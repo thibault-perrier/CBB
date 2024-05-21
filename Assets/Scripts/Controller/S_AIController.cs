@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.GraphicsBuffer;
 
 public class S_AIController : MonoBehaviour
 {
@@ -24,11 +25,13 @@ public class S_AIController : MonoBehaviour
     [SerializeField, Range(0, 100)] private float _attackProbability = 100f;
 
     private GameObject _player;
-    public GameObject _target;
+
+    private WheelsController _wheelsController;
 
     private void Start()
     {
         _player = GameObject.FindGameObjectWithTag(_playerTag);
+        _wheelsController = GetComponent<WheelsController>();
     }
     private void FixedUpdate()
     {
@@ -58,7 +61,45 @@ public class S_AIController : MonoBehaviour
     /// <param name="target"></param>
     private void MoveAI(Vector3 target)
     {
-        _target.transform.position = target;
+        float forwardAmout = 0f;
+        float TurnAmount = 0f;
+
+        Vector3 dir = (target - transform.position).normalized;
+        float dot = Vector3.Dot(transform.forward, dir);
+        float angleToDir = Vector3.SignedAngle(transform.forward, dir, Vector3.up);
+
+
+        if (dot > 1f)
+        {
+            // go forward
+            forwardAmout = 1f;
+        }
+        else
+        {
+            // go backward
+            forwardAmout = -1f;
+        }
+
+        if (angleToDir > 0f)
+        {
+            // turn right
+            TurnAmount = 1f;
+        }
+        else
+        {
+            // turn left
+            TurnAmount = -1f;
+        }
+        Debug.Log(forwardAmout);
+        _wheelsController.Direction = TurnAmount;
+        if (forwardAmout > 0f)
+        {
+            _wheelsController.Movement = WheelsController.Move.toward;
+        }
+        else
+        {
+            _wheelsController.Movement = WheelsController.Move.backward;
+        }
     }
     /// <summary>
     /// get the position to the seconds point for a path from player
