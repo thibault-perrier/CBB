@@ -6,17 +6,29 @@ public class Wheel : MonoBehaviour
 {
     [SerializeField] private bool _accelerate;
     [SerializeField] private WheelCollider _wheelCollider;
-    [SerializeField] private float _speed;
+    [SerializeField] private float _torque;
 
-    private void Update()
+    public bool Accelerate
+    {
+        set { _accelerate = value; }
+    }
+
+    public float Torque
+    {
+        set { _torque = value; }
+    }
+
+    private void FixedUpdate()
     {
         if (_accelerate)
         {
-            _wheelCollider.motorTorque = 30;
+            _wheelCollider.motorTorque = _torque;
+            _wheelCollider.brakeTorque = 0;
         }
         else
         {
-            _wheelCollider.brakeTorque = 0;
+            _wheelCollider.motorTorque = 0;
+            _wheelCollider.brakeTorque = 10;
         }
     }
 }
