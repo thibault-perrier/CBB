@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class WheelsController : MonoBehaviour
@@ -12,10 +13,15 @@ public class WheelsController : MonoBehaviour
     [SerializeField] private float _maxMotorTorque;
     [SerializeField] private float _minMotorTorque;
 
-
+    public enum Move
+    {
+        toward,
+        neutral,
+        backward
+    }
 
     private float _direction;
-    private bool _accelerate;
+    private Move _move;
     private Rigidbody rb;
 
     /// <summary>
@@ -25,9 +31,13 @@ public class WheelsController : MonoBehaviour
     {
         set { _direction = value; }
     }
-    public bool Accelerate
+
+    /// <summary>
+    /// defined direction move between toward, backward and neutral.
+    /// </summary>
+    public Move Movement
     {
-        set { this._accelerate = value; }
+        set { this._move = value; }
     }
 
     private void Awake()
@@ -78,8 +88,19 @@ public class WheelsController : MonoBehaviour
     {
         foreach (Wheel wheel in _wheels)
         {
-            wheel.Torque = torque;
-            wheel.Accelerate = this._accelerate;
+            switch (_move)
+            {
+                case Move.toward:
+                    wheel.Torque = torque;
+                    break;
+                case Move.neutral:
+                    wheel.Torque = -torque;
+                    break;
+                default:
+                    break;
+            }
+            
+            wheel.Accelerate = _move != Move.neutral;
         }
     }
 
