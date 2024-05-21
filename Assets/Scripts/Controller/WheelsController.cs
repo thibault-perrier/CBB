@@ -21,7 +21,7 @@ public class WheelsController : MonoBehaviour
     }
 
     private float _direction;
-    private Move _move;
+    private Move _move = Move.neutral;
     private Rigidbody rb;
 
     /// <summary>
@@ -47,6 +47,12 @@ public class WheelsController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        _move = Move.neutral;
+        if(Input.GetKey(KeyCode.W))
+            _move = Move.toward;
+        if (Input.GetKey(KeyCode.S))
+            _move = Move.backward;
+
         //Direction
         _direction = 0;
 
@@ -62,39 +68,39 @@ public class WheelsController : MonoBehaviour
 
         DirectionUpdate();
 
-        //Torque and speed
+        ApplyMotorTorque();
 
-        float currentSpeed = rb.velocity.magnitude;
 
-        Debug.Log("Speed " + currentSpeed);
-
-        //clamp torque
-        if (currentSpeed < _maxSpeed)
-        {
-            float motorTorque = _minMotorTorque + (_maxMotorTorque - _minMotorTorque);
-            ApplyMotorTorque(motorTorque);
-        }
-        else
-        {
-            ApplyMotorTorque(-(currentSpeed - _maxSpeed) * 10);
-        }
     }
 
     /// <summary>
     /// Apply torque on all wheels
     /// </summary>
-    /// <param name="torque">Torque value to set</param>
-    void ApplyMotorTorque(float torque)
+    void ApplyMotorTorque()
     {
+        //Torque and speed
+
+        float currentSpeed = rb.velocity.magnitude;
+
+        float motorTorque = _minMotorTorque + (_maxMotorTorque - _minMotorTorque);
+
+        Debug.Log("Speed " + currentSpeed);
+
+        if (currentSpeed > _maxSpeed)
+        {
+            motorTorque = (currentSpeed - _maxSpeed) * -30;
+        }
+
         foreach (Wheel wheel in _wheels)
         {
             switch (_move)
             {
                 case Move.toward:
-                    wheel.Torque = torque;
+
+                    wheel.Torque = motorTorque;
                     break;
-                case Move.neutral:
-                    wheel.Torque = -torque;
+                case Move.backward:
+                    wheel.Torque = -motorTorque;
                     break;
                 default:
                     break;
@@ -102,6 +108,12 @@ public class WheelsController : MonoBehaviour
             
             wheel.Accelerate = _move != Move.neutral;
         }
+
+        //clamp torque
+
+        
+
+        
     }
 
     /// <summary>
