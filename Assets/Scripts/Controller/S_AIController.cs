@@ -69,7 +69,7 @@ public class S_AIController : MonoBehaviour
         float angleToDir = Vector3.SignedAngle(transform.forward, dir, Vector3.up);
 
 
-        if (dot > 1f)
+        if (dot > 0f)
         {
             // go forward
             forwardAmout = 1f;
@@ -91,7 +91,7 @@ public class S_AIController : MonoBehaviour
             TurnAmount = -1f;
         }
         Debug.Log(forwardAmout);
-        _wheelsController.Direction = TurnAmount;
+        // _wheelsController.Direction = TurnAmount;
         if (forwardAmout > 0f)
         {
             _wheelsController.Movement = WheelsController.Move.toward;
