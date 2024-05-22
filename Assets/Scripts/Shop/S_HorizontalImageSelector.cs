@@ -1,10 +1,13 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HorizontalImageSelector : MonoBehaviour
 {
     public RectTransform _frame;
-    public float moveSpeed = 8000f;
+    public float moveSpeed = 800f;
+    public GameObject _slot;
 
     private RectTransform[] _selectedImages;
 
@@ -25,7 +28,7 @@ public class HorizontalImageSelector : MonoBehaviour
         foreach (RectTransform imageRect in _selectedImages)
         {
             Vector3 currentPosition = imageRect.position;
-            currentPosition.x += horizontalInput * moveSpeed ;
+            currentPosition.x += horizontalInput * moveSpeed * Time.deltaTime;
             imageRect.position = currentPosition;
         }
     }
@@ -37,6 +40,8 @@ public class HorizontalImageSelector : MonoBehaviour
             Image image = other.GetComponent<Image>();
             if (image != null)
             {
+                image.transform.position = _slot.transform.position;
+                StartCoroutine(Select());
                 Color imageColor = image.color;
                 imageColor.a = 1f;
                 image.color = imageColor;
@@ -56,5 +61,13 @@ public class HorizontalImageSelector : MonoBehaviour
                 image.color = imageColor;
             }
         }
+    }
+
+    IEnumerator Select()
+    {
+        moveSpeed = 0;
+        yield return new WaitForSeconds(1f);
+        moveSpeed = 1200;
+        yield return null;
     }
 }
