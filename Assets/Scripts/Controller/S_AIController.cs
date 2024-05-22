@@ -1,4 +1,4 @@
-using System.Collections;
+
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -17,8 +17,6 @@ public class S_AIController : MonoBehaviour
     [Header("Togles Actions")]
     [SerializeField, Tooltip("if he focus the plaeyr weapon")]
     private bool _attackPlayerWeapon;
-    [SerializeField, Tooltip("if he dont touch the traps")]
-    private bool _dodgeTrap;
     [SerializeField, Tooltip("if he use her best weapon for attack")]
     private bool _attackWithBestWeapon;
 
@@ -29,9 +27,11 @@ public class S_AIController : MonoBehaviour
     private GameObject _target;
     private GameObject _currentWeapon;
 
-    public List<GameObject> Weapons;
-
     private WheelsController _wheelsController;
+    
+    // test varaible 
+    public List<GameObject> Weapons;
+    public List<GameObject> PlayerWeapons;
 
     private void Start()
     {
@@ -64,7 +64,7 @@ public class S_AIController : MonoBehaviour
         }
         else
         {
-            GameObject playerBestWeapon = GetBestPlayerWeapon();
+            GameObject playerBestWeapon = GetBestPlayerWeaponFromTarget(transform);
             succesToFindPath = GetFirstPathPosition(playerBestWeapon.transform.position, ref position);
             _target = playerBestWeapon;
         }
@@ -159,10 +159,18 @@ public class S_AIController : MonoBehaviour
     /// select the best player weapons
     /// </summary>
     /// <returns>return the best player weapon object</returns>
-    private GameObject GetBestPlayerWeapon()
+    private GameObject GetBestPlayerWeaponFromTarget(Transform target)
     {
+        if (PlayerWeapons.Count < 1)
+            return _player;
+
         // sort the best weapon
-        return _player;
+        return PlayerWeapons
+            .Where(x => Vector3.Dot(x.transform.forward, (target.position - x.transform.position).normalized) > 0f)
+            .Select(x => x.transform)
+            .OrderBy(x => int.Parse(x.name) + Vector3.Distance(x.position, target.position))
+            .Reverse()
+            .ToList()[0].gameObject;
     }
     /// <summary>
     /// sort weapons from power, distance and if he is not behind to the target
@@ -171,20 +179,12 @@ public class S_AIController : MonoBehaviour
     /// <returns>return the best weapon from the distance to the target</returns>
     private GameObject GetBestWeaponFromTarget(Transform target)
     {
-        if (!_attackWithBestWeapon)
-            return this.gameObject;
-
-        // sort if weapon is behind the target
-        Weapons = Weapons
-            .Where(x => Vector3.Dot(x.transform.forward, (target.position - x.transform.position).normalized) > 0f)
-            .ToList();
-
-        // if all weapons are behind the target return self
-        if (Weapons.Count < 1)
+        if (!_attackWithBestWeapon || Weapons.Count < 1)
             return this.gameObject;
 
         // sort the best weapon by power, distance and look
         return Weapons
+            .Where(x => Vector3.Dot(x.transform.forward, (target.position - x.transform.position).normalized) > 0f)
             .Select(x => x.transform)
             .OrderBy(x => int.Parse(x.name) + Vector3.Distance(x.position, target.position))
             .Reverse()
