@@ -2,17 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class S_AIController : MonoBehaviour
 {
     [Header("Player")]
     [SerializeField, Tooltip("Tag for find player")] 
     private string _playerTag;
-
-    [Header("Agents")]
-    [SerializeField, Tooltip("component for create path from player")]
-    private NavMeshAgent _agents;
 
     [Header("Togles Actions")]
     [SerializeField, Tooltip("if he focus the plaeyr weapon")]
@@ -42,10 +37,14 @@ public class S_AIController : MonoBehaviour
     {
         if (CurrentWeaponCanAttack())
         {
+            _wheelsController.Movement = WheelsController.Move.neutral;
             // TO DO: make a brake and attack with current weapon
         }
+        else
+        {
+            UpdateAIMovement();
+        }
 
-        UpdateAIMovement();
     }
 
     /// <summary>
@@ -53,34 +52,18 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     private void UpdateAIMovement()
     {
-        // get the path until the player
-        Vector3 position = new();
-        bool succesToFindPath = false;
-
         if (!_attackPlayerWeapon)
         {
-            succesToFindPath = GetFirstPathPosition(_player.transform.position, ref position);
             _target = _player;
         }
         else
         {
             GameObject playerBestWeapon = GetBestPlayerWeaponFromTarget(transform);
-            succesToFindPath = GetFirstPathPosition(playerBestWeapon.transform.position, ref position);
             _target = playerBestWeapon;
         }
 
         _currentWeapon = GetBestWeaponFromTarget(_target.transform);
-
-        // if he find a path for focus player
-        if (succesToFindPath)
-        {
-            MoveToPoint(position, _currentWeapon.transform);
-        }
-        else
-        {
-            Vector3 targetDirection = (_target.transform.position - transform.position).normalized;
-            MoveToPoint(transform.position + targetDirection * 2f, _currentWeapon.transform);
-        }
+        MoveToPoint(_target.transform.position, _currentWeapon.transform);
     }
     /// <summary>
     /// set wheel velocity from the target
@@ -88,72 +71,46 @@ public class S_AIController : MonoBehaviour
     /// <param name="target"></param>
     private void MoveToPoint(Vector3 target, Transform weapon)
     {
-        float forwardAmout = 0f;
         float TurnAmount = 0f;
 
         // for set the movement
         Vector3 dir = (target - weapon.position).normalized;
-        float dot = Vector3.Dot(transform.forward, dir);
-        float angleToDir = Vector3.SignedAngle(transform.forward, dir, Vector3.up);
+        float dotDirection = Vector3.Dot(weapon.forward, dir);
+        float angleToDir = Vector3.SignedAngle(weapon.forward, dir, Vector3.up);
+        float dotWeaponBody = Vector3.Dot(weapon.forward, transform.forward);
 
-        if (dot > 0f)
+        if (dotDirection < 0f && dotWeaponBody < 0f)
+        {
+            Debug.Log("OK");
+            _wheelsController.Direction = 1f;
+            _wheelsController.Movement = WheelsController.Move.toward;
+            return;
+        }
+
+        if (dotDirection > 0f)
         {
             // go forward
-            forwardAmout = 1f;
+            _wheelsController.Movement = dotWeaponBody > 0f ? WheelsController.Move.toward : WheelsController.Move.backward;
         }
         else
         {
             // go backward
-            forwardAmout = -1f;
+            _wheelsController.Movement = dotWeaponBody > 0f ? WheelsController.Move.backward : WheelsController.Move.toward;
         }
 
         if (angleToDir > 0f)
         {
             // turn right
-            TurnAmount = .5f;
+            TurnAmount = dotWeaponBody > 0f ? 1f : -1f;
         }
         else
         {
             // turn left
-            TurnAmount = -.5f;
+            TurnAmount = dotWeaponBody > 0f ? -1f : 1f;
         }
-        
-        // set controller parameters
+
+        // set controller direction
         _wheelsController.Direction = TurnAmount;
-        if (forwardAmout > 0f)
-        {
-            _wheelsController.Movement = WheelsController.Move.toward;
-        }
-        else
-        {
-            _wheelsController.Movement = WheelsController.Move.backward;
-        }
-    }
-    /// <summary>
-    /// get the position to the seconds point for a path until the player
-    /// </summary>
-    /// <returns>return the secondes point of path</returns>
-    private bool GetFirstPathPosition(Vector3 destination, ref Vector3 result)
-    {
-        if (_agents == null)
-        {
-            result = Vector3.zero;
-            return false;
-        }
-
-        // create and calcute path
-        var path = new NavMeshPath();
-        _agents.CalculatePath(destination, path);
-
-        // return the seconds point of path
-        if (path.corners.Length > 1)
-        {
-            result = path.corners[1];
-            return true;
-        }
-
-        result = Vector3.zero;
-        return false;
     }
     /// <summary>
     /// select the best player weapons
@@ -184,7 +141,6 @@ public class S_AIController : MonoBehaviour
 
         // sort the best weapon by power, distance and look
         return Weapons
-            .Where(x => Vector3.Dot(x.transform.forward, (target.position - x.transform.position).normalized) > 0f)
             .Select(x => x.transform)
             .OrderBy(x => int.Parse(x.name) + Vector3.Distance(x.position, target.position))
             .Reverse()
@@ -203,6 +159,6 @@ public class S_AIController : MonoBehaviour
         if (targetDistance < 2f)
             return true;
         
-        return true;
+        return false;
     }
 }
