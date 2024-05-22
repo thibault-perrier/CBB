@@ -1,17 +1,22 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class WheelsController : MonoBehaviour
 {
-    [SerializeField] private List<Wheel> _wheels;
-    [SerializeField] private List<WheelCollider> _directionWheels;
+    [SerializeField] private List<WheelCollider> _wheels;
+    [SerializeField] private List<WheelCollider> _directionWheelsCollider;
     [SerializeField] private float _maxAngle = 30;
-    [SerializeField] private List<Transform> _directionWheelsTransforms;
     [SerializeField] private float _maxSpeed;
     [SerializeField] private float _maxMotorTorque;
-    [SerializeField] private float _minMotorTorque;
+
+    private float _direction;
+    private Move _move = Move.neutral;
+    private Rigidbody _rb;
+    private float _mass;
+
+    private float _wheelRadius;     // in meter
+    [SerializeField] private float _timeToMaxSpeed = 5f;    // in second
+
 
     public enum Move
     {
@@ -19,10 +24,6 @@ public class WheelsController : MonoBehaviour
         neutral,
         backward
     }
-
-    private float _direction;
-    private Move _move = Move.neutral;
-    private Rigidbody rb;
 
     /// <summary>
     /// Delta value internvale [1 , -1], 1 for right and -1 for left;
@@ -42,18 +43,19 @@ public class WheelsController : MonoBehaviour
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        _rb = GetComponent<Rigidbody>();
+
+        _mass = _rb.mass + 4 * _wheels[0].mass;
+        _wheelRadius = _wheels[0].radius;
     }
 
     private void FixedUpdate()
     {
-        _move = Move.neutral;
         if(Input.GetKey(KeyCode.W))
             _move = Move.toward;
         if (Input.GetKey(KeyCode.S))
             _move = Move.backward;
 
-        //Direction
         _direction = 0;
 
         if (Input.GetKey(KeyCode.A))
@@ -67,10 +69,9 @@ public class WheelsController : MonoBehaviour
         
 
         DirectionUpdate();
-
         ApplyMotorTorque();
 
-
+        _move = Move.neutral;
     }
 
     /// <summary>
@@ -78,42 +79,33 @@ public class WheelsController : MonoBehaviour
     /// </summary>
     void ApplyMotorTorque()
     {
-        //Torque and speed
+        float currentSpeed = _rb.velocity.magnitude;
 
-        float currentSpeed = rb.velocity.magnitude;
+        float desiredAcceleration = (_maxSpeed - currentSpeed) / _timeToMaxSpeed;
+        float requiredForce = _mass * desiredAcceleration;
+        float motorTorque = requiredForce * _wheelRadius;
 
-        float motorTorque = _minMotorTorque + (_maxMotorTorque - _minMotorTorque);
+        // limit max torque
+        motorTorque = Mathf.Clamp(motorTorque, -_maxMotorTorque, _maxMotorTorque);
 
-        Debug.Log("Speed " + currentSpeed);
-
-        if (currentSpeed > _maxSpeed)
-        {
-            motorTorque = (currentSpeed - _maxSpeed) * -30;
-        }
-
-        foreach (Wheel wheel in _wheels)
+        foreach (WheelCollider wheel in _wheels)
         {
             switch (_move)
             {
                 case Move.toward:
-
-                    wheel.Torque = motorTorque;
+                    wheel.brakeTorque = 0;
+                    wheel.motorTorque = motorTorque;
                     break;
                 case Move.backward:
-                    wheel.Torque = -motorTorque;
+                    wheel.brakeTorque = 0;
+                    wheel.motorTorque = -motorTorque;
                     break;
                 default:
+                    wheel.motorTorque = 0;
+                    wheel.brakeTorque = 20;
                     break;
             }
-            
-            wheel.Accelerate = _move != Move.neutral;
         }
-
-        //clamp torque
-
-        
-
-        
     }
 
     /// <summary>
@@ -121,7 +113,7 @@ public class WheelsController : MonoBehaviour
     /// </summary>
     private void DirectionUpdate()
     {
-        foreach(WheelCollider wheel in _directionWheels)
+        foreach(WheelCollider wheel in _directionWheelsCollider)
         {
             wheel.steerAngle = _maxAngle * _direction;
         }
