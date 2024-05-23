@@ -2,72 +2,125 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
-public class HorizontalImageSelector : MonoBehaviour
+public class S_HorizontalImageSelector : MonoBehaviour
 {
-    public RectTransform _frame;
-    public float moveSpeed = 800f;
+    public RectTransform[] _frames;
     public GameObject _slot;
+    public float _stepDelay = 0.1f;
+    public TextMeshProUGUI _frameLabel;
 
-    private RectTransform[] _selectedImages;
+    private RectTransform[][] _selectedImages;
+    private Coroutine[] _movementCoroutines;
+    private int _currentFrameIndex = 0;
+    private int _currentIndex = 0;
+
+    public static S_HorizontalImageSelector Instance;
+
+    void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
-        int childCount = _frame.childCount;
-        _selectedImages = new RectTransform[childCount];
+        float horizontalInput = -Input.GetAxis("Horizontal");
+        InitializeFrames();
+        UpdateFrameLabel();
+    }
 
-        for (int i = 0; i < childCount; i++)
+    private void InitializeFrames()
+    {
+        int frameCount = _frames.Length;
+        _selectedImages = new RectTransform[frameCount][];
+        _movementCoroutines = new Coroutine[frameCount];
+
+        for (int j = 0; j < frameCount; j++)
         {
-            _selectedImages[i] = _frame.GetChild(i).GetComponent<RectTransform>();
+            int childCount = _frames[j].childCount;
+            _selectedImages[j] = new RectTransform[childCount];
+
+            for (int i = 0; i < childCount; i++)
+            {
+                _selectedImages[j][i] = _frames[j].GetChild(i).GetComponent<RectTransform>();
+            }
+
+            if (_selectedImages[j].Length > 0)
+            {
+                UpdateSelectedImage(j, _currentIndex);
+            }
         }
     }
 
     private void Update()
     {
         float horizontalInput = -Input.GetAxis("Horizontal");
-        foreach (RectTransform imageRect in _selectedImages)
-        {
-            Vector3 currentPosition = imageRect.position;
-            currentPosition.x += horizontalInput * moveSpeed * Time.deltaTime;
-            imageRect.position = currentPosition;
-        }
-    }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("SelectableImage"))
+        if (_movementCoroutines[_currentFrameIndex] == null)
         {
-            Image image = other.GetComponent<Image>();
-            if (image != null)
+            if (horizontalInput > 0.5f && _currentIndex < _selectedImages[_currentFrameIndex].Length - 1)
             {
-                image.transform.position = _slot.transform.position;
-                StartCoroutine(Select());
-                Color imageColor = image.color;
-                imageColor.a = 1f;
-                image.color = imageColor;
+                _currentIndex++;
+                _movementCoroutines[_currentFrameIndex] = StartCoroutine(MoveFrameToImage(_currentFrameIndex, _currentIndex));
+            }
+            else if (horizontalInput < -0.5f && _currentIndex > 0)
+            {
+                _currentIndex--;
+                _movementCoroutines[_currentFrameIndex] = StartCoroutine(MoveFrameToImage(_currentFrameIndex, _currentIndex));
             }
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    private IEnumerator MoveFrameToImage(int frameIndex, int imageIndex)
     {
-        if (other.CompareTag("SelectableImage"))
+        Vector3 startPosition = _frames[frameIndex].localPosition;
+        Vector3 endPosition = new Vector3(-_selectedImages[frameIndex][imageIndex].localPosition.x, _frames[frameIndex].localPosition.y, _frames[frameIndex].localPosition.z);
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < _stepDelay)
         {
-            Image image = other.GetComponent<Image>();
-            if (image != null)
-            {
-                Color imageColor = image.color;
-                imageColor.a = 0.5f;
-                image.color = imageColor;
-            }
+            _frames[frameIndex].localPosition = Vector3.Lerp(startPosition, endPosition, elapsedTime / _stepDelay);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        _frames[frameIndex].localPosition = endPosition;
+
+        UpdateSelectedImage(frameIndex, imageIndex);
+
+        _slot.transform.position = new Vector3(_selectedImages[frameIndex][imageIndex].position.x, _slot.transform.position.y, _slot.transform.position.z);
+
+        _movementCoroutines[frameIndex] = null;
+    }
+
+    private void UpdateSelectedImage(int frameIndex, int imageIndex)
+    {
+        for (int i = 0; i < _selectedImages[frameIndex].Length; i++)
+        {
+            Image image = _selectedImages[frameIndex][i].GetComponent<Image>();
+            Color imageColor = image.color;
+            imageColor.a = (i == imageIndex) ? 1f : 0.5f;
+            image.color = imageColor;
         }
     }
 
-    IEnumerator Select()
+    public void ChangeFrame(int direction)
     {
-        moveSpeed = 0;
-        yield return new WaitForSeconds(1f);
-        moveSpeed = 1200;
-        yield return null;
+        _currentFrameIndex = (_currentFrameIndex + direction + _frames.Length) % _frames.Length;
+        UpdateSelectedImage(_currentFrameIndex, _currentIndex);
+        _slot.transform.position = new Vector3(_selectedImages[_currentFrameIndex][_currentIndex].position.x, _slot.transform.position.y, _slot.transform.position.z);
+
+        UpdateFrameLabel();
+    }
+
+    private void UpdateFrameLabel()
+    {
+        string[] frameLabels = { "Chassis", "Weapons", "Pack" };
+        if (_frameLabel != null && _currentFrameIndex < frameLabels.Length)
+        {
+            _frameLabel.text = frameLabels[_currentFrameIndex];
+        }
     }
 }
