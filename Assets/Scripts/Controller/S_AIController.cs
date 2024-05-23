@@ -25,6 +25,8 @@ public class S_AIController : MonoBehaviour
     private float _attackProbability = 100f;
     [SerializeField, Range(0, 100), Tooltip("probability to make a movement every frame")]
     private float _movementProbability = 100f;
+    [SerializeField, Range(0, 100), Tooltip("probability to turn for make a dodge")]
+    private float _dodgeProbability = 100f;
 
     private GameObject _player;
     private GameObject _target;
@@ -69,11 +71,30 @@ public class S_AIController : MonoBehaviour
         bool canTakeDamage = CanTakeDamageWithPlayer();
         if (canTakeDamage && !_currentWeapon.activeSelf)
         {
-            MoveToPoint(transform.position - transform.forward * 4f, transform);
+            FleeTarget();
         }
         else
         {
             MoveBotToTarget();
+        }
+    }
+    /// <summary>
+    /// flee the player at a distance
+    /// </summary>
+    private void FleeTarget()
+    {
+        Vector3 dir = (_target.transform.position - transform.position).normalized;
+        float dot = Vector3.Dot(transform.forward, dir);
+
+        if (dot > 0f)
+        {
+            // go backward
+            MoveToPoint(transform.position - transform.forward * 4f, transform);
+        }
+        else
+        {
+            // go toward
+            MoveToPoint(transform.position + transform.forward * 4f, transform);
         }
     }
     /// <summary>
@@ -102,6 +123,8 @@ public class S_AIController : MonoBehaviour
     /// <param name="target"></param>
     private void MoveToPoint(Vector3 target, Transform weapon)
     {
+        float TurnAmount = 0f;
+
         // for set the movement
         Vector3 dir = (target - weapon.position).normalized;
         float dotDirection = Vector3.Dot(weapon.forward, dir);
@@ -109,7 +132,9 @@ public class S_AIController : MonoBehaviour
         float dotWeaponBody = Vector3.Dot(weapon.forward, transform.forward);
 
         // get turn amount if he hit any trap
-        float TurnAmount = GetTurnAmountForDodgeTrap(dotDirection > 0f ? 1f : -1f);
+        float dodgeRnd = Random.Range(0, 101);
+        if (dodgeRnd < _dodgeProbability)
+            TurnAmount = GetTurnAmountForDodgeTrap(dotDirection > 0f ? 1f : -1f);
 
         if (dotDirection < 0f && dotWeaponBody < 0f)
         {
