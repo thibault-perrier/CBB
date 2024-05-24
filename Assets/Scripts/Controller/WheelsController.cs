@@ -56,7 +56,7 @@ public class WheelsController : MonoBehaviour
         if (Input.GetKey(KeyCode.S))
             _move = Move.backward;
 
-        _direction = 0;
+        // _direction = 0;
 
         if (Input.GetKey(KeyCode.A))
         {

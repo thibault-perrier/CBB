@@ -1,4 +1,5 @@
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -28,6 +29,8 @@ public class S_AIController : MonoBehaviour
     [SerializeField, Range(0, 100), Tooltip("probability to turn for make a dodge")]
     private float _dodgeProbability = 100f;
 
+    private bool _canAttack = true;
+
     private GameObject _enemy;
     private GameObject _target;
     private GameObject _currentWeapon;
@@ -49,7 +52,6 @@ public class S_AIController : MonoBehaviour
         if (CurrentWeaponCanAttack())
         {
             _wheelsController.Movement = WheelsController.Move.neutral;
-            _currentWeapon.SetActive(false);
             AttackWhithCurrrentWeapon();
         }
         else
@@ -105,7 +107,8 @@ public class S_AIController : MonoBehaviour
     /// <param name="target"></param>
     private void MoveToPoint(Vector3 target, Transform weapon)
     {
-        float TurnAmount = 0f;
+        float turnAmount = 0f;
+        bool dodge = false;
 
         // for set the movement
         Vector3 dir = (target - weapon.position).normalized;
@@ -116,7 +119,12 @@ public class S_AIController : MonoBehaviour
         // get turn amount if he hit any trap
         float dodgeRnd = Random.Range(0, 101);
         if (dodgeRnd < _dodgeProbability)
-            TurnAmount = GetTurnAmountForDodgeTrap(dotDirection > 0f ? 1f : -1f);
+        {
+            turnAmount = GetTurnAmountForDodgeTrap(dotDirection > 0f ? 1f : -1f);
+            
+            if (turnAmount != 0f)
+                dodge = true;
+        }
 
         if (dotDirection < 0f && dotWeaponBody < 0f)
         {
@@ -136,23 +144,61 @@ public class S_AIController : MonoBehaviour
             _wheelsController.Movement = dotWeaponBody > 0f ? WheelsController.Move.backward : WheelsController.Move.toward;
         }
 
-        if (TurnAmount == 0f)
+        if (!dodge)
         {
             if (angleToDir > 0f)
             {
                 // turn right
-                TurnAmount = dotWeaponBody > 0f ? 1f : -1f;
+                turnAmount = dotWeaponBody > 0f ? 1f : -1f;
             }
             else
             {
                 // turn left
-                TurnAmount = dotWeaponBody > 0f ? -1f : 1f;
+                turnAmount = dotWeaponBody > 0f ? -1f : 1f;
             }
         }
 
         // set controller direction
-        _wheelsController.Direction = TurnAmount;
+        _wheelsController.Direction = turnAmount;
     }
+    /// <summary>
+    /// make raycasts for define the turnAmount
+    /// </summary>
+    /// <returns>return the new turn amount</returns>
+    private float GetTurnAmountForDodgeTrap(float scaleDirection)
+    {
+        if (!_dodgeTrap)
+            return 0f;
+
+        float turnAmount = 0f;
+        bool tuchOneTime = false;
+
+        for (float angle = 0; angle < 100f; angle += 20f)
+        {
+            // calcul direction of ray
+            float xDirection = Mathf.InverseLerp(-50f, 50f, angle - 50f) * 2f - 1f;
+            var direction = new Vector3(xDirection, 0f, scaleDirection);
+
+            // make a raycast
+            bool hit = Physics.Raycast(transform.position, transform.TransformDirection(direction), 5f, _trapLayer);
+            if (hit)
+            {
+                turnAmount += (angle - 50f) > 0f ? -1f : 1f;
+                tuchOneTime = true;
+                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 5f, Color.green, 0f);
+            }
+            else
+            {
+                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 5f, Color.red, 0f);
+            }
+        }
+
+        if (turnAmount == 0f && tuchOneTime)
+            return 1f;
+
+        return Mathf.Clamp(turnAmount, -1f, 1f);
+    }
+
     /// <summary>
     /// select the best player weapons
     /// </summary>
@@ -208,6 +254,25 @@ public class S_AIController : MonoBehaviour
 
         return true;
     }
+
+    /// <summary>
+    /// use the current weapon for make an attack
+    /// </summary>
+    private void AttackWhithCurrrentWeapon()
+    {
+        if (!_canAttack)
+            return;
+
+        StartCoroutine(AttackCooldown());
+
+        // make a probabiblity for attack
+        float attackRnd = Random.Range(0, 101);
+        if (attackRnd > _attackProbability)
+            return;
+
+        _currentWeapon.SetActive(false);
+        // TO DO: make attack with current weapon
+    }
     /// <summary>
     /// if the target is closed the current weapon
     /// </summary>
@@ -224,51 +289,6 @@ public class S_AIController : MonoBehaviour
         return false;
     }
     /// <summary>
-    /// make raycasts for define the turnAmount
-    /// </summary>
-    /// <returns>return the new turn amount</returns>
-    private float GetTurnAmountForDodgeTrap(float scaleDirection)
-    {
-        if (!_dodgeTrap)
-            return 0f;
-
-        float turnAmount = 0f;
-
-        for (float angle = 0; angle < 100f; angle += 20f)
-        {
-            // calcul direction of ray
-            float xDirection = Mathf.InverseLerp(-50f, 50f, angle - 50f) * 2f - 1f;
-            var direction = new Vector3(xDirection, 0f, scaleDirection);
-
-            // make a raycast
-            bool hit = Physics.Raycast(transform.position, transform.TransformDirection(direction), 5f, _trapLayer);
-            if (hit)
-            {
-                turnAmount += (angle - 50f) > 0f ? -1f : 1f;
-                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 5f, Color.green, 0f);
-            }
-            else
-            {
-                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 5f, Color.red, 0f);
-            }
-        }
-
-        return Mathf.Clamp(turnAmount, -1f, 1f);
-    }
-    /// <summary>
-    /// use the current weapon for make an attack
-    /// </summary>
-    private void AttackWhithCurrrentWeapon()
-    {
-        // make a probabiblity for attack
-        float attackRnd = Random.Range(0, 101);
-
-        if (attackRnd > _attackProbability)
-            return;
-
-        // TO DO: make attack with current weapon
-    }
-    /// <summary>
     /// if i can take any damage with chalenger
     /// </summary>
     /// <returns>return true if i can take any damage</returns>
@@ -280,7 +300,7 @@ public class S_AIController : MonoBehaviour
         {
             float distanceWeaponToSelf = Vector3.Distance(transform.position, weapon.transform.position);
 
-            if (distanceWeaponToSelf < 2f)
+            if (distanceWeaponToSelf < 4f)
                 return true;
         }
 
@@ -293,5 +313,15 @@ public class S_AIController : MonoBehaviour
     private GameObject[] GetActiveEnemyWeapons()
     {
         return EnemyWeapons.Where(x => x.activeSelf).ToArray();
+    }
+    /// <summary>
+    /// Cooldown for attack, set the _canAttack false and true with 1 seconde
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator AttackCooldown()
+    {
+        _canAttack = false;
+        yield return new WaitForSeconds(1f);
+        _canAttack = true;
     }
 }
