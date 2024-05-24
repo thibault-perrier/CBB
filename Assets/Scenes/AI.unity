@@ -175,7 +175,6 @@ GameObject:
   - component: {fileID: 396675251}
   - component: {fileID: 396675250}
   - component: {fileID: 396675249}
-  - component: {fileID: 396675253}
   m_Layer: 0
   m_Name: floor
   m_TagString: Untagged
@@ -269,37 +268,59 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &396675253
-MonoBehaviour:
+--- !u!1 &397664055
+GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 396675248}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AgentTypeID: 0
-  m_CollectObjects: 0
-  m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 2, z: 0}
-  m_LayerMask:
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 397664057}
+  - component: {fileID: 397664056}
+  m_Layer: 6
+  m_Name: Trap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &397664056
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397664055}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
-  m_UseGeometry: 0
-  m_DefaultArea: 0
-  m_GenerateLinks: 0
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
-  m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: ee58a67ef582bf74c95bf00e61a166a4, type: 2}
-  m_BuildHeightMesh: 0
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.4160748, y: 3.7608652, z: 3.4389362}
+  m_Center: {x: 0.18728638, y: 1.3804324, z: -1.2194679}
+--- !u!4 &397664057
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397664055}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -15.37, y: 0.09, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!146 &414130469 stripped
 WheelCollider:
   m_CorrespondingSourceObject: {fileID: 8626277753439424062, guid: 54d9a87acec8339438590167e68805de, type: 3}
@@ -351,15 +372,17 @@ MonoBehaviour:
   _trapLayer:
     serializedVersion: 2
     m_Bits: 64
-  _playerTag: Player
-  _attackPlayerWeapon: 1
+  _enemyTag: Player
+  _attackEnemyWeapon: 1
   _attackWithBestWeapon: 1
-  _dodgeTrap: 0
+  _dodgeTrap: 1
   _attackProbability: 100
+  _movementProbability: 100
+  _dodgeProbability: 63
   Weapons:
   - {fileID: 1247806408}
   - {fileID: 741174592}
-  PlayerWeapons:
+  EnemyWeapons:
   - {fileID: 488582417}
   - {fileID: 75228794}
   - {fileID: 1989791980}
@@ -501,7 +524,7 @@ Transform:
   m_GameObject: {fileID: 1247806408}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -0.06, y: 0, z: -1.79}
+  m_LocalPosition: {x: -0.06, y: 0, z: -1.74}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -848,7 +871,7 @@ Transform:
   m_GameObject: {fileID: 4888339024713107663}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -14.55, y: 4.57, z: 13.97}
+  m_LocalPosition: {x: -14.55, y: 0.69, z: 13.97}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1167,3 +1190,4 @@ SceneRoots:
   - {fileID: 396675252}
   - {fileID: 896291220}
   - {fileID: 5066241686316053731}
+  - {fileID: 397664057}

@@ -8,13 +8,13 @@ public class S_AIController : MonoBehaviour
     [SerializeField, Tooltip("layer for hit trap with raycast")]
     private LayerMask _trapLayer;
 
-    [Header("Player")]
-    [SerializeField, Tooltip("Tag for find player")] 
-    private string _playerTag;
+    [Header("Enemy")]
+    [SerializeField, Tooltip("Tag for find enemy")] 
+    private string _enemyTag;
 
     [Header("Togles Actions")]
-    [SerializeField, Tooltip("if he focus the plaeyr weapon")]
-    private bool _attackPlayerWeapon;
+    [SerializeField, Tooltip("if he focus the enemy weapon")]
+    private bool _attackEnemyWeapon;
     [SerializeField, Tooltip("if he use her best weapon for attack")]
     private bool _attackWithBestWeapon;
     [SerializeField, Tooltip("if he dodge the trap")]
@@ -28,7 +28,7 @@ public class S_AIController : MonoBehaviour
     [SerializeField, Range(0, 100), Tooltip("probability to turn for make a dodge")]
     private float _dodgeProbability = 100f;
 
-    private GameObject _player;
+    private GameObject _enemy;
     private GameObject _target;
     private GameObject _currentWeapon;
 
@@ -36,11 +36,11 @@ public class S_AIController : MonoBehaviour
     
     // test varaible 
     public List<GameObject> Weapons;
-    public List<GameObject> PlayerWeapons;
+    public List<GameObject> EnemyWeapons;
 
     private void Start()
     {
-        _player = GameObject.FindGameObjectWithTag(_playerTag);
+        _enemy = GameObject.FindGameObjectWithTag(_enemyTag);
         _wheelsController = GetComponent<WheelsController>();
         MoveBotToTarget();
     }
@@ -68,10 +68,11 @@ public class S_AIController : MonoBehaviour
         if (movementRnd > _movementProbability)
             return;
 
-        bool canTakeDamage = CanTakeDamageWithPlayer();
+        bool canTakeDamage = CanTakeDamageWithEnemy();
         if (canTakeDamage && !_currentWeapon.activeSelf)
         {
-            FleeTarget();
+            Vector3 dir = (transform.position - _target.transform.position).normalized;
+            MoveToPoint(transform.position + dir * 4f, transform);
         }
         else
         {
@@ -79,36 +80,17 @@ public class S_AIController : MonoBehaviour
         }
     }
     /// <summary>
-    /// flee the player at a distance
-    /// </summary>
-    private void FleeTarget()
-    {
-        Vector3 dir = (_target.transform.position - transform.position).normalized;
-        float dot = Vector3.Dot(transform.forward, dir);
-
-        if (dot > 0f)
-        {
-            // go backward
-            MoveToPoint(transform.position - transform.forward * 4f, transform);
-        }
-        else
-        {
-            // go toward
-            MoveToPoint(transform.position + transform.forward * 4f, transform);
-        }
-    }
-    /// <summary>
     /// update AI movement and set the current weapon for i and enemy
     /// </summary>
     private void MoveBotToTarget()
     {
-        if (!_attackPlayerWeapon)
+        if (!_attackEnemyWeapon)
         {
-            _target = _player;
+            _target = _enemy;
         }
         else
         {
-            GameObject playerBestWeapon = GetBestPlayerWeaponFromTarget(transform);
+            GameObject playerBestWeapon = GetBestEnemyWeaponFromTarget(transform);
             _target = playerBestWeapon;
         }
 
@@ -175,17 +157,17 @@ public class S_AIController : MonoBehaviour
     /// select the best player weapons
     /// </summary>
     /// <returns>return the best player weapon object</returns>
-    private GameObject GetBestPlayerWeaponFromTarget(Transform target)
+    private GameObject GetBestEnemyWeaponFromTarget(Transform target)
     {
-        if (PlayerWeapons.Count < 1)
-            return _player;
+        if (EnemyWeapons.Count < 1)
+            return _enemy;
 
-        var cloneList = PlayerWeapons
+        var cloneList = EnemyWeapons
             .Where(x => Vector3.Dot(x.transform.forward, (target.position - x.transform.position).normalized) > 0f)
             .ToList();
 
         if (cloneList.Count < 1)
-            return _player;
+            return _enemy;
 
         // sort the best weapon
         return cloneList
@@ -201,8 +183,14 @@ public class S_AIController : MonoBehaviour
     /// <returns>return the best weapon from the distance to the target</returns>
     private bool GetBestWeaponFromTarget(Transform target, ref GameObject weapon)
     {
-        if (!_attackWithBestWeapon || Weapons.Count < 1)
+        if (Weapons.Count < 1)
             return false;
+
+        if (!_attackWithBestWeapon)
+        {
+            weapon = Weapons[Random.Range(0, Weapons.Count)];
+            return true;
+        }
 
         var cloneList = Weapons
             .Where(x => x.activeSelf)
@@ -284,9 +272,9 @@ public class S_AIController : MonoBehaviour
     /// if i can take any damage with chalenger
     /// </summary>
     /// <returns>return true if i can take any damage</returns>
-    private bool CanTakeDamageWithPlayer()
+    private bool CanTakeDamageWithEnemy()
     {
-        var activePlayerWeapons = GetActivePlayerWeapons();
+        var activePlayerWeapons = GetActiveEnemyWeapons();
 
         foreach (var weapon in activePlayerWeapons)
         {
@@ -302,8 +290,8 @@ public class S_AIController : MonoBehaviour
     /// Get all player who can attack player
     /// </summary>
     /// <returns>return an array of all weapons object who can attack the player</returns>
-    private GameObject[] GetActivePlayerWeapons()
+    private GameObject[] GetActiveEnemyWeapons()
     {
-        return PlayerWeapons.Where(x => x.activeSelf).ToArray();
+        return EnemyWeapons.Where(x => x.activeSelf).ToArray();
     }
 }
