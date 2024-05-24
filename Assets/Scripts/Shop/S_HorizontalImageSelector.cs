@@ -1,8 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class S_HorizontalImageSelector : MonoBehaviour
 {
@@ -10,11 +9,13 @@ public class S_HorizontalImageSelector : MonoBehaviour
     public GameObject _slot;
     public float _stepDelay = 0.1f;
     public TextMeshProUGUI _frameLabel;
+    public TextMeshProUGUI _moneyText;
 
     private RectTransform[][] _selectedImages;
     private Coroutine[] _movementCoroutines;
     private int _currentFrameIndex = 0;
     private int _currentIndex = 0;
+    public int _currentMoney = 200;
 
     public static S_HorizontalImageSelector Instance;
 
@@ -25,9 +26,9 @@ public class S_HorizontalImageSelector : MonoBehaviour
 
     void Start()
     {
-        float horizontalInput = -Input.GetAxis("Horizontal");
         InitializeFrames();
         UpdateFrameLabel();
+        UpdateShopText();
     }
 
     private void InitializeFrames()
@@ -51,6 +52,11 @@ public class S_HorizontalImageSelector : MonoBehaviour
                 UpdateSelectedImage(j, _currentIndex);
             }
         }
+    }
+
+    public void UpdateShopText()
+    {
+        _moneyText.text = _currentMoney + _moneyText.text.ToString();
     }
 
     private void Update()
