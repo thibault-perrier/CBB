@@ -11,7 +11,11 @@ public class S_PlayerController : MonoBehaviour
     private void Start()
     {
         _cam = GameObject.Find("CameraManager");
-        _cameraView = _cam.GetComponent<S_CameraView>();
+
+        if (_cam != null )
+        {
+            _cameraView = _cam.GetComponent<S_CameraView>();
+        }
     }
 
     //Move the robot on the X axis
@@ -41,6 +45,14 @@ public class S_PlayerController : MonoBehaviour
             _viewIndex = newValue > 3 ? 0 : newValue < 0 ? 3 : newValue;
 
             _cameraView.SetViewType((S_CameraView.ViewType)_viewIndex);
+        }
+    }
+
+    public void OnMoveTournament(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+
         }
     }
 }
