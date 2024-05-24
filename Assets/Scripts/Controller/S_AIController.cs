@@ -36,7 +36,9 @@ public class S_AIController : MonoBehaviour
     private GameObject _currentWeapon;
 
     private WheelsController _wheelsController;
-    
+    private GameObject[] _traps;
+    private Vector3 _fleeDestination;
+
     // test varaible 
     public List<GameObject> Weapons;
     public List<GameObject> EnemyWeapons;
@@ -60,6 +62,7 @@ public class S_AIController : MonoBehaviour
         }
     }
 
+
     /// <summary>
     /// update the AI movement from target
     /// </summary>
@@ -70,16 +73,32 @@ public class S_AIController : MonoBehaviour
         if (movementRnd > _movementProbability)
             return;
 
-        bool canTakeDamage = CanTakeDamageWithEnemy();
-        if (canTakeDamage && !_currentWeapon.activeSelf)
+        if (!_currentWeapon.activeSelf)
         {
-            Vector3 dir = (transform.position - _target.transform.position).normalized;
-            MoveToPoint(transform.position + dir * 4f, transform);
+            FleeEnemyWithTrap();
         }
         else
         {
+            _fleeDestination = Vector3.positiveInfinity;
             MoveBotToTarget();
         }
+    }
+    /// <summary>
+    /// Flee the enemy in puuting us between us and the enemy 
+    /// </summary>
+    private void FleeEnemyWithTrap()
+    {
+        _traps = FindGameObjectsInLayer(6);
+        Transform nearestTrap = FindNearestObject(_traps, transform.position).transform;
+        Vector3 dirSelfToTrap = nearestTrap.position - transform.position;
+
+        if (_fleeDestination.Equals(Vector3.positiveInfinity))
+            _fleeDestination = transform.position + dirSelfToTrap + dirSelfToTrap.normalized * 3f;
+
+        float distanceToFleeDesination = Vector3.Distance(transform.position, _fleeDestination);
+
+        if (distanceToFleeDesination > 3f)
+            MoveToPoint(_fleeDestination, transform);
     }
     /// <summary>
     /// update AI movement and set the current weapon for i and enemy
@@ -173,7 +192,7 @@ public class S_AIController : MonoBehaviour
         float turnAmount = 0f;
         bool tuchOneTime = false;
 
-        for (float angle = 0; angle < 100f; angle += 20f)
+        for (float angle = 0; angle <= 100f; angle += 20f)
         {
             // calcul direction of ray
             float xDirection = Mathf.InverseLerp(-50f, 50f, angle - 50f) * 2f - 1f;
@@ -198,6 +217,43 @@ public class S_AIController : MonoBehaviour
 
         return Mathf.Clamp(turnAmount, -1f, 1f);
     }
+
+    
+    /// <summary>
+    /// find all gameobject with layer
+    /// </summary>
+    /// <param name="layer">layer to find</param>
+    /// <returns>return gameObject array of all object with this layer</returns>
+    GameObject[] FindGameObjectsInLayer(int layer)
+    {
+        var goArray = FindObjectsOfType(typeof(GameObject)) as GameObject[];
+        var goList = new List<GameObject>();
+        for (int i = 0; i < goArray.Length; i++)
+        {
+            if (goArray[i].layer == layer)
+            {
+                goList.Add(goArray[i]);
+            }
+        }
+        if (goList.Count == 0)
+        {
+            return null;
+        }
+        return goList.ToArray();
+    }
+    /// <summary>
+    /// Find the nearest gameobject
+    /// </summary>
+    /// <param name="gameObjects">all object to calcul distance</param>
+    /// <param name="position">point zero for find distance</param>
+    /// <returns>return the nearest object</returns>
+    GameObject FindNearestObject(GameObject[] gameObjects, Vector3 position)
+    {
+        return gameObjects
+            .OrderBy(x => Vector3.Distance(x.transform.position, position))
+            .ToList()[0];
+    }
+
 
     /// <summary>
     /// select the best player weapons
@@ -255,6 +311,7 @@ public class S_AIController : MonoBehaviour
         return true;
     }
 
+
     /// <summary>
     /// use the current weapon for make an attack
     /// </summary>
@@ -271,6 +328,7 @@ public class S_AIController : MonoBehaviour
             return;
 
         _currentWeapon.SetActive(false);
+        GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
         // TO DO: make attack with current weapon
     }
     /// <summary>
@@ -289,7 +347,7 @@ public class S_AIController : MonoBehaviour
         return false;
     }
     /// <summary>
-    /// if i can take any damage with chalenger
+    /// if i can take any damage with enemy
     /// </summary>
     /// <returns>return true if i can take any damage</returns>
     private bool CanTakeDamageWithEnemy()
@@ -307,9 +365,9 @@ public class S_AIController : MonoBehaviour
         return false;
     }
     /// <summary>
-    /// Get all player who can attack player
+    /// Get all weapon who can attack him self
     /// </summary>
-    /// <returns>return an array of all weapons object who can attack the player</returns>
+    /// <returns>return an array of all weapons object who can attack him self</returns>
     private GameObject[] GetActiveEnemyWeapons()
     {
         return EnemyWeapons.Where(x => x.activeSelf).ToArray();
