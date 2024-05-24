@@ -28,7 +28,9 @@ public class S_SwipeController : MonoBehaviour
             _targetPos += _pageStep;
             MovePage();
             S_HorizontalImageSelector.Instance.ChangeFrame(1);
+            S_HorizontalImageSelector.Instance._pageNumber++;
         }
+        S_HorizontalImageSelector.Instance.UpdateShopText();
     }
 
     public void Previous()
@@ -39,7 +41,9 @@ public class S_SwipeController : MonoBehaviour
             _targetPos -= _pageStep;
             MovePage();
             S_HorizontalImageSelector.Instance.ChangeFrame(-1);
+            S_HorizontalImageSelector.Instance._pageNumber--;
         }
+        S_HorizontalImageSelector.Instance.UpdateShopText();
     }
 
     public void MovePage()

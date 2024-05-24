@@ -6,16 +6,22 @@ using UnityEngine.UI;
 public class S_HorizontalImageSelector : MonoBehaviour
 {
     public RectTransform[] _frames;
+    private RectTransform[][] _selectedImages;
     public GameObject _slot;
-    public float _stepDelay = 0.1f;
     public TextMeshProUGUI _frameLabel;
     public TextMeshProUGUI _moneyText;
+    public TextMeshProUGUI _pageText;
 
-    private RectTransform[][] _selectedImages;
+    public float _stepDelay = 0.1f;
+    public float _verticalCooldown = 1f;
+
     private Coroutine[] _movementCoroutines;
+    private bool _canMoveVertically = true;
+
     private int _currentFrameIndex = 0;
     private int _currentIndex = 0;
-    public int _currentMoney = 200;
+    public int _currentMoney = 0;
+    public int _pageNumber = 1;
 
     public static S_HorizontalImageSelector Instance;
 
@@ -49,19 +55,24 @@ public class S_HorizontalImageSelector : MonoBehaviour
 
             if (_selectedImages[j].Length > 0)
             {
+                _currentIndex = (_selectedImages[j].Length / 2);
                 UpdateSelectedImage(j, _currentIndex);
+                _frames[j].localPosition = new Vector3(-_selectedImages[j][_currentIndex].localPosition.x, _frames[j].localPosition.y, _frames[j].localPosition.z);
+                _slot.transform.position = new Vector3(_selectedImages[j][_currentIndex].position.x, _slot.transform.position.y, _slot.transform.position.z);
             }
         }
     }
 
     public void UpdateShopText()
     {
-        _moneyText.text = _currentMoney + _moneyText.text.ToString();
+        _moneyText.text = "Money: " + _currentMoney.ToString();
+        _pageText.text = "Page: " + _pageNumber.ToString();
     }
 
     private void Update()
     {
         float horizontalInput = -Input.GetAxis("Horizontal");
+        float verticalInput = -Input.GetAxis("Vertical");
 
         if (_movementCoroutines[_currentFrameIndex] == null)
         {
@@ -76,6 +87,36 @@ public class S_HorizontalImageSelector : MonoBehaviour
                 _movementCoroutines[_currentFrameIndex] = StartCoroutine(MoveFrameToImage(_currentFrameIndex, _currentIndex));
             }
         }
+
+        if (_canMoveVertically)
+        {
+            if (verticalInput > 0.5f && _currentFrameIndex < _frames.Length - 1)
+            {
+                StartCoroutine(HandleVerticalInput(1));
+            }
+            else if (verticalInput < -0.5f && _currentFrameIndex > 0)
+            {
+                StartCoroutine(HandleVerticalInput(-1));
+            }
+        }
+    }
+
+    private IEnumerator HandleVerticalInput(int direction)
+    {
+        _canMoveVertically = false;
+
+        if (direction == 1)
+        {
+            S_SwipeController.instance.Next();
+        }
+        else if (direction == -1)
+        {
+            S_SwipeController.instance.Previous();
+        }
+
+        yield return new WaitForSeconds(_verticalCooldown);
+
+        _canMoveVertically = true;
     }
 
     private IEnumerator MoveFrameToImage(int frameIndex, int imageIndex)
@@ -115,6 +156,7 @@ public class S_HorizontalImageSelector : MonoBehaviour
     public void ChangeFrame(int direction)
     {
         _currentFrameIndex = (_currentFrameIndex + direction + _frames.Length) % _frames.Length;
+        _currentIndex = (_selectedImages[_currentFrameIndex].Length / 2);
         UpdateSelectedImage(_currentFrameIndex, _currentIndex);
         _slot.transform.position = new Vector3(_selectedImages[_currentFrameIndex][_currentIndex].position.x, _slot.transform.position.y, _slot.transform.position.z);
 
@@ -123,10 +165,19 @@ public class S_HorizontalImageSelector : MonoBehaviour
 
     private void UpdateFrameLabel()
     {
-        string[] frameLabels = { "Chassis", "Weapons", "Pack" };
+        string[] frameLabels = { "Frames", "Weapons", "Starter Pack", "Background Logo", "Front Logo" };
         if (_frameLabel != null && _currentFrameIndex < frameLabels.Length)
         {
             _frameLabel.text = frameLabels[_currentFrameIndex];
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("SelectableImage"))
+        {
+            Debug.Log("whaaaa");
+            _currentIndex = _selectedImages[_currentFrameIndex].Length;
         }
     }
 }
