@@ -2140,6 +2140,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1131327363}
   - component: {fileID: 1131327362}
+  - component: {fileID: 1131327364}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -2224,6 +2225,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &1131327364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131327361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &1244200505
 GameObject:
   m_ObjectHideFlags: 0
@@ -2646,7 +2670,6 @@ RectTransform:
   - {fileID: 82634138}
   - {fileID: 1119947563}
   - {fileID: 1282688784}
-  - {fileID: 1805251681}
   m_Father: {fileID: 1978754139}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -2998,7 +3021,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -642.8559, y: 279.9214}
+  m_AnchoredPosition: {x: -642.8559, y: 322}
   m_SizeDelta: {x: 463.5749, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1581988424
@@ -3131,6 +3154,7 @@ RectTransform:
   m_Children:
   - {fileID: 2043544725}
   - {fileID: 1244200506}
+  - {fileID: 1805251681}
   m_Father: {fileID: 1978754139}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -3344,11 +3368,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1511484588}
+  m_Father: {fileID: 1623933110}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 799.833, y: 500}
+  m_AnchoredPosition: {x: 862.3447, y: 517.54517}
   m_SizeDelta: {x: 320.3339, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1805251682

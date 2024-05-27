@@ -68,6 +68,8 @@ public class S_HorizontalImageSelector : MonoBehaviour
         }
     }
 
+    
+
     public void UpdateShopText()
     {
         _moneyText.text = "Money: " + _currentMoney.ToString();
@@ -105,6 +107,14 @@ public class S_HorizontalImageSelector : MonoBehaviour
             {
                 StartCoroutine(HandleVerticalInput(-1));
             }
+        }
+
+        if (Input.GetKeyDown("D"))
+        {
+            horizontalInput = 0.25f;
+            _currentIndex++;
+            _lastSelectedIndexes[_currentFrameIndex] = _currentIndex; // Update the last selected index
+            _movementCoroutines[_currentFrameIndex] = StartCoroutine(MoveFrameToImage(_currentFrameIndex, _currentIndex));
         }
     }
 
