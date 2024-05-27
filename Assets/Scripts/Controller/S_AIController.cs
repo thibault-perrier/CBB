@@ -31,22 +31,23 @@ public class S_AIController : MonoBehaviour
     private float _dodgeProbability = 100f;
 
     [Header("Attack")]
-    [SerializeField ,ReadOnly, Tooltip("if he can attack")] 
+    [SerializeField, Tooltip("if he can attack")] 
     private bool _canAttack = true;
     [SerializeField, Min(0f), Tooltip("coolDown for the next attack")]
     private float _attackCooldown = 1f;
 
     [Header("Targets (Debug)")]
-    [SerializeField, ReadOnly, Tooltip("enemy bot")]
+    [SerializeField, Tooltip("enemy bot")]
     private GameObject _enemy;
-    [SerializeField, ReadOnly, Tooltip("this is the focus target he can be the enemy or the enemy weapons")]
+    [SerializeField, Tooltip("this is the focus target he can be the enemy or the enemy weapons")]
     private GameObject _target;
-    [SerializeField, ReadOnly, Tooltip("this is the current weapon used for attack the target")]
+    [SerializeField, Tooltip("this is the current weapon used for attack the target")]
     private GameObject _currentWeapon;
 
-    private WheelsController _wheelsController;
+    private S_WheelsController _wheelsController;
     private GameObject[] _traps;
     private Vector3 _fleeDestination;
+    private WaitForSeconds _attackCooldownCoroutine = new(1f);
 
     // test varaible 
     public List<GameObject> Weapons;
@@ -55,14 +56,15 @@ public class S_AIController : MonoBehaviour
     private void Start()
     {
         _enemy = GameObject.FindGameObjectWithTag(_enemyTag);
-        _wheelsController = GetComponent<WheelsController>();
+        _wheelsController = GetComponent<S_WheelsController>();
         MoveBotToTarget();
     }
     private void FixedUpdate()
     {
+        _wheelsController.Movement = S_WheelsController.Move.neutral;
+
         if (CurrentWeaponCanAttack())
         {
-            _wheelsController.Movement = WheelsController.Move.neutral;
             AttackWhithCurrrentWeapon();
         }
         else
@@ -70,7 +72,10 @@ public class S_AIController : MonoBehaviour
             UpdateAIMovement();
         }
     }
-
+    private void OnValidate()
+    {
+        _attackCooldownCoroutine = new(_attackCooldown);
+    }
 
     /// <summary>
     /// update the AI movement from target
@@ -159,19 +164,19 @@ public class S_AIController : MonoBehaviour
         if (dotDirection < 0f && dotWeaponBody < 0f)
         {
             _wheelsController.Direction = angleToDir > 0f ? 1f : -1f;
-            _wheelsController.Movement = WheelsController.Move.toward;
+            _wheelsController.Movement = S_WheelsController.Move.toward;
             return;
         }
 
         if (dotDirection > 0f)
         {
             // go forward
-            _wheelsController.Movement = dotWeaponBody > 0f ? WheelsController.Move.toward : WheelsController.Move.backward;
+            _wheelsController.Movement = dotWeaponBody > 0f ? S_WheelsController.Move.toward : S_WheelsController.Move.backward;
         }
         else
         {
             // go backward
-            _wheelsController.Movement = dotWeaponBody > 0f ? WheelsController.Move.backward : WheelsController.Move.toward;
+            _wheelsController.Movement = dotWeaponBody > 0f ? S_WheelsController.Move.backward : S_WheelsController.Move.toward;
         }
 
         if (!dodge)
@@ -403,7 +408,7 @@ public class S_AIController : MonoBehaviour
     private IEnumerator AttackCooldown()
     {
         _canAttack = false;
-        yield return new WaitForSeconds(1f);
+        yield return _attackCooldownCoroutine;
         _canAttack = true;
     }
 }

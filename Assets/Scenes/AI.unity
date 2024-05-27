@@ -147,7 +147,7 @@ Transform:
   m_GameObject: {fileID: 75228794}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1.003}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -223,7 +223,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: -3033667219593020291, guid: 861c1b5b31b37ff458e5eecac9f529c7, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -284,7 +284,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &397664056
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -379,6 +379,11 @@ MonoBehaviour:
   _attackProbability: 100
   _movementProbability: 100
   _dodgeProbability: 100
+  _canAttack: 1
+  _attackCooldown: 1
+  _enemy: {fileID: 0}
+  _target: {fileID: 0}
+  _currentWeapon: {fileID: 0}
   Weapons:
   - {fileID: 1247806408}
   - {fileID: 741174592}
@@ -449,7 +454,7 @@ Transform:
   m_GameObject: {fileID: 741174592}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0, z: 0}
+  m_LocalPosition: {x: 0.5, y: 0, z: 0.31}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -570,7 +575,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: -3033667219593020291, guid: 861c1b5b31b37ff458e5eecac9f529c7, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -620,7 +625,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1247806409
 Transform:
   m_ObjectHideFlags: 0
@@ -651,6 +656,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1550764731}
   - component: {fileID: 1550764730}
+  - component: {fileID: 1550764732}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -735,6 +741,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &1550764732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1550764729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &1812280834
 GameObject:
   m_ObjectHideFlags: 0
@@ -857,7 +886,7 @@ Transform:
   m_GameObject: {fileID: 1989791980}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1.0030003}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -923,6 +952,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7627696444417990143, guid: 54d9a87acec8339438590167e68805de, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -3033667219593020291, guid: 861c1b5b31b37ff458e5eecac9f529c7, type: 3}
     - target: {fileID: 7941983589671488304, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Name
       value: Wheel (1)
@@ -1045,6 +1078,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7627696444417990143, guid: 54d9a87acec8339438590167e68805de, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -3033667219593020291, guid: 861c1b5b31b37ff458e5eecac9f529c7, type: 3}
     - target: {fileID: 7941983589671488304, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Name
       value: Wheel (2)
@@ -1182,6 +1219,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7627696444417990143, guid: 54d9a87acec8339438590167e68805de, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -3033667219593020291, guid: 861c1b5b31b37ff458e5eecac9f529c7, type: 3}
     - target: {fileID: 7941983589671488304, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Name
       value: Wheel
@@ -1267,6 +1308,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7627696444417990143, guid: 54d9a87acec8339438590167e68805de, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -3033667219593020291, guid: 861c1b5b31b37ff458e5eecac9f529c7, type: 3}
     - target: {fileID: 7941983589671488304, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Name
       value: Wheel (3)
