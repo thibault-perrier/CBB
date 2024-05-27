@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
 
 public class S_AIController : MonoBehaviour
@@ -29,10 +30,18 @@ public class S_AIController : MonoBehaviour
     [SerializeField, Range(0, 100), Tooltip("probability to turn for make a dodge")]
     private float _dodgeProbability = 100f;
 
+    [Header("Attack")]
+    [SerializeField ,ReadOnly, Tooltip("if he can attack")] 
     private bool _canAttack = true;
+    [SerializeField, Min(0f), Tooltip("coolDown for the next attack")]
+    private float _attackCooldown = 1f;
 
+    [Header("Targets (Debug)")]
+    [SerializeField, ReadOnly, Tooltip("enemy bot")]
     private GameObject _enemy;
+    [SerializeField, ReadOnly, Tooltip("this is the focus target he can be the enemy or the enemy weapons")]
     private GameObject _target;
+    [SerializeField, ReadOnly, Tooltip("this is the current weapon used for attack the target")]
     private GameObject _currentWeapon;
 
     private WheelsController _wheelsController;
@@ -73,7 +82,7 @@ public class S_AIController : MonoBehaviour
         if (movementRnd > _movementProbability)
             return;
 
-        if (!_currentWeapon.activeSelf)
+        if (!_currentWeapon.activeSelf || !_canAttack)
         {
             FleeEnemyWithTrap();
         }
@@ -131,9 +140,11 @@ public class S_AIController : MonoBehaviour
 
         // for set the movement
         Vector3 dir = (target - weapon.position).normalized;
-        float dotDirection = Vector3.Dot(weapon.forward, dir);
-        float angleToDir = Vector3.SignedAngle(weapon.forward, dir, Vector3.up);
-        float dotWeaponBody = Vector3.Dot(weapon.forward, transform.forward);
+        Vector3 weaponForward = GetForwardWeapon(weapon, transform);
+
+        float dotDirection = Vector3.Dot(weaponForward, dir);
+        float angleToDir = Vector3.SignedAngle(weaponForward, dir, Vector3.up);
+        float dotWeaponBody = Vector3.Dot(weaponForward, transform.forward);
 
         // get turn amount if he hit any trap
         float dodgeRnd = Random.Range(0, 101);
@@ -224,7 +235,7 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     /// <param name="layer">layer to find</param>
     /// <returns>return gameObject array of all object with this layer</returns>
-    GameObject[] FindGameObjectsInLayer(int layer)
+    private GameObject[] FindGameObjectsInLayer(int layer)
     {
         var goArray = FindObjectsOfType(typeof(GameObject)) as GameObject[];
         var goList = new List<GameObject>();
@@ -247,11 +258,24 @@ public class S_AIController : MonoBehaviour
     /// <param name="gameObjects">all object to calcul distance</param>
     /// <param name="position">point zero for find distance</param>
     /// <returns>return the nearest object</returns>
-    GameObject FindNearestObject(GameObject[] gameObjects, Vector3 position)
+    private GameObject FindNearestObject(GameObject[] gameObjects, Vector3 position)
     {
         return gameObjects
             .OrderBy(x => Vector3.Distance(x.transform.position, position))
             .ToList()[0];
+    }
+    /// <summary>
+    /// get the forward vector
+    /// </summary>
+    /// <param name="weapon">current weapon</param>
+    /// <param name="bot">him self</param>
+    /// <returns>return the forward vector of current weapon</returns>
+    private Vector3 GetForwardWeapon(Transform weapon, Transform bot)
+    {
+        Vector3 dirSelfWeapon = (weapon.transform.position - bot.position).normalized;
+        float dot = Vector3.Dot(bot.forward, dirSelfWeapon);
+
+        return dot >= 0f ? bot.forward : -bot.forward;
     }
 
 
@@ -265,7 +289,7 @@ public class S_AIController : MonoBehaviour
             return _enemy;
 
         var cloneList = EnemyWeapons
-            .Where(x => Vector3.Dot(x.transform.forward, (target.position - x.transform.position).normalized) > 0f)
+            .Where(x => Vector3.Dot(GetForwardWeapon(x.transform, _enemy.transform), (target.position - x.transform.position).normalized) > 0f)
             .ToList();
 
         if (cloneList.Count < 1)
