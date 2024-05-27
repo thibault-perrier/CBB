@@ -20,7 +20,7 @@ public class S_SwipeController : MonoBehaviour
         instance = this;
     }
 
-    public void Next()
+    public void Next() //switch next frame
     {
         if (_currentPage < _maxPage)
         {
@@ -33,7 +33,7 @@ public class S_SwipeController : MonoBehaviour
         S_HorizontalImageSelector.Instance.UpdateShopText();
     }
 
-    public void Previous()
+    public void Previous()//switch previous frame
     {
         if (_currentPage > 1)
         {
@@ -46,7 +46,7 @@ public class S_SwipeController : MonoBehaviour
         S_HorizontalImageSelector.Instance.UpdateShopText();
     }
 
-    public void MovePage()
+    public void MovePage() // anim switch frame
     {
         _levelPageRect.LeanMoveLocal(_targetPos, _tweenTime).setEase(_tweenType);
     }

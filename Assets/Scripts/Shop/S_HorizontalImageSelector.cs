@@ -18,15 +18,18 @@ public class S_HorizontalImageSelector : MonoBehaviour
     private Coroutine[] _movementCoroutines;
     private bool _canMoveVertically = true;
 
-    private int _currentFrameIndex = 0;
-    private int _currentIndex = 0;
-    public int _currentMoney = 0;
-    public int _pageNumber = 1;
+    private int _currentFrameIndex = 0; //number frame for move
+    private int _currentIndex = 0; // current position 
+    public int _currentMoney = 0; 
+    public int _pageNumber = 1; // index frame
+
+    private float _normalHorizontalSensitivity = 1f;
+    private float _currentHorizontalSensitivity = 1f;
+    private float _increasedSensitivity = 2f;
 
     public static S_HorizontalImageSelector Instance;
 
-    // List to save the last selected index for each frame
-    private int[] _lastSelectedIndexes;
+    private int[] _lastSelectedIndexes; // list for save current position inside differents frames
 
     void Awake()
     {
@@ -68,8 +71,6 @@ public class S_HorizontalImageSelector : MonoBehaviour
         }
     }
 
-    
-
     public void UpdateShopText()
     {
         _moneyText.text = "Money: " + _currentMoney.ToString();
@@ -78,7 +79,20 @@ public class S_HorizontalImageSelector : MonoBehaviour
 
     private void Update()
     {
-        float horizontalInput = -Input.GetAxis("Horizontal");
+        if (Input.GetKey(KeyCode.Q))
+        {
+            _currentHorizontalSensitivity = _increasedSensitivity;
+        }
+         if (Input.GetKey(KeyCode.D))
+        {
+            _currentHorizontalSensitivity = -_increasedSensitivity;
+        }
+        else
+        {
+            _currentHorizontalSensitivity = -_normalHorizontalSensitivity;
+        }
+
+        float horizontalInput = Input.GetAxis("Horizontal") * _currentHorizontalSensitivity;
         float verticalInput = -Input.GetAxis("Vertical");
 
         if (_movementCoroutines[_currentFrameIndex] == null)
@@ -86,13 +100,13 @@ public class S_HorizontalImageSelector : MonoBehaviour
             if (horizontalInput > 0.5f && _currentIndex < _selectedImages[_currentFrameIndex].Length - 1)
             {
                 _currentIndex++;
-                _lastSelectedIndexes[_currentFrameIndex] = _currentIndex; // Update the last selected index
+                _lastSelectedIndexes[_currentFrameIndex] = _currentIndex; 
                 _movementCoroutines[_currentFrameIndex] = StartCoroutine(MoveFrameToImage(_currentFrameIndex, _currentIndex));
             }
             else if (horizontalInput < -0.5f && _currentIndex > 0)
             {
                 _currentIndex--;
-                _lastSelectedIndexes[_currentFrameIndex] = _currentIndex; // Update the last selected index
+                _lastSelectedIndexes[_currentFrameIndex] = _currentIndex; 
                 _movementCoroutines[_currentFrameIndex] = StartCoroutine(MoveFrameToImage(_currentFrameIndex, _currentIndex));
             }
         }
@@ -108,17 +122,9 @@ public class S_HorizontalImageSelector : MonoBehaviour
                 StartCoroutine(HandleVerticalInput(-1));
             }
         }
-
-        if (Input.GetKeyDown("D"))
-        {
-            horizontalInput = 0.25f;
-            _currentIndex++;
-            _lastSelectedIndexes[_currentFrameIndex] = _currentIndex; // Update the last selected index
-            _movementCoroutines[_currentFrameIndex] = StartCoroutine(MoveFrameToImage(_currentFrameIndex, _currentIndex));
-        }
     }
 
-    private IEnumerator HandleVerticalInput(int direction)
+    private IEnumerator HandleVerticalInput(int direction) // Movement vertical 
     {
         _canMoveVertically = false;
 
@@ -136,7 +142,7 @@ public class S_HorizontalImageSelector : MonoBehaviour
         _canMoveVertically = true;
     }
 
-    private IEnumerator MoveFrameToImage(int frameIndex, int imageIndex)
+    private IEnumerator MoveFrameToImage(int frameIndex, int imageIndex) // Scroll horizontal inside frame
     {
         Vector3 startPosition = _frames[frameIndex].localPosition;
         Vector3 endPosition = new Vector3(-_selectedImages[frameIndex][imageIndex].localPosition.x, _frames[frameIndex].localPosition.y, _frames[frameIndex].localPosition.z);
@@ -159,7 +165,7 @@ public class S_HorizontalImageSelector : MonoBehaviour
         _movementCoroutines[frameIndex] = null;
     }
 
-    private void UpdateSelectedImage(int frameIndex, int imageIndex)
+    private void UpdateSelectedImage(int frameIndex, int imageIndex) //Select Item (Visual)
     {
         for (int i = 0; i < _selectedImages[frameIndex].Length; i++)
         {
@@ -170,17 +176,17 @@ public class S_HorizontalImageSelector : MonoBehaviour
         }
     }
 
-    public void ChangeFrame(int direction)
+    public void ChangeFrame(int direction) // Change vertical frame
     {
         _currentFrameIndex = (_currentFrameIndex + direction + _frames.Length) % _frames.Length;
-        _currentIndex = _lastSelectedIndexes[_currentFrameIndex]; // Use the last selected index for the new frame
+        _currentIndex = _lastSelectedIndexes[_currentFrameIndex]; 
         UpdateSelectedImage(_currentFrameIndex, _currentIndex);
         _slot.transform.position = new Vector3(_selectedImages[_currentFrameIndex][_currentIndex].position.x, _slot.transform.position.y, _slot.transform.position.z);
 
         UpdateFrameLabel();
     }
 
-    private void UpdateFrameLabel()
+    private void UpdateFrameLabel() //Name for the differents frame
     {
         string[] frameLabels = { "Frames", "Weapons", "Starter Pack", "Background Logo", "Front Logo" };
         if (_frameLabel != null && _currentFrameIndex < frameLabels.Length)
