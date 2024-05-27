@@ -5,12 +5,17 @@ public class S_PlayerController : MonoBehaviour
 {
     private GameObject _cam;
     private S_CameraView _cameraView;
+    private S_CameraMovement _mainCam;
+
+    private S_WheelsController _wheelsController;
 
     private int _viewIndex = 0;
 
     private void Start()
     {
         _cam = GameObject.Find("CameraManager");
+        _mainCam = Camera.main.GetComponent<S_CameraMovement>();
+        _wheelsController = GetComponent<S_WheelsController>();
 
         if (_cam != null )
         {
@@ -24,6 +29,20 @@ public class S_PlayerController : MonoBehaviour
         if (context.performed)
         {
             Debug.Log(context.ReadValue<float>());
+            float movement = context.ReadValue<float>();
+
+            if (movement > 0)
+            {
+                _wheelsController.Movement = S_WheelsController.Move.backward;
+            }
+            else if (movement < 0)
+            {
+                _wheelsController.Movement = S_WheelsController.Move.toward;
+            }
+        }
+        else if (context.canceled)
+        {
+            _wheelsController.Movement = S_WheelsController.Move.neutral;
         }
     }
 
@@ -33,6 +52,12 @@ public class S_PlayerController : MonoBehaviour
         if (context.performed)
         {
             Debug.Log(context.ReadValue<float>());
+
+            _wheelsController.Direction = context.ReadValue<float>();
+        }
+        else if (context.canceled)
+        {
+            _wheelsController.Direction = 0;
         }
     }
 
@@ -48,11 +73,8 @@ public class S_PlayerController : MonoBehaviour
         }
     }
 
-    public void OnMoveTournament(InputAction.CallbackContext context)
+    public void OnMoveTournamentCamera(InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
-
-        }
+        _mainCam.SetMovement(context.ReadValue<Vector2>());
     }
 }

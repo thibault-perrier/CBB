@@ -10,7 +10,7 @@
                     "type": "Value",
                     "id": "84c639b9-ef16-49e3-a4cd-8007c65cec9c",
                     "expectedControlType": "Axis",
-                    "processors": "AxisDeadzone",
+                    "processors": "AxisDeadzone(min=0.5,max=0.925)",
                     "interactions": "",
                     "initialStateCheck": true
                 },
@@ -83,7 +83,7 @@
                     "id": "44e229f6-c858-463e-a2cf-f42615002665",
                     "path": "<Gamepad>/rightStick/x",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "Invert",
                     "groups": "",
                     "action": "Rotate",
                     "isComposite": false,
