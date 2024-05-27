@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ChassisData", menuName = "Robot/Chassis")]
-public class S_ChassisData : ScriptableObject
+[CreateAssetMenu(fileName = "S_FrameData", menuName = "Robot/Frame")]
+public class S_FrameData : ScriptableObject
 {
     [SerializeField] private GameObject _prefab;
     [SerializeField] private int _maxLife;
@@ -27,7 +27,7 @@ public class S_ChassisData : ScriptableObject
 
     public int GetNbWeaponMax()
     {
-        return _prefab.GetComponent<S_ChassisManager>().NBWeaponHookPoints;
+        return _prefab.GetComponent<S_FrameManager>().NBWeaponHookPoints;
     }
 
 }

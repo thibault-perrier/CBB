@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class S_ChassisManager : MonoBehaviour, I_Damageable
+public class S_FrameManager : MonoBehaviour, I_Damageable
 {
     private int _life;
     [SerializeField] private S_WeaponData _data;
@@ -38,7 +38,7 @@ public class S_ChassisManager : MonoBehaviour, I_Damageable
     }
 
     
-    public event Action<S_ChassisManager> OnDie;
+    public event Action<S_FrameManager> OnDie;
 
     public void TakeDamage(int amount)
     {
