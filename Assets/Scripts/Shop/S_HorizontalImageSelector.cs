@@ -25,6 +25,9 @@ public class S_HorizontalImageSelector : MonoBehaviour
 
     public static S_HorizontalImageSelector Instance;
 
+    // List to save the last selected index for each frame
+    private int[] _lastSelectedIndexes;
+
     void Awake()
     {
         Instance = this;
@@ -42,6 +45,7 @@ public class S_HorizontalImageSelector : MonoBehaviour
         int frameCount = _frames.Length;
         _selectedImages = new RectTransform[frameCount][];
         _movementCoroutines = new Coroutine[frameCount];
+        _lastSelectedIndexes = new int[frameCount]; // Initialize the list with the length of frame count
 
         for (int j = 0; j < frameCount; j++)
         {
@@ -55,10 +59,11 @@ public class S_HorizontalImageSelector : MonoBehaviour
 
             if (_selectedImages[j].Length > 0)
             {
-                _currentIndex = (_selectedImages[j].Length / 2);
-                UpdateSelectedImage(j, _currentIndex);
-                _frames[j].localPosition = new Vector3(-_selectedImages[j][_currentIndex].localPosition.x, _frames[j].localPosition.y, _frames[j].localPosition.z);
-                _slot.transform.position = new Vector3(_selectedImages[j][_currentIndex].position.x, _slot.transform.position.y, _slot.transform.position.z);
+                _lastSelectedIndexes[j] = _selectedImages[j].Length / 2; // Set initial selected index to middle
+                _currentIndex = _lastSelectedIndexes[j]; // Set the current index to the middle
+                UpdateSelectedImage(j, _lastSelectedIndexes[j]);
+                _frames[j].localPosition = new Vector3(-_selectedImages[j][_lastSelectedIndexes[j]].localPosition.x, _frames[j].localPosition.y, _frames[j].localPosition.z);
+                _slot.transform.position = new Vector3(_selectedImages[j][_lastSelectedIndexes[j]].position.x, _slot.transform.position.y, _slot.transform.position.z);
             }
         }
     }
@@ -79,11 +84,13 @@ public class S_HorizontalImageSelector : MonoBehaviour
             if (horizontalInput > 0.5f && _currentIndex < _selectedImages[_currentFrameIndex].Length - 1)
             {
                 _currentIndex++;
+                _lastSelectedIndexes[_currentFrameIndex] = _currentIndex; // Update the last selected index
                 _movementCoroutines[_currentFrameIndex] = StartCoroutine(MoveFrameToImage(_currentFrameIndex, _currentIndex));
             }
             else if (horizontalInput < -0.5f && _currentIndex > 0)
             {
                 _currentIndex--;
+                _lastSelectedIndexes[_currentFrameIndex] = _currentIndex; // Update the last selected index
                 _movementCoroutines[_currentFrameIndex] = StartCoroutine(MoveFrameToImage(_currentFrameIndex, _currentIndex));
             }
         }
@@ -156,7 +163,7 @@ public class S_HorizontalImageSelector : MonoBehaviour
     public void ChangeFrame(int direction)
     {
         _currentFrameIndex = (_currentFrameIndex + direction + _frames.Length) % _frames.Length;
-        _currentIndex = (_selectedImages[_currentFrameIndex].Length / 2);
+        _currentIndex = _lastSelectedIndexes[_currentFrameIndex]; // Use the last selected index for the new frame
         UpdateSelectedImage(_currentFrameIndex, _currentIndex);
         _slot.transform.position = new Vector3(_selectedImages[_currentFrameIndex][_currentIndex].position.x, _slot.transform.position.y, _slot.transform.position.z);
 
@@ -169,15 +176,6 @@ public class S_HorizontalImageSelector : MonoBehaviour
         if (_frameLabel != null && _currentFrameIndex < frameLabels.Length)
         {
             _frameLabel.text = frameLabels[_currentFrameIndex];
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("SelectableImage"))
-        {
-            Debug.Log("whaaaa");
-            _currentIndex = _selectedImages[_currentFrameIndex].Length;
         }
     }
 }
