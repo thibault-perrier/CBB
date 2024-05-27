@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WheelsController : MonoBehaviour
+public class S_WheelsController : MonoBehaviour
 {
     [SerializeField] private List<WheelCollider> _wheels;
     [SerializeField] private List<WheelCollider> _directionWheelsCollider;
@@ -51,27 +51,8 @@ public class WheelsController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(Input.GetKey(KeyCode.W))
-            _move = Move.toward;
-        if (Input.GetKey(KeyCode.S))
-            _move = Move.backward;
-
-        // _direction = 0;
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            _direction = -1;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            _direction = 1;
-        }
-        
-
         DirectionUpdate();
         ApplyMotorTorque();
-
-        _move = Move.neutral;
     }
 
     /// <summary>
