@@ -1,6 +1,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using Unity.Collections;
 using UnityEngine;
@@ -9,6 +10,8 @@ public class S_AIController : MonoBehaviour
 {
     [SerializeField, Tooltip("layer for hit trap with raycast")]
     private LayerMask _trapLayer;
+    [SerializeField, Tooltip("flee object define the flee direction")]
+    private Transform _fleeDirection;
 
     [Header("Enemy")]
     [SerializeField, Tooltip("Tag for find enemy")] 
@@ -48,10 +51,18 @@ public class S_AIController : MonoBehaviour
     private GameObject[] _traps;
     private Vector3 _fleeDestination;
     private WaitForSeconds _attackCooldownCoroutine = new(1f);
+    private FleeType _fleeMethode = FleeType.None;
 
     // test varaible 
     public List<GameObject> Weapons;
     public List<GameObject> EnemyWeapons;
+
+    enum FleeType
+    {
+        None,
+        Trap,
+        Distance
+    }
 
     private void Start()
     {
@@ -61,8 +72,10 @@ public class S_AIController : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        // reset the movement state
         _wheelsController.Movement = S_WheelsController.Move.neutral;
 
+        // if he can attack
         if (CurrentWeaponCanAttack())
         {
             AttackWhithCurrrentWeapon();
@@ -77,42 +90,115 @@ public class S_AIController : MonoBehaviour
         _attackCooldownCoroutine = new(_attackCooldown);
     }
 
+
     /// <summary>
     /// update the AI movement from target
     /// </summary>
     private void UpdateAIMovement()
     {
+        // get movement probability
         float movementRnd = Random.Range(0, 101);
-
         if (movementRnd > _movementProbability)
             return;
 
+        // if he has not weapon for attack or he cant attack
         if (!_currentWeapon.activeSelf || !_canAttack)
         {
-            FleeEnemyWithTrap();
+            MoveBotToTarget();
+            SelectTheFleeMethode();
+
+            switch (_fleeMethode)
+            {
+                case FleeType.None:                                 break;
+                case FleeType.Trap:     FleeEnemyWithTrap();        break;
+                case FleeType.Distance: FleeEnemyWithDistance();    break;
+                default: break;
+            }
         }
         else
         {
+            // reset the flee
             _fleeDestination = Vector3.positiveInfinity;
+            _fleeMethode = FleeType.None;
+
             MoveBotToTarget();
         }
+    }
+    /// <summary>
+    /// Select the methode for flee the enemy
+    /// </summary>
+    private void SelectTheFleeMethode()
+    {
+        if (_fleeMethode != FleeType.None)
+            return;
+
+        // if he cant move in the current direction
+        if (IsBlocked())
+            _fleeMethode = FleeType.Distance;
+        else
+            _fleeMethode = FleeType.Trap;
+    }
+    /// <summary>
+    /// Detect if he can move
+    /// </summary>
+    /// <returns>return True if he can move</returns>
+    private bool IsBlocked()
+    {
+        Vector3 rayDirection = new();
+        
+        if (_wheelsController.Movement == S_WheelsController.Move.toward)
+            rayDirection = -transform.forward;
+        else if (_wheelsController.Movement == S_WheelsController.Move.backward)
+            rayDirection = transform.forward;
+
+        return Physics.Raycast(transform.position, transform.TransformDirection(rayDirection), 5f);
     }
     /// <summary>
     /// Flee the enemy in puuting us between us and the enemy 
     /// </summary>
     private void FleeEnemyWithTrap()
     {
+        // find all gameObject with layer 6
         _traps = FindGameObjectsInLayer(6);
         Transform nearestTrap = FindNearestObject(_traps, transform.position).transform;
         Vector3 dirSelfToTrap = nearestTrap.position - transform.position;
 
+        // if he has not already fleeDestination
         if (_fleeDestination.Equals(Vector3.positiveInfinity))
             _fleeDestination = transform.position + dirSelfToTrap + dirSelfToTrap.normalized * 3f;
 
         float distanceToFleeDesination = Vector3.Distance(transform.position, _fleeDestination);
 
+        // while we are not nearest to fleeDestination
         if (distanceToFleeDesination > 3f)
-            MoveToPoint(_fleeDestination, transform);
+        {
+            // choice the direction for flee the enemy
+            Vector3 dirToEnemy = (_enemy.transform.position - transform.position).normalized;
+            float dot = Vector3.Dot(transform.forward, dirToEnemy);
+            _fleeDirection.localPosition = Vector3.zero;
+
+            if (dot > 0)
+                _fleeDirection.localPosition = -Vector3.forward;
+            else
+                _fleeDirection.localPosition = Vector3.forward;
+
+            MoveToPoint(_fleeDestination, _fleeDirection);
+        }
+    }
+    /// <summary>
+    /// Flee the enemy in make some distance between us
+    /// </summary>
+    private void FleeEnemyWithDistance()
+    {
+        // get the point to move
+        Vector3 dirToEnemy = (transform.position - _enemy.transform.position);
+        Vector3 destination = _enemy.transform.position + dirToEnemy.normalized * 4f;
+
+        if (dirToEnemy.magnitude > 3f)
+            _fleeMethode = FleeType.Trap;
+
+        // move to the poitn
+        MoveToPoint(destination, transform);
     }
     /// <summary>
     /// update AI movement and set the current weapon for i and enemy
@@ -125,10 +211,12 @@ public class S_AIController : MonoBehaviour
         }
         else
         {
+            // set the target from the nearest enemy weapon
             GameObject playerBestWeapon = GetBestEnemyWeaponFromTarget(transform);
             _target = playerBestWeapon;
         }
 
+        // get him self best weapon
         bool succes = GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
 
         if (succes)
@@ -155,12 +243,13 @@ public class S_AIController : MonoBehaviour
         float dodgeRnd = Random.Range(0, 101);
         if (dodgeRnd < _dodgeProbability)
         {
-            turnAmount = GetTurnAmountForDodgeTrap(dotDirection > 0f ? 1f : -1f);
+            turnAmount = GetTurnAmountForDodgeTrap(GetDodgeTurnAmountScale(dotDirection, dotWeaponBody));
             
             if (turnAmount != 0f)
                 dodge = true;
         }
 
+        // if the weapon is behind the target and the weapon is behind self
         if (dotDirection < 0f && dotWeaponBody < 0f)
         {
             _wheelsController.Direction = angleToDir > 0f ? 1f : -1f;
@@ -197,6 +286,24 @@ public class S_AIController : MonoBehaviour
         _wheelsController.Direction = turnAmount;
     }
     /// <summary>
+    /// get the scale for the GetTurnAmountForDodgeTrap methode
+    /// </summary>
+    /// <param name="dotDirection"></param>
+    /// <param name="dotWeapon"></param>
+    /// <returns>return the scale</returns>
+    private float GetDodgeTurnAmountScale(float dotDirection, float dotWeapon)
+    {
+        // if weapon is toward target
+        if (dotDirection > 0f)
+        {
+            return dotWeapon > 0f ? 1f : -1f;
+        }
+        else
+        {
+            return dotWeapon > 0f ? -1f : 1f;
+        }
+    }
+    /// <summary>
     /// make raycasts for define the turnAmount
     /// </summary>
     /// <returns>return the new turn amount</returns>
@@ -214,10 +321,11 @@ public class S_AIController : MonoBehaviour
             float xDirection = Mathf.InverseLerp(-50f, 50f, angle - 50f) * 2f - 1f;
             var direction = new Vector3(xDirection, 0f, scaleDirection);
 
-            // make a raycast
+            // make a raycast and add the turn amount
             bool hit = Physics.Raycast(transform.position, transform.TransformDirection(direction), 5f, _trapLayer);
             if (hit)
             {
+                // add the turn amount by the raycast angle
                 turnAmount += (angle - 50f) > 0f ? -1f : 1f;
                 tuchOneTime = true;
                 Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 5f, Color.green, 0f);
@@ -242,10 +350,12 @@ public class S_AIController : MonoBehaviour
     /// <returns>return gameObject array of all object with this layer</returns>
     private GameObject[] FindGameObjectsInLayer(int layer)
     {
+        // get all gameObject in scene
         var goArray = FindObjectsOfType(typeof(GameObject)) as GameObject[];
         var goList = new List<GameObject>();
         for (int i = 0; i < goArray.Length; i++)
         {
+            // if the current gameObject has the same layer
             if (goArray[i].layer == layer)
             {
                 goList.Add(goArray[i]);
@@ -265,6 +375,7 @@ public class S_AIController : MonoBehaviour
     /// <returns>return the nearest object</returns>
     private GameObject FindNearestObject(GameObject[] gameObjects, Vector3 position)
     {
+        // sort all element by the distance and get the first
         return gameObjects
             .OrderBy(x => Vector3.Distance(x.transform.position, position))
             .ToList()[0];
@@ -277,6 +388,7 @@ public class S_AIController : MonoBehaviour
     /// <returns>return the forward vector of current weapon</returns>
     private Vector3 GetForwardWeapon(Transform weapon, Transform bot)
     {
+        // get the dot product of the weapon and the current bot
         Vector3 dirSelfWeapon = (weapon.transform.position - bot.position).normalized;
         float dot = Vector3.Dot(bot.forward, dirSelfWeapon);
 
@@ -290,13 +402,16 @@ public class S_AIController : MonoBehaviour
     /// <returns>return the best player weapon object</returns>
     private GameObject GetBestEnemyWeaponFromTarget(Transform target)
     {
+        // return the current enemy if he has not weapons
         if (EnemyWeapons.Count < 1)
             return _enemy;
 
+        // sort the weapon if he is behind him self
         var cloneList = EnemyWeapons
             .Where(x => Vector3.Dot(GetForwardWeapon(x.transform, _enemy.transform), (target.position - x.transform.position).normalized) > 0f)
             .ToList();
 
+        // if all enemy weapons are behind him
         if (cloneList.Count < 1)
             return _enemy;
 
@@ -317,16 +432,19 @@ public class S_AIController : MonoBehaviour
         if (Weapons.Count < 1)
             return false;
 
+        // if he not attack with best weapon return the random pick up of random weapon
         if (!_attackWithBestWeapon)
         {
             weapon = Weapons[Random.Range(0, Weapons.Count)];
             return true;
         }
 
+        // sort the weapon who can attack
         var cloneList = Weapons
             .Where(x => x.activeSelf)
             .ToList();
 
+        // if all weapons cant attack
         if (cloneList.Count < 1)
             return false;
 
@@ -374,32 +492,6 @@ public class S_AIController : MonoBehaviour
             return true;
         
         return false;
-    }
-    /// <summary>
-    /// if i can take any damage with enemy
-    /// </summary>
-    /// <returns>return true if i can take any damage</returns>
-    private bool CanTakeDamageWithEnemy()
-    {
-        var activePlayerWeapons = GetActiveEnemyWeapons();
-
-        foreach (var weapon in activePlayerWeapons)
-        {
-            float distanceWeaponToSelf = Vector3.Distance(transform.position, weapon.transform.position);
-
-            if (distanceWeaponToSelf < 4f)
-                return true;
-        }
-
-        return false;
-    }
-    /// <summary>
-    /// Get all weapon who can attack him self
-    /// </summary>
-    /// <returns>return an array of all weapons object who can attack him self</returns>
-    private GameObject[] GetActiveEnemyWeapons()
-    {
-        return EnemyWeapons.Where(x => x.activeSelf).ToArray();
     }
     /// <summary>
     /// Cooldown for attack, set the _canAttack false and true with 1 seconde
