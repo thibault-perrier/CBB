@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,10 +6,11 @@ public class S_TournamentManager : MonoBehaviour
 {
     [SerializeField] S_TournamentBracket _tournamentBracket;
 
+    [Serializable]
     public struct Participant
     {
-        public string name;
         public int id;
+        public string name;
         //public Sprite logo;
         public Color logo;
         public float rating;
@@ -24,6 +26,7 @@ public class S_TournamentManager : MonoBehaviour
         Diamond
     }
 
+    [Serializable]
     public struct Tournament
     {
         public Rank rank;
@@ -35,6 +38,7 @@ public class S_TournamentManager : MonoBehaviour
 
     [SerializeField] private List<Participant> _participants;
     private List<Participant> _roundWinners;
+    private List<Participant> _roundLosers = new List<Participant>();
 
     private Tournament _plastic; //FOR TESTING PURPOSE ONLY
     private Tournament _bronze;
@@ -42,18 +46,23 @@ public class S_TournamentManager : MonoBehaviour
     private Tournament _gold;
     private Tournament _diamond;
 
-    private Tournament _currentRank;
+    private Tournament _currentTournament;
 
     private int _currentMatch = 0;
-    private int _currentRound = 0;
+    private int _currentLevel = 0;
+
+    private bool _isRunning = false;
+    public bool IsRunning { get { return _isRunning; } set { _isRunning = value; } }
 
     //TEST PARTICIPANTS
     private Participant _participant1; //lets pretend this is the player for testing
     private Participant _participant2;
     private Participant _participant3;
     private Participant _participant4;
-
-    public Event PlayerLose;
+    private Participant _participant5;
+    private Participant _participant6;
+    private Participant _participant7;
+    private Participant _participant8;
 
     private void Awake()
     {
@@ -65,14 +74,22 @@ public class S_TournamentManager : MonoBehaviour
         _participant2.name = "Participant nb 1";
         _participant3.name = "Participant nb 2";
         _participant4.name = "Participant nb 3";
+        _participant5.name = "Participant nb 4";
+        _participant6.name = "Participant nb 5";
+        _participant7.name = "Participant nb 6";
+        _participant8.name = "Participant nb 7";
 
         _participant1.logo = Color.blue;
         _participant2.logo = Color.red;
         _participant3.logo = Color.yellow;
         _participant4.logo = Color.green;
+        _participant5.logo = Color.white;
+        _participant6.logo = Color.cyan;
+        _participant7.logo = Color.black;
+        _participant8.logo = Color.magenta;
 
-        InitializeCurrentTournament(_plastic);
-        Debug.Log("Initialazing a " + _plastic.rank.ToString() + " tournament");
+        InitializeCurrentTournament(_gold);
+        Debug.Log("Initialazing a " + _gold.rank.ToString() + " tournament");
     }
 
     public void AddParticipant(Participant participant)
@@ -116,8 +133,8 @@ public class S_TournamentManager : MonoBehaviour
      * and make the player pay */
     public int InitializeCurrentTournament(Tournament tournament)
     {
-        _currentRank = tournament;
-        Debug.Log(_currentRank.maxMatchNb);
+        _currentTournament = tournament;
+        Debug.Log(_currentTournament.maxMatchNb);
 
         _participants = new List<Participant>(tournament.participantNb)
         {
@@ -125,7 +142,11 @@ public class S_TournamentManager : MonoBehaviour
             _participant1, 
             _participant2,
             _participant3,
-            _participant4
+            _participant4,
+            _participant5,
+            _participant6,
+            _participant7,
+            _participant8
         };
 
         //Add random participants in the list with random robots, their strength depend of the difficulty
@@ -133,6 +154,15 @@ public class S_TournamentManager : MonoBehaviour
         if (_participants.Count > 0)
         {
             ShuffleParticipants(_participants);
+        }
+
+        //Give participants ID to know where they are in the bracket
+        for (int i = 0; i < _participants.Count; i++)
+        {
+            Participant participant = _participants[i];
+
+            participant.id = i * 2;
+            _participants[i] = participant;
         }
 
         return tournament.cost;
@@ -145,7 +175,7 @@ public class S_TournamentManager : MonoBehaviour
 
         while (n > 1)
         {
-            int k = Random.Range(0, n);
+            int k = UnityEngine.Random.Range(0, n);
             n--;
 
             Participant tmp = participants[k];
@@ -168,8 +198,10 @@ public class S_TournamentManager : MonoBehaviour
     public void CheckWinners()
     {
         _participants = new List<Participant>(_roundWinners);
+        _tournamentBracket.RefreshWinnerLogo();
 
         _roundWinners.Clear();
+        _roundLosers.Clear();
     }
 
     //Simulate a match and take in account the strength of the participant's robot
@@ -177,14 +209,19 @@ public class S_TournamentManager : MonoBehaviour
     {
         if (IsEven())
         {
-            bool participant1Wins = Random.Range(0f, 1f) >= 0.5f; //replace with cote calculation
+            bool participant1Wins = UnityEngine.Random.Range(0f, 1f) >= 0.5f; //replace with cote calculation
 
             Participant p1 = _participants[_currentMatch * 2]; //need to multiply so the previous participant does not fight again
+            Transform logo1 = _tournamentBracket.GetLogos()[_currentMatch * 2];
+
             Participant p2 = _participants[(_currentMatch * 2) + 1];
+            Transform logo2 = _tournamentBracket.GetLogos()[(_currentMatch * 2) + 1];
 
             if (participant1Wins)
             {
                 _roundWinners.Add(p1);
+                _roundLosers.Add(p2);
+                _tournamentBracket.AddWinnerLogo(logo1, logo2);
                 if (p2.name == "PLAYER")
                 {
                     _tournamentBracket.PlayerLostScreen();
@@ -193,11 +230,14 @@ public class S_TournamentManager : MonoBehaviour
             else
             {
                 _roundWinners.Add(p2);
+                _roundLosers.Add(p1);
+                _tournamentBracket.AddWinnerLogo(logo2, logo1);
                 if (p1.name == "PLAYER")
                 {
                     _tournamentBracket.PlayerLostScreen();
                 }
             }
+            Debug.Log(participant1Wins);
         }
     }
 
@@ -232,11 +272,11 @@ public class S_TournamentManager : MonoBehaviour
     {
         _currentMatch++;
 
-        if (_currentMatch > _currentRank.maxMatchNb)
+        if (_currentMatch > _currentTournament.maxMatchNb)
         {
             _currentMatch = 0;
-            _currentRank.maxMatchNb /= 2;
-            _currentRound++;
+            _currentTournament.maxMatchNb /= 2;
+            _currentLevel++;
             CheckWinners();
         }
     }
@@ -248,7 +288,7 @@ public class S_TournamentManager : MonoBehaviour
 
     public int GetRoundNb()
     {
-        return _currentRound;
+        return _currentLevel;
     }
 
     public bool IsPlayerPlaying(Participant p1, Participant p2)
@@ -263,7 +303,8 @@ public class S_TournamentManager : MonoBehaviour
 
     public int WinPrize()
     {
-        return _currentRank.prize;
+        _isRunning = false;
+        return _currentTournament.prize;
     }
 
     public float GetRating()
