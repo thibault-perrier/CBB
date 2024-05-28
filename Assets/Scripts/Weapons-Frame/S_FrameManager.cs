@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -15,6 +14,11 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     public int NBWeaponHookPoints
     {
         get { return _weaponHookPoints.Count; }
+    }
+
+    public List<GameObject> WeaponHookPoints
+    {
+        get { return _weaponHookPoints; }
     }
 
 

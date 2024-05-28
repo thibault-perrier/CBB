@@ -1,17 +1,25 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class S_EditorController : MonoBehaviour
 {
+    [SerializeField] private GameObject _presetGroup;
+    [SerializeField] private List<GameObject> _presets;
+
     [SerializeField] private GameObject _weaponGroup1;
     [SerializeField] private GameObject _weaponGroup2;
+
     [SerializeField] private GameObject _frameGroup1;
     [SerializeField] private GameObject _frameGroup2;
 
     [SerializeField] private List<GameObject> _weapons;     
     [SerializeField] private List<S_WeaponData> _weaponsData;       //list of scriptable object player's weapons
+    
     [SerializeField] private List<GameObject> _frame;       
     [SerializeField] private List<S_FrameData> _frameData;          //list of scriptable object player's frames
 
@@ -20,6 +28,20 @@ public class S_EditorController : MonoBehaviour
 
     [SerializeField] private int _nbWeapon = 6;
     [SerializeField] private int _nbFrame = 3;
+
+    [SerializeField] private List<S_WeaponData> _selectedWeaponsData;
+    [SerializeField] private S_FrameData _selectedFrameData;
+    [SerializeField] private int _selectedPreset;
+
+    [SerializeField] private List<GameObject> _presetWeaponsHookPoints;
+    [SerializeField] private S_FrameData _presetFrameData;
+    [SerializeField] private List<S_WeaponData> _presetWeaponData;
+
+    
+    
+    [SerializeField] private EditState _editState;
+
+
 
     enum EditState
     {
@@ -32,7 +54,7 @@ public class S_EditorController : MonoBehaviour
     {
         UpdatePiece();
         _selectedMaterial.SetFloat("_Selected", 1);
-        
+        _selectedPreset = -1;
     }
 
     // Start is called before the first frame update
@@ -159,9 +181,97 @@ public class S_EditorController : MonoBehaviour
             }
         }
 
+        //foreach (GameObject  in )
+        //{
+        //    GameObject newWeapon = Instantiate(weapon.Prefab);
+        //    newWeapon.transform.position = Vector3.zero;
+
+        //    RectTransform rectTransform = newWeapon.AddComponent<RectTransform>();
+
+        //    rectTransform.sizeDelta = new Vector2(1, 1);
+
+        //    _weapons.Add(newWeapon);
+        //    newWeapon.transform.position = Vector3.zero;
+        //    if (_weaponGroup1.transform.childCount < _nbWeapon)
+        //    {
+        //        newWeapon.transform.parent = _weaponGroup1.transform;
+        //    }
+        //    else
+        //    {
+        //        newWeapon.transform.parent = _weaponGroup2.transform;
+        //    }
+        //}
+
     }
 
-    private void ClearPieces()
+    public void Back()
+    {
+        switch (_editState)
+        {
+            case EditState.PresetChoice:
+                // go to Menu
+                break;
+            case EditState.FrameChoice:
+                _editState = EditState.PresetChoice;
+                break;
+            case EditState.WeaponChoice:
+                _editState = EditState.FrameChoice;
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void SelectItem()
+    {
+        switch (_editState)
+        {
+            case EditState.PresetChoice:
+
+                break;
+            case EditState.FrameChoice:
+
+                break;
+            case EditState.WeaponChoice:
+
+                break;
+            default:
+                break;
+        }
+    }
+    
+    private void UnSelectItem()
+    {
+        switch (_editState)
+        {
+            case EditState.PresetChoice:
+                
+                break;
+            case EditState.FrameChoice:
+
+                break;
+            case EditState.WeaponChoice:
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void GetPreset()
+    {
+
+    }
+
+    private void GetWeaponsHookPoint(S_FrameManager frameManager)
+    {
+        _presetWeaponsHookPoints = frameManager.WeaponHookPoints;
+    }
+
+    /// <summary>
+    /// Clear lists of choice piece
+    /// </summary>
+    private void ClearChoicePieces()
     {
         _frame.Clear();
         _frameData.Clear();
