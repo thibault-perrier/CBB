@@ -6,11 +6,6 @@ using UnityEngine;
 
 public class S_AIController : MonoBehaviour
 {
-    [SerializeField, Tooltip("layer for hit trap with raycast")]
-    private LayerMask _trapLayer;
-    [SerializeField, Tooltip("flee object define the flee direction")]
-    private Transform _fleeDirection;
-
     [Header("Enemy")]
     [SerializeField, Tooltip("Tag for find enemy")] 
     private string _enemyTag;
@@ -24,22 +19,34 @@ public class S_AIController : MonoBehaviour
     private bool _dodgeTrap;
     [SerializeField, Tooltip("if he flee the enemy when he cant attack")]
     private bool _canFleeEnemy;
+    [SerializeField, Tooltip("if he can failed any attack")]
+    private bool _canFailedAnyAttack;
 
     [Header("Probability Actions")]
     [SerializeField, Range(0, 100), Tooltip("probability to make an attack when he can do it")] 
-    private float _attackProbability = 100f;
+    private float _attackSuccesProbability = 100f;
     [SerializeField, Range(0, 100), Tooltip("probability to make a movement every frame")]
     private float _movementProbability = 100f;
     [SerializeField, Range(0, 100), Tooltip("probability to turn for make a dodge")]
     private float _dodgeProbability = 100f;
     [SerializeField, Range(0, 100), Tooltip("probability to start the flee")]
     private float _fleeProbability = 100f;
+    [SerializeField, Range(0, 100), Tooltip("probability to fail an attack")]
+    private float _attackFailedProbability = 0f;
+
+    [Header("Toggles actions variable")]
+    [SerializeField, Tooltip("layer for hit trap with raycast")]
+    private LayerMask _trapLayer;
+    [SerializeField, Tooltip("flee object define the flee direction")]
+    private Transform _fleeDirection;
 
     [Header("Attack")]
     [SerializeField, Tooltip("if he can attack")] 
     private bool _canAttack = true;
     [SerializeField, Min(0f), Tooltip("coolDown for the next attack")]
     private float _attackCooldown = 1f;
+    [SerializeField, Min(0f), Tooltip("min distance for failed an attack")]
+    private float _attackFailedDistance;
 
     [Header("Targets (Debug)")]
     [SerializeField, Tooltip("enemy bot")]
@@ -100,6 +107,9 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     private void UpdateAIMovement()
     {
+        if (TryFailedAttack())
+            return;
+
         // get movement probability
         float movementRnd = Random.Range(0, 101);
         if (movementRnd > _movementProbability)
@@ -485,6 +495,33 @@ public class S_AIController : MonoBehaviour
 
 
     /// <summary>
+    /// try to failed any attack with probability
+    /// </summary>
+    /// <returns>return <b>True</b> if he make an attack</returns>
+    private bool TryFailedAttack()
+    {
+        if (!_canAttack)
+            return false;
+
+        // if he is not enough close
+        float distanceToEnemy = Vector3.Distance(transform.position, _enemy.transform.position);
+        if (distanceToEnemy > _attackFailedDistance)
+            return false;
+
+        if (!_canFailedAnyAttack)
+            return false;
+        
+        // get random for the attack failed
+        float failedAttackRnd = Random.Range(0, 101);
+        if (failedAttackRnd < _attackFailedProbability)
+        {
+            AttackWhithCurrrentWeapon();
+            return true;
+        }
+
+        return false;
+    }
+    /// <summary>
     /// use the current weapon for make an attack
     /// </summary>
     private void AttackWhithCurrrentWeapon()
@@ -496,7 +533,7 @@ public class S_AIController : MonoBehaviour
 
         // make a probabiblity for attack
         float attackRnd = Random.Range(0, 101);
-        if (attackRnd > _attackProbability)
+        if (attackRnd > _attackSuccesProbability)
             return;
 
         StartCoroutine(SetActiveWeapon(_currentWeapon));
