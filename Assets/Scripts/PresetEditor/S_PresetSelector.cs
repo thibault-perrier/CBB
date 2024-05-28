@@ -1,14 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class S_EditorController : MonoBehaviour
+public class S_PresetSelector : MonoBehaviour
 {
-    [SerializeField] private GameObject _weaponGroup1;
-    [SerializeField] private GameObject _weaponGroup2;
-    [SerializeField] private GameObject _frameGroup1;
-    [SerializeField] private GameObject _frameGroup2;
+    [SerializeField] private GameObject _Group1;
+    [SerializeField] private GameObject _Group2;
 
     [SerializeField] private List<GameObject> _weapons;     
     [SerializeField] private List<S_WeaponData> _weaponsData;       //list of scriptable object player's weapons
@@ -16,17 +13,13 @@ public class S_EditorController : MonoBehaviour
     [SerializeField] private List<S_FrameData> _frameData;          //list of scriptable object player's frames
 
     [SerializeField] private Material _selectedMaterial;
-    [SerializeField] private int _selecteIndex = 0;
 
-    [SerializeField] private int _nbWeapon = 6;
+    /// <summary>
+    /// Max number of Frame on the line
+    /// </summary>
     [SerializeField] private int _nbFrame = 3;
 
-    enum EditState
-    {
-        PresetChoice,
-        WeaponChoice,
-        FrameChoice
-    }
+    [SerializeField] private int _selecteIndex = 0;
 
     private void Awake()
     {
@@ -60,8 +53,6 @@ public class S_EditorController : MonoBehaviour
                 _selecteIndex = 0;
             _selectedMaterial.SetVector("_Selected_Object_Position", _weapons[_selecteIndex].gameObject.transform.position);
         }
-
-        
     }
 
     /// <summary>
@@ -117,48 +108,48 @@ public class S_EditorController : MonoBehaviour
         //init piece prefab
 
 
-        foreach (S_FrameData frame in _frameData)
-        {
-            GameObject newFrame = Instantiate(frame.Prefab);
-            newFrame.transform.position = Vector3.zero;
+        //foreach (S_FrameData frame in _frameData)
+        //{
+        //    GameObject newFrame = Instantiate(frame.Prefab);
+        //    newFrame.transform.position = Vector3.zero;
 
-            RectTransform rectTransform = newFrame.AddComponent<RectTransform>();
+        //    RectTransform rectTransform = newFrame.AddComponent<RectTransform>();
 
-            rectTransform.sizeDelta = new Vector2(1, 1);
+        //    rectTransform.sizeDelta = new Vector2(1, 1);
 
-            _frame.Add(newFrame);
-            newFrame.transform.position = Vector3.zero;
-            if (_frameGroup1.transform.childCount < _nbFrame)
-            {
-                newFrame.transform.parent = _frameGroup1.transform;
-            }
-            else
-            {
-                newFrame.transform.parent = _frameGroup2.transform;
-            }
-        }
+        //    _frame.Add(newFrame);
+        //    newFrame.transform.position = Vector3.zero;
+        //    if (_frameGroup1.transform.childCount < _nbFrame)
+        //    {
+        //        newFrame.transform.parent = _frameGroup1.transform;
+        //    }
+        //    else
+        //    {
+        //        newFrame.transform.parent = _frameGroup2.transform;
+        //    }
+        //}
 
-        foreach (S_WeaponData weapon in _weaponsData)
-        {
-            GameObject newWeapon = Instantiate(weapon.Prefab);
-            newWeapon.transform.position = Vector3.zero;
+        //foreach (S_WeaponData weapon in _weaponsData)
+        //{
+        //    GameObject newWeapon = Instantiate(weapon.Prefab);
+        //    newWeapon.transform.position = Vector3.zero;
 
-            RectTransform rectTransform = newWeapon.AddComponent<RectTransform>();
+        //    RectTransform rectTransform = newWeapon.AddComponent<RectTransform>();
 
-            rectTransform.sizeDelta = new Vector2(1, 1);
+        //    rectTransform.sizeDelta = new Vector2(1, 1);
 
-            _weapons.Add(newWeapon);
-            newWeapon.transform.position = Vector3.zero;
-            if (_weaponGroup1.transform.childCount < _nbWeapon)
-            {
-                newWeapon.transform.parent = _weaponGroup1.transform;
-            }
-            else
-            {
-                newWeapon.transform.parent = _weaponGroup2.transform;
-            }
-        }
-
+        //    _weapons.Add(newWeapon);
+        //    newWeapon.transform.position = Vector3.zero;
+        //    if (_weaponGroup1.transform.childCount < _nbWeapon)
+        //    {
+        //        newWeapon.transform.parent = _weaponGroup1.transform;
+        //    }
+        //    else
+        //    {
+        //        newWeapon.transform.parent = _weaponGroup2.transform;
+        //    }
+        //}
+        
     }
 
     private void ClearPieces()
