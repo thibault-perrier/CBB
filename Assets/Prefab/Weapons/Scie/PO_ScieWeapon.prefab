@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7393865134739618398}
   - component: {fileID: 3292387393631454536}
+  - component: {fileID: 5122986004896040144}
   m_Layer: 0
   m_Name: PO_ScieWeapon
   m_TagString: Untagged
@@ -54,6 +55,24 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5122986004896040144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4298193733833486486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91febbad3ce4c4340b07aed5f677874c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _data: {fileID: 11400000, guid: 069ab80a1918b9249b22a78e6978bbf3, type: 2}
+  _state: 0
+  _lifeBrakePoint: 15
+  _shotWeapon: 0
+  _active: 0
+  _animator: {fileID: 0}
 --- !u!1001 &504532536301603868
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class S_WeaponManager : MonoBehaviour, I_Damageable
@@ -97,7 +93,8 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
     public void LaunchAttack()
     {
-        _animator.SetBool("_playAttack", true);
+        if(_state == State.ok)
+            _animator.SetBool("_playAttack", true);
     }
 
     private void AttackON()

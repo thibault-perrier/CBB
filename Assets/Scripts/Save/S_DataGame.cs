@@ -27,6 +27,7 @@ public class InventorySaver // Inventory
 [System.Serializable]
 public class Weapons
 {
+    public int _id;
     public string _name;
     public int _number;
 }
@@ -34,6 +35,7 @@ public class Weapons
 [System.Serializable]
 public class Frame
 {
+    public int _id;
     public string _name;
     public int _number;
 }
