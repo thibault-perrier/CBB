@@ -21,6 +21,8 @@ public class S_AIController : MonoBehaviour
     private bool _canFleeEnemy;
     [SerializeField, Tooltip("if he can failed any attack")]
     private bool _canFailedAnyAttack;
+    [SerializeField, Tooltip("if he can ignore the trap when we are enough near the target")]
+    private bool _canIgnoreTrap;
 
     [Header("Probability Actions")]
     [SerializeField, Range(0, 100), Tooltip("probability to make an attack when he can do it")] 
@@ -40,6 +42,7 @@ public class S_AIController : MonoBehaviour
     [SerializeField, Tooltip("flee object define the flee direction")]
     private Transform _fleeDirection;
 
+    [Space(30)]
     [Header("Attack")]
     [SerializeField, Tooltip("if he can attack")] 
     private bool _canAttack = true;
@@ -61,11 +64,14 @@ public class S_AIController : MonoBehaviour
     private GameObject[] _fleeTraps;
     private Vector3 _fleeDestination;
     private WaitForSeconds _attackCooldownCoroutine = new(1f);
+    private WaitForSeconds _fleeFailureCooldownCoroutine = new(1f);
+
     private FleeType _fleeMethode = FleeType.None;
 
     enum FleeType
     {
         None,
+        Failure,
         Trap,
         Distance
     }
@@ -136,10 +142,13 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     private void FleeEnemy()
     {
+        MoveBotToTarget();
+        if (_fleeMethode.Equals(FleeType.Failure))
+            return;
+
         if (!_canFleeEnemy)
             return;
 
-        MoveBotToTarget();
         SelectTheFleeMethode();
         switch (_fleeMethode)
         {
@@ -153,9 +162,13 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     private void SelectTheFleeMethode()
     {
+        // get random flee probability
         float fleeRnd = Random.Range(0, 101);
         if (_fleeProbability > fleeRnd)
+        {
+            StartCoroutine(CoolDownFailureFlee());
             return;
+        }
 
         if (_fleeMethode != FleeType.None)
             return;
@@ -218,7 +231,7 @@ public class S_AIController : MonoBehaviour
     {
         // get the point to move
         Vector3 dirToEnemy = (transform.position - _enemy.transform.position);
-        Vector3 destination = _enemy.transform.position + dirToEnemy.normalized * 10f;
+        Vector3 destination = _enemy.transform.position + dirToEnemy.normalized * 2f;
 
         if (dirToEnemy.magnitude >= 10f)
             _fleeMethode = FleeType.None;
@@ -226,8 +239,35 @@ public class S_AIController : MonoBehaviour
         // move to the poitn
         MoveToPoint(destination, transform);
     }
+    /// <summary>
+    /// start the cooldown for set the failure flee after 1 seconde
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator CoolDownFailureFlee()
+    {
+        _fleeMethode = FleeType.Failure;
+        yield return _fleeFailureCooldownCoroutine;
+        _fleeMethode = FleeType.None;
+    }
 
 
+    /// <summary>
+    /// if we are enough near the target just ignore trap
+    /// </summary>
+    /// <returns>return <b>True</b> if we are enough near to the target</returns>
+    private bool CanIgnoreTrap()
+    {
+        if (!_canIgnoreTrap)
+            return false;
+
+        Vector3 dirToTarget = (_target.transform.position - transform.position);
+        float dot = Vector3.Dot(transform.forward, dirToTarget.normalized);
+
+        if (dot > Mathf.Cos(40f) && dirToTarget.magnitude < 2.5f)
+            return true;
+
+        return false;
+    }
     /// <summary>
     /// update AI movement and set the current weapon for i and enemy
     /// </summary>
@@ -271,10 +311,13 @@ public class S_AIController : MonoBehaviour
         float dodgeRnd = Random.Range(0, 101);
         if (dodgeRnd < _dodgeProbability)
         {
-            turnAmount = GetTurnAmountForDodgeTrap(GetDodgeTurnAmountScale(dotDirection, dotWeaponBody));
-            
-            if (turnAmount != 0f)
-                dodge = true;
+            if (!CanIgnoreTrap())
+            {
+                turnAmount = GetTurnAmountForDodgeTrap(GetDodgeTurnAmountScale(dotDirection, dotWeaponBody));
+
+                if (turnAmount != 0f)
+                    dodge = true;
+            }
         }
 
         // if the weapon is behind the target and the weapon is behind self
@@ -420,7 +463,7 @@ public class S_AIController : MonoBehaviour
         return dot >= 0f ? bot.forward : -bot.forward;
     }
 
-
+                              
     /// <summary>
     /// select the best player weapons
     /// </summary>
