@@ -1,5 +1,5 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +12,8 @@ public class S_HorizontalImageSelector : MonoBehaviour
     public TextMeshProUGUI _frameLabel;
     public TextMeshProUGUI _moneyText;
     public TextMeshProUGUI _pageText;
+    public TextMeshProUGUI _priceItem;
+    public TextMeshProUGUI _statItem;
 
     public float _stepDelay = 0.1f;
     public float _verticalCooldown = 1f;
@@ -32,19 +34,21 @@ public class S_HorizontalImageSelector : MonoBehaviour
 
     private int[] _lastSelectedIndexes;
 
-    // Lists for holding sprites
-    public List<Sprite> _frameSprites;
-    public List<Sprite> _weaponSprites;
-    public List<Sprite> _starterPackSprites;
-    public List<Sprite> _backgroundLogoSprites;
-    public List<Sprite> _frontLogoSprites;
+    [Serializable]
+    public struct ElementInfo
+    {
+        public int _price;
+        public int _hp;
+        public int _weight;
+    }
 
-    // Reference GameObjects for instantiation
-    public GameObject _frameReference;
-    public GameObject _weaponReference;
-    public GameObject _starterPackReference;
-    public GameObject _backgroundLogoReference;
-    public GameObject _frontLogoReference;
+    [Serializable]
+    public class FrameData
+    {
+        public ElementInfo[] frameElements;
+    }
+
+    public FrameData[] frameData;
 
     void Awake()
     {
@@ -56,7 +60,6 @@ public class S_HorizontalImageSelector : MonoBehaviour
         InitializeFrames();
         UpdateFrameLabel();
         UpdateShopText();
-        InstantiateObjects();
     }
 
     private void InitializeFrames()
@@ -91,6 +94,12 @@ public class S_HorizontalImageSelector : MonoBehaviour
     {
         _moneyText.text = "Money: " + _currentMoney.ToString();
         _pageText.text = "Page: " + _pageNumber.ToString();
+        if (_priceItem != null && frameData.Length > _currentFrameIndex && frameData[_currentFrameIndex].frameElements.Length > _currentIndex)
+        {
+            ElementInfo currentElement = frameData[_currentFrameIndex].frameElements[_currentIndex];
+            _priceItem.text = "Price: " + currentElement._price.ToString();
+            _statItem.text = "HP: " + currentElement._hp.ToString() + "\nWeight: " + currentElement._weight.ToString();
+        }
     }
 
     private void Update()
@@ -140,7 +149,7 @@ public class S_HorizontalImageSelector : MonoBehaviour
         }
     }
 
-    private IEnumerator HandleVerticalInput(int direction)
+    private IEnumerator HandleVerticalInput(int direction) //move vertical
     {
         _canMoveVertically = false;
 
@@ -158,7 +167,7 @@ public class S_HorizontalImageSelector : MonoBehaviour
         _canMoveVertically = true;
     }
 
-    private IEnumerator MoveFrameToImage(int frameIndex, int imageIndex)
+    private IEnumerator MoveFrameToImage(int frameIndex, int imageIndex) //switch image 
     {
         Vector3 startPosition = _frames[frameIndex].localPosition;
         Vector3 endPosition = new Vector3(-_selectedImages[frameIndex][imageIndex].localPosition.x, _frames[frameIndex].localPosition.y, _frames[frameIndex].localPosition.z);
@@ -179,6 +188,8 @@ public class S_HorizontalImageSelector : MonoBehaviour
         _slot.transform.position = new Vector3(_selectedImages[frameIndex][imageIndex].position.x, _slot.transform.position.y, _slot.transform.position.z);
 
         _movementCoroutines[frameIndex] = null;
+
+        UpdateShopText();
     }
 
     private void UpdateSelectedImage(int frameIndex, int imageIndex)
@@ -192,7 +203,7 @@ public class S_HorizontalImageSelector : MonoBehaviour
         }
     }
 
-    public void ChangeFrame(int direction)
+    public void ChangeFrame(int direction) 
     {
         _currentFrameIndex = (_currentFrameIndex + direction + _frames.Length) % _frames.Length;
         _currentIndex = _lastSelectedIndexes[_currentFrameIndex];
@@ -200,9 +211,10 @@ public class S_HorizontalImageSelector : MonoBehaviour
         _slot.transform.position = new Vector3(_selectedImages[_currentFrameIndex][_currentIndex].position.x, _slot.transform.position.y, _slot.transform.position.z);
 
         UpdateFrameLabel();
+        UpdateShopText();
     }
 
-    private void UpdateFrameLabel()
+    private void UpdateFrameLabel() //Change text
     {
         string[] frameLabels = { "Frames", "Weapons", "Starter Pack", "Background Logo", "Front Logo" };
         if (_frameLabel != null && _currentFrameIndex < frameLabels.Length)
@@ -211,27 +223,18 @@ public class S_HorizontalImageSelector : MonoBehaviour
         }
     }
 
-    private void InstantiateObjects()
+    public void PurchaseItem()
     {
-        InstantiateImageObjects(_frameSprites, _frameReference);
-        InstantiateImageObjects(_weaponSprites, _weaponReference);
-        InstantiateImageObjects(_starterPackSprites, _starterPackReference);
-        InstantiateImageObjects(_backgroundLogoSprites, _backgroundLogoReference);
-        InstantiateImageObjects(_frontLogoSprites, _frontLogoReference);
-    }
-
-    private void InstantiateImageObjects(List<Sprite> spriteList, GameObject referenceObject)
-    {
-        foreach (Sprite sprite in spriteList)
+        ElementInfo BuyElement = frameData[_currentFrameIndex].frameElements[_currentIndex];
+      
+        if(_currentMoney >= BuyElement._price )
         {
-            GameObject imageObject = new GameObject("Image");
-            imageObject.transform.SetParent(referenceObject.transform, false);
-
-            Image imageComponent = imageObject.AddComponent<Image>();
-            imageComponent.sprite = sprite;
-
-            RectTransform rectTransform = imageObject.GetComponent<RectTransform>();
-            rectTransform.sizeDelta = new Vector2(400, 400); // Adjust size as needed
+            _currentMoney = _currentMoney - BuyElement._price;
+            UpdateShopText();
+        }
+        else
+        {
+            Debug.Log("pas assez d'argent");
         }
     }
 }
