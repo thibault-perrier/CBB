@@ -33,7 +33,7 @@ public class S_AIController : MonoBehaviour
     private float _dodgeProbability = 100f;
     [SerializeField, Range(0, 100), Tooltip("probability to start the flee")]
     private float _fleeProbability = 100f;
-    [SerializeField, Range(0, 100), Tooltip("probability to fail an attack")]
+    [SerializeField, Range(0, 100), Tooltip("probability to fail an attack when he cant do any attack")]
     private float _attackFailedProbability = 0f;
 
     [Header("Toggles actions variable")]
@@ -95,7 +95,7 @@ public class S_AIController : MonoBehaviour
         // if he can attack
         if (CurrentWeaponCanAttack())
         {
-            AttackWhithCurrrentWeapon();
+            AttackWithCurrrentWeapon();
         }
         else
         {
@@ -142,7 +142,7 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     private void FleeEnemy()
     {
-        MoveBotToTarget();
+        // if he failed the flee with probability or if he is fleeing
         if (_fleeMethode.Equals(FleeType.Failure))
             return;
 
@@ -162,12 +162,16 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     private void SelectTheFleeMethode()
     {
-        // get random flee probability
-        float fleeRnd = Random.Range(0, 101);
-        if (_fleeProbability > fleeRnd)
+        // if he is not try to flee them try to failure
+        if (!_fleeMethode.Equals(FleeType.None))
         {
-            StartCoroutine(CoolDownFailureFlee());
-            return;
+            // get random flee probability
+            float fleeRnd = Random.Range(0, 101);
+            if (_fleeProbability < fleeRnd)
+            {
+                StartCoroutine(CoolDownFailureFlee());
+                return;
+            }
         }
 
         if (_fleeMethode != FleeType.None)
@@ -186,7 +190,7 @@ public class S_AIController : MonoBehaviour
     private bool IsBlocked()
     {
         _fleeTraps = _traps
-            .Where(x => Vector3.Dot((_enemy.transform.position - transform.position).normalized, (x.transform.position - transform.position).normalized) < 0f)
+            .Where(x => Vector3.Dot((_enemy.transform.position - transform.position).normalized, (x.transform.position - transform.position).normalized) < -.2f)
             .ToArray();
   
         return _fleeTraps.Length < 1;
@@ -204,7 +208,10 @@ public class S_AIController : MonoBehaviour
             _fleeDestination = transform.position + dirSelfToTrap + dirSelfToTrap.normalized * 3f;
 
         if (IsBlocked())
+        {
             _fleeMethode = FleeType.None;
+            return;
+        }
 
         float distanceToFleeDesination = Vector3.Distance(transform.position, _fleeDestination);
 
@@ -240,7 +247,7 @@ public class S_AIController : MonoBehaviour
         MoveToPoint(destination, transform);
     }
     /// <summary>
-    /// start the cooldown for set the failure flee after 1 seconde
+    /// start the cooldown for set the <b>Failure</b> flee and after 1 seconde the <b>None</b>
     /// </summary>
     /// <returns></returns>
     private IEnumerator CoolDownFailureFlee()
@@ -546,7 +553,7 @@ public class S_AIController : MonoBehaviour
         if (!_canAttack)
             return false;
 
-        // if he is not enough close
+        // if he is not enough close to the enemy
         float distanceToEnemy = Vector3.Distance(transform.position, _enemy.transform.position);
         if (distanceToEnemy > _attackFailedDistance)
             return false;
@@ -556,9 +563,9 @@ public class S_AIController : MonoBehaviour
         
         // get random for the attack failed
         float failedAttackRnd = Random.Range(0, 101);
-        if (failedAttackRnd < _attackFailedProbability)
+        if (_attackFailedProbability < failedAttackRnd)
         {
-            AttackWhithCurrrentWeapon();
+            AttackWithCurrrentWeapon();
             return true;
         }
 
@@ -567,7 +574,7 @@ public class S_AIController : MonoBehaviour
     /// <summary>
     /// use the current weapon for make an attack
     /// </summary>
-    private void AttackWhithCurrrentWeapon()
+    private void AttackWithCurrrentWeapon()
     {
         if (!_canAttack)
             return;
