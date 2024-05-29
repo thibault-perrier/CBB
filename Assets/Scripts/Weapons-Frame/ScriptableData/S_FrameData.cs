@@ -1,16 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "WeaponData", menuName = "Robot/Weapon")]
-public class S_WeaponData : ScriptableObject
+[CreateAssetMenu(fileName = "S_FrameData", menuName = "Robot/Frame")]
+public class S_FrameData : ScriptableObject
 {
     [SerializeField] private GameObject _prefab;
     [SerializeField] private int _maxLife;
     [SerializeField] private int _cost;
-    [SerializeField] private int _damage;
     [SerializeField] private float _mass;
-
+    
+    public GameObject Prefab
+    {
+        get { return _prefab; }
+    }
     public int MaxLife
     {
         get { return _maxLife; }
@@ -19,12 +20,14 @@ public class S_WeaponData : ScriptableObject
     {
         get { return _cost; }
     }
-    public int Damage
-    {
-        get { return _damage; }
-    }
     public float Mass
     {
         get { return _mass; }
     }
+
+    public int GetNbWeaponMax()
+    {
+        return _prefab.GetComponent<S_FrameManager>().NBWeaponHookPoints;
+    }
+
 }
