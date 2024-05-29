@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_HorizontalImageSelector : MonoBehaviour
@@ -9,6 +10,7 @@ public class S_HorizontalImageSelector : MonoBehaviour
     public RectTransform[] _frames;
     private RectTransform[][] _selectedImages;
     public GameObject _slot;
+    public GameObject _statsText;
     public TextMeshProUGUI _frameLabel;
     public TextMeshProUGUI _moneyText;
     public TextMeshProUGUI _pageText;
@@ -234,7 +236,28 @@ public class S_HorizontalImageSelector : MonoBehaviour
         }
         else
         {
-            Debug.Log("pas assez d'argent");
+            Debug.Log("Need more Money");
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Logo"))
+        {
+            _statsText.SetActive(false);
+            Debug.Log("WAHHHHHAAAAAAAAAAAAAAA");
+        }
+        else
+        {
+            _statsText.SetActive(true);
+        }
+    }
+
+    public void OnBuyItem(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            PurchaseItem();
         }
     }
 }

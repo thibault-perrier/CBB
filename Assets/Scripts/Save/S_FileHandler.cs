@@ -1,9 +1,13 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class S_FileHandler: MonoBehaviour
 {
-   
+    public static S_FileHandler instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
     public void SaveInventory()
     {
         string inventoryData = JsonUtility.ToJson(S_DataGame.instance.inventory);
