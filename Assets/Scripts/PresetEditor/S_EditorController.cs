@@ -8,6 +8,8 @@ using UnityEngine.UIElements;
 
 public class S_EditorController : MonoBehaviour
 {
+    [SerializeField] private GameObject _newPresetObjectIcon;
+
     [SerializeField] private GameObject _presetGroup;
     [SerializeField] private List<GameObject> _presets;
 
@@ -55,6 +57,7 @@ public class S_EditorController : MonoBehaviour
         UpdatePiece();
         _selectedMaterial.SetFloat("_Selected", 1);
         _selectedPreset = -1;
+        _selectedMaterial.SetVector("_Selected_Object_Position", _weapons[_selecteIndex].gameObject.transform.position);
     }
 
     // Start is called before the first frame update
@@ -278,4 +281,61 @@ public class S_EditorController : MonoBehaviour
         _weapons.Clear();
         _weaponsData.Clear();
     }
+
+    private void CreatePresetPrefab(int id)
+    {
+        //recuperer les info du preset
+        S_FrameData frameData = null;
+        List<S_WeaponData> weaponsData = null;
+
+        GameObject frame = Instantiate(frameData.Prefab);
+        List<GameObject> weapons = new List<GameObject>();
+
+        foreach (S_WeaponData weaponData in weaponsData)
+        {
+            weapons.Add(Instantiate(weaponData.Prefab));
+        }
+
+        List<GameObject> hookPoits = frame.GetComponent<S_FrameManager>().WeaponHookPoints.ToList();
+        
+    }
 }
+
+
+/*
+
+recûperer les preset et si le nombre de preset et inferieur a 5 ajouter un objet UI pour creer un nouveau preset
+(Supression preset ?)
+Selectionner preset => garder l'ID du preset en memoire
+si le preset = _newPresetObjectIcon creer le preset et lui mettre le premier chassis disponible dans la save
+
+passage en cameras etablie
+
+initialiser les items disponible selon l'inventaire avec le nombre d'item par stack
+potentiellement creer une struct par type d'item pour avoir la Data et le nombre disponible
+
+Definir toute les parties dans des varibles _presetFrameData et _presetWeaponData
+initialiser les prefabs du preset chassis et armes selon la save
+
+faire un selector sur _presetFrameData et _presetWeaponData
+
+si l'objet selectionner est une arme et que je clik sur B je suprime l'objet du preset et met a jour les armes
+
+selon le type de l'objet selectionner par la touche A lancer le selector sur les armes et sur les chassis
+
+Selector arme
+
+si appuie sur A l'objet se met sur le point d'accroche, je met a jour l'arme du point d'accroche du preset du preset et je met a jour les armes
+si j'appui sur B retour a la selection sur le preset
+
+Selector Chassis
+
+si appuie sur A l'objet se met sur le point d'accroche, je met a jour le chassis du preset et je met a jour les chassis
+si j'appui sur B retour a la selection des preset
+
+
+  
+predefinir la selection sur le preset 
+
+
+*/
