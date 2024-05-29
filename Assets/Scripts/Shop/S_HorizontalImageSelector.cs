@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class S_HorizontalImageSelector : MonoBehaviour
@@ -259,5 +260,10 @@ public class S_HorizontalImageSelector : MonoBehaviour
         {
             PurchaseItem();
         }
+    }
+
+    public void BackMainMenu()
+    {
+        SceneManager.LoadScene(0);
     }
 }
