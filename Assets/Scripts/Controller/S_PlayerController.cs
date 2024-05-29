@@ -5,7 +5,6 @@ public class S_PlayerController : MonoBehaviour
 {
     private GameObject _cam;
     private S_CameraView _cameraView;
-    private S_CameraMovement _mainCam;
 
     private S_WheelsController _wheelsController;
 
@@ -14,7 +13,6 @@ public class S_PlayerController : MonoBehaviour
     private void Start()
     {
         _cam = GameObject.Find("CameraManager");
-        _mainCam = Camera.main.GetComponent<S_CameraMovement>();
         _wheelsController = GetComponent<S_WheelsController>();
 
         if (_cam != null )
@@ -71,10 +69,5 @@ public class S_PlayerController : MonoBehaviour
 
             _cameraView.SetViewType((S_CameraView.ViewType)_viewIndex);
         }
-    }
-
-    public void OnMoveTournamentCamera(InputAction.CallbackContext context)
-    {
-        _mainCam.SetMovement(context.ReadValue<Vector2>());
     }
 }

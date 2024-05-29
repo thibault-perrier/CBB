@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,21 +29,26 @@ public class S_CameraView : MonoBehaviour
 
     private float _smoothTime = 2f;
     private Camera _camComponent;
+    private Animator _animator;
 
     private bool _isTournamentView = false;
+
+    public delegate void OnShowOffComplete();
+    public event OnShowOffComplete ShowOffComplete;
+    private Coroutine _showMovement;
 
     public bool IsTournamentView
     {
         set { _isTournamentView = value; }
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         _camComponent = GetComponent<Camera>();
+        _animator = GetComponent<Animator>();
         _viewType = ViewType.Arena;
 
-        if (_camArena != null )
+        if (_camArena != null)
         {
             _camArena.transform.position = _arenaAnchor;
             _currentCam = _camArena;
@@ -57,26 +63,31 @@ public class S_CameraView : MonoBehaviour
     For example a follow camera should always be implemented in LateUpdate because it tracks objects that might have moved inside Update.*/
     void LateUpdate()
     {
-        if (!_isTournamentView)
+        if (_showMovement == null)
         {
-            switch (_viewType)
+            if (!_isTournamentView)
             {
-                case ViewType.Arena:
-                    ArenaViewMovement();
-                    break;
-                default:
-                    //TODO remove this debug log to stop the flood
-                    //Debug.LogWarning("There is no implementation for this type of view ! : " +  _viewType);
-                    break;
+                switch (_viewType)
+                {
+                    case ViewType.Arena:
+                        ArenaViewMovement();
+                        break;
+                    default:
+                        //TODO remove this debug log to stop the flood
+                        //Debug.LogWarning("There is no implementation for this type of view ! : " +  _viewType);
+                        break;
+                }
             }
-        }
-        else
-        {
-            TournamentViewMovement();
+            else
+            {
+                TournamentViewMovement();
+            }
         }
     }
 
-    //Update the rotation of the camera depending of the center point of the robots for the Arena view
+    /// <summary>
+    /// Update the rotation of the camera depending of the center point of the robots for the Arena view
+    /// </summary>
     private void ArenaViewMovement()
     {
         if (_objects.Count > 0)
@@ -90,7 +101,9 @@ public class S_CameraView : MonoBehaviour
         }
     }
 
-    //Update the position of the camera while in the tournament screen
+    /// <summary>
+    /// Update the position of the camera while in the tournament screen
+    /// </summary>
     private void TournamentViewMovement()
     {
         if (_objects.Count > 0)
@@ -105,7 +118,10 @@ public class S_CameraView : MonoBehaviour
         }
     }
 
-    //Get the position of a point that is the center of a bound (can works with one or more robots)
+    /// <summary>
+    /// Get the position of a point that is the center of a bound (can works with one or more robots)
+    /// </summary>
+    /// <returns></returns>
     private Vector3 GetCenterPoint()
     {
         if (_objects.Count == 1)
@@ -123,7 +139,10 @@ public class S_CameraView : MonoBehaviour
         return bounds.center;
     }
 
-    //Get the highest distance between all of the objects inside the bound
+    /// <summary>
+    /// Get the highest distance between all of the objects inside the bound
+    /// </summary>
+    /// <returns></returns>
     private float GetGreatestDistance()
     {
         var bounds = new Bounds(_objects[0].position, Vector3.zero);
@@ -136,7 +155,10 @@ public class S_CameraView : MonoBehaviour
         return bounds.size.y + bounds.size.x;
     }
 
-    //Change the view type of the camera
+    /// <summary>
+    /// Change the view type of the camera
+    /// </summary>
+    /// <param name="type"></param>
     public void SetViewType(ViewType type)
     {
         _viewType = type;
@@ -145,7 +167,9 @@ public class S_CameraView : MonoBehaviour
         Debug.Log(_viewType);
     }
 
-    //When changing the view we need to set the camera position too before updating it
+    /// <summary>
+    /// When changing the view we need to set the camera position too before updating it
+    /// </summary>
     private void ChangeCameraPosition()
     {
         switch (_viewType)
@@ -175,21 +199,74 @@ public class S_CameraView : MonoBehaviour
         }
     }
 
-    /*Add a robot to the list so the bound center can be calculated accordingly
-    Has to be used when giving reference to the robot that are in the arena*/
+    /// <summary>
+    /// Add a robot to the list so the bound center can be calculated accordingly
+    /// Has to be used when giving reference to the robot that are in the arena
+    /// </summary>
+    /// <param name="anObject"></param>
     public void AddObjectToView(Transform anObject)
     {
         _objects.Add(anObject);
     }
 
-    /*Remove a robot from the list so the bound center can be calculated accordingly
-    Has to be used when a robot is defeated
-    Probably used only when there is more than 2 robots ?*/
+    /// <summary>
+    /// Remove a robot from the list so the bound center can be calculated accordingly
+    /// Has to be used when a robot is defeated
+    /// Probably used only when there is more than 2 robots ?
+    /// </summary>
+    /// <param name="anObject"></param>
     public void RemoveObjectToView(Transform anObject)
     {
         _objects.Remove(anObject);
     }
 
+    /// <summary>
+    /// Move the camera accross 2 gameobjects
+    /// </summary>
+    /// <param name="firstObject"></param>
+    /// <param name="lastObject"></param>
+    /// <returns></returns>
+    private IEnumerator ShowOffObjects(GameObject firstObject, GameObject lastObject)
+    {
+        _currentCam.transform.position = new Vector3(firstObject.transform.position.x, firstObject.transform.position.y, 50f);
+        Vector3 lastPos = new Vector3(lastObject.transform.position.x, lastObject.transform.position.y, 50f);
+
+        while (Vector3.SqrMagnitude(transform.position - lastPos) > 0.1f)
+        {
+            _currentCam.transform.position = Vector3.MoveTowards(transform.position, lastPos, Time.deltaTime * 20f);
+            Debug.Log(transform.position);
+            yield return null;
+        }
+
+        transform.position = lastPos;
+        _showMovement = null;
+        ShowOffComplete?.Invoke(); //Send an event when the coroutine is over
+    }
+
+    /// <summary>
+    /// Another class can starts the coroutine from there
+    /// </summary>
+    /// <param name="firstObject"></param>
+    /// <param name="lastObject"></param>
+    public void StartShowOffObjects(GameObject firstObject, GameObject lastObject)
+    {
+        _showMovement = StartCoroutine(ShowOffObjects(firstObject, lastObject));
+    }
+
+    public IEnumerator ZoomFadeIn()
+    {
+        _animator.SetTrigger("Start");
+        yield return null;
+    }
+
+    public void StartZoomFadeIn()
+    {
+        StartCoroutine(ZoomFadeIn());
+    }
+
+    /// <summary>
+    /// Remove every object the camera follows
+    /// </summary>
     public void ClearObjectToView()
     {
         _objects.Clear();

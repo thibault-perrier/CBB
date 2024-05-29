@@ -107,7 +107,9 @@ public class S_TournamentManager : MonoBehaviour
         _participants.Clear();
     }
 
-    //Set the data inside dictionnaries to check the cost or the number of participants easily
+    /// <summary>
+    /// Initialize the data for each rank
+    /// </summary>
     private void InitializeParticipationData()
     {
         _bronze = SetRankData(_bronze, Rank.Bronze, 25, 16, 400, 8 - 1);
@@ -118,6 +120,16 @@ public class S_TournamentManager : MonoBehaviour
         _plastic = SetRankData(_plastic, Rank.Plastic, 0, 4, 1, 2 - 1); //FOR TESTING PURPOSE ONLY
     }
 
+    /// <summary>
+    /// Set the data for a rank, wich rank, cost, the number of participant, the prize at the end, the number of match there will be
+    /// </summary>
+    /// <param name="tournament"></param>
+    /// <param name="rank"></param>
+    /// <param name="cost"></param>
+    /// <param name="participantNb"></param>
+    /// <param name="prize"></param>
+    /// <param name="matchNb"></param>
+    /// <returns></returns>
     private Tournament SetRankData(Tournament tournament, Rank rank, int cost, int participantNb, int prize, int matchNb)
     {
         tournament.rank = rank;
@@ -129,8 +141,12 @@ public class S_TournamentManager : MonoBehaviour
         return tournament;
     }
 
-    /* Initialize the number of participant and the rank of the tournament
-     * and make the player pay */
+    /// <summary>
+    /// Initialize the number of participant and the rank of the tournament
+    /// and make the player pay
+    /// </summary>
+    /// <param name="tournament"></param>
+    /// <returns></returns>
     public int InitializeCurrentTournament(Tournament tournament)
     {
         _currentTournament = tournament;
@@ -168,7 +184,10 @@ public class S_TournamentManager : MonoBehaviour
         return tournament.cost;
     }
 
-    //Shuffle the list of participants so they are randomized 
+    /// <summary>
+    /// Shuffle the list of participants so they are randomized
+    /// </summary>
+    /// <param name="participants"></param>
     public void ShuffleParticipants(List<Participant> participants)
     {
         int n = participants.Count;
@@ -194,7 +213,9 @@ public class S_TournamentManager : MonoBehaviour
         return _roundWinners;
     }
 
-    //Remove the participants that lost
+    /// <summary>
+    /// Remove the participants that lost from the list of participants
+    /// </summary>
     public void CheckWinners()
     {
         _participants = new List<Participant>(_roundWinners);
@@ -204,7 +225,9 @@ public class S_TournamentManager : MonoBehaviour
         _roundLosers.Clear();
     }
 
-    //Simulate a match and take in account the strength of the participant's robot
+    /// <summary>
+    /// Simulate a match and take in account the strength of the participant's robot and rating
+    /// </summary>
     public void SimulateMatch()
     {
         if (IsEven())
@@ -241,7 +264,10 @@ public class S_TournamentManager : MonoBehaviour
         }
     }
 
-    //Check if there is an even number of participants
+    /// <summary>
+    /// Check if there is an even number of participants
+    /// </summary>
+    /// <returns></returns>
     public bool IsEven()
     {
         if (_participants != null)
@@ -254,20 +280,21 @@ public class S_TournamentManager : MonoBehaviour
         }
     }
 
-    public void StartMatchWithPlayer(Participant p)
-    {
-        //put the logic that will make a match start here
-
-        Debug.Log("Player vs " + p.name);
-    }
-
-    public void StartRealMatchWithBots(Participant p1, Participant p2)
+    /// <summary>
+    /// Start a real match (and not a simulation)
+    /// </summary>
+    /// <param name="p1"></param>
+    /// <param name="p2"></param>
+    public void StartRealMatch(Participant p1, Participant p2)
     {
         //put the logic that will make a match start here
 
         Debug.Log(p1.name + p2.name);
     }
 
+    /// <summary>
+    /// Update the index of the currently played match and current level (or round) of the tournament
+    /// </summary>
     public void NextMatch()
     {
         _currentMatch++;
@@ -291,6 +318,12 @@ public class S_TournamentManager : MonoBehaviour
         return _currentLevel;
     }
 
+    /// <summary>
+    /// Check if the player has to play the current match or not
+    /// </summary>
+    /// <param name="p1"></param>
+    /// <param name="p2"></param>
+    /// <returns></returns>
     public bool IsPlayerPlaying(Participant p1, Participant p2)
     {
         if (p1.name == "PLAYER" ||  p2.name == "PLAYER")
@@ -301,6 +334,10 @@ public class S_TournamentManager : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Give the player his reward
+    /// </summary>
+    /// <returns></returns>
     public int WinPrize()
     {
         _isRunning = false;
