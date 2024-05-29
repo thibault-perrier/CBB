@@ -6,6 +6,14 @@ using UnityEngine;
 
 public class S_AIController : MonoBehaviour
 {
+    public enum FleeType
+    {
+        None,
+        Failure,
+        Trap,
+        Distance
+    }
+
     [Header("Enemy")]
     [SerializeField, Tooltip("Tag for find enemy")] 
     private string _enemyTag;
@@ -42,14 +50,13 @@ public class S_AIController : MonoBehaviour
     [SerializeField, Tooltip("flee object define the flee direction")]
     private Transform _fleeDirection;
 
-    [Space(30)]
     [Header("Attack")]
-    [SerializeField, Tooltip("if he can attack")] 
+    [SerializeField, Tooltip("if he can attack")]
     private bool _canAttack = true;
     [SerializeField, Min(0f), Tooltip("coolDown for the next attack")]
     private float _attackCooldown = 1f;
     [SerializeField, Min(0f), Tooltip("min distance for failed an attack")]
-    private float _attackFailedDistance;
+    private float _attackFailedDistance = 5f;
 
     [Header("Targets (Debug)")]
     [SerializeField, Tooltip("enemy bot")]
@@ -68,17 +75,102 @@ public class S_AIController : MonoBehaviour
 
     private FleeType _fleeMethode = FleeType.None;
 
-    enum FleeType
-    {
-        None,
-        Failure,
-        Trap,
-        Distance
-    }
-
     // test varaible 
     public List<GameObject> Weapons;
     public List<GameObject> EnemyWeapons;
+
+
+    /// <summary>
+    /// if he focus the enemy weapon
+    /// </summary>
+    public bool AttackEnemyWeapon
+    { 
+        get => _attackEnemyWeapon;    
+        set => _attackEnemyWeapon = value; 
+    }
+    /// <summary>
+    /// if he use her best weapon for attack
+    /// </summary>
+    public bool AttackWithBestWeapon 
+    { 
+        get => _attackWithBestWeapon; 
+        set => _attackWithBestWeapon = value; 
+    }
+    /// <summary>
+    /// if he dodge the trap
+    /// </summary>
+    public bool DodgeTrap 
+    { 
+        get => _dodgeTrap;            
+        set => _dodgeTrap = value; 
+    }
+    /// <summary>
+    /// if he flee the enemy when he cant attack
+    /// </summary>
+    public bool CanFleeEnemy 
+    { 
+        get => _canFleeEnemy;         
+        set => _canFleeEnemy = value; 
+    }
+    /// <summary>
+    /// if he can failed any attack
+    /// </summary>
+    public bool CanFailedAnyAttack 
+    { 
+        get => _canFailedAnyAttack;   
+        set => _canFailedAnyAttack = value; 
+    }
+    /// <summary>
+    /// if he can ignore the trap when we are enough near the target
+    /// </summary>
+    public bool CanIgnoreTrap 
+    { 
+        get => _canIgnoreTrap;        
+        set => _canIgnoreTrap = value; 
+    }
+
+
+    /// <summary>
+    /// probability to make an attack when he can do it
+    /// </summary>
+    public float AttackSuccesProbability 
+    { 
+        get => _attackSuccesProbability; 
+        set => _attackSuccesProbability = Mathf.Clamp(_attackSuccesProbability, 0f, 100f); 
+    }
+    /// <summary>
+    /// probability to make a movement every frame
+    /// </summary>
+    public float MovementProbability 
+    { 
+        get => _movementProbability; 
+        set => _movementProbability = Mathf.Clamp(_movementProbability, 0f, 100f); 
+    }
+    /// <summary>
+    /// probability to turn for make a dodge
+    /// </summary>
+    public float DodgeProbability 
+    { 
+        get => _dodgeProbability; 
+        set => _dodgeProbability = Mathf.Clamp(_dodgeProbability, 0f, 100f); 
+    }
+    /// <summary>
+    /// probability to start the flee
+    /// </summary>
+    public float FleeProbability 
+    { 
+        get => _fleeProbability; 
+        set => _fleeProbability = Mathf.Clamp(_fleeProbability, 0f, 100f); 
+    }
+    /// <summary>
+    /// probability to fail an attack when he cant do any attack
+    /// </summary>
+    public float AttackFailedProbability 
+    {
+        get => _attackFailedProbability; 
+        set => _attackFailedProbability = Mathf.Clamp(_attackFailedProbability, 0f, 100f); 
+    }
+
 
     private void Start()
     {
@@ -113,8 +205,7 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     private void UpdateAIMovement()
     {
-        if (TryFailedAttack())
-            return;
+        TryFailedAttack();
 
         // get movement probability
         float movementRnd = Random.Range(0, 101);
@@ -142,7 +233,9 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     private void FleeEnemy()
     {
-        // if he failed the flee with probability or if he is fleeing
+        GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
+
+        // if he failed the flee with probability
         if (_fleeMethode.Equals(FleeType.Failure))
             return;
 
@@ -189,10 +282,16 @@ public class S_AIController : MonoBehaviour
     /// <returns>return True if he can move</returns>
     private bool IsBlocked()
     {
+        // if there are no trap in the world
+        if (_traps.Length < 1)
+            return true;
+
+        // select the trap behind us
         _fleeTraps = _traps
             .Where(x => Vector3.Dot((_enemy.transform.position - transform.position).normalized, (x.transform.position - transform.position).normalized) < -.2f)
             .ToArray();
-  
+        
+        // return True if he is not empty
         return _fleeTraps.Length < 1;
     }
     /// <summary>
@@ -262,7 +361,7 @@ public class S_AIController : MonoBehaviour
     /// if we are enough near the target just ignore trap
     /// </summary>
     /// <returns>return <b>True</b> if we are enough near to the target</returns>
-    private bool CanIgnoreTrap()
+    private bool IgnoreTrap()
     {
         if (!_canIgnoreTrap)
             return false;
@@ -318,7 +417,7 @@ public class S_AIController : MonoBehaviour
         float dodgeRnd = Random.Range(0, 101);
         if (dodgeRnd < _dodgeProbability)
         {
-            if (!CanIgnoreTrap())
+            if (!IgnoreTrap())
             {
                 turnAmount = GetTurnAmountForDodgeTrap(GetDodgeTurnAmountScale(dotDirection, dotWeaponBody));
 
@@ -470,7 +569,32 @@ public class S_AIController : MonoBehaviour
         return dot >= 0f ? bot.forward : -bot.forward;
     }
 
-                              
+
+    /// <summary>
+    /// detect if the weapon is in view
+    /// </summary>
+    /// <param name="weapon">current weapon</param>
+    /// <returns>return True if he is in view</returns>
+    private bool RaycastWeapon(GameObject weapon, GameObject bot)
+    {
+        Vector3 dir = weapon.transform.position - bot.transform.position;
+        return Physics.Raycast(bot.transform.position, dir.normalized, dir.magnitude);
+    }
+    /// <summary>
+    /// detect if the weapon is valid, if he enough far is valid else if is behind the enemy is not valid
+    /// </summary>
+    /// <param name="weapon">current weapon to validate</param>
+    /// <returns>return <b>True</b> if it is valid</returns>
+    private bool IsValidWeaponForTarget(Transform weapon)
+    {
+        // if the enemy is enough far the weapon if valid
+        Vector3 dirToEnemy = (_enemy.transform.position - transform.position);
+        if (dirToEnemy.magnitude > 5f)
+            return true;
+
+        // if the weapon is before the enemy its a valid weapon
+        return Vector3.Dot(GetForwardWeapon(weapon, transform), dirToEnemy.normalized) > 0f;
+    }
     /// <summary>
     /// select the best player weapons
     /// </summary>
@@ -499,16 +623,6 @@ public class S_AIController : MonoBehaviour
             .ToList()[0].gameObject;
     }
     /// <summary>
-    /// detect if the weapon is in view
-    /// </summary>
-    /// <param name="weapon">current weapon</param>
-    /// <returns>return True if he is in view</returns>
-    private bool RaycastWeapon(GameObject weapon, GameObject bot)
-    {
-        Vector3 dir = weapon.transform.position - bot.transform.position;
-        return Physics.Raycast(bot.transform.position, dir.normalized, dir.magnitude);
-    }
-    /// <summary>
     /// sort weapons from power, distance and if he is not behind to the target
     /// </summary>
     /// <param name="target"></param>
@@ -520,7 +634,7 @@ public class S_AIController : MonoBehaviour
 
         // sort the weapon who can attack
         var cloneList = Weapons
-            .Where(x => x.activeSelf || Vector3.Dot(GetForwardWeapon(x.transform, transform), (_enemy.transform.position - transform.position).normalized) > 0f)
+            .Where(x => x.activeSelf || IsValidWeaponForTarget(x.transform))
             .ToList();
 
         // if he not attack with best weapon return the random pick up of random weapon
@@ -548,28 +662,25 @@ public class S_AIController : MonoBehaviour
     /// try to failed any attack with probability
     /// </summary>
     /// <returns>return <b>True</b> if he make an attack</returns>
-    private bool TryFailedAttack()
+    private void TryFailedAttack()
     {
         if (!_canAttack)
-            return false;
+            return;
 
         // if he is not enough close to the enemy
         float distanceToEnemy = Vector3.Distance(transform.position, _enemy.transform.position);
         if (distanceToEnemy > _attackFailedDistance)
-            return false;
+            return;
 
         if (!_canFailedAnyAttack)
-            return false;
+            return;
         
         // get random for the attack failed
         float failedAttackRnd = Random.Range(0, 101);
-        if (_attackFailedProbability < failedAttackRnd)
+        if (_attackFailedProbability >= failedAttackRnd)
         {
             AttackWithCurrrentWeapon();
-            return true;
         }
-
-        return false;
     }
     /// <summary>
     /// use the current weapon for make an attack
@@ -606,7 +717,7 @@ public class S_AIController : MonoBehaviour
         return false;
     }
     /// <summary>
-    /// Cooldown for attack, set the _canAttack false and true with 1 seconde
+    /// Cooldown for attack, set the _canAttack <b>False</b> and true with 1 seconde
     /// </summary>
     /// <returns></returns>
     private IEnumerator AttackCooldown()
