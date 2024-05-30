@@ -31,6 +31,8 @@ public class S_AIController : MonoBehaviour
     private bool _canFailedAnyAttack;
     [SerializeField, Tooltip("if he can ignore the trap when we are enough near the target")]
     private bool _canIgnoreTrap;
+    [SerializeField, Tooltip("if he can reverse her movement")]
+    private bool _canReverseMovement;
 
     [Header("Probability Actions")]
     [SerializeField, Range(0, 100), Tooltip("probability to make an attack when he can do it")] 
@@ -43,12 +45,18 @@ public class S_AIController : MonoBehaviour
     private float _fleeProbability = 100f;
     [SerializeField, Range(0, 100), Tooltip("probability to fail an attack when he cant do any attack")]
     private float _attackFailedProbability = 0f;
+    [SerializeField, Range(0, 100), Tooltip("probability to reverse her movement")]
+    private float _reverseMovementProbability = 0f;
+    [SerializeField, Range(0, 100), Tooltip("probability to get enemy weapons for the current target")]
+    private float _attackEnemyWeaponProbabiltiy = 0f;
 
     [Header("Toggles actions variable")]
     [SerializeField, Tooltip("layer for hit trap with raycast")]
     private LayerMask _trapLayer;
     [SerializeField, Tooltip("flee object define the flee direction")]
     private Transform _fleeDirection;
+    [SerializeField, Min(0f), Tooltip("coolDown for the flee failure come back to None")]
+    private float _fleeCooldown;
 
     [Header("Attack")]
     [SerializeField, Tooltip("if he can attack")]
@@ -71,8 +79,9 @@ public class S_AIController : MonoBehaviour
     private GameObject[] _fleeTraps;
     private Vector3 _fleeDestination;
     private WaitForSeconds _attackCooldownCoroutine = new(1f);
-    private WaitForSeconds _fleeFailureCooldownCoroutine = new(1f);
+    private WaitForSeconds _fleeFailureCooldownCoroutine = new(.5f);
 
+    [SerializeField]
     private FleeType _fleeMethode = FleeType.None;
 
     // test varaible 
@@ -128,6 +137,14 @@ public class S_AIController : MonoBehaviour
         get => _canIgnoreTrap;        
         set => _canIgnoreTrap = value; 
     }
+    /// <summary>
+    /// if he can reverse her movement
+    /// </summary>
+    public bool CanReverseMovement 
+    { 
+        get => _canReverseMovement; 
+        set => _canReverseMovement = value; 
+    }
 
 
     /// <summary>
@@ -136,7 +153,7 @@ public class S_AIController : MonoBehaviour
     public float AttackSuccesProbability 
     { 
         get => _attackSuccesProbability; 
-        set => _attackSuccesProbability = Mathf.Clamp(_attackSuccesProbability, 0f, 100f); 
+        set => _attackSuccesProbability = Mathf.Clamp(value, 0f, 100f); 
     }
     /// <summary>
     /// probability to make a movement every frame
@@ -144,7 +161,7 @@ public class S_AIController : MonoBehaviour
     public float MovementProbability 
     { 
         get => _movementProbability; 
-        set => _movementProbability = Mathf.Clamp(_movementProbability, 0f, 100f); 
+        set => _movementProbability = Mathf.Clamp(value, 0f, 100f); 
     }
     /// <summary>
     /// probability to turn for make a dodge
@@ -152,7 +169,7 @@ public class S_AIController : MonoBehaviour
     public float DodgeProbability 
     { 
         get => _dodgeProbability; 
-        set => _dodgeProbability = Mathf.Clamp(_dodgeProbability, 0f, 100f); 
+        set => _dodgeProbability = Mathf.Clamp(value, 0f, 100f); 
     }
     /// <summary>
     /// probability to start the flee
@@ -160,7 +177,7 @@ public class S_AIController : MonoBehaviour
     public float FleeProbability 
     { 
         get => _fleeProbability; 
-        set => _fleeProbability = Mathf.Clamp(_fleeProbability, 0f, 100f); 
+        set => _fleeProbability = Mathf.Clamp(value, 0f, 100f); 
     }
     /// <summary>
     /// probability to fail an attack when he cant do any attack
@@ -168,15 +185,59 @@ public class S_AIController : MonoBehaviour
     public float AttackFailedProbability 
     {
         get => _attackFailedProbability; 
-        set => _attackFailedProbability = Mathf.Clamp(_attackFailedProbability, 0f, 100f); 
+        set => _attackFailedProbability = Mathf.Clamp(value, 0f, 100f); 
     }
-
+    /// <summary>
+    /// probability to reverse her movement
+    /// </summary>
+    public float ReverseMovementProbability
+    {
+        get => _reverseMovementProbability;
+        set => _reverseMovementProbability = Mathf.Clamp(value, 0f, 100f);
+    }
+    /// <summary>
+    /// probability to get enemy weapons for the current target
+    /// </summary>
+    public float AttackEnemyWeaponProbability
+    {
+        get => _attackEnemyWeaponProbabiltiy;
+        set => _attackEnemyWeaponProbabiltiy = Mathf.Clamp(value, 0f, 100f);
+    }
+    /// <summary>
+    /// coolDown for the next attack
+    /// </summary>
+    public float AttackCooldown
+    {
+        get => _attackCooldown;
+        set
+        {
+            _attackCooldown = Mathf.Max(0f, value);
+            _attackCooldownCoroutine = new(_attackCooldown);
+        }
+    }
+    /// <summary>
+    /// the cooldown for the failure flee
+    /// </summary>
+    public float FleeCooldown
+    {
+        get => _fleeCooldown;
+        set
+        {
+            _fleeCooldown = Mathf.Max(0f, value);
+            _fleeFailureCooldownCoroutine = new(_fleeCooldown);
+        }
+    }
 
     private void Start()
     {
+        _attackCooldownCoroutine = new(_attackCooldown);
+        _fleeFailureCooldownCoroutine = new(_fleeCooldown);
+
         _enemy = GameObject.FindGameObjectWithTag(_enemyTag);
+        _target = _enemy;
+
         _wheelsController = GetComponent<S_WheelsController>();
-        MoveBotToTarget();
+        GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
         _traps = FindGameObjectsInLayer(6);
     }
     private void FixedUpdate()
@@ -193,10 +254,6 @@ public class S_AIController : MonoBehaviour
         {
             UpdateAIMovement();
         }
-    }
-    private void OnValidate()
-    {
-        _attackCooldownCoroutine = new(_attackCooldown);
     }
 
 
@@ -256,7 +313,7 @@ public class S_AIController : MonoBehaviour
     private void SelectTheFleeMethode()
     {
         // if he is not try to flee them try to failure
-        if (!_fleeMethode.Equals(FleeType.None))
+        if (_fleeMethode.Equals(FleeType.None))
         {
             // get random flee probability
             float fleeRnd = Random.Range(0, 101);
@@ -282,6 +339,9 @@ public class S_AIController : MonoBehaviour
     /// <returns>return True if he can move</returns>
     private bool IsBlocked()
     {
+        if (_traps == null)
+            return true;
+
         // if there are no trap in the world
         if (_traps.Length < 1)
             return true;
@@ -335,14 +395,16 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     private void FleeEnemyWithDistance()
     {
-        // get the point to move
-        Vector3 dirToEnemy = (transform.position - _enemy.transform.position);
-        Vector3 destination = _enemy.transform.position + dirToEnemy.normalized * 2f;
+        Vector3 dirToEnemy = (_enemy.transform.position - transform.position);
+        Vector3 destination = Vector3.zero;
+        float dot = Vector3.Dot(transform.forward, dirToEnemy.normalized);
 
-        if (dirToEnemy.magnitude >= 10f)
-            _fleeMethode = FleeType.None;
+        if (dot > 0)
+            destination = transform.position - transform.forward;
+        else
+            destination = transform.position + transform.forward;
 
-        // move to the poitn
+        // move to the point
         MoveToPoint(destination, transform);
     }
     /// <summary>
@@ -385,9 +447,18 @@ public class S_AIController : MonoBehaviour
         }
         else
         {
-            // set the target from the nearest enemy weapon
-            GameObject playerBestWeapon = GetBestEnemyWeaponFromTarget(transform);
-            _target = playerBestWeapon;
+            // get random for not attack enemy weapons
+            float attackEnemyWeaponsRnd = Random.Range(0, 101);
+            if (attackEnemyWeaponsRnd < _attackEnemyWeaponProbabiltiy)
+            {
+                _target = _enemy;
+            } 
+            else
+            {
+                // set the target from the nearest enemy weapon
+                GameObject playerBestWeapon = GetBestEnemyWeaponFromTarget(transform);
+                _target = playerBestWeapon;
+            }
         }
 
         // get him self best weapon
@@ -412,6 +483,7 @@ public class S_AIController : MonoBehaviour
         float dotDirection = Vector3.Dot(weaponForward, dir);
         float angleToDir = Vector3.SignedAngle(weaponForward, dir, Vector3.up);
         float dotWeaponBody = Vector3.Dot(weaponForward, transform.forward);
+        float dotBehindEnemy = Vector3.Dot(transform.forward, dir);
 
         // get turn amount if he hit any trap
         float dodgeRnd = Random.Range(0, 101);
@@ -426,23 +498,25 @@ public class S_AIController : MonoBehaviour
             }
         }
 
-        // if the weapon is behind the target and the weapon is behind self
-        if (dotDirection < 0f && dotWeaponBody < 0f)
+        // if the weapon is behind the target
+        if (dotDirection < 0f)
         {
-            _wheelsController.Direction = angleToDir > 0f ? 1f : -1f;
-            _wheelsController.Movement = S_WheelsController.Move.toward;
+            float direction = angleToDir > 0f ? -1f : 1f;
+            _wheelsController.Direction = 2f;
+            // if we are in front of the enemy go backward else fo toward
+            _wheelsController.Movement = dotBehindEnemy > 0f ? Reverse(S_WheelsController.Move.backward) : Reverse(S_WheelsController.Move.toward);
             return;
         }
 
         if (dotDirection > 0f)
         {
             // go forward
-            _wheelsController.Movement = dotWeaponBody > 0f ? S_WheelsController.Move.toward : S_WheelsController.Move.backward;
+            _wheelsController.Movement = dotWeaponBody > 0f ? Reverse(S_WheelsController.Move.toward) : Reverse(S_WheelsController.Move.backward);
         }
         else
         {
             // go backward
-            _wheelsController.Movement = dotWeaponBody > 0f ? S_WheelsController.Move.backward : S_WheelsController.Move.toward;
+            _wheelsController.Movement = dotWeaponBody > 0f ? Reverse(S_WheelsController.Move.backward) : Reverse(S_WheelsController.Move.toward);
         }
 
         if (!dodge)
@@ -461,6 +535,28 @@ public class S_AIController : MonoBehaviour
 
         // set controller direction
         _wheelsController.Direction = turnAmount;
+    }
+    /// <summary>
+    /// reverse the current movement with probability if
+    /// he move toward return backward else return forward
+    /// </summary>
+    /// <param name="currentMovement">the current movement for reverse</param>
+    /// <returns>return the currentMovement reserve or just currentMovement</returns>
+    private S_WheelsController.Move Reverse(S_WheelsController.Move currentMovement)
+    {
+        if (!_canReverseMovement)
+            return currentMovement;
+
+        float reverseMovementRnd = Random.Range(0, 101);
+        if (reverseMovementRnd < _reverseMovementProbability)
+        {
+            if (currentMovement.Equals(S_WheelsController.Move.toward))
+                return S_WheelsController.Move.backward;
+
+            return S_WheelsController.Move.toward;
+        }
+
+        return currentMovement;
     }
 
 
@@ -554,6 +650,8 @@ public class S_AIController : MonoBehaviour
             .OrderBy(x => Vector3.Distance(x.transform.position, position))
             .ToList()[0];
     }
+
+
     /// <summary>
     /// get the forward vector
     /// </summary>
@@ -568,8 +666,6 @@ public class S_AIController : MonoBehaviour
 
         return dot >= 0f ? bot.forward : -bot.forward;
     }
-
-
     /// <summary>
     /// detect if the weapon is in view
     /// </summary>
@@ -588,8 +684,8 @@ public class S_AIController : MonoBehaviour
     private bool IsValidWeaponForTarget(Transform weapon)
     {
         // if the enemy is enough far the weapon if valid
-        Vector3 dirToEnemy = (_enemy.transform.position - transform.position);
-        if (dirToEnemy.magnitude > 5f)
+        Vector3 dirToEnemy = (_target.transform.position - weapon.position);
+        if (dirToEnemy.magnitude > 2f)
             return true;
 
         // if the weapon is before the enemy its a valid weapon
@@ -634,13 +730,13 @@ public class S_AIController : MonoBehaviour
 
         // sort the weapon who can attack
         var cloneList = Weapons
-            .Where(x => x.activeSelf || IsValidWeaponForTarget(x.transform))
+            .Where(x => x.activeSelf)
             .ToList();
 
         // if he not attack with best weapon return the random pick up of random weapon
         if (!_attackWithBestWeapon)
         {
-            weapon = Weapons[Random.Range(0, Weapons.Count)];
+            weapon = Weapons[0];
             return true;
         }
 
@@ -679,7 +775,8 @@ public class S_AIController : MonoBehaviour
         float failedAttackRnd = Random.Range(0, 101);
         if (_attackFailedProbability >= failedAttackRnd)
         {
-            AttackWithCurrrentWeapon();
+            if (!CurrentWeaponCanAttack())
+                AttackWithCurrrentWeapon();
         }
     }
     /// <summary>
@@ -690,7 +787,7 @@ public class S_AIController : MonoBehaviour
         if (!_canAttack)
             return;
 
-        StartCoroutine(AttackCooldown());
+        StartCoroutine(AttackCooldownCoroutine());
 
         // make a probabiblity for attack
         float attackRnd = Random.Range(0, 101);
@@ -720,7 +817,7 @@ public class S_AIController : MonoBehaviour
     /// Cooldown for attack, set the _canAttack <b>False</b> and true with 1 seconde
     /// </summary>
     /// <returns></returns>
-    private IEnumerator AttackCooldown()
+    private IEnumerator AttackCooldownCoroutine()
     {
         _canAttack = false;
         yield return _attackCooldownCoroutine;
@@ -728,8 +825,11 @@ public class S_AIController : MonoBehaviour
     }
     private IEnumerator SetActiveWeapon(GameObject weapon)
     {
+        if (!weapon.activeSelf)
+            yield break;
+
         weapon.SetActive(false);
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(10f);
         weapon.SetActive(true);
     }
 }
