@@ -120,7 +120,7 @@ public class S_HorizontalImageSelector : MonoBehaviour
             _currentHorizontalSensitivity = -_normalHorizontalSensitivity;
         }
 
-        float horizontalInput = Input.GetAxis("Horizontal") * _currentHorizontalSensitivity;
+        float horizontalInput = -Input.GetAxis("Horizontal") * _currentHorizontalSensitivity;
         float verticalInput = -Input.GetAxis("Vertical");
 
         if (_movementCoroutines[_currentFrameIndex] == null)
@@ -246,7 +246,6 @@ public class S_HorizontalImageSelector : MonoBehaviour
         if (collision.gameObject.CompareTag("Logo"))
         {
             _statsText.SetActive(false);
-            Debug.Log("WAHHHHHAAAAAAAAAAAAAAA");
         }
         else
         {
@@ -258,7 +257,16 @@ public class S_HorizontalImageSelector : MonoBehaviour
     {
         if (context.started)
         {
+            Debug.Log("zehfuhezif");
             PurchaseItem();
+        }
+    }
+
+    public void LeaveShop(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            BackMainMenu();
         }
     }
 
