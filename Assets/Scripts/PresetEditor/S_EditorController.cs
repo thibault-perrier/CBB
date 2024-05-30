@@ -39,8 +39,9 @@ public class S_EditorController : MonoBehaviour
     [SerializeField] private S_FrameData _presetFrameData;
     [SerializeField] private List<S_WeaponData> _presetWeaponData;
 
-    
-    
+    [SerializeField] private List<GameObject> _presetObjectPart;
+
+
     [SerializeField] private EditState _editState;
 
 
@@ -282,9 +283,9 @@ public class S_EditorController : MonoBehaviour
         _weaponsData.Clear();
     }
 
-    private void CreatePresetPrefab(int id)
+    private GameObject CreatePresetPrefab(int id)
     {
-        //recuperer les info du preset
+        //TO-DO recuperer les info du preset
         S_FrameData frameData = null;
         List<S_WeaponData> weaponsData = null;
 
@@ -298,7 +299,48 @@ public class S_EditorController : MonoBehaviour
 
         List<GameObject> hookPoits = frame.GetComponent<S_FrameManager>().WeaponHookPoints.ToList();
         
+        for(int i=0; i < weapons.Count(); i++)
+        {
+            weapons[i].transform.parent = hookPoits[i].transform;
+            weapons[i].transform.localPosition = Vector3.zero;
+            weapons[i].transform.localRotation = Quaternion.identity;
+        }
+
+        return frame;
     }
+
+    public void UpdatePrefabRobot()
+    {
+        S_FrameData frameData = _selectedFrameData;
+        List<S_WeaponData> weaponsData = _selectedWeaponsData;
+
+        GameObject frame = Instantiate(frameData.Prefab);
+        List<GameObject> weapons = new List<GameObject>();
+
+        List<GameObject> hookPoits = frame.GetComponent<S_FrameManager>().WeaponHookPoints.ToList();
+
+        for (int i = 0; i < weaponsData.Count(); i++)
+        {
+            if (hookPoits.Count() - 1 >= i)
+            {
+                weapons.Add(Instantiate(weaponsData[i].Prefab));
+                weapons[i].transform.parent = hookPoits[i].transform;
+                weapons[i].transform.localPosition = Vector3.zero;
+                weapons[i].transform.localRotation = Quaternion.identity;
+            }
+        }
+
+        _presetObjectPart.Clear();
+        _presetObjectPart = weapons.ToList();
+        _presetObjectPart.Add(frame);
+    }
+
+    private void UpdatePresetRobotGroup()
+    {
+        //recuperer la list des robot preset
+        
+    }
+
 }
 
 
