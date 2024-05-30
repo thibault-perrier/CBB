@@ -93,7 +93,8 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
     public void LaunchAttack()
     {
-        _animator.SetBool("_playAttack", true);
+        if(_state == State.ok)
+            _animator.SetBool("_playAttack", true);
     }
 
     private void AttackON()
