@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class S_CameraView : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class S_CameraView : MonoBehaviour
 
     private ViewType _viewType;
     private GameObject _currentCam;
-    private Vector3 _arenaAnchor = new Vector3(0f, 20f, -30f); //Should be different depending of the arena
+    [SerializeField] private Transform _arenaAnchor;
 
     private float _smoothTime = 2f;
     private Camera _camComponent;
@@ -35,7 +36,16 @@ public class S_CameraView : MonoBehaviour
 
     public delegate void OnShowOffComplete();
     public event OnShowOffComplete ShowOffComplete;
+    public delegate void OnFadeInComplete();
+    public event OnFadeInComplete FadeInComplete;
+    public delegate void OnReturnToTournamentComplete();
+    public event OnReturnToTournamentComplete ReturnToToTournamentComplete;
+
     private Coroutine _showMovement;
+
+    private InputAction _skipAction;
+
+    private Vector3 _lastParticipantInView;
 
     public bool IsTournamentView
     {
@@ -45,18 +55,22 @@ public class S_CameraView : MonoBehaviour
     private void Awake()
     {
         _camComponent = GetComponent<Camera>();
-        _animator = GetComponent<Animator>();
         _viewType = ViewType.Arena;
 
         if (_camArena != null)
         {
-            _camArena.transform.position = _arenaAnchor;
+            _camArena.transform.position = _arenaAnchor.transform.position;
             _currentCam = _camArena;
         }
         else
         {
             Debug.Log("No camera has been referenced for the arena !");
         }
+
+        _skipAction = new InputAction("Skip");
+        _skipAction.AddBinding("<Gamepad>/buttonSouth");
+        _skipAction.AddBinding("<Keyboard>/space");
+        _skipAction.Enable();
     }
 
     /*LateUpdate is called after all Update functions have been called.
@@ -114,7 +128,7 @@ public class S_CameraView : MonoBehaviour
             // Calculate desired camera position
             Vector3 desiredPosition = centerPoint - new Vector3(0, 0, greatestDistance / 2f + 30f);
 
-            transform.position = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * _smoothTime);
+            _currentCam.transform.position = Vector3.Lerp(_currentCam.transform.position, desiredPosition, Time.deltaTime * _smoothTime);
         }
     }
 
@@ -228,13 +242,18 @@ public class S_CameraView : MonoBehaviour
     /// <returns></returns>
     private IEnumerator ShowOffObjects(GameObject firstObject, GameObject lastObject)
     {
-        _currentCam.transform.position = new Vector3(firstObject.transform.position.x, firstObject.transform.position.y, 50f);
-        Vector3 lastPos = new Vector3(lastObject.transform.position.x, lastObject.transform.position.y, 50f);
+        _currentCam.transform.position = new Vector3(firstObject.transform.position.x, firstObject.transform.position.y, 260f);
+        Vector3 lastPos = new Vector3(lastObject.transform.position.x, lastObject.transform.position.y, 260f);
 
-        while (Vector3.SqrMagnitude(transform.position - lastPos) > 0.1f)
+        while (Vector3.SqrMagnitude(_currentCam.transform.position - lastPos) > 0.1f)
         {
-            _currentCam.transform.position = Vector3.MoveTowards(transform.position, lastPos, Time.deltaTime * 20f);
-            Debug.Log(transform.position);
+            _currentCam.transform.position = Vector3.MoveTowards(_currentCam.transform.position, lastPos, Time.deltaTime * 20f);
+
+            if (_skipAction.triggered) //to skip the showing off
+            {
+                break;
+            }
+
             yield return null;
         }
 
@@ -253,15 +272,67 @@ public class S_CameraView : MonoBehaviour
         _showMovement = StartCoroutine(ShowOffObjects(firstObject, lastObject));
     }
 
+    public void StopShowOffObject()
+    {
+        StopCoroutine(_showMovement);
+    }
+
     public IEnumerator ZoomFadeIn()
     {
-        _animator.SetTrigger("Start");
-        yield return null;
+        _animator = _currentCam.GetComponent<Animator>();
+
+        _lastParticipantInView = transform.position;
+
+        if (_animator != null)
+        {
+            _animator.SetTrigger("Start");
+        }
+
+        yield return new WaitForSeconds(_animator.GetCurrentAnimatorClipInfo(0).Length);
+
+        _isTournamentView = false;
+        _camArena.transform.position = _arenaAnchor.transform.position;
+        FadeInComplete?.Invoke();
+
+        yield return new WaitForSeconds(0.5f); //give time for the camera to rotate
+        if (_animator != null)
+        {
+            _animator.SetTrigger("Start");
+        }
+    }
+
+    public IEnumerator ReturnToTournament()
+    {
+        _animator = _currentCam.GetComponent<Animator>();
+
+        if (_animator != null)
+        {
+            _animator.SetTrigger("Start");
+        }
+
+        yield return new WaitForSeconds(_animator.GetCurrentAnimatorClipInfo(0).Length);
+
+        ReturnToToTournamentComplete?.Invoke();
+        _isTournamentView = true;
+        ClearObjectToView();
+        _camArena.transform.position = _lastParticipantInView - new Vector3(0f, 0f, 50f);
+        _camArena.transform.rotation = Quaternion.identity;
+
+        yield return new WaitForSeconds(1f); //give time for the camera to rotate
+        if (_animator != null)
+        {
+            _animator.SetTrigger("Start");
+        }
     }
 
     public void StartZoomFadeIn()
     {
         StartCoroutine(ZoomFadeIn());
+    }
+
+    public void StartReturnToTournament()
+    {
+        StartCoroutine(ReturnToTournament());
     }
 
     /// <summary>

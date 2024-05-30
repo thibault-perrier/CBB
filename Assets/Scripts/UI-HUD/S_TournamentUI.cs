@@ -7,6 +7,7 @@ public class S_TournamentBracket : MonoBehaviour
 {
     [SerializeField] private S_TournamentManager _tournamentManager;
     [SerializeField] S_CameraView _cameraView;
+    [SerializeField] private S_ArenaManager _arenaManager;
 
     [Header("Tournament brackets")]
     [SerializeField] private GameObject _eightParticipantsBracket;
@@ -38,6 +39,8 @@ public class S_TournamentBracket : MonoBehaviour
     private void Start()
     {
         _cameraView.ShowOffComplete += OnShowOffComplete; // Subscribe to the event
+        _cameraView.FadeInComplete += OnFadeInComplete;
+        _cameraView.ReturnToToTournamentComplete += OnReturnToTournament;
 
         if (!_tournamentManager.IsRunning)
         {
@@ -54,6 +57,8 @@ public class S_TournamentBracket : MonoBehaviour
     private void OnDestroy()
     {
         _cameraView.ShowOffComplete -= OnShowOffComplete;
+        _cameraView.FadeInComplete -= OnFadeInComplete;
+        _cameraView.ReturnToToTournamentComplete -= OnReturnToTournament;
     }
 
     /// <summary>
@@ -61,7 +66,22 @@ public class S_TournamentBracket : MonoBehaviour
     /// </summary>
     private void OnShowOffComplete()
     {
-        _movingLogoCoroutine = StartCoroutine(MoveTowardNewRound(_currentUsedBracket.transform, _logos[_currentMatch].gameObject, _logos[_currentMatch + 1].gameObject, _currentLevel, _currentMatch));
+        _movingLogoCoroutine = StartCoroutine(MoveTowardNewRound(_currentUsedBracket.transform, 
+            _logos[_currentMatch].gameObject, 
+            _logos[_currentMatch + 1].gameObject, _currentLevel, _currentMatch));
+    }
+
+    private void OnFadeInComplete()
+    {
+        S_TournamentManager.Participant p1 = _tournamentManager.GetParticipants()[_currentMatch * 2];
+        S_TournamentManager.Participant p2 = _tournamentManager.GetParticipants()[_currentMatch * 2 + 1];
+
+        _arenaManager.ShowStats(p1, p2);
+    }
+
+    private void OnReturnToTournament()
+    {
+        SkipBotMatch();
     }
 
     /// <summary>
@@ -131,7 +151,7 @@ public class S_TournamentBracket : MonoBehaviour
                 Transform winnerLogo = _winnersLogo[currentMatch];
                 Transform loserLogo = _losersLogo[currentMatch];
                 _movingLogoCoroutine = StartCoroutine(MoveWinner(bracket, currentMatch, currentRound, winnerLogo.gameObject));
-                StartCoroutine(LoserMoveBack(loserLogo.gameObject));
+                StartCoroutine(LoserMoveBack(bracket, currentMatch, currentRound, loserLogo.gameObject));
             }
         }
     }
@@ -301,17 +321,17 @@ public class S_TournamentBracket : MonoBehaviour
         _tournamentManager.NextMatch();
         UpdateMatchAndRound();
 
-        if (_tournamentManager.IsEven())
-        {
-            _movingLogoCoroutine = StartCoroutine(MoveTowardNewRound(bracket,
-                _logos[_currentMatch * 2].gameObject, 
-                _logos[_currentMatch * 2 + 1].gameObject,
-                _currentLevel, _currentMatch));
-        }
-        else
-        {
-            _movingLogoCoroutine = StartCoroutine(MoveTournamentWinner(bracket, currentLevel, currentMatch, _logos[currentMatch * 2].gameObject));
-        }
+        //if (_tournamentManager.IsEven())
+        //{
+        //    _movingLogoCoroutine = StartCoroutine(MoveTowardNewRound(bracket,
+        //        _logos[_currentMatch * 2].gameObject, 
+        //        _logos[_currentMatch * 2 + 1].gameObject,
+        //        _currentLevel, _currentMatch));
+        //}
+        //else
+        //{
+        //    _movingLogoCoroutine = StartCoroutine(MoveTournamentWinner(bracket, currentLevel, currentMatch, _logos[currentMatch * 2].gameObject));
+        //}
     }
 
     /// <summary>
@@ -319,7 +339,7 @@ public class S_TournamentBracket : MonoBehaviour
     /// </summary>
     /// <param name="loser"></param>
     /// <returns></returns>
-    private IEnumerator LoserMoveBack(GameObject loser)
+    private IEnumerator LoserMoveBack(Transform bracket, int currentMatch, int currentLevel, GameObject loser)
     {
         Vector3 endPos = loser.transform.position - new Vector3(0, 42f, 0f);
 
@@ -332,6 +352,18 @@ public class S_TournamentBracket : MonoBehaviour
         }
 
         loser.transform.position = endPos;
+
+        if (_tournamentManager.IsEven())
+        {
+            _movingLogoCoroutine = StartCoroutine(MoveTowardNewRound(bracket,
+                _logos[_currentMatch * 2].gameObject,
+                _logos[_currentMatch * 2 + 1].gameObject,
+                _currentLevel, _currentMatch));
+        }
+        else
+        {
+            _movingLogoCoroutine = StartCoroutine(MoveTournamentWinner(bracket, currentLevel, currentMatch, _logos[currentMatch * 2].gameObject));
+        }
     }
 
     /// <summary>

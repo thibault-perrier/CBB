@@ -46,7 +46,7 @@ public class S_TournamentManager : MonoBehaviour
     private Tournament _gold;
     private Tournament _diamond;
 
-    private Tournament _currentTournament;
+    [SerializeField] private Tournament _currentTournament;
 
     private int _currentMatch = 0;
     private int _currentLevel = 0;
@@ -68,7 +68,7 @@ public class S_TournamentManager : MonoBehaviour
     {
         _roundWinners = new List<Participant>();
 
-        InitializeParticipationData();
+        //InitializeParticipationData();
 
         _participant1.name = "PLAYER";
         _participant2.name = "Participant nb 1";
@@ -88,8 +88,10 @@ public class S_TournamentManager : MonoBehaviour
         _participant7.logo = Color.black;
         _participant8.logo = Color.magenta;
 
-        InitializeCurrentTournament(_gold);
-        Debug.Log("Initialazing a " + _gold.rank.ToString() + " tournament");
+        InitializeCurrentTournament(_currentTournament);
+        Debug.Log("Initialazing a " + _currentTournament.rank.ToString() + " tournament");
+
+        _currentTournament.maxMatchNb -= 1; //It's so we can use this as an index for arrays and lists
     }
 
     public void AddParticipant(Participant participant)
@@ -150,7 +152,6 @@ public class S_TournamentManager : MonoBehaviour
     public int InitializeCurrentTournament(Tournament tournament)
     {
         _currentTournament = tournament;
-        Debug.Log(_currentTournament.maxMatchNb);
 
         _participants = new List<Participant>(tournament.participantNb)
         {
@@ -260,7 +261,6 @@ public class S_TournamentManager : MonoBehaviour
                     _tournamentBracket.PlayerLostScreen();
                 }
             }
-            Debug.Log(participant1Wins);
         }
     }
 
