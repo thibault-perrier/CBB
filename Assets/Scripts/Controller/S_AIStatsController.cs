@@ -9,14 +9,18 @@ public struct StatsBotRank
     private bool _attackEnemyWeapon;
     [SerializeField, Tooltip("if he use her best weapon for attack")]
     private bool _attackWithBestWeapon;
+    [SerializeField, Tooltip("if he can failed any attack with probability")]
+    private bool _canFailedAnyAttack;
+
+    [Space(15)]
     [SerializeField, Tooltip("if he dodge the trap with probability")]
     private bool _dodgeTrap;
     [SerializeField, Tooltip("if he flee the enemy when he cant attack")]
     private bool _canFleeEnemy;
-    [SerializeField, Tooltip("if he can failed any attack with probability")]
-    private bool _canFailedAnyAttack;
     [SerializeField, Tooltip("if he can ignore the trap when we are enough near the target")]
     private bool _canIgnoreTrap;
+
+    [Space(15)]
     [SerializeField, Tooltip("if he can reverse her movement with probability")]
     private bool _canReverseMovement;
     [SerializeField, Tooltip("if he can reverse her direction with probability")]
@@ -25,18 +29,22 @@ public struct StatsBotRank
     [Header("Probability Actions")]
     [SerializeField, Range(0, 100), Tooltip("probability to make an attack when he can do it")]
     private float _attackSuccesProbability;
+    [SerializeField, Range(0, 100), Tooltip("probability to get enemy weapons for the current target")]
+    private float _attackEnemyWeaponProbabiltiy;
+    [SerializeField, Range(0, 100), Tooltip("probability to fail an attack when he cant do any attack")]
+    private float _attackFailedProbability;
+
+    [Space(15)]
     [SerializeField, Range(0, 100), Tooltip("probability to make a movement every frame")]
     private float _movementProbability;
     [SerializeField, Range(0, 100), Tooltip("probability to turn for make a dodge")]
     private float _dodgeProbability;
     [SerializeField, Range(0, 100), Tooltip("probability to start the flee")]
     private float _fleeProbability;
-    [SerializeField, Range(0, 100), Tooltip("probability to fail an attack when he cant do any attack")]
-    private float _attackFailedProbability;
+
+    [Space(15)]
     [SerializeField, Range(0, 100), Tooltip("probability to reverse her movement")]
     private float _reverseMovementProbability;
-    [SerializeField, Range(0, 100), Tooltip("probability to get enemy weapons for the current target")]
-    private float _attackEnemyWeaponProbabiltiy;
     [SerializeField, Range(0, 100), Tooltip("probabiltiy to reverse her direction")]
     private float _reverseDirectionProbability;
 
@@ -51,18 +59,20 @@ public struct StatsBotRank
     [Header("Offset variable random")]
     [SerializeField, Tooltip("the offset of attack succes probability when he is gets, Y is Exclusive")]
     private Vector2 _attackSuccesProbabilityRandom;
+    [SerializeField, Tooltip("the offset of attack enemy probability when he is gets, Y is exclusive")]
+    private Vector2 _attackEnemyWeaponProbabilityRandom;
+    [SerializeField, Tooltip("the offset of attack failed probability when he is gets, Y is Exclusive")]
+    private Vector2 _attackFailedProbabilityRandom;
+
+    [Space(15)]
     [SerializeField, Tooltip("the offset of movement probability when he is gets, Y is Exclusive")]
     private Vector2 _movementProbabilityRandom;
     [SerializeField, Tooltip("the offset of dodge probability when he is gets, Y is Exclusive")]
     private Vector2 _dodgeProbabilityRandom;
     [SerializeField, Tooltip("the offset of flee probability when he is gets, Y is Exclusive")]
     private Vector2 _fleeProbabilityRandom;
-    [SerializeField, Tooltip("the offset of attack failed probability when he is gets, Y is Exclusive")]
-    private Vector2 _attackFailedProbabilityRandom;
     [SerializeField, Tooltip("the offset of reverse movement probabiltiy when he is gets, Y is Exclusive")]
     private Vector2 _reverseMovementProbabilityRandom;
-    [SerializeField, Tooltip("the offset of attack enemy probability when he is gets, Y is exclusive")]
-    private Vector2 _attackEnemyWeaponProbabilityRandom;
     [SerializeField, Tooltip("the offset of reverse direction when he is gets, Y is exlusive")]
     private Vector2 _reverseDirectionProbabilityRandom;
 

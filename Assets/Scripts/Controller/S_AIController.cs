@@ -31,14 +31,18 @@ public class S_AIController : MonoBehaviour
     private bool _attackEnemyWeapon;
     [SerializeField, Tooltip("if he use her best weapon for attack")]
     private bool _attackWithBestWeapon;
+    [SerializeField, Tooltip("if he can failed any attack")]
+    private bool _canFailedAnyAttack;
+
+    [Space(15)]
     [SerializeField, Tooltip("if he dodge the trap")]
     private bool _dodgeTrap;
     [SerializeField, Tooltip("if he flee the enemy when he cant attack")]
     private bool _canFleeEnemy;
-    [SerializeField, Tooltip("if he can failed any attack")]
-    private bool _canFailedAnyAttack;
     [SerializeField, Tooltip("if he can ignore the trap when we are enough near the target")]
     private bool _canIgnoreTrap;
+
+    [Space(15)]
     [SerializeField, Tooltip("if he can reverse her movement")]
     private bool _canReverseMovement;
     [SerializeField, Tooltip("if he can reverse her direction")]
@@ -47,18 +51,22 @@ public class S_AIController : MonoBehaviour
     [Header("Probability Actions")]
     [SerializeField, Range(0, 100), Tooltip("probability to make an attack when he can do it")] 
     private float _attackSuccesProbability = 100f;
+    [SerializeField, Range(0, 100), Tooltip("probability to get enemy weapons for the current target")]
+    private float _attackEnemyWeaponProbabiltiy = 0f;
+    [SerializeField, Range(0, 100), Tooltip("probability to fail an attack when he cant do any attack")]
+    private float _attackFailedProbability = 0f;
+
+    [Space(15)]
     [SerializeField, Range(0, 100), Tooltip("probability to make a movement every frame")]
     private float _movementProbability = 100f;
     [SerializeField, Range(0, 100), Tooltip("probability to turn for make a dodge")]
     private float _dodgeProbability = 100f;
     [SerializeField, Range(0, 100), Tooltip("probability to start the flee")]
     private float _fleeProbability = 100f;
-    [SerializeField, Range(0, 100), Tooltip("probability to fail an attack when he cant do any attack")]
-    private float _attackFailedProbability = 0f;
+
+    [Space(15)]
     [SerializeField, Range(0, 100), Tooltip("probability to reverse her movement")]
     private float _reverseMovementProbability = 0f;
-    [SerializeField, Range(0, 100), Tooltip("probability to get enemy weapons for the current target")]
-    private float _attackEnemyWeaponProbabiltiy = 0f;
     [SerializeField, Range(0, 100), Tooltip("probabiltiy to reverse her direction")]
     private float _reverseDirectionProbability = 0f;
 
@@ -308,15 +316,15 @@ public class S_AIController : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        // reset the movement state
+        _wheelsController.Movement = S_WheelsController.Move.neutral;
+
         // verif if he is enable for work
         if (_aiState.Equals(AIState.Disable))
             return;
 
         if (!_enemy)
             return;
-
-        // reset the movement state
-        _wheelsController.Movement = S_WheelsController.Move.neutral;
 
         // if he can attack
         if (CurrentWeaponCanAttack())
@@ -370,6 +378,7 @@ public class S_AIController : MonoBehaviour
         if (!_canFleeEnemy)
             return;
 
+        // select the flee methode and move with selected flee methode
         SelectTheFleeMethode();
         switch (_fleeMethode)
         {
@@ -467,9 +476,10 @@ public class S_AIController : MonoBehaviour
     private void FleeEnemyWithDistance()
     {
         Vector3 dirToEnemy = (_enemy.transform.position - transform.position);
-        Vector3 destination = Vector3.zero;
+        Vector3 destination;
         float dot = Vector3.Dot(transform.forward, dirToEnemy.normalized);
 
+        // if the enemy is front of self destination is behind us else she is front of us
         if (dot > 0)
             destination = transform.position - transform.forward;
         else
@@ -495,12 +505,14 @@ public class S_AIController : MonoBehaviour
     /// <returns>return <b>True</b> if we are enough near to the target</returns>
     private bool IgnoreTrap()
     {
+        // if he cant ignore the trap
         if (!_canIgnoreTrap)
             return false;
 
         Vector3 dirToTarget = (_target.transform.position - transform.position);
         float dot = Vector3.Dot(transform.forward, dirToTarget.normalized);
 
+        // if he is in view of 40 degre and he is enough near he can ignore trap
         if (dot > Mathf.Cos(40f) && dirToTarget.magnitude < 2.5f)
             return true;
 
@@ -511,6 +523,7 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     private void MoveBotToTarget()
     {
+        // if he cant attack ennemy weapon _target is juste the enemy
         if (!_attackEnemyWeapon)
         {
             _target = _enemy;
@@ -519,7 +532,7 @@ public class S_AIController : MonoBehaviour
         {
             // get random for not attack enemy weapons
             float attackEnemyWeaponsRnd = Random.Range(0, 101);
-            if (attackEnemyWeaponsRnd < _attackEnemyWeaponProbabiltiy)
+            if (attackEnemyWeaponsRnd > _attackEnemyWeaponProbabiltiy)
             {
                 _target = _enemy;
             } 
@@ -534,6 +547,7 @@ public class S_AIController : MonoBehaviour
         // get him self best weapon
         bool succes = GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
 
+        // if he get any weapon move to target with your current weapon
         if (succes)
             MoveToPoint(_target.transform.position, _currentWeapon.transform);
     }
@@ -559,10 +573,12 @@ public class S_AIController : MonoBehaviour
         float dodgeRnd = Random.Range(0, 101);
         if (dodgeRnd < _dodgeProbability)
         {
+            // if he cant ignore traps try get turn amount with raycast
             if (!IgnoreTrap())
             {
                 turnAmount = GetTurnAmountForDodgeTrap(GetDodgeTurnAmountScale(dotDirection, dotWeaponBody));
 
+                // if he hit any trap
                 if (turnAmount != 0f)
                     dodge = true;
             }
@@ -588,6 +604,7 @@ public class S_AIController : MonoBehaviour
             _wheelsController.Movement = dotWeaponBody > 0f ? Reverse(S_WheelsController.Move.backward) : Reverse(S_WheelsController.Move.toward);
         }
 
+        // if he hit any trap dont calcul turn amount
         if (!dodge)
         {
             if (angleToDir > 0f)
@@ -613,12 +630,14 @@ public class S_AIController : MonoBehaviour
     /// <returns>return the currentMovement reserve or just currentMovement</returns>
     private S_WheelsController.Move Reverse(S_WheelsController.Move currentMovement)
     {
+        // if he cant reverse the movement just return the current
         if (!_canReverseMovement)
             return currentMovement;
 
         float reverseMovementRnd = Random.Range(0, 101);
         if (reverseMovementRnd < _reverseMovementProbability)
         {
+            // if he move toward return backward else return toward
             if (currentMovement.Equals(S_WheelsController.Move.toward))
                 return S_WheelsController.Move.backward;
 
@@ -635,10 +654,12 @@ public class S_AIController : MonoBehaviour
     /// <returns>return the direction reverse or not</returns>
     private float Reverse(float direction)
     {
+        // if he cant reverse direction return the current
         if (!_canReverseDirection)
             return direction;
 
         float reverseDirectionRnd = Random.Range(0, 101);
+        // if direction equal 1 return -1 else return 1
         if (reverseDirectionRnd < _reverseDirectionProbability)
             return direction * -1f;
 
@@ -648,18 +669,20 @@ public class S_AIController : MonoBehaviour
     /// <summary>
     /// get the scale for the GetTurnAmountForDodgeTrap methode
     /// </summary>
-    /// <param name="dotDirection"></param>
-    /// <param name="dotWeapon"></param>
+    /// <param name="dotDirection">the dot product from weapon forward and direction from me and enemy</param>
+    /// <param name="dotWeapon">the dot product from weapon forward and self forward</param>
     /// <returns>return the scale</returns>
     private float GetDodgeTurnAmountScale(float dotDirection, float dotWeapon)
     {
         // if weapon is toward target
         if (dotDirection > 0f)
         {
+            // if weapon isnt behind self forward return -1f
             return dotWeapon > 0f ? 1f : -1f;
         }
         else
         {
+            // if weapon isnt behind self forward return 1f
             return dotWeapon > 0f ? -1f : 1f;
         }
     }
@@ -669,6 +692,7 @@ public class S_AIController : MonoBehaviour
     /// <returns>return the new turn amount</returns>
     private float GetTurnAmountForDodgeTrap(float scaleDirection)
     {
+        // if he cant dodge trap return 0 for the new turnAmount
         if (!_dodgeTrap)
             return 0f;
 
@@ -691,6 +715,7 @@ public class S_AIController : MonoBehaviour
             }
         }
 
+        // if all raycast tuch any traps them return 1
         if (turnAmount == 0f && tuchOneTime)
             return 1f;
 
@@ -752,10 +777,13 @@ public class S_AIController : MonoBehaviour
     /// <summary>
     /// detect if the weapon is in view
     /// </summary>
-    /// <param name="weapon">current weapon</param>
+    /// <param name="weapon">current weapon of <b>bot one</b></param>
+    /// <param name="bot">the <b>seconde bot</b></param>
     /// <returns>return True if he is in view</returns>
     private bool RaycastWeapon(GameObject weapon, GameObject bot)
     {
+        // make a raycast for know if bot can acces to weapon
+        // return True if he cant acces else return False
         Vector3 dir = weapon.transform.position - bot.transform.position;
         return Physics.Raycast(bot.transform.position, dir.normalized, dir.magnitude);
     }
@@ -884,7 +912,7 @@ public class S_AIController : MonoBehaviour
         StartCoroutine(SetActiveWeapon(_currentWeapon));
         GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
         // TO DO: make attack with current weapon
-    }
+    } // TODO make an attack with current weapon=========================================================================================================
     /// <summary>
     /// if the target is closed the current weapon
     /// </summary>
@@ -899,7 +927,7 @@ public class S_AIController : MonoBehaviour
             return true;
         
         return false;
-    }
+    } // TODO Update this methode when we have weapon==========================================================================================================
     /// <summary>
     /// Cooldown for attack, set the _canAttack <b>False</b> and true with 1 seconde
     /// </summary>
