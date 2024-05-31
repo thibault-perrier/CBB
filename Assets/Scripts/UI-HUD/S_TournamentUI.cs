@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class S_TournamentBracket : MonoBehaviour
@@ -35,9 +36,12 @@ public class S_TournamentBracket : MonoBehaviour
     private List<Transform> _waypoints = new List<Transform>();
 
     private Coroutine _movingLogoCoroutine;
+    private EventSystem _eventSystem;
 
     private void Start()
     {
+        _eventSystem = EventSystem.current;
+
         _cameraView.ShowOffComplete += OnShowOffComplete; // Subscribe to the event
         _cameraView.FadeInComplete += OnFadeInComplete;
         _cameraView.ReturnToToTournamentComplete += OnReturnToTournament;
@@ -71,6 +75,10 @@ public class S_TournamentBracket : MonoBehaviour
             _logos[_currentMatch + 1].gameObject, _currentLevel, _currentMatch));
     }
 
+    /// <summary>
+    /// When the camera is done with the fade in it will set the ccurrent participants
+    /// and show their stats in the UI
+    /// </summary>
     private void OnFadeInComplete()
     {
         S_TournamentManager.Participant p1 = _tournamentManager.GetParticipants()[_currentMatch * 2];
@@ -79,8 +87,14 @@ public class S_TournamentBracket : MonoBehaviour
         _arenaManager.ShowStats(p1, p2);
     }
 
+    /// <summary>
+    /// When the camera is done returning in front of the
+    /// Tournament UI it will resume showing winner and loser
+    /// </summary>
     private void OnReturnToTournament()
     {
+        _cameraView.AddObjectToView(_logos[_currentMatch * 2]);
+        _cameraView.AddObjectToView(_logos[_currentMatch * 2 + 1]);
         SkipBotMatch();
     }
 
@@ -226,11 +240,13 @@ public class S_TournamentBracket : MonoBehaviour
             {
                 ActivateUI(_playerMatchButton, true);
                 ActivateUI(_botMatchButtons, false);
+                _eventSystem.SetSelectedGameObject(_playerMatchButton.transform.GetChild(0).gameObject);
             }
             else
             {
                 ActivateUI(_botMatchButtons, true);
                 ActivateUI(_playerMatchButton, false);
+                _eventSystem.SetSelectedGameObject(_botMatchButtons.transform.GetChild(0).gameObject);
             }
         }
     }
@@ -254,6 +270,10 @@ public class S_TournamentBracket : MonoBehaviour
         button.SetActive(active);
     }
 
+    /// <summary>
+    /// Display the UI showing the player has lose
+    /// TODO : Make a better UI with button to return to the menu
+    /// </summary>
     public void PlayerLostScreen()
     {
         ActivateUI(_playerLose, true);
@@ -321,17 +341,19 @@ public class S_TournamentBracket : MonoBehaviour
         _tournamentManager.NextMatch();
         UpdateMatchAndRound();
 
-        //if (_tournamentManager.IsEven())
-        //{
-        //    _movingLogoCoroutine = StartCoroutine(MoveTowardNewRound(bracket,
-        //        _logos[_currentMatch * 2].gameObject, 
-        //        _logos[_currentMatch * 2 + 1].gameObject,
-        //        _currentLevel, _currentMatch));
-        //}
-        //else
-        //{
-        //    _movingLogoCoroutine = StartCoroutine(MoveTournamentWinner(bracket, currentLevel, currentMatch, _logos[currentMatch * 2].gameObject));
-        //}
+        if (_tournamentManager.IsEven())
+        {
+            _movingLogoCoroutine = StartCoroutine(MoveTowardNewRound(_currentUsedBracket.transform,
+                _logos[_currentMatch * 2].gameObject,
+                _logos[_currentMatch * 2 + 1].gameObject,
+                _currentLevel, _currentMatch));
+        }
+        else
+        {
+            _movingLogoCoroutine = StartCoroutine(MoveTournamentWinner(_currentUsedBracket.transform, _logos[_currentMatch * 2].gameObject));
+        }
+
+        _movingLogoCoroutine = null;
     }
 
     /// <summary>
@@ -343,7 +365,7 @@ public class S_TournamentBracket : MonoBehaviour
     {
         Vector3 endPos = loser.transform.position - new Vector3(0, 42f, 0f);
 
-        _cameraView.RemoveObjectToView(loser.transform);
+        //_cameraView.RemoveObjectToView(loser.transform);
 
         while (Vector3.SqrMagnitude(loser.transform.position - endPos) > 0.1f)
         {
@@ -352,18 +374,6 @@ public class S_TournamentBracket : MonoBehaviour
         }
 
         loser.transform.position = endPos;
-
-        if (_tournamentManager.IsEven())
-        {
-            _movingLogoCoroutine = StartCoroutine(MoveTowardNewRound(bracket,
-                _logos[_currentMatch * 2].gameObject,
-                _logos[_currentMatch * 2 + 1].gameObject,
-                _currentLevel, _currentMatch));
-        }
-        else
-        {
-            _movingLogoCoroutine = StartCoroutine(MoveTournamentWinner(bracket, currentLevel, currentMatch, _logos[currentMatch * 2].gameObject));
-        }
     }
 
     /// <summary>
@@ -374,7 +384,7 @@ public class S_TournamentBracket : MonoBehaviour
     /// <param name="currentLevel"></param>
     /// <param name="winner"></param>
     /// <returns></returns>
-    private IEnumerator MoveTournamentWinner(Transform bracket, int currentMatch, int currentLevel, GameObject winner)
+    private IEnumerator MoveTournamentWinner(Transform bracket, GameObject winner)
     {
         ClosePopUpButton();
 
@@ -388,6 +398,8 @@ public class S_TournamentBracket : MonoBehaviour
             winner.transform.position = Vector3.MoveTowards(winner.transform.position, waypoint.transform.position, Time.deltaTime * _logoSpeed);
             yield return null;
         }
+
+        _movingLogoCoroutine = null;
 
         winner.transform.position = waypoint.transform.position;
         //Add more system that allow the player to win his prize and open another UI for the occasion

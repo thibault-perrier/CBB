@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class S_BetSystem : MonoBehaviour
@@ -9,42 +10,41 @@ public class S_BetSystem : MonoBehaviour
 
     [SerializeField] private Button[] _betScreenButtons;
 
-    [SerializeField] private GameObject _skipBet, _launchMatch;
+    [SerializeField] private GameObject _launchMatch;
+    private TextMeshProUGUI _launchMatchTxt;
 
     private int _betAmount = 0;
     private float _currentBetRating = 0;
     private S_TournamentManager.Participant _currentParticipantChosen;
 
+    private EventSystem _eventSystem;
+
     public delegate void OnStartMatch();
     public OnStartMatch StartMatch;
+
+    private void Awake()
+    {
+        _eventSystem = EventSystem.current;
+        _launchMatchTxt = _launchMatch.GetComponentInChildren<TextMeshProUGUI>();
+        _launchMatchTxt.text = "Skip bet";
+    }
 
     private void OnEnable()
     {
         _betAmountTxt.text = "";
         _betAmount = 0;
-    }
-
-    private void OnDisable()
-    {
-        _launchMatch.SetActive(false);
-        _skipBet.SetActive(true);
-    }
-
-    private void Start()
-    {
-        _launchMatch.SetActive(false);
+        _launchMatchTxt.text = "Skip bet";
     }
 
     public void EnterAmount(int amount)
     {
-        if (_betAmountTxt.text.Length < 11)
+        if (_betAmountTxt.text.Length < 9)
             _betAmountTxt.text += amount.ToString();
     }
 
     public void ConfirmBet()
     {
         int betAmount;
-
         int.TryParse(_betAmountTxt.text, out betAmount);
 
         //check if player has enough money
@@ -56,11 +56,22 @@ public class S_BetSystem : MonoBehaviour
         Debug.Log("You bet : " + _betAmount);
 
         gameObject.SetActive(false);
+        ActivateButtons();
 
         if (_betAmountTxt.text.Length > 0)
         {
-            _skipBet.SetActive(false);
-            _launchMatch.SetActive(true);
+            _launchMatchTxt.text = "Launch Match";
+            _eventSystem.SetSelectedGameObject(_launchMatch);
+
+            for (int i = 0; i < _betScreenButtons.Length - 1; i++)
+            {
+                _betScreenButtons[i].interactable = false;
+            }
+        }
+        else
+        {
+            _launchMatchTxt.text = "Skip bet";
+            _eventSystem.SetSelectedGameObject(_launchMatch);
         }
     }
 

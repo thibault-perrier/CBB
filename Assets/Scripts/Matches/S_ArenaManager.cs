@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class S_ArenaManager : MonoBehaviour
@@ -8,6 +9,7 @@ public class S_ArenaManager : MonoBehaviour
     [SerializeField] private GameObject _p1Stats;
     [SerializeField] private GameObject _p2Stats;
     [SerializeField] private GameObject _keypad;
+    [SerializeField] private GameObject _key;
 
     [SerializeField] private S_CameraView _cameraView;
 
@@ -18,8 +20,11 @@ public class S_ArenaManager : MonoBehaviour
     private S_TournamentManager.Participant _p1;
     private S_TournamentManager.Participant _p2;
 
+    private EventSystem _eventSystem;
+
     private void Awake()
     {
+        _eventSystem = EventSystem.current;
         _betSystem = _keypad.GetComponent<S_BetSystem>();
     }
 
@@ -29,10 +34,15 @@ public class S_ArenaManager : MonoBehaviour
         _matchUI.SetActive(false);
     }
 
+    /// <summary>
+    /// Start the match
+    /// TODO : need to implement what really start the match and not just the UI change
+    /// </summary>
     public void StartMatch()
     {
         _participantsStats.SetActive(false);
         _matchUI.SetActive(true);
+        _eventSystem.SetSelectedGameObject(_matchUI.transform.GetChild(0).gameObject);
     }
 
     public void CancelMatch()
@@ -47,6 +57,8 @@ public class S_ArenaManager : MonoBehaviour
     /// <param name="p2"></param>
     public void ShowStats(S_TournamentManager.Participant p1, S_TournamentManager.Participant p2)
     {
+        _eventSystem.SetSelectedGameObject(_p1Stats.transform.GetChild(0).gameObject);
+
         _participantsStats.SetActive(true);
 
         SetStatsOnUi(p1.rating.ToString(), p1.name, p1.logo, _p1Stats);
@@ -69,6 +81,8 @@ public class S_ArenaManager : MonoBehaviour
     /// <param name="pStatGameObject"></param>
     public void SetStatsOnUi(string rating,  string name, Color logo , GameObject pStatGameObject)
     {
+        _betSystem.ActivateButtons();
+
         TextMeshProUGUI ratingTxt = pStatGameObject.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI nameTxt = pStatGameObject.transform.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>();
 
@@ -84,6 +98,9 @@ public class S_ArenaManager : MonoBehaviour
         _participantsStats.SetActive(false);
     }
 
+    /// <summary>
+    /// Open or close (if it's already opened) the key pad to write the bet amount
+    /// </summary>
     public void OpenCloseKeypad()
     {
         if (_keypad.activeSelf)
@@ -93,9 +110,15 @@ public class S_ArenaManager : MonoBehaviour
         else
         {
             _keypad.SetActive(true);
+            _eventSystem.SetSelectedGameObject(_key.transform.GetChild(0).gameObject);
         }
     }
 
+    // The use of two separate methods was needed because it's was complicated to give a reference to the participants in the editor
+
+    /// <summary>
+    /// Set the participant inside the bet method to keep track for which one the player bet
+    /// </summary>
     public void BetForParticipantOne()
     {
         _betSystem.SetChosenParticipant(_p1);

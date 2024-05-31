@@ -277,11 +277,15 @@ public class S_CameraView : MonoBehaviour
         StopCoroutine(_showMovement);
     }
 
+    /// <summary>
+    /// Animate a fade in, put the camera at the arena and show the participants informations
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator ZoomFadeIn()
     {
         _animator = _currentCam.GetComponent<Animator>();
 
-        _lastParticipantInView = transform.position;
+        _lastParticipantInView = _currentCam.transform.position;
 
         if (_animator != null)
         {
@@ -301,6 +305,10 @@ public class S_CameraView : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// After a match is over (or skip is called) the camera return in front of the tournament tree
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator ReturnToTournament()
     {
         _animator = _currentCam.GetComponent<Animator>();
@@ -312,13 +320,13 @@ public class S_CameraView : MonoBehaviour
 
         yield return new WaitForSeconds(_animator.GetCurrentAnimatorClipInfo(0).Length);
 
-        ReturnToToTournamentComplete?.Invoke();
-        _isTournamentView = true;
         ClearObjectToView();
+        _isTournamentView = true;
         _camArena.transform.position = _lastParticipantInView - new Vector3(0f, 0f, 50f);
         _camArena.transform.rotation = Quaternion.identity;
 
         yield return new WaitForSeconds(1f); //give time for the camera to rotate
+        ReturnToToTournamentComplete?.Invoke();
         if (_animator != null)
         {
             _animator.SetTrigger("Start");
