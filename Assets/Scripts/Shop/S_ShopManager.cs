@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class S_ShopManager : MonoBehaviour
@@ -130,7 +131,7 @@ public class S_ShopManager : MonoBehaviour
 
     public void UpdateShopText()
     {
-        _moneyText.text = "Money: " + S_DataGame.Instance.inventory.PlayerMoney;//TODO: GET MONEY FROM PLAYER_DATA--------------------------------------
+        _moneyText.text = "Money: " + S_DataGame.Instance.inventory.CurrentMoney;//TODO: GET MONEY FROM PLAYER_DATA--------------------------------------
         _pageText.text = "Page: " + (_currentFrameIndex + 1).ToString();
         if (_priceItem != null && _currentFrameIndex < frameData.Length && _currentItemIndex < frameData[_currentFrameIndex].frameElements.Length)
         {
@@ -199,9 +200,9 @@ public class S_ShopManager : MonoBehaviour
     {
         ElementInfo BuyElement = frameData[_currentFrameIndex].frameElements[_currentItemIndex];
       
-        if(S_DataGame.Instance.inventory.PlayerMoney >= BuyElement._price )
+        if(S_DataGame.Instance.inventory.CurrentMoney >= BuyElement._price )
         {
-            S_DataGame.Instance.inventory.PlayerMoney = S_DataGame.Instance.inventory.PlayerMoney - BuyElement._price;
+            S_DataGame.Instance.inventory.CurrentMoney = S_DataGame.Instance.inventory.CurrentMoney - BuyElement._price;
             UpdateShopText();
             //TODO : Update Inventory Quantity -------------------------------------------------------------------------------------
         }
@@ -253,6 +254,15 @@ public class S_ShopManager : MonoBehaviour
                     StartCoroutine(MoveVerticalFrames(-1));
                 }
             }
+        }
+    }
+
+    public void LeaveShop(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            SceneManager.LoadScene("MainMenu");
+            S_DataGame.Instance.SaveInventory();
         }
     }
 }
