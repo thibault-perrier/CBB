@@ -739,6 +739,7 @@ MonoBehaviour:
   _canFailedAnyAttack: 0
   _canIgnoreTrap: 0
   _canReverseMovement: 1
+  _canReverseDirection: 0
   _attackSuccesProbability: 0
   _movementProbability: 59.2
   _dodgeProbability: 0
@@ -746,13 +747,16 @@ MonoBehaviour:
   _attackFailedProbability: 0
   _reverseMovementProbability: 15.2
   _attackEnemyWeaponProbabiltiy: 0
+  _reverseDirectionProbability: 0
   _trapLayer:
     serializedVersion: 2
     m_Bits: 64
   _fleeDirection: {fileID: 1916805294}
   _fleeCooldown: 0
   _canAttack: 1
+  _failedAttack: 0
   _attackCooldown: 1
+  _attackFailedCooldown: 1
   _attackFailedDistance: 5
   _enemy: {fileID: 0}
   _target: {fileID: 0}
@@ -1130,7 +1134,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4196e29ba3ed72d41ae683658c492a52, type: 2}
+  - {fileID: 2100000, guid: 24077e1969e5c1341936e1387be0d31f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2149,7 +2153,7 @@ Transform:
   m_GameObject: {fileID: 1952974743}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.2299995, y: 0.69, z: -17.75}
+  m_LocalPosition: {x: -5.72, y: 0.69, z: -22.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2175,7 +2179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _updateStatsOnStart: 1
-  _botRank: 4
+  _botRank: 2
   _statsBotTutorialRank:
     _attackEnemyWeapon: 0
     _attackWithBestWeapon: 0
@@ -2183,7 +2187,8 @@ MonoBehaviour:
     _canFleeEnemy: 0
     _canFailedAnyAttack: 0
     _canIgnoreTrap: 0
-    _canReverseMovement: 0
+    _canReverseMovement: 1
+    _canReverseDirection: 0
     _attackSuccesProbability: 0
     _movementProbability: 60
     _dodgeProbability: 0
@@ -2191,8 +2196,10 @@ MonoBehaviour:
     _attackFailedProbability: 0
     _reverseMovementProbability: 20
     _attackEnemyWeaponProbabiltiy: 0
+    _reverseDirectionProbability: 0
     _attackCooldown: 3
     _fleeCooldown: 0
+    _attackFailedCooldown: 0
     _attackSuccesProbabilityRandom: {x: 0, y: 0}
     _movementProbabilityRandom: {x: -10, y: 10}
     _dodgeProbabilityRandom: {x: 0, y: 0}
@@ -2200,8 +2207,10 @@ MonoBehaviour:
     _attackFailedProbabilityRandom: {x: 0, y: 0}
     _reverseMovementProbabilityRandom: {x: -10, y: 10}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
+    _reverseDirectionProbabilityRandom: {x: 0, y: 0}
     _attackCooldownRandom: {x: 0, y: 0}
     _fleeCooldownRandom: {x: 0, y: 0}
+    _attackFailedCooldownRandom: {x: 0, y: 0}
   _statsBotBronzeRank:
     _attackEnemyWeapon: 0
     _attackWithBestWeapon: 1
@@ -2210,15 +2219,18 @@ MonoBehaviour:
     _canFailedAnyAttack: 1
     _canIgnoreTrap: 0
     _canReverseMovement: 1
-    _attackSuccesProbability: 60
-    _movementProbability: 75
+    _canReverseDirection: 1
+    _attackSuccesProbability: 55
+    _movementProbability: 72.5
     _dodgeProbability: 0
     _fleeProbability: 40
-    _attackFailedProbability: 25
-    _reverseMovementProbability: 25
+    _attackFailedProbability: 60
+    _reverseMovementProbability: 20
     _attackEnemyWeaponProbabiltiy: 0
-    _attackCooldown: 1.5
-    _fleeCooldown: 0
+    _reverseDirectionProbability: 35
+    _attackCooldown: 5
+    _fleeCooldown: 0.1
+    _attackFailedCooldown: 1
     _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _movementProbabilityRandom: {x: -10, y: 10}
     _dodgeProbabilityRandom: {x: 0, y: 0}
@@ -2226,34 +2238,41 @@ MonoBehaviour:
     _attackFailedProbabilityRandom: {x: -5, y: 5}
     _reverseMovementProbabilityRandom: {x: -5, y: 5}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
-    _attackCooldownRandom: {x: 0, y: 0}
-    _fleeCooldownRandom: {x: 0, y: 0}
+    _reverseDirectionProbabilityRandom: {x: -5, y: 5}
+    _attackCooldownRandom: {x: -1.5, y: 1.5}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
+    _attackFailedCooldownRandom: {x: -0.1, y: 0.1}
   _statsBotSliverRank:
-    _attackEnemyWeapon: 1
+    _attackEnemyWeapon: 0
     _attackWithBestWeapon: 1
     _dodgeTrap: 1
     _canFleeEnemy: 1
     _canFailedAnyAttack: 1
     _canIgnoreTrap: 0
     _canReverseMovement: 1
-    _attackSuccesProbability: 75
+    _canReverseDirection: 1
+    _attackSuccesProbability: 70
     _movementProbability: 85
-    _dodgeProbability: 65
+    _dodgeProbability: 80
     _fleeProbability: 70
     _attackFailedProbability: 10
     _reverseMovementProbability: 12
-    _attackEnemyWeaponProbabiltiy: 50
+    _attackEnemyWeaponProbabiltiy: 0
+    _reverseDirectionProbability: 15
     _attackCooldown: 3
     _fleeCooldown: 0.1
+    _attackFailedCooldown: 0.5
     _attackSuccesProbabilityRandom: {x: -10, y: 10}
-    _movementProbabilityRandom: {x: -15, y: 15}
+    _movementProbabilityRandom: {x: -7, y: 7}
     _dodgeProbabilityRandom: {x: -10, y: 10}
-    _fleeProbabilityRandom: {x: -10, y: 10}
+    _fleeProbabilityRandom: {x: -15, y: 15}
     _attackFailedProbabilityRandom: {x: -5, y: 5}
     _reverseMovementProbabilityRandom: {x: -5, y: 5}
     _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
-    _attackCooldownRandom: {x: 0, y: 0}
-    _fleeCooldownRandom: {x: 0, y: 0}
+    _reverseDirectionProbabilityRandom: {x: -2.5, y: 2.5}
+    _attackCooldownRandom: {x: -1, y: 1}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
+    _attackFailedCooldownRandom: {x: -0.01, y: 0.01}
   _statsBotGoldRank:
     _attackEnemyWeapon: 1
     _attackWithBestWeapon: 1
@@ -2262,6 +2281,7 @@ MonoBehaviour:
     _canFailedAnyAttack: 1
     _canIgnoreTrap: 0
     _canReverseMovement: 1
+    _canReverseDirection: 0
     _attackSuccesProbability: 85
     _movementProbability: 95
     _dodgeProbability: 90
@@ -2269,17 +2289,21 @@ MonoBehaviour:
     _attackFailedProbability: 0
     _reverseMovementProbability: 0
     _attackEnemyWeaponProbabiltiy: 70
+    _reverseDirectionProbability: 0
     _attackCooldown: 1
     _fleeCooldown: 0.1
+    _attackFailedCooldown: 0
     _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _movementProbabilityRandom: {x: -15, y: 15}
-    _dodgeProbabilityRandom: {x: -10, y: 10}
+    _dodgeProbabilityRandom: {x: -5, y: 5}
     _fleeProbabilityRandom: {x: 0, y: 20}
     _attackFailedProbabilityRandom: {x: 0, y: 0}
     _reverseMovementProbabilityRandom: {x: 0, y: 5}
     _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
-    _attackCooldownRandom: {x: 0, y: 0}
-    _fleeCooldownRandom: {x: 0, y: 0}
+    _reverseDirectionProbabilityRandom: {x: 0, y: 0}
+    _attackCooldownRandom: {x: 0.5, y: 0.5}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
+    _attackFailedCooldownRandom: {x: 0, y: 0}
   _statsBotDiamondRank:
     _attackEnemyWeapon: 1
     _attackWithBestWeapon: 1
@@ -2288,6 +2312,7 @@ MonoBehaviour:
     _canFailedAnyAttack: 1
     _canIgnoreTrap: 1
     _canReverseMovement: 1
+    _canReverseDirection: 0
     _attackSuccesProbability: 100
     _movementProbability: 100
     _dodgeProbability: 100
@@ -2295,8 +2320,10 @@ MonoBehaviour:
     _attackFailedProbability: 0
     _reverseMovementProbability: 0
     _attackEnemyWeaponProbabiltiy: 100
+    _reverseDirectionProbability: 0
     _attackCooldown: 1
-    _fleeCooldown: 0.5
+    _fleeCooldown: 0
+    _attackFailedCooldown: 0
     _attackSuccesProbabilityRandom: {x: 0, y: 0}
     _movementProbabilityRandom: {x: 0, y: 0}
     _dodgeProbabilityRandom: {x: 0, y: 0}
@@ -2304,8 +2331,10 @@ MonoBehaviour:
     _attackFailedProbabilityRandom: {x: 0, y: 0}
     _reverseMovementProbabilityRandom: {x: 0, y: 0}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
-    _attackCooldownRandom: {x: 0, y: 0}
+    _reverseDirectionProbabilityRandom: {x: 0, y: 0}
+    _attackCooldownRandom: {x: -0.01, y: 0.01}
     _fleeCooldownRandom: {x: 0, y: 0}
+    _attackFailedCooldownRandom: {x: 0, y: 0}
 --- !u!114 &1952974749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2326,6 +2355,7 @@ MonoBehaviour:
   _canFailedAnyAttack: 0
   _canIgnoreTrap: 0
   _canReverseMovement: 0
+  _canReverseDirection: 0
   _attackSuccesProbability: 100
   _movementProbability: 100
   _dodgeProbability: 100
@@ -2333,13 +2363,16 @@ MonoBehaviour:
   _attackFailedProbability: 0
   _reverseMovementProbability: 0
   _attackEnemyWeaponProbabiltiy: 0
+  _reverseDirectionProbability: 0
   _trapLayer:
     serializedVersion: 2
     m_Bits: 64
   _fleeDirection: {fileID: 400416798}
   _fleeCooldown: 0
   _canAttack: 1
+  _failedAttack: 0
   _attackCooldown: 1
+  _attackFailedCooldown: 1
   _attackFailedDistance: 5
   _enemy: {fileID: 0}
   _target: {fileID: 0}
@@ -2596,7 +2629,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4196e29ba3ed72d41ae683658c492a52, type: 2}
+  - {fileID: 2100000, guid: 24077e1969e5c1341936e1387be0d31f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2827,7 +2860,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _updateStatsOnStart: 1
-  _botRank: 3
+  _botRank: 2
   _statsBotTutorialRank:
     _attackEnemyWeapon: 0
     _attackWithBestWeapon: 0
@@ -2835,7 +2868,8 @@ MonoBehaviour:
     _canFleeEnemy: 0
     _canFailedAnyAttack: 0
     _canIgnoreTrap: 0
-    _canReverseMovement: 0
+    _canReverseMovement: 1
+    _canReverseDirection: 0
     _attackSuccesProbability: 0
     _movementProbability: 60
     _dodgeProbability: 0
@@ -2843,8 +2877,10 @@ MonoBehaviour:
     _attackFailedProbability: 0
     _reverseMovementProbability: 20
     _attackEnemyWeaponProbabiltiy: 0
+    _reverseDirectionProbability: 0
     _attackCooldown: 3
     _fleeCooldown: 0
+    _attackFailedCooldown: 0
     _attackSuccesProbabilityRandom: {x: 0, y: 0}
     _movementProbabilityRandom: {x: -10, y: 10}
     _dodgeProbabilityRandom: {x: 0, y: 0}
@@ -2852,8 +2888,10 @@ MonoBehaviour:
     _attackFailedProbabilityRandom: {x: 0, y: 0}
     _reverseMovementProbabilityRandom: {x: -10, y: 10}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
+    _reverseDirectionProbabilityRandom: {x: 0, y: 0}
     _attackCooldownRandom: {x: 0, y: 0}
     _fleeCooldownRandom: {x: 0, y: 0}
+    _attackFailedCooldownRandom: {x: 0, y: 0}
   _statsBotBronzeRank:
     _attackEnemyWeapon: 0
     _attackWithBestWeapon: 1
@@ -2862,15 +2900,18 @@ MonoBehaviour:
     _canFailedAnyAttack: 1
     _canIgnoreTrap: 0
     _canReverseMovement: 1
-    _attackSuccesProbability: 60
-    _movementProbability: 75
+    _canReverseDirection: 1
+    _attackSuccesProbability: 55
+    _movementProbability: 72.5
     _dodgeProbability: 0
     _fleeProbability: 40
-    _attackFailedProbability: 25
-    _reverseMovementProbability: 25
+    _attackFailedProbability: 60
+    _reverseMovementProbability: 20
     _attackEnemyWeaponProbabiltiy: 0
-    _attackCooldown: 1.5
-    _fleeCooldown: 0
+    _reverseDirectionProbability: 35
+    _attackCooldown: 5
+    _fleeCooldown: 0.1
+    _attackFailedCooldown: 1
     _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _movementProbabilityRandom: {x: -10, y: 10}
     _dodgeProbabilityRandom: {x: 0, y: 0}
@@ -2878,34 +2919,41 @@ MonoBehaviour:
     _attackFailedProbabilityRandom: {x: -5, y: 5}
     _reverseMovementProbabilityRandom: {x: -5, y: 5}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
-    _attackCooldownRandom: {x: 0, y: 0}
-    _fleeCooldownRandom: {x: 0, y: 0}
+    _reverseDirectionProbabilityRandom: {x: -5, y: 5}
+    _attackCooldownRandom: {x: -1.5, y: 1.5}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
+    _attackFailedCooldownRandom: {x: -0.1, y: 0.1}
   _statsBotSliverRank:
-    _attackEnemyWeapon: 1
+    _attackEnemyWeapon: 0
     _attackWithBestWeapon: 1
     _dodgeTrap: 1
     _canFleeEnemy: 1
     _canFailedAnyAttack: 1
     _canIgnoreTrap: 0
     _canReverseMovement: 1
-    _attackSuccesProbability: 75
+    _canReverseDirection: 1
+    _attackSuccesProbability: 70
     _movementProbability: 85
-    _dodgeProbability: 65
+    _dodgeProbability: 80
     _fleeProbability: 70
     _attackFailedProbability: 10
     _reverseMovementProbability: 12
-    _attackEnemyWeaponProbabiltiy: 50
+    _attackEnemyWeaponProbabiltiy: 0
+    _reverseDirectionProbability: 15
     _attackCooldown: 3
     _fleeCooldown: 0.1
+    _attackFailedCooldown: 0.5
     _attackSuccesProbabilityRandom: {x: -10, y: 10}
-    _movementProbabilityRandom: {x: -15, y: 15}
+    _movementProbabilityRandom: {x: -7, y: 7}
     _dodgeProbabilityRandom: {x: -10, y: 10}
-    _fleeProbabilityRandom: {x: -10, y: 10}
+    _fleeProbabilityRandom: {x: -15, y: 15}
     _attackFailedProbabilityRandom: {x: -5, y: 5}
     _reverseMovementProbabilityRandom: {x: -5, y: 5}
     _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
-    _attackCooldownRandom: {x: 0, y: 0}
-    _fleeCooldownRandom: {x: 0, y: 0}
+    _reverseDirectionProbabilityRandom: {x: -2.5, y: 2.5}
+    _attackCooldownRandom: {x: -1, y: 1}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
+    _attackFailedCooldownRandom: {x: -0.01, y: 0.01}
   _statsBotGoldRank:
     _attackEnemyWeapon: 1
     _attackWithBestWeapon: 1
@@ -2914,6 +2962,7 @@ MonoBehaviour:
     _canFailedAnyAttack: 1
     _canIgnoreTrap: 0
     _canReverseMovement: 1
+    _canReverseDirection: 0
     _attackSuccesProbability: 85
     _movementProbability: 95
     _dodgeProbability: 90
@@ -2921,8 +2970,10 @@ MonoBehaviour:
     _attackFailedProbability: 0
     _reverseMovementProbability: 0
     _attackEnemyWeaponProbabiltiy: 70
+    _reverseDirectionProbability: 0
     _attackCooldown: 1
     _fleeCooldown: 0.1
+    _attackFailedCooldown: 0
     _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _movementProbabilityRandom: {x: -15, y: 15}
     _dodgeProbabilityRandom: {x: -5, y: 5}
@@ -2930,8 +2981,10 @@ MonoBehaviour:
     _attackFailedProbabilityRandom: {x: 0, y: 0}
     _reverseMovementProbabilityRandom: {x: 0, y: 5}
     _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
-    _attackCooldownRandom: {x: 0, y: 0}
-    _fleeCooldownRandom: {x: 0, y: 0}
+    _reverseDirectionProbabilityRandom: {x: 0, y: 0}
+    _attackCooldownRandom: {x: 0.5, y: 0.5}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
+    _attackFailedCooldownRandom: {x: 0, y: 0}
   _statsBotDiamondRank:
     _attackEnemyWeapon: 1
     _attackWithBestWeapon: 1
@@ -2940,6 +2993,7 @@ MonoBehaviour:
     _canFailedAnyAttack: 1
     _canIgnoreTrap: 1
     _canReverseMovement: 1
+    _canReverseDirection: 0
     _attackSuccesProbability: 100
     _movementProbability: 100
     _dodgeProbability: 100
@@ -2947,8 +3001,10 @@ MonoBehaviour:
     _attackFailedProbability: 0
     _reverseMovementProbability: 0
     _attackEnemyWeaponProbabiltiy: 100
+    _reverseDirectionProbability: 0
     _attackCooldown: 1
-    _fleeCooldown: 0.5
+    _fleeCooldown: 0
+    _attackFailedCooldown: 0
     _attackSuccesProbabilityRandom: {x: 0, y: 0}
     _movementProbabilityRandom: {x: 0, y: 0}
     _dodgeProbabilityRandom: {x: 0, y: 0}
@@ -2956,8 +3012,10 @@ MonoBehaviour:
     _attackFailedProbabilityRandom: {x: 0, y: 0}
     _reverseMovementProbabilityRandom: {x: 0, y: 0}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
-    _attackCooldownRandom: {x: 0, y: 0}
+    _reverseDirectionProbabilityRandom: {x: 0, y: 0}
+    _attackCooldownRandom: {x: -0.01, y: 0.01}
     _fleeCooldownRandom: {x: 0, y: 0}
+    _attackFailedCooldownRandom: {x: 0, y: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

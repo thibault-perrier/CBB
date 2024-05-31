@@ -13,6 +13,14 @@ public class S_AIController : MonoBehaviour
         Trap,
         Distance
     }
+    public enum AIState
+    {
+        Enable,
+        Disable,
+    }
+
+    [SerializeField, Tooltip("the current state of AI")]
+    private AIState _aiState;
 
     [Header("Enemy")]
     [SerializeField, Tooltip("Tag for find enemy")] 
@@ -33,6 +41,8 @@ public class S_AIController : MonoBehaviour
     private bool _canIgnoreTrap;
     [SerializeField, Tooltip("if he can reverse her movement")]
     private bool _canReverseMovement;
+    [SerializeField, Tooltip("if he can reverse her direction")]
+    private bool _canReverseDirection;
 
     [Header("Probability Actions")]
     [SerializeField, Range(0, 100), Tooltip("probability to make an attack when he can do it")] 
@@ -49,6 +59,8 @@ public class S_AIController : MonoBehaviour
     private float _reverseMovementProbability = 0f;
     [SerializeField, Range(0, 100), Tooltip("probability to get enemy weapons for the current target")]
     private float _attackEnemyWeaponProbabiltiy = 0f;
+    [SerializeField, Range(0, 100), Tooltip("probabiltiy to reverse her direction")]
+    private float _reverseDirectionProbability = 0f;
 
     [Header("Toggles actions variable")]
     [SerializeField, Tooltip("layer for hit trap with raycast")]
@@ -61,8 +73,12 @@ public class S_AIController : MonoBehaviour
     [Header("Attack")]
     [SerializeField, Tooltip("if he can attack")]
     private bool _canAttack = true;
+    [SerializeField, Tooltip("if he failed attack")]
+    private bool _failedAttack;
     [SerializeField, Min(0f), Tooltip("coolDown for the next attack")]
     private float _attackCooldown = 1f;
+    [SerializeField, Min(0f), Tooltip("cooldown for try to failed any attack")]
+    private float _attackFailedCooldown = 1f;
     [SerializeField, Min(0f), Tooltip("min distance for failed an attack")]
     private float _attackFailedDistance = 5f;
 
@@ -79,15 +95,37 @@ public class S_AIController : MonoBehaviour
     private GameObject[] _fleeTraps;
     private Vector3 _fleeDestination;
     private WaitForSeconds _attackCooldownCoroutine = new(1f);
+    private WaitForSeconds _attackFailedCoroutine = new(1f);
     private WaitForSeconds _fleeFailureCooldownCoroutine = new(.5f);
 
     [SerializeField]
     private FleeType _fleeMethode = FleeType.None;
 
-    // test varaible 
+    // test varaible
     public List<GameObject> Weapons;
     public List<GameObject> EnemyWeapons;
 
+    /// <summary>
+    /// the current state of AI
+    /// </summary>
+    public AIState State
+    {
+        get => _aiState;
+        set => _aiState = value;
+    }
+
+    /// <summary>
+    /// Set the enemy tag for find enemy
+    /// </summary>
+    public string EnemyTag
+    {
+        get => _enemyTag;
+        set
+        {
+            _enemyTag = value;
+            _enemy = GameObject.FindGameObjectWithTag(value);
+        }
+    }
 
     /// <summary>
     /// if he focus the enemy weapon
@@ -145,7 +183,14 @@ public class S_AIController : MonoBehaviour
         get => _canReverseMovement; 
         set => _canReverseMovement = value; 
     }
-
+    /// <summary>
+    /// if he can reverse her direction
+    /// </summary>
+    public bool CanReverseDirection
+    {
+        get => _canReverseDirection;
+        set => _canReverseDirection = value;
+    }
 
     /// <summary>
     /// probability to make an attack when he can do it
@@ -204,6 +249,15 @@ public class S_AIController : MonoBehaviour
         set => _attackEnemyWeaponProbabiltiy = Mathf.Clamp(value, 0f, 100f);
     }
     /// <summary>
+    /// probabiltiy to reverse her direction
+    /// </summary>
+    public float ReverseDirectionProbability
+    {
+        get => _reverseDirectionProbability;
+        set => _reverseDirectionProbability = Mathf.Clamp(value, 0f, 100f);
+    }
+
+    /// <summary>
     /// coolDown for the next attack
     /// </summary>
     public float AttackCooldown
@@ -227,6 +281,18 @@ public class S_AIController : MonoBehaviour
             _fleeFailureCooldownCoroutine = new(_fleeCooldown);
         }
     }
+    /// <summary>
+    /// cooldown for try to failed any attack
+    /// </summary>
+    public float AttackFailedCooldown
+    {
+        get => _attackFailedCooldown;
+        set
+        {
+            _attackFailedCooldown = Mathf.Max(0f, value);
+            _attackFailedCoroutine = new(_attackFailedCooldown);
+        }
+    }
 
     private void Start()
     {
@@ -242,6 +308,13 @@ public class S_AIController : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        // verif if he is enable for work
+        if (_aiState.Equals(AIState.Disable))
+            return;
+
+        if (!_enemy)
+            return;
+
         // reset the movement state
         _wheelsController.Movement = S_WheelsController.Move.neutral;
 
@@ -255,7 +328,6 @@ public class S_AIController : MonoBehaviour
             UpdateAIMovement();
         }
     }
-
 
     /// <summary>
     /// update the AI movement from target
@@ -283,7 +355,6 @@ public class S_AIController : MonoBehaviour
             MoveBotToTarget();
         }
     }
-
 
     /// <summary>
     /// flee the enemy, he go behind nearest trap if he can or he turn back
@@ -418,7 +489,6 @@ public class S_AIController : MonoBehaviour
         _fleeMethode = FleeType.None;
     }
 
-
     /// <summary>
     /// if we are enough near the target just ignore trap
     /// </summary>
@@ -501,7 +571,6 @@ public class S_AIController : MonoBehaviour
         // if the weapon is behind the target
         if (dotDirection < 0f)
         {
-            float direction = angleToDir > 0f ? -1f : 1f;
             _wheelsController.Direction = 2f;
             // if we are in front of the enemy go backward else fo toward
             _wheelsController.Movement = dotBehindEnemy > 0f ? Reverse(S_WheelsController.Move.backward) : Reverse(S_WheelsController.Move.toward);
@@ -524,12 +593,12 @@ public class S_AIController : MonoBehaviour
             if (angleToDir > 0f)
             {
                 // turn right
-                turnAmount = dotWeaponBody > 0f ? 1f : -1f;
+                turnAmount = dotWeaponBody > 0f ? Reverse(1f) : Reverse(-1f);
             }
             else
             {
                 // turn left
-                turnAmount = dotWeaponBody > 0f ? -1f : 1f;
+                turnAmount = dotWeaponBody > 0f ? Reverse(-1f) : Reverse(1f);
             }
         }
 
@@ -558,7 +627,23 @@ public class S_AIController : MonoBehaviour
 
         return currentMovement;
     }
+    /// <summary>
+    /// reverse the current direction with probability if
+    /// he turn right return turn left else return turn right
+    /// </summary>
+    /// <param name="direction">the current direction</param>
+    /// <returns>return the direction reverse or not</returns>
+    private float Reverse(float direction)
+    {
+        if (!_canReverseDirection)
+            return direction;
 
+        float reverseDirectionRnd = Random.Range(0, 101);
+        if (reverseDirectionRnd < _reverseDirectionProbability)
+            return direction * -1f;
+
+        return direction;
+    }
 
     /// <summary>
     /// get the scale for the GetTurnAmountForDodgeTrap methode
@@ -611,8 +696,7 @@ public class S_AIController : MonoBehaviour
 
         return Mathf.Clamp(turnAmount, -1f, 1f);
     }
-
-    
+ 
     /// <summary>
     /// find all gameobject with layer
     /// </summary>
@@ -651,9 +735,8 @@ public class S_AIController : MonoBehaviour
             .ToList()[0];
     }
 
-
     /// <summary>
-    /// get the forward vector
+    /// get the forward vector of weapon in relation of bot
     /// </summary>
     /// <param name="weapon">current weapon</param>
     /// <param name="bot">him self</param>
@@ -753,13 +836,17 @@ public class S_AIController : MonoBehaviour
         return true;
     }
 
-
     /// <summary>
     /// try to failed any attack with probability
     /// </summary>
     /// <returns>return <b>True</b> if he make an attack</returns>
     private void TryFailedAttack()
     {
+        if (_failedAttack)
+            return;
+
+        StartCoroutine(AttackFailedCooldownCoroutine());
+
         if (!_canAttack)
             return;
 
@@ -822,6 +909,16 @@ public class S_AIController : MonoBehaviour
         _canAttack = false;
         yield return _attackCooldownCoroutine;
         _canAttack = true;
+    }
+    /// <summary>
+    /// Cooldown for try to fail any attack
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator AttackFailedCooldownCoroutine()
+    {
+        _failedAttack = true;
+        yield return _attackFailedCoroutine;
+        _failedAttack = false;
     }
     private IEnumerator SetActiveWeapon(GameObject weapon)
     {
