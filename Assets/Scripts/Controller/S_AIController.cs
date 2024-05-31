@@ -31,7 +31,7 @@ public class S_AIController : MonoBehaviour
     private bool _attackEnemyWeapon;
     [SerializeField, Tooltip("if he use her best weapon for attack")]
     private bool _attackWithBestWeapon;
-    [SerializeField, Tooltip("if he can failed any attack")]
+    [SerializeField, Tooltip("if he can fail any attack")]
     private bool _canFailedAnyAttack;
 
     [Space(15)]
@@ -43,10 +43,10 @@ public class S_AIController : MonoBehaviour
     private bool _canIgnoreTrap;
 
     [Space(15)]
-    [SerializeField, Tooltip("if he can reverse her movement")]
-    private bool _canReverseMovement;
-    [SerializeField, Tooltip("if he can reverse her direction")]
-    private bool _canReverseDirection;
+    [SerializeField, Tooltip("if he can make an accidental movement")]
+    private bool _canMakeAccidentalMovement;
+    [SerializeField, Tooltip("if he can make an accidental direction")]
+    private bool _canMakeAccidentalDirection;
 
     [Header("Probability Actions")]
     [SerializeField, Range(0, 100), Tooltip("probability to make an attack when he can do it")] 
@@ -54,7 +54,7 @@ public class S_AIController : MonoBehaviour
     [SerializeField, Range(0, 100), Tooltip("probability to get enemy weapons for the current target")]
     private float _attackEnemyWeaponProbabiltiy = 0f;
     [SerializeField, Range(0, 100), Tooltip("probability to fail an attack when he cant do any attack")]
-    private float _attackFailedProbability = 0f;
+    private float _attackFailProbability = 0f;
 
     [Space(15)]
     [SerializeField, Range(0, 100), Tooltip("probability to make a movement every frame")]
@@ -65,10 +65,10 @@ public class S_AIController : MonoBehaviour
     private float _fleeProbability = 100f;
 
     [Space(15)]
-    [SerializeField, Range(0, 100), Tooltip("probability to reverse her movement")]
-    private float _reverseMovementProbability = 0f;
-    [SerializeField, Range(0, 100), Tooltip("probabiltiy to reverse her direction")]
-    private float _reverseDirectionProbability = 0f;
+    [SerializeField, Range(0, 100), Tooltip("probability to make an accidental movement")]
+    private float _accidentalMovementProbability = 0f;
+    [SerializeField, Range(0, 100), Tooltip("probabiltiy to make ab accidental direction")]
+    private float _accidentalDirectionProbability = 0f;
 
     [Header("Toggles actions variable")]
     [SerializeField, Tooltip("layer for hit trap with raycast")]
@@ -82,13 +82,13 @@ public class S_AIController : MonoBehaviour
     [SerializeField, Tooltip("if he can attack")]
     private bool _canAttack = true;
     [SerializeField, Tooltip("if he failed attack")]
-    private bool _failedAttack;
+    private bool _failAttack;
     [SerializeField, Min(0f), Tooltip("coolDown for the next attack")]
     private float _attackCooldown = 1f;
     [SerializeField, Min(0f), Tooltip("cooldown for try to failed any attack")]
-    private float _attackFailedCooldown = 1f;
+    private float _attackFailCooldown = 1f;
     [SerializeField, Min(0f), Tooltip("min distance for failed an attack")]
-    private float _attackFailedDistance = 5f;
+    private float _attackFailDistance = 5f;
 
     [Header("Targets (Debug)")]
     [SerializeField, Tooltip("enemy bot")]
@@ -168,9 +168,9 @@ public class S_AIController : MonoBehaviour
         set => _canFleeEnemy = value; 
     }
     /// <summary>
-    /// if he can failed any attack
+    /// if he can fail any attack
     /// </summary>
-    public bool CanFailedAnyAttack 
+    public bool CanFailAnyAttack 
     { 
         get => _canFailedAnyAttack;   
         set => _canFailedAnyAttack = value; 
@@ -186,18 +186,18 @@ public class S_AIController : MonoBehaviour
     /// <summary>
     /// if he can reverse her movement
     /// </summary>
-    public bool CanReverseMovement 
+    public bool CanMakeAccidentalMovement 
     { 
-        get => _canReverseMovement; 
-        set => _canReverseMovement = value; 
+        get => _canMakeAccidentalMovement; 
+        set => _canMakeAccidentalMovement = value; 
     }
     /// <summary>
     /// if he can reverse her direction
     /// </summary>
-    public bool CanReverseDirection
+    public bool CanMakeAccidentalDirection
     {
-        get => _canReverseDirection;
-        set => _canReverseDirection = value;
+        get => _canMakeAccidentalDirection;
+        set => _canMakeAccidentalDirection = value;
     }
 
     /// <summary>
@@ -235,18 +235,18 @@ public class S_AIController : MonoBehaviour
     /// <summary>
     /// probability to fail an attack when he cant do any attack
     /// </summary>
-    public float AttackFailedProbability 
+    public float AttackFailProbability 
     {
-        get => _attackFailedProbability; 
-        set => _attackFailedProbability = Mathf.Clamp(value, 0f, 100f); 
+        get => _attackFailProbability; 
+        set => _attackFailProbability = Mathf.Clamp(value, 0f, 100f); 
     }
     /// <summary>
-    /// probability to reverse her movement
+    /// probability to make an accidental movement
     /// </summary>
-    public float ReverseMovementProbability
+    public float AccidentalMovementProbability
     {
-        get => _reverseMovementProbability;
-        set => _reverseMovementProbability = Mathf.Clamp(value, 0f, 100f);
+        get => _accidentalMovementProbability;
+        set => _accidentalMovementProbability = Mathf.Clamp(value, 0f, 100f);
     }
     /// <summary>
     /// probability to get enemy weapons for the current target
@@ -257,12 +257,12 @@ public class S_AIController : MonoBehaviour
         set => _attackEnemyWeaponProbabiltiy = Mathf.Clamp(value, 0f, 100f);
     }
     /// <summary>
-    /// probabiltiy to reverse her direction
+    /// probabiltiy to make an accidental direction
     /// </summary>
-    public float ReverseDirectionProbability
+    public float AccidentalDirectionProbability
     {
-        get => _reverseDirectionProbability;
-        set => _reverseDirectionProbability = Mathf.Clamp(value, 0f, 100f);
+        get => _accidentalDirectionProbability;
+        set => _accidentalDirectionProbability = Mathf.Clamp(value, 0f, 100f);
     }
 
     /// <summary>
@@ -292,13 +292,13 @@ public class S_AIController : MonoBehaviour
     /// <summary>
     /// cooldown for try to failed any attack
     /// </summary>
-    public float AttackFailedCooldown
+    public float AttackFailCooldown
     {
-        get => _attackFailedCooldown;
+        get => _attackFailCooldown;
         set
         {
-            _attackFailedCooldown = Mathf.Max(0f, value);
-            _attackFailedCoroutine = new(_attackFailedCooldown);
+            _attackFailCooldown = Mathf.Max(0f, value);
+            _attackFailedCoroutine = new(_attackFailCooldown);
         }
     }
 
@@ -435,7 +435,7 @@ public class S_AIController : MonoBehaviour
         return _fleeTraps.Length < 1;
     }
     /// <summary>
-    /// Flee the enemy in puuting us between us and the enemy 
+    /// Flee the enemy behind the nearest trap
     /// </summary>
     private void FleeEnemyWithTrap()
     {
@@ -444,7 +444,10 @@ public class S_AIController : MonoBehaviour
 
         // if he has not already fleeDestination
         if (_fleeDestination.Equals(Vector3.positiveInfinity))
+        {
+            // set the flee destination by the behind of nearest trap
             _fleeDestination = transform.position + dirSelfToTrap + dirSelfToTrap.normalized * 3f;
+        }
 
         if (IsBlocked())
         {
@@ -631,11 +634,11 @@ public class S_AIController : MonoBehaviour
     private S_WheelsController.Move Reverse(S_WheelsController.Move currentMovement)
     {
         // if he cant reverse the movement just return the current
-        if (!_canReverseMovement)
+        if (!_canMakeAccidentalMovement)
             return currentMovement;
 
         float reverseMovementRnd = Random.Range(0, 101);
-        if (reverseMovementRnd < _reverseMovementProbability)
+        if (reverseMovementRnd < _accidentalMovementProbability)
         {
             // if he move toward return backward else return toward
             if (currentMovement.Equals(S_WheelsController.Move.toward))
@@ -655,12 +658,12 @@ public class S_AIController : MonoBehaviour
     private float Reverse(float direction)
     {
         // if he cant reverse direction return the current
-        if (!_canReverseDirection)
+        if (!_canMakeAccidentalDirection)
             return direction;
 
         float reverseDirectionRnd = Random.Range(0, 101);
         // if direction equal 1 return -1 else return 1
-        if (reverseDirectionRnd < _reverseDirectionProbability)
+        if (reverseDirectionRnd < _accidentalDirectionProbability)
             return direction * -1f;
 
         return direction;
@@ -870,7 +873,7 @@ public class S_AIController : MonoBehaviour
     /// <returns>return <b>True</b> if he make an attack</returns>
     private void TryFailedAttack()
     {
-        if (_failedAttack)
+        if (_failAttack)
             return;
 
         StartCoroutine(AttackFailedCooldownCoroutine());
@@ -880,7 +883,7 @@ public class S_AIController : MonoBehaviour
 
         // if he is not enough close to the enemy
         float distanceToEnemy = Vector3.Distance(transform.position, _enemy.transform.position);
-        if (distanceToEnemy > _attackFailedDistance)
+        if (distanceToEnemy > _attackFailDistance)
             return;
 
         if (!_canFailedAnyAttack)
@@ -888,7 +891,7 @@ public class S_AIController : MonoBehaviour
         
         // get random for the attack failed
         float failedAttackRnd = Random.Range(0, 101);
-        if (_attackFailedProbability >= failedAttackRnd)
+        if (_attackFailProbability >= failedAttackRnd)
         {
             if (!CurrentWeaponCanAttack())
                 AttackWithCurrrentWeapon();
@@ -944,9 +947,9 @@ public class S_AIController : MonoBehaviour
     /// <returns></returns>
     private IEnumerator AttackFailedCooldownCoroutine()
     {
-        _failedAttack = true;
+        _failAttack = true;
         yield return _attackFailedCoroutine;
-        _failedAttack = false;
+        _failAttack = false;
     }
     private IEnumerator SetActiveWeapon(GameObject weapon)
     {

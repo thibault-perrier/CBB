@@ -9,8 +9,8 @@ public struct StatsBotRank
     private bool _attackEnemyWeapon;
     [SerializeField, Tooltip("if he use her best weapon for attack")]
     private bool _attackWithBestWeapon;
-    [SerializeField, Tooltip("if he can failed any attack with probability")]
-    private bool _canFailedAnyAttack;
+    [SerializeField, Tooltip("if he can fail any attack with probability")]
+    private bool _canFailAnyAttack;
 
     [Space(15)]
     [SerializeField, Tooltip("if he dodge the trap with probability")]
@@ -21,10 +21,10 @@ public struct StatsBotRank
     private bool _canIgnoreTrap;
 
     [Space(15)]
-    [SerializeField, Tooltip("if he can reverse her movement with probability")]
-    private bool _canReverseMovement;
-    [SerializeField, Tooltip("if he can reverse her direction with probability")]
-    private bool _canReverseDirection;
+    [SerializeField, Tooltip("if he can make an accidental movement with probability")]
+    private bool _canMakeAccidentalMovement;
+    [SerializeField, Tooltip("if he can make an accidental direction with probability")]
+    private bool _canMakeAccidentalDirection;
 
     [Header("Probability Actions")]
     [SerializeField, Range(0, 100), Tooltip("probability to make an attack when he can do it")]
@@ -32,7 +32,7 @@ public struct StatsBotRank
     [SerializeField, Range(0, 100), Tooltip("probability to get enemy weapons for the current target")]
     private float _attackEnemyWeaponProbabiltiy;
     [SerializeField, Range(0, 100), Tooltip("probability to fail an attack when he cant do any attack")]
-    private float _attackFailedProbability;
+    private float _attackFailProbability;
 
     [Space(15)]
     [SerializeField, Range(0, 100), Tooltip("probability to make a movement every frame")]
@@ -43,10 +43,10 @@ public struct StatsBotRank
     private float _fleeProbability;
 
     [Space(15)]
-    [SerializeField, Range(0, 100), Tooltip("probability to reverse her movement")]
-    private float _reverseMovementProbability;
-    [SerializeField, Range(0, 100), Tooltip("probabiltiy to reverse her direction")]
-    private float _reverseDirectionProbability;
+    [SerializeField, Range(0, 100), Tooltip("probability to make an accidental movement")]
+    private float _accidentalMovementProbability;
+    [SerializeField, Range(0, 100), Tooltip("probabiltiy to make an accidental direction")]
+    private float _accidentalDirectionProbability;
 
     [Header("Cooldown")]
     [SerializeField, Min(0f), Tooltip("coolDown for the next attack")]
@@ -54,7 +54,7 @@ public struct StatsBotRank
     [SerializeField, Min(0f), Tooltip("coolDown for the flee failure come back to None")]
     private float _fleeCooldown;
     [SerializeField, Min(0f), Tooltip("cooldown for try to failed any attack")]
-    private float _attackFailedCooldown;
+    private float _attackFailCooldown;
 
     [Header("Offset variable random")]
     [SerializeField, Tooltip("the offset of attack succes probability when he is gets, Y is Exclusive")]
@@ -62,7 +62,7 @@ public struct StatsBotRank
     [SerializeField, Tooltip("the offset of attack enemy probability when he is gets, Y is exclusive")]
     private Vector2 _attackEnemyWeaponProbabilityRandom;
     [SerializeField, Tooltip("the offset of attack failed probability when he is gets, Y is Exclusive")]
-    private Vector2 _attackFailedProbabilityRandom;
+    private Vector2 _attackFailProbabilityRandom;
 
     [Space(15)]
     [SerializeField, Tooltip("the offset of movement probability when he is gets, Y is Exclusive")]
@@ -71,10 +71,10 @@ public struct StatsBotRank
     private Vector2 _dodgeProbabilityRandom;
     [SerializeField, Tooltip("the offset of flee probability when he is gets, Y is Exclusive")]
     private Vector2 _fleeProbabilityRandom;
-    [SerializeField, Tooltip("the offset of reverse movement probabiltiy when he is gets, Y is Exclusive")]
-    private Vector2 _reverseMovementProbabilityRandom;
-    [SerializeField, Tooltip("the offset of reverse direction when he is gets, Y is exlusive")]
-    private Vector2 _reverseDirectionProbabilityRandom;
+    [SerializeField, Tooltip("the offset of accidental movement probabiltiy when he is gets, Y is Exclusive")]
+    private Vector2 _accidentalMovementProbabilityRandom;
+    [SerializeField, Tooltip("the offset of accidental direction when he is gets, Y is exlusive")]
+    private Vector2 _accidentalDirectionProbabilityRandom;
 
     [Space(15)]
     [SerializeField, Tooltip("the offset of flee cooldown when he is gets, Y is exclusive")]
@@ -82,7 +82,7 @@ public struct StatsBotRank
     [SerializeField, Tooltip("the offset of attack cooldown when he is gets, Y is exclusive")]
     private Vector2 _fleeCooldownRandom;
     [SerializeField, Tooltip("the offset of attack failed cooldown when he is gets, Y is exclusive")]
-    private Vector2 _attackFailedCooldownRandom;
+    private Vector2 _attackFailCooldownRandom;
 
     /// <summary>
     /// if he focus the enemy weapon
@@ -113,11 +113,11 @@ public struct StatsBotRank
         get => _canFleeEnemy;
     }
     /// <summary>
-    /// if he can failed any attack
+    /// if he can fail any attack
     /// </summary>
-    public bool CanFailedAnyAttack
+    public bool CanFailAnyAttack
     {
-        get => _canFailedAnyAttack;
+        get => _canFailAnyAttack;
     }
     /// <summary>
     /// if he can ignore the trap when we are enough near the target
@@ -127,19 +127,19 @@ public struct StatsBotRank
         get => _canIgnoreTrap;
     }
     /// <summary>
-    /// if he can reverse her movement
+    /// if he can make an accidental movement with probability
     /// </summary>
-    public bool CanReverseMovement
+    public bool CanMakeAccidentalMovement
     {
-        get => _canReverseMovement;
+        get => _canMakeAccidentalMovement;
     }
     /// <summary>
-    /// if he can reverse her direction with probability
+    /// if he can make an accidental direction with probability
     /// </summary>
-    public bool CanReverseDirection
+    public bool CanMakeAccidentalDirection
     {
-        get => _canReverseDirection;
-        set => _canReverseDirection = value;
+        get => _canMakeAccidentalDirection;
+        set => _canMakeAccidentalDirection = value;
     }
 
     /// <summary>
@@ -171,18 +171,18 @@ public struct StatsBotRank
         get => Mathf.Clamp(_fleeProbability + Random.Range(_fleeProbabilityRandom.x, _fleeProbabilityRandom.y), 0f, 100f); 
     }
     /// <summary>
-    /// Get attack failed probability with random offset
+    /// Get attack fail probability with random offset
     /// </summary>
-    public float AttackFailedProbabiltiy 
+    public float AttackFailProbabiltiy 
     { 
-        get => Mathf.Clamp(_attackFailedProbability + Random.Range(_attackFailedProbabilityRandom.x, _attackFailedProbabilityRandom.y), 0f, 100f); 
+        get => Mathf.Clamp(_attackFailProbability + Random.Range(_attackFailProbabilityRandom.x, _attackFailProbabilityRandom.y), 0f, 100f); 
     }
     /// <summary>
     /// probability to reverse her movement
     /// </summary>
-    public float ReverseMovementProbability
+    public float AccidentalMovementProbability
     {
-        get => Mathf.Clamp(_reverseMovementProbability + Random.Range(_reverseMovementProbabilityRandom.x, _reverseMovementProbabilityRandom.y), 0f, 100f);
+        get => Mathf.Clamp(_accidentalMovementProbability + Random.Range(_accidentalMovementProbabilityRandom.x, _accidentalMovementProbabilityRandom.y), 0f, 100f);
     }
     /// <summary>
     /// the offset of attack enemy probability when he is gets
@@ -194,9 +194,9 @@ public struct StatsBotRank
     /// <summary>
     /// probabiltiy to reverse her direction
     /// </summary>
-    public float ReverseDirectionProbability
+    public float AccidentalDirectionProbability
     {
-        get => Mathf.Clamp(_reverseDirectionProbability + Random.Range(_reverseDirectionProbabilityRandom.x, _reverseDirectionProbabilityRandom.y), 0f, 100f);
+        get => Mathf.Clamp(_accidentalDirectionProbability + Random.Range(_accidentalDirectionProbabilityRandom.x, _accidentalDirectionProbabilityRandom.y), 0f, 100f);
     }
 
     /// <summary>
@@ -214,11 +214,11 @@ public struct StatsBotRank
         get => Mathf.Max(_attackCooldown + Random.Range(_attackCooldownRandom.x, _attackCooldownRandom.y), 0f);
     }
     /// <summary>
-    /// cooldown for try to failed any attack
+    /// cooldown for try to fail any attack
     /// </summary>
-    public float AttackFailedCooldown
+    public float AttackFailCooldown
     {
-        get => Mathf.Max(_attackFailedCooldown + Random.Range(_attackFailedCooldownRandom.x, _attackFailedCooldownRandom.y), 0f);
+        get => Mathf.Max(_attackFailCooldown + Random.Range(_attackFailCooldownRandom.x, _attackFailCooldownRandom.y), 0f);
     }
 }
 
@@ -350,27 +350,27 @@ public class S_AIStatsController : MonoBehaviour
         // set the toggles actions
         _aiController.AttackEnemyWeapon = stats.AttackEnemyWeapon;
         _aiController.CanFleeEnemy = stats.CanFleeEnemy;
-        _aiController.CanFailedAnyAttack = stats.CanFailedAnyAttack;
+        _aiController.CanFailAnyAttack = stats.CanFailAnyAttack;
         _aiController.CanIgnoreTrap = stats.CanIgnoreTrap;
         _aiController.AttackWithBestWeapon = stats.AttackWithBestWeapon;
         _aiController.DodgeTrap = stats.CanDodgeTrap;
-        _aiController.CanReverseMovement = stats.CanReverseMovement;
-        _aiController.CanReverseDirection = stats.CanReverseDirection;
+        _aiController.CanMakeAccidentalMovement = stats.CanMakeAccidentalMovement;
+        _aiController.CanMakeAccidentalDirection = stats.CanMakeAccidentalDirection;
 
         // set the actions probability
-        _aiController.AttackFailedProbability = stats.AttackFailedProbabiltiy;
+        _aiController.AttackFailProbability = stats.AttackFailProbabiltiy;
         _aiController.AttackSuccesProbability = stats.AttackSuccesProbability;
         _aiController.DodgeProbability = stats.DodgeProbability;
         _aiController.FleeProbability = stats.FleeProbability;
         _aiController.MovementProbability = stats.MovementProbability;
-        _aiController.ReverseMovementProbability = stats.ReverseMovementProbability;
+        _aiController.AccidentalMovementProbability = stats.AccidentalMovementProbability;
         _aiController.AttackEnemyWeaponProbability = stats.AttackWeaponEnemyProbability;
-        _aiController.ReverseDirectionProbability = stats.ReverseDirectionProbability;
+        _aiController.AccidentalDirectionProbability = stats.AccidentalDirectionProbability;
 
         // set the cooldown
         _aiController.AttackCooldown = stats.AttackCooldown;
         _aiController.FleeCooldown = stats.FleeCooldown;
-        _aiController.AttackFailedCooldown = stats.AttackFailedCooldown;
+        _aiController.AttackFailCooldown = stats.AttackFailCooldown;
     }
     /// <summary>
     /// Set the all bot statistique randomly
