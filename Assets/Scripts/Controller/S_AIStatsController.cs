@@ -235,9 +235,9 @@ public class S_AIStatsController : MonoBehaviour
         Randomly
     }
 
-    [SerializeField]
+    [SerializeField, Tooltip("if the statistique are set in the start")]
     private bool _updateStatsOnStart;
-    [SerializeField]
+    [SerializeField, Tooltip("current rank for the bot")]
     private BotRank _botRank = BotRank.Bronze;
 
     [Header("Bot Ranks")]

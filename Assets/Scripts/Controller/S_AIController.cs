@@ -590,7 +590,7 @@ public class S_AIController : MonoBehaviour
         // if the weapon is behind the target
         if (dotDirection < 0f)
         {
-            _wheelsController.Direction = 2f;
+            _wheelsController.Direction = Reverse(2f);
             // if we are in front of the enemy go backward else fo toward
             _wheelsController.Movement = dotBehindEnemy > 0f ? Reverse(S_WheelsController.Move.backward) : Reverse(S_WheelsController.Move.toward);
             return;
