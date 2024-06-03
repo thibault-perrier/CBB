@@ -1,67 +1,59 @@
-using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class S_ObjectClickable : MonoBehaviour
 {
+    public static S_ObjectClickable Instance;
     private bool _isFocused = false;
+    public bool _interactionLocked = false; 
     [SerializeField] private Animator _animatorDoor;
     [SerializeField] private Animator _animatorCameraGarage;
-    [SerializeField] private Animator _animatorFade;
 
-    private void OnMouseUpAsButton()
+    public void OnFocus()
     {
-        Activate();
-    }
-
-    private void OnMouseOver()
-    {
-        if (!_isFocused)
+        if (!_interactionLocked) 
         {
+            _isFocused = true;
             SetColor(Color.blue);
         }
     }
 
-    private void OnMouseExit()
+    public void OnFocusLost()
     {
-        if (!_isFocused)
+        if (!_interactionLocked) 
         {
+            _isFocused = false;
             SetColor(Color.white);
         }
     }
 
-    public void OnFocus()
-    {
-        _isFocused = true;
-        SetColor(Color.blue);
-    }
-
-    public void OnFocusLost()
-    {
-        _isFocused = false;
-        SetColor(Color.white);
-    }
-
     public void OnActivated()
     {
-        Activate();
+        if (!_interactionLocked) 
+        {
+            Activate();
+            SetColor(Color.white);
+        }
     }
 
     private void Activate()
     {
+        LockInteraction(); 
+
         if (gameObject.CompareTag("Garage"))
         {
+            SetColor(Color.white);
             _animatorDoor.SetBool("Open", true);
             _animatorCameraGarage.SetBool("MoveToGarage", true);
-            Debug.Log(_animatorCameraGarage);
         }
         else if (gameObject.CompareTag("Tournament"))
         {
-            SceneManager.LoadScene("TournamentScene");
+            SetColor(Color.white);
+            _animatorCameraGarage.SetBool("MoveToTournament", true);
         }
         else if (gameObject.CompareTag("Shop"))
         {
-            StartCoroutine(SwitchShop());
+            //SetColor(Color.white);
+            _animatorCameraGarage.SetBool("MoveToShop", true);
         }
     }
 
@@ -70,12 +62,13 @@ public class S_ObjectClickable : MonoBehaviour
         gameObject.LeanColor(color, 0.1f);
     }
 
-    private IEnumerator SwitchShop()
+    private void LockInteraction() 
     {
-        _animatorCameraGarage.SetBool("MoveToShop", true);
-        yield return new WaitForSeconds(3.29f);
-        _animatorFade.SetBool("Fade", true);
-        SceneManager.LoadScene("Shop");
-        yield return null;
+        _interactionLocked = true;
+    }
+
+    public void UnlockInteraction() 
+    {
+        _interactionLocked = false;
     }
 }

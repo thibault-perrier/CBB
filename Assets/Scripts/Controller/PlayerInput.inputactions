@@ -274,6 +274,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "LeaveShop",
+                    "type": "Button",
+                    "id": "4b9d10f3-1cf6-4c43-9b62-435f9ffe11b5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -626,6 +635,17 @@
                     "processors": "InvertVector2(invertX=false)",
                     "groups": "",
                     "action": "ShopControllers",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "371e9c0d-11b9-4265-840c-efd6f620f894",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeaveShop",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

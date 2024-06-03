@@ -1,13 +1,22 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
-public class ClickablesManager : MonoBehaviour
+public class S_ClickablesManager : MonoBehaviour
 {
+    public static S_ClickablesManager Instance;
     public GameObject[] _clickables;
     private int _currentIndex = 0;
     private float _navigationCooldown = 0.2f;
     private float _nextNavigationTime = 0f;
+    public GameObject mainMenu;
+    public GameObject shopMenu;
 
+    void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+    }
     void Start()
     {
         if (_clickables.Length > 0)
@@ -27,17 +36,17 @@ public class ClickablesManager : MonoBehaviour
 
             if (joystickInput.x > 0.5f)
             {
-                Navigate(1);
+                Navigate(-1);
                 _nextNavigationTime = Time.time + _navigationCooldown;
             }
             else if (joystickInput.x < -0.5f)
             {
-                Navigate(-1);
+                Navigate(1);
                 _nextNavigationTime = Time.time + _navigationCooldown;
             }
         }
 
-        if (gamepad.buttonSouth.wasPressedThisFrame) // A button on Xbox controller
+        if (gamepad.buttonSouth.wasPressedThisFrame) 
         {
             ActivateCurrent();
         }
@@ -79,5 +88,22 @@ public class ClickablesManager : MonoBehaviour
         {
             clickable.OnActivated();
         }
+    }
+
+    public void HideMainMenu()
+    {
+        mainMenu.SetActive(false);
+        shopMenu.SetActive(true);
+    }
+
+    public void ShowMainMenu()
+    {
+        mainMenu.SetActive(true);
+        shopMenu.SetActive(false);
+    }
+
+    public void LoadTournament()
+    {
+        SceneManager.LoadScene("TournamentScene");
     }
 }

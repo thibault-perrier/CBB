@@ -222,7 +222,7 @@ public class S_ShopManager : MonoBehaviour
 
     public void OnShopControllers(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && gameObject.activeInHierarchy)
         {
             float horizontalInput = context.ReadValue<Vector2>().x;
             float verticalInput = context.ReadValue<Vector2>().y;   
@@ -261,7 +261,8 @@ public class S_ShopManager : MonoBehaviour
     {
         if (context.started)
         {
-            SceneManager.LoadScene("MainMenu");
+            S_ClickablesManager.Instance.mainMenu.SetActive(true);
+            S_ClickablesManager.Instance.shopMenu.SetActive(false);
             S_DataGame.Instance.SaveInventory();
         }
     }
