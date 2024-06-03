@@ -77,7 +77,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         _state = State.destroy;
     }
 
-    public void Repear()
+    public void Repair()
     {
         _life = _data.MaxLife;
         _state = State.ok;
@@ -94,7 +94,12 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     public void LaunchAttack()
     {
         if(_state == State.ok)
+        {
             _animator.SetBool("_playAttack", true);
+            AttackON();
+        }
+            
+
     }
 
     private void AttackON()

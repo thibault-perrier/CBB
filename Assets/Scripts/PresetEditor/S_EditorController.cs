@@ -38,6 +38,7 @@ public class S_EditorController : MonoBehaviour
     [SerializeField] private List<GameObject> _presetWeaponsHookPoints;
     [SerializeField] private S_FrameData _presetFrameData;
     [SerializeField] private List<S_WeaponData> _presetWeaponData;
+    [SerializeField] private int _indexHookPointToModify;
 
     [SerializeField] private List<GameObject> _presetObjectPart;
 
@@ -48,6 +49,7 @@ public class S_EditorController : MonoBehaviour
 
     enum EditState
     {
+        PartChoice,
         PresetChoice,
         WeaponChoice,
         FrameChoice
@@ -73,20 +75,19 @@ public class S_EditorController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
             _selecteIndex -= 1;
-            if (_selecteIndex < 0)
-                _selecteIndex = _weapons.Count - 1;
-            Debug.Log(_weapons[_selecteIndex].gameObject.transform.position);
-            _selectedMaterial.SetVector("_Selected_Object_Position", _weapons[_selecteIndex].gameObject.transform.position);
+            Selector();
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
             _selecteIndex += 1;
-            if (_selecteIndex > _weapons.Count -1)
-                _selecteIndex = 0;
-            _selectedMaterial.SetVector("_Selected_Object_Position", _weapons[_selecteIndex].gameObject.transform.position);
+            Selector();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Back();
         }
 
-        
+
     }
 
     /// <summary>
@@ -212,13 +213,45 @@ public class S_EditorController : MonoBehaviour
         switch (_editState)
         {
             case EditState.PresetChoice:
-                // go to Menu
+                // retour menu
                 break;
-            case EditState.FrameChoice:
+            case EditState.PartChoice:
                 _editState = EditState.PresetChoice;
                 break;
+            case EditState.FrameChoice:
+                _editState = EditState.PartChoice;
+                break;
             case EditState.WeaponChoice:
-                _editState = EditState.FrameChoice;
+                _editState = EditState.PartChoice;
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void Selector()
+    {
+        switch (_editState)
+        {
+            case EditState.PresetChoice:
+                if (_selecteIndex > _presets.Count - 1)
+                    _selecteIndex = 0;
+                _selectedMaterial.SetVector("_Selected_Object_Position", _presets[_selecteIndex].gameObject.transform.position);
+                break;
+             case EditState.PartChoice:
+                if (_selecteIndex > _presetObjectPart.Count - 1)
+                    _selecteIndex = 0;
+                _selectedMaterial.SetVector("_Selected_Object_Position", _presetObjectPart[_selecteIndex].gameObject.transform.position);
+                break;
+            case EditState.FrameChoice:
+                if (_selecteIndex > _frame.Count - 1)
+                    _selecteIndex = 0;
+                _selectedMaterial.SetVector("_Selected_Object_Position", _frame[_selecteIndex].gameObject.transform.position);
+                break;
+            case EditState.WeaponChoice:
+                if (_selecteIndex > _weapons.Count - 1)
+                    _selecteIndex = 0;
+                _selectedMaterial.SetVector("_Selected_Object_Position", _weapons[_selecteIndex].gameObject.transform.position);
                 break;
             default:
                 break;
@@ -232,32 +265,88 @@ public class S_EditorController : MonoBehaviour
             case EditState.PresetChoice:
                 
                 break;
+            case EditState.PartChoice:
+
+                if (_presetObjectPart[_selecteIndex].GetComponent<S_FrameManager>() != null)
+                {
+                    _editState = EditState.FrameChoice;
+                }
+                else
+                {
+                    _indexHookPointToModify = _selecteIndex;
+                    _editState = EditState.WeaponChoice;
+                }
+                break;
             case EditState.FrameChoice:
 
                 break;
             case EditState.WeaponChoice:
+
+                _editState = EditState.PartChoice;
+
 
                 break;
             default:
                 break;
         }
     }
-    
+
+    /// <summary>
+    /// Set save of robot for new weapons selected
+    /// </summary>
+    /// <param name="weaponData"></param>
+    private void UpdatePresetWeapon(S_WeaponData weaponData)
+    {
+        List<Weapons> _weapons = new List<Weapons>();     //list of new weapons of robot
+
+        for (int i = 1; i < _presetObjectPart.Count(); i++)
+        {
+            if (i != _indexHookPointToModify)
+            {
+                //Weapon weapon = Weapon relier au weaponData;
+                // _weapons.Add(weapon);
+            }
+            else
+            {
+                _weapons.Add(null);
+            }
+                
+        }
+        UpdatePrefabRobot();
+    }
+
+    /// <summary>
+    /// Set save of robot for new frame selected
+    /// </summary>
+    /// <param name="weaponData"></param>
+    private void UpdatePresetFrame(S_WeaponData weaponData)
+    {
+        List<Weapons> _weapons = new List<Weapons>();     //list of new weapons of robot
+
+        for (int i = 1; i < _presetObjectPart.Count(); i++)
+        {
+            if (i != _indexHookPointToModify)
+            {
+                //Weapon weapon = Weapon relier au weaponData;
+                // _weapons.Add(weapon);
+            }
+            else
+            {
+                _weapons.Add(null);
+            }
+
+        }
+        UpdatePrefabRobot();
+    }
+
     private void UnSelectItem()
     {
-        switch (_editState)
+        if (_editState == EditState.PartChoice && _presetObjectPart[_selecteIndex].GetComponent<S_WeaponManager>() != null)
         {
-            case EditState.PresetChoice:
-                
-                break;
-            case EditState.FrameChoice:
-
-                break;
-            case EditState.WeaponChoice:
-
-                break;
-            default:
-                break;
+            GameObject gameObject = _presetObjectPart[_selecteIndex];
+            _presetObjectPart[_selecteIndex] = gameObject.transform.parent.gameObject;
+            Destroy(gameObject);
+            UpdatePrefabRobot();
         }
     }
 
@@ -314,24 +403,41 @@ public class S_EditorController : MonoBehaviour
         List<S_WeaponData> weaponsData = _selectedWeaponsData;
 
         GameObject frame = Instantiate(frameData.Prefab);
-        List<GameObject> weapons = new List<GameObject>();
 
         List<GameObject> hookPoits = frame.GetComponent<S_FrameManager>().WeaponHookPoints.ToList();
-
-        for (int i = 0; i < weaponsData.Count(); i++)
+        
+        foreach(GameObject gameObject in _presetObjectPart)
         {
-            if (hookPoits.Count() - 1 >= i)
-            {
-                weapons.Add(Instantiate(weaponsData[i].Prefab));
-                weapons[i].transform.parent = hookPoits[i].transform;
-                weapons[i].transform.localPosition = Vector3.zero;
-                weapons[i].transform.localRotation = Quaternion.identity;
-            }
+            Destroy(gameObject);
         }
 
         _presetObjectPart.Clear();
-        _presetObjectPart = weapons.ToList();
         _presetObjectPart.Add(frame);
+
+        for (int i = 0; i < weaponsData.Count(); i++)
+        {
+
+            if (hookPoits.Count() - 1 >= i)
+            {
+                if(weaponsData[i] != null)
+                {
+                    GameObject weapon = Instantiate(weaponsData[i].Prefab);
+                    _presetObjectPart.Add(weapon);
+                    weapon.transform.parent = hookPoits[i].transform;
+                    weapon.transform.localPosition = Vector3.zero;
+                    weapon.transform.localRotation = Quaternion.identity;
+                }
+                else
+                {
+                    _presetObjectPart.Add(hookPoits[i]);
+                }
+                
+            }
+        }
+
+        
+        
+        
     }
 
     private void UpdatePresetRobotGroup()

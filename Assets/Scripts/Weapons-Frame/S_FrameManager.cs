@@ -61,7 +61,7 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
         // Logic to remove destroy items in inventory
     }
 
-    public void Repear()
+    public void Repair()
     {
         _life = _data.MaxLife;
     }
