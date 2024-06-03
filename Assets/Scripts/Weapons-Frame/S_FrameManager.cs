@@ -6,7 +6,7 @@ using UnityEngine;
 public class S_FrameManager : MonoBehaviour, I_Damageable
 {
     private int _life;
-    [SerializeField] private S_WeaponData _data;
+    [SerializeField] private S_FrameData _data;
     private Rigidbody _rb;
     [SerializeField] private List<GameObject> _weaponHookPoints;
     [SerializeField] private bool _player = false;
