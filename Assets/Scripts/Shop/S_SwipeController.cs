@@ -11,13 +11,14 @@ public class S_SwipeController : MonoBehaviour
     [SerializeField] float _tweenTime;
     [SerializeField] LeanTweenType _tweenType;
 
-    public static S_SwipeController instance;
+    public static S_SwipeController Instance;
 
     private void Awake()
     {
         _currentPage = 1;
         _targetPos = _levelPageRect.localPosition;
-        instance = this;
+        if (Instance == null)
+            Instance = this;
     }
 
     public void Next() //switch next frame
@@ -27,10 +28,9 @@ public class S_SwipeController : MonoBehaviour
             _currentPage++;
             _targetPos += _pageStep;
             MovePage();
-            S_HorizontalImageSelector.Instance.ChangeFrame(1);
-            S_HorizontalImageSelector.Instance._pageNumber++;
+            S_ShopManager.Instance.ChangeFrame(1);
         }
-        S_HorizontalImageSelector.Instance.UpdateShopText();
+        S_ShopManager.Instance.UpdateShopText();
     }
 
     public void Previous()//switch previous frame
@@ -40,10 +40,9 @@ public class S_SwipeController : MonoBehaviour
             _currentPage--;
             _targetPos -= _pageStep;
             MovePage();
-            S_HorizontalImageSelector.Instance.ChangeFrame(-1);
-            S_HorizontalImageSelector.Instance._pageNumber--;
+            S_ShopManager.Instance.ChangeFrame(-1);
         }
-        S_HorizontalImageSelector.Instance.UpdateShopText();
+        S_ShopManager.Instance.UpdateShopText();
     }
 
     public void MovePage() // anim switch frame
