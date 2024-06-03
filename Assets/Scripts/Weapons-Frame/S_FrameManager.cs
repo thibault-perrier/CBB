@@ -6,10 +6,11 @@ using UnityEngine;
 public class S_FrameManager : MonoBehaviour, I_Damageable
 {
     private int _life;
-    [SerializeField] private S_WeaponData _data;
+    [SerializeField] private S_FrameData _data;
     private Rigidbody _rb;
     [SerializeField] private List<GameObject> _weaponHookPoints;
     [SerializeField] private bool _player = false;
+    public List<S_WeaponManager> _weaponManagers;
 
     public int NBWeaponHookPoints
     {
@@ -27,7 +28,14 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     // Start is called before the first frame update
     void Start()
     {
-        
+        foreach (GameObject gameObject in _weaponHookPoints)
+        {
+            S_WeaponManager weaponManager = gameObject.GetComponentInChildren<S_WeaponManager>();
+            if(weaponManager != null)
+            {
+                _weaponManagers.Add(weaponManager);
+            }
+        }
     }
 
     // Update is called once per frame
