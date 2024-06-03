@@ -49,12 +49,16 @@ public struct StatsBotRank
     private float _accidentalDirectionProbability;
 
     [Header("Cooldown")]
-    [SerializeField, Min(0f), Tooltip("coolDown for the next attack")]
+    [SerializeField, Min(0f), Tooltip("cooldown for the next attack")]
     private float _attackCooldown;
     [SerializeField, Min(0f), Tooltip("coolDown for the flee failure come back to None")]
     private float _fleeCooldown;
-    [SerializeField, Min(0f), Tooltip("cooldown for try to failed any attack")]
+    [SerializeField, Min(0f), Tooltip("cooldown for try to fail any attack")]
     private float _attackFailCooldown;
+
+    [Header("Distance")]
+    [SerializeField, Min(0f), Tooltip("min distance for fail an attack")]
+    private float _attackFailDistance;
 
     [Header("Offset variable random")]
     [SerializeField, Tooltip("the offset of attack succes probability when he is gets, Y is Exclusive")]
@@ -220,6 +224,14 @@ public struct StatsBotRank
     {
         get => Mathf.Max(_attackFailCooldown + Random.Range(_attackFailCooldownRandom.x, _attackFailCooldownRandom.y), 0f);
     }
+
+    /// <summary>
+    /// min distance for fail an attack
+    /// </summary>
+    public float AttackFailDistance
+    {
+        get => _attackFailDistance;
+    }
 }
 
 [RequireComponent (typeof(S_AIController))]
@@ -371,6 +383,9 @@ public class S_AIStatsController : MonoBehaviour
         _aiController.AttackCooldown = stats.AttackCooldown;
         _aiController.FleeCooldown = stats.FleeCooldown;
         _aiController.AttackFailCooldown = stats.AttackFailCooldown;
+
+        // set the distance
+        _aiController.AttackFailDistance = stats.AttackFailDistance;
     }
     /// <summary>
     /// Set the all bot statistique randomly

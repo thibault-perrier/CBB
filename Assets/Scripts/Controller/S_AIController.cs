@@ -83,11 +83,11 @@ public class S_AIController : MonoBehaviour
     private bool _canAttack = true;
     [SerializeField, Tooltip("if he failed attack")]
     private bool _failAttack;
-    [SerializeField, Min(0f), Tooltip("coolDown for the next attack")]
+    [SerializeField, Min(0f), Tooltip("cooldown for the next attack")]
     private float _attackCooldown = 1f;
-    [SerializeField, Min(0f), Tooltip("cooldown for try to failed any attack")]
+    [SerializeField, Min(0f), Tooltip("cooldown for try to fail any attack")]
     private float _attackFailCooldown = 1f;
-    [SerializeField, Min(0f), Tooltip("min distance for failed an attack")]
+    [SerializeField, Min(0f), Tooltip("min distance for fail an attack")]
     private float _attackFailDistance = 5f;
 
     [Header("Targets (Debug)")]
@@ -266,7 +266,7 @@ public class S_AIController : MonoBehaviour
     }
 
     /// <summary>
-    /// coolDown for the next attack
+    /// cooldown for the next attack
     /// </summary>
     public float AttackCooldown
     {
@@ -300,6 +300,15 @@ public class S_AIController : MonoBehaviour
             _attackFailCooldown = Mathf.Max(0f, value);
             _attackFailedCoroutine = new(_attackFailCooldown);
         }
+    }
+
+    /// <summary>
+    /// min distance for fail an attack
+    /// </summary>
+    public float AttackFailDistance
+    {
+        get => _attackFailDistance;
+        set => _attackFailDistance = Mathf.Max(0f, value);
     }
 
     private void Start()
@@ -439,14 +448,21 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     private void FleeEnemyWithTrap()
     {
-        Transform nearestTrap = FindNearestObject(_fleeTraps, transform.position).transform;
-        Vector3 dirSelfToTrap = nearestTrap.position - transform.position;
+        GameObject nearestTrap = FindNearestObject(_fleeTraps, _enemy.transform.position, 3f);
+        // if he not find an valide trap
+        if (!nearestTrap)
+        {
+            _fleeMethode = FleeType.Distance;
+            return;
+        }
+
+        Vector3 dirSelfToTrap = nearestTrap.transform.position - transform.position;
 
         // if he has not already fleeDestination
         if (_fleeDestination.Equals(Vector3.positiveInfinity))
         {
             // set the flee destination by the behind of nearest trap
-            _fleeDestination = transform.position + dirSelfToTrap + dirSelfToTrap.normalized * 3f;
+            _fleeDestination = transform.position + dirSelfToTrap + (dirSelfToTrap.normalized * 3f);
         }
 
         if (IsBlocked())
@@ -513,11 +529,20 @@ public class S_AIController : MonoBehaviour
             return false;
 
         Vector3 dirToTarget = (_target.transform.position - transform.position);
-        float dot = Vector3.Dot(transform.forward, dirToTarget.normalized);
+        float dotAngle = Vector3.Dot(transform.forward, dirToTarget.normalized);
 
-        // if he is in view of 40 degre and he is enough near he can ignore trap
-        if (dot > Mathf.Cos(40f) && dirToTarget.magnitude < 2.5f)
-            return true;
+        if (_wheelsController.Movement.Equals(S_WheelsController.Move.toward))
+        {
+            // if he is in view of 40 degre and he is enough near he can ignore trap
+            if (dotAngle > Mathf.Cos(40f) && dirToTarget.magnitude < 2.5f)
+                return true;
+        }
+        else if (_wheelsController.Movement.Equals(S_WheelsController.Move.backward))
+        {
+            // if he is in view of 40 degre and he is enough near he can ignore trap
+            if (Mathf.Abs(dotAngle) > Mathf.Cos(40f) && dirToTarget.magnitude < 2.5f)
+                return true;
+        }
 
         return false;
     }
@@ -576,14 +601,17 @@ public class S_AIController : MonoBehaviour
         float dodgeRnd = Random.Range(0, 101);
         if (dodgeRnd < _dodgeProbability)
         {
-            // if he cant ignore traps try get turn amount with raycast
+            // if he cant ignore trap
             if (!IgnoreTrap())
             {
+                // try get turn amount with raycast
                 turnAmount = GetTurnAmountForDodgeTrap(GetDodgeTurnAmountScale(dotDirection, dotWeaponBody));
 
                 // if he hit any trap
                 if (turnAmount != 0f)
+                {
                     dodge = true;
+                }
             }
         }
 
@@ -702,7 +730,7 @@ public class S_AIController : MonoBehaviour
         float turnAmount = 0f;
         bool tuchOneTime = false;
 
-        for (float angle = 0; angle <= 100f; angle += 20f)
+        for (float angle = 0; angle <= 100f; angle += 10f)
         {
             // calcul direction of ray
             float xDirection = Mathf.InverseLerp(-50f, 50f, angle - 50f) * 2f - 1f;
@@ -715,6 +743,11 @@ public class S_AIController : MonoBehaviour
                 // add the turn amount by the raycast angle
                 turnAmount += (angle - 50f) > 0f ? -1f : 1f;
                 tuchOneTime = true;
+                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 5f, Color.green, 0f);
+            }
+            else
+            {
+                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 5f, Color.red, 0f);
             }
         }
 
@@ -722,7 +755,7 @@ public class S_AIController : MonoBehaviour
         if (turnAmount == 0f && tuchOneTime)
             return 1f;
 
-        return Mathf.Clamp(turnAmount, -1f, 1f);
+        return turnAmount;
     }
  
     /// <summary>
@@ -755,10 +788,11 @@ public class S_AIController : MonoBehaviour
     /// <param name="gameObjects">all object to calcul distance</param>
     /// <param name="position">point zero for find distance</param>
     /// <returns>return the nearest object</returns>
-    private GameObject FindNearestObject(GameObject[] gameObjects, Vector3 position)
+    private GameObject FindNearestObject(GameObject[] gameObjects, Vector3 position, float minDistance = 0f)
     {
         // sort all element by the distance and get the first
         return gameObjects
+            .Where(x => Vector3.Distance(x.transform.position, position) > minDistance)
             .OrderBy(x => Vector3.Distance(x.transform.position, position))
             .ToList()[0];
     }
@@ -789,21 +823,6 @@ public class S_AIController : MonoBehaviour
         // return True if he cant acces else return False
         Vector3 dir = weapon.transform.position - bot.transform.position;
         return Physics.Raycast(bot.transform.position, dir.normalized, dir.magnitude);
-    }
-    /// <summary>
-    /// detect if the weapon is valid, if he enough far is valid else if is behind the enemy is not valid
-    /// </summary>
-    /// <param name="weapon">current weapon to validate</param>
-    /// <returns>return <b>True</b> if it is valid</returns>
-    private bool IsValidWeaponForTarget(Transform weapon)
-    {
-        // if the enemy is enough far the weapon if valid
-        Vector3 dirToEnemy = (_target.transform.position - weapon.position);
-        if (dirToEnemy.magnitude > 2f)
-            return true;
-
-        // if the weapon is before the enemy its a valid weapon
-        return Vector3.Dot(GetForwardWeapon(weapon, transform), dirToEnemy.normalized) > 0f;
     }
     /// <summary>
     /// select the best player weapons
@@ -891,10 +910,13 @@ public class S_AIController : MonoBehaviour
         
         // get random for the attack failed
         float failedAttackRnd = Random.Range(0, 101);
-        if (_attackFailProbability >= failedAttackRnd)
+        if (_attackFailProbability > failedAttackRnd)
         {
             if (!CurrentWeaponCanAttack())
+            {
                 AttackWithCurrrentWeapon();
+                Debug.Log("fail attack");
+            }
         }
     }
     /// <summary>

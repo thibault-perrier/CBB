@@ -122,6 +122,59 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &56649859
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 56649860}
+  - component: {fileID: 56649861}
+  m_Layer: 6
+  m_Name: Trap (16)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &56649860
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 56649859}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.6, y: 0, z: 37.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1401772824}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &56649861
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 56649859}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.4160748, y: 3.7608652, z: 3.4389362}
+  m_Center: {x: 0.18728638, y: 1.3804324, z: -1.2194679}
 --- !u!1 &87574788
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,7 +275,7 @@ Transform:
   m_GameObject: {fileID: 165298352}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.4, y: 0, z: 24.7}
+  m_LocalPosition: {x: 16.5, y: 0, z: 53.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -383,59 +436,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
   m_PrefabInstance: {fileID: 300770832}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &332052948
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 332052950}
-  - component: {fileID: 332052949}
-  m_Layer: 6
-  m_Name: Trap (11)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!65 &332052949
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 332052948}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 3.4160748, y: 3.7608652, z: 3.4389362}
-  m_Center: {x: 0.18728638, y: 1.3804324, z: -1.2194679}
---- !u!4 &332052950
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 332052948}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10.7, y: 0, z: -7.0999985}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1401772824}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &363150444 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
@@ -629,59 +629,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1952974747}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &404308498
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 404308500}
-  - component: {fileID: 404308499}
-  m_Layer: 6
-  m_Name: Trap (12)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!65 &404308499
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 404308498}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 3.4160748, y: 3.7608652, z: 3.4389362}
-  m_Center: {x: 0.18728638, y: 1.3804324, z: -1.2194679}
---- !u!4 &404308500
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 404308498}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -24.3, y: 0, z: -6}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1401772824}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!146 &414130469 stripped
 WheelCollider:
@@ -1240,59 +1187,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
   m_PrefabInstance: {fileID: 1143452003}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1175157776
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1175157778}
-  - component: {fileID: 1175157777}
-  m_Layer: 6
-  m_Name: Trap (10)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!65 &1175157777
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1175157776}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 3.4160748, y: 3.7608652, z: 3.4389362}
-  m_Center: {x: 0.18728638, y: 1.3804324, z: -1.2194679}
---- !u!4 &1175157778
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1175157776}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 37.1, y: 0, z: -7.299999}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1401772824}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1182426676
 GameObject:
   m_ObjectHideFlags: 0
@@ -1553,73 +1447,17 @@ Transform:
   - {fileID: 397664057}
   - {fileID: 882946077}
   - {fileID: 1930929942}
-  - {fileID: 1405868864}
   - {fileID: 1581012693}
   - {fileID: 87574790}
   - {fileID: 1391350347}
   - {fileID: 1326996552}
   - {fileID: 165298354}
   - {fileID: 1526824978}
-  - {fileID: 1175157778}
-  - {fileID: 332052950}
-  - {fileID: 404308500}
   - {fileID: 1309307812}
   - {fileID: 747582336}
   - {fileID: 1461422183}
+  - {fileID: 56649860}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1405868862
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1405868864}
-  - component: {fileID: 1405868863}
-  m_Layer: 6
-  m_Name: Trap (3)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!65 &1405868863
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1405868862}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 3.4160748, y: 3.7608652, z: 3.4389362}
-  m_Center: {x: 0.18728638, y: 1.3804324, z: -1.2194679}
---- !u!4 &1405868864
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1405868862}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -37.5, y: 0, z: 35.6}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1401772824}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1461422181
 GameObject:
@@ -2201,6 +2039,7 @@ MonoBehaviour:
     _attackCooldown: 3
     _fleeCooldown: 0
     _attackFailCooldown: 0
+    _attackFailDistance: 0
     _attackSuccesProbabilityRandom: {x: 0, y: 0}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
     _attackFailProbabilityRandom: {x: 0, y: 0}
@@ -2215,28 +2054,29 @@ MonoBehaviour:
   _statsBotBronzeRank:
     _attackEnemyWeapon: 0
     _attackWithBestWeapon: 1
-    _canFailAnyAttack: 0
+    _canFailAnyAttack: 1
     _dodgeTrap: 0
     _canFleeEnemy: 1
     _canIgnoreTrap: 0
-    _canMakeAccidentalMovement: 0
-    _canMakeAccidentalDirection: 0
-    _attackSuccesProbability: 55
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
+    _attackSuccesProbability: 60
     _attackEnemyWeaponProbabiltiy: 0
-    _attackFailProbability: 0
-    _movementProbability: 72.5
+    _attackFailProbability: 25
+    _movementProbability: 80
     _dodgeProbability: 0
     _fleeProbability: 40
-    _accidentalMovementProbability: 20
-    _accidentalDirectionProbability: 20
+    _accidentalMovementProbability: 25
+    _accidentalDirectionProbability: 25
     _attackCooldown: 5
     _fleeCooldown: 0.1
-    _attackFailCooldown: 0
+    _attackFailCooldown: 0.25
+    _attackFailDistance: 5.5
     _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
-    _attackFailProbabilityRandom: {x: 0, y: 0}
+    _attackFailProbabilityRandom: {x: -10, y: 10}
     _movementProbabilityRandom: {x: -10, y: 10}
-    _dodgeProbabilityRandom: {x: 0, y: 0}
+    _dodgeProbabilityRandom: {x: 0, y: 10}
     _fleeProbabilityRandom: {x: -10, y: 10}
     _accidentalMovementProbabilityRandom: {x: -5, y: 5}
     _accidentalDirectionProbabilityRandom: {x: -5, y: 5}
@@ -2246,15 +2086,15 @@ MonoBehaviour:
   _statsBotSliverRank:
     _attackEnemyWeapon: 0
     _attackWithBestWeapon: 1
-    _canFailAnyAttack: 0
+    _canFailAnyAttack: 1
     _dodgeTrap: 1
     _canFleeEnemy: 1
     _canIgnoreTrap: 0
-    _canMakeAccidentalMovement: 0
-    _canMakeAccidentalDirection: 0
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
     _attackSuccesProbability: 70
     _attackEnemyWeaponProbabiltiy: 0
-    _attackFailProbability: 0
+    _attackFailProbability: 20
     _movementProbability: 85
     _dodgeProbability: 80
     _fleeProbability: 70
@@ -2262,10 +2102,11 @@ MonoBehaviour:
     _accidentalDirectionProbability: 15
     _attackCooldown: 3
     _fleeCooldown: 0.1
-    _attackFailCooldown: 0
+    _attackFailCooldown: 0.5
+    _attackFailDistance: 4.5
     _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
-    _attackFailProbabilityRandom: {x: 0, y: 0}
+    _attackFailProbabilityRandom: {x: -5, y: 5}
     _movementProbabilityRandom: {x: -7, y: 7}
     _dodgeProbabilityRandom: {x: -10, y: 10}
     _fleeProbabilityRandom: {x: -15, y: 15}
@@ -2277,7 +2118,7 @@ MonoBehaviour:
   _statsBotGoldRank:
     _attackEnemyWeapon: 1
     _attackWithBestWeapon: 1
-    _canFailAnyAttack: 0
+    _canFailAnyAttack: 1
     _dodgeTrap: 1
     _canFleeEnemy: 1
     _canIgnoreTrap: 0
@@ -2285,7 +2126,7 @@ MonoBehaviour:
     _canMakeAccidentalDirection: 1
     _attackSuccesProbability: 85
     _attackEnemyWeaponProbabiltiy: 70
-    _attackFailProbability: 0
+    _attackFailProbability: 15
     _movementProbability: 95
     _dodgeProbability: 90
     _fleeProbability: 85
@@ -2293,10 +2134,11 @@ MonoBehaviour:
     _accidentalDirectionProbability: 10
     _attackCooldown: 1
     _fleeCooldown: 0.1
-    _attackFailCooldown: 0
+    _attackFailCooldown: 0.7
+    _attackFailDistance: 3.5
     _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
-    _attackFailProbabilityRandom: {x: 0, y: 0}
+    _attackFailProbabilityRandom: {x: -5, y: 5}
     _movementProbabilityRandom: {x: -15, y: 15}
     _dodgeProbabilityRandom: {x: -5, y: 5}
     _fleeProbabilityRandom: {x: 0, y: 20}
@@ -2308,29 +2150,30 @@ MonoBehaviour:
   _statsBotDiamondRank:
     _attackEnemyWeapon: 1
     _attackWithBestWeapon: 1
-    _canFailAnyAttack: 0
+    _canFailAnyAttack: 1
     _dodgeTrap: 1
     _canFleeEnemy: 1
     _canIgnoreTrap: 1
     _canMakeAccidentalMovement: 0
     _canMakeAccidentalDirection: 0
     _attackSuccesProbability: 95
-    _attackEnemyWeaponProbabiltiy: 95
-    _attackFailProbability: 0
-    _movementProbability: 100
+    _attackEnemyWeaponProbabiltiy: 100
+    _attackFailProbability: 10
+    _movementProbability: 95
     _dodgeProbability: 100
     _fleeProbability: 100
     _accidentalMovementProbability: 0
     _accidentalDirectionProbability: 0
     _attackCooldown: 1
     _fleeCooldown: 0
-    _attackFailCooldown: 0
-    _attackSuccesProbabilityRandom: {x: 0, y: 0}
+    _attackFailCooldown: 0.5
+    _attackFailDistance: 3.5
+    _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
-    _attackFailProbabilityRandom: {x: 0, y: 0}
-    _movementProbabilityRandom: {x: 0, y: 0}
+    _attackFailProbabilityRandom: {x: -2, y: 2}
+    _movementProbabilityRandom: {x: -5, y: 5}
     _dodgeProbabilityRandom: {x: 0, y: 0}
-    _fleeProbabilityRandom: {x: 0, y: 0}
+    _fleeProbabilityRandom: {x: -5, y: 5}
     _accidentalMovementProbabilityRandom: {x: 0, y: 0}
     _accidentalDirectionProbabilityRandom: {x: 0, y: 0}
     _attackCooldownRandom: {x: -0.01, y: 0.01}
@@ -2375,7 +2218,7 @@ MonoBehaviour:
   _failAttack: 0
   _attackCooldown: 1
   _attackFailCooldown: 1
-  _attackFailDistance: 5
+  _attackFailDistance: 3
   _enemy: {fileID: 0}
   _target: {fileID: 0}
   _currentWeapon: {fileID: 0}
@@ -2899,6 +2742,7 @@ MonoBehaviour:
     _attackCooldown: 3
     _fleeCooldown: 0
     _attackFailCooldown: 0
+    _attackFailDistance: 0
     _attackSuccesProbabilityRandom: {x: 0, y: 0}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
     _attackFailProbabilityRandom: {x: 0, y: 0}
@@ -2917,24 +2761,25 @@ MonoBehaviour:
     _dodgeTrap: 0
     _canFleeEnemy: 1
     _canIgnoreTrap: 0
-    _canMakeAccidentalMovement: 0
-    _canMakeAccidentalDirection: 0
-    _attackSuccesProbability: 55
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
+    _attackSuccesProbability: 60
     _attackEnemyWeaponProbabiltiy: 0
-    _attackFailProbability: 30
-    _movementProbability: 72.5
+    _attackFailProbability: 25
+    _movementProbability: 80
     _dodgeProbability: 0
     _fleeProbability: 40
-    _accidentalMovementProbability: 20
-    _accidentalDirectionProbability: 20
+    _accidentalMovementProbability: 25
+    _accidentalDirectionProbability: 25
     _attackCooldown: 5
     _fleeCooldown: 0.1
-    _attackFailCooldown: 0
+    _attackFailCooldown: 0.25
+    _attackFailDistance: 5.5
     _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
-    _attackFailProbabilityRandom: {x: 0, y: 0}
+    _attackFailProbabilityRandom: {x: -10, y: 10}
     _movementProbabilityRandom: {x: -10, y: 10}
-    _dodgeProbabilityRandom: {x: 0, y: 0}
+    _dodgeProbabilityRandom: {x: 0, y: 10}
     _fleeProbabilityRandom: {x: -10, y: 10}
     _accidentalMovementProbabilityRandom: {x: -5, y: 5}
     _accidentalDirectionProbabilityRandom: {x: -5, y: 5}
@@ -2948,11 +2793,11 @@ MonoBehaviour:
     _dodgeTrap: 1
     _canFleeEnemy: 1
     _canIgnoreTrap: 0
-    _canMakeAccidentalMovement: 0
-    _canMakeAccidentalDirection: 0
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
     _attackSuccesProbability: 70
     _attackEnemyWeaponProbabiltiy: 0
-    _attackFailProbability: 25
+    _attackFailProbability: 20
     _movementProbability: 85
     _dodgeProbability: 80
     _fleeProbability: 70
@@ -2960,10 +2805,11 @@ MonoBehaviour:
     _accidentalDirectionProbability: 15
     _attackCooldown: 3
     _fleeCooldown: 0.1
-    _attackFailCooldown: 0
+    _attackFailCooldown: 0.5
+    _attackFailDistance: 4.5
     _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
-    _attackFailProbabilityRandom: {x: 0, y: 0}
+    _attackFailProbabilityRandom: {x: -5, y: 5}
     _movementProbabilityRandom: {x: -7, y: 7}
     _dodgeProbabilityRandom: {x: -10, y: 10}
     _fleeProbabilityRandom: {x: -15, y: 15}
@@ -2983,7 +2829,7 @@ MonoBehaviour:
     _canMakeAccidentalDirection: 1
     _attackSuccesProbability: 85
     _attackEnemyWeaponProbabiltiy: 70
-    _attackFailProbability: 20
+    _attackFailProbability: 15
     _movementProbability: 95
     _dodgeProbability: 90
     _fleeProbability: 85
@@ -2991,10 +2837,11 @@ MonoBehaviour:
     _accidentalDirectionProbability: 10
     _attackCooldown: 1
     _fleeCooldown: 0.1
-    _attackFailCooldown: 0
+    _attackFailCooldown: 0.7
+    _attackFailDistance: 3.5
     _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
-    _attackFailProbabilityRandom: {x: 0, y: 0}
+    _attackFailProbabilityRandom: {x: -5, y: 5}
     _movementProbabilityRandom: {x: -15, y: 15}
     _dodgeProbabilityRandom: {x: -5, y: 5}
     _fleeProbabilityRandom: {x: 0, y: 20}
@@ -3010,26 +2857,27 @@ MonoBehaviour:
     _dodgeTrap: 1
     _canFleeEnemy: 1
     _canIgnoreTrap: 1
-    _canMakeAccidentalMovement: 0
+    _canMakeAccidentalMovement: 1
     _canMakeAccidentalDirection: 0
     _attackSuccesProbability: 95
-    _attackEnemyWeaponProbabiltiy: 95
-    _attackFailProbability: 15
-    _movementProbability: 100
+    _attackEnemyWeaponProbabiltiy: 100
+    _attackFailProbability: 20
+    _movementProbability: 95
     _dodgeProbability: 100
     _fleeProbability: 100
-    _accidentalMovementProbability: 0
+    _accidentalMovementProbability: 10
     _accidentalDirectionProbability: 0
     _attackCooldown: 1
     _fleeCooldown: 0
-    _attackFailCooldown: 0
-    _attackSuccesProbabilityRandom: {x: 0, y: 0}
+    _attackFailCooldown: 0.7
+    _attackFailDistance: 3.5
+    _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
-    _attackFailProbabilityRandom: {x: 0, y: 0}
-    _movementProbabilityRandom: {x: 0, y: 0}
+    _attackFailProbabilityRandom: {x: -7, y: 7}
+    _movementProbabilityRandom: {x: -5, y: 5}
     _dodgeProbabilityRandom: {x: 0, y: 0}
-    _fleeProbabilityRandom: {x: 0, y: 0}
-    _accidentalMovementProbabilityRandom: {x: 0, y: 0}
+    _fleeProbabilityRandom: {x: -5, y: 5}
+    _accidentalMovementProbabilityRandom: {x: -10, y: 15}
     _accidentalDirectionProbabilityRandom: {x: 0, y: 0}
     _attackCooldownRandom: {x: -0.01, y: 0.01}
     _fleeCooldownRandom: {x: 0, y: 0}
