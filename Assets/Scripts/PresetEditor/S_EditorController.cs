@@ -77,7 +77,6 @@ public class S_EditorController : MonoBehaviour
                 _selecteIndex = _weapons.Count - 1;
             Debug.Log(_weapons[_selecteIndex].gameObject.transform.position);
             _selectedMaterial.SetVector("_Selected_Object_Position", _weapons[_selecteIndex].gameObject.transform.position);
-            
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
@@ -231,7 +230,7 @@ public class S_EditorController : MonoBehaviour
         switch (_editState)
         {
             case EditState.PresetChoice:
-
+                
                 break;
             case EditState.FrameChoice:
 

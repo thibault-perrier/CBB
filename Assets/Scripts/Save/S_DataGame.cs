@@ -20,7 +20,7 @@ public class InventorySaver // Inventory
     public int _money;
     public List<Frame> frames = new List<Frame>();
     public List<Weapons> weapons = new List<Weapons>();
-
+    public List<Robot> robots = new List<Robot>();
 }
 
 [System.Serializable]
@@ -39,6 +39,14 @@ public class Frame
     public int _number;
 }
 
+[System.Serializable]
+public class Robot
+{
+    public int _id;
+    public string _name;
+    public Frame _frame;
+    public List<Weapons> _weapons;
+}
 
 [System.Serializable]
 public class TournamentSaver // Tournament
