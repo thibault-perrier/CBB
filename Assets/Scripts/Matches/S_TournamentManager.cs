@@ -14,6 +14,7 @@ public class S_TournamentManager : MonoBehaviour
         //public Sprite logo;
         public Color logo;
         public float rating;
+        public bool hasLost;
         //public Robot robot;
     }
 
@@ -243,6 +244,7 @@ public class S_TournamentManager : MonoBehaviour
 
             if (participant1Wins)
             {
+                p2.hasLost = true;
                 _roundWinners.Add(p1);
                 _roundLosers.Add(p2);
                 _tournamentBracket.AddWinnerLogo(logo1, logo2);
@@ -253,6 +255,7 @@ public class S_TournamentManager : MonoBehaviour
             }
             else
             {
+                p1.hasLost = true;
                 _roundWinners.Add(p2);
                 _roundLosers.Add(p1);
                 _tournamentBracket.AddWinnerLogo(logo2, logo1);

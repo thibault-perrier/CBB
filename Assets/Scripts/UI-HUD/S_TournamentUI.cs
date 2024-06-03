@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class S_TournamentBracket : MonoBehaviour
@@ -9,6 +10,7 @@ public class S_TournamentBracket : MonoBehaviour
     [SerializeField] private S_TournamentManager _tournamentManager;
     [SerializeField] S_CameraView _cameraView;
     [SerializeField] private S_ArenaManager _arenaManager;
+    [SerializeField] private S_BetSystem _betSystem;
 
     [Header("Tournament brackets")]
     [SerializeField] private GameObject _eightParticipantsBracket;
@@ -38,6 +40,8 @@ public class S_TournamentBracket : MonoBehaviour
     private Coroutine _movingLogoCoroutine;
     private EventSystem _eventSystem;
 
+    private GameObject _tournamentUI;
+
     private void Start()
     {
         _eventSystem = EventSystem.current;
@@ -45,6 +49,8 @@ public class S_TournamentBracket : MonoBehaviour
         _cameraView.ShowOffComplete += OnShowOffComplete; // Subscribe to the event
         _cameraView.FadeInComplete += OnFadeInComplete;
         _cameraView.ReturnToToTournamentComplete += OnReturnToTournament;
+
+        _tournamentUI = _botMatchButtons.transform.parent.gameObject;
 
         if (!_tournamentManager.IsRunning)
         {
@@ -203,6 +209,7 @@ public class S_TournamentBracket : MonoBehaviour
             _tournamentManager.SimulateMatch();
 
             UpdateWinnerLogo(_currentUsedBracket.transform, _currentLevel, _currentMatch);
+            _betSystem.WinBet();
         }
     }
 
@@ -233,6 +240,8 @@ public class S_TournamentBracket : MonoBehaviour
 
         if (participants != null && _tournamentManager.IsEven())
         {
+            ActivateUI(_tournamentUI, true);
+
             S_TournamentManager.Participant p1 = participants[_currentMatch * 2]; //need to multiply so the previous participant does not fight again
             S_TournamentManager.Participant p2 = participants[(_currentMatch * 2) + 1];
 
@@ -240,12 +249,14 @@ public class S_TournamentBracket : MonoBehaviour
             {
                 ActivateUI(_playerMatchButton, true);
                 ActivateUI(_botMatchButtons, false);
+                _eventSystem.SetSelectedGameObject(null);
                 _eventSystem.SetSelectedGameObject(_playerMatchButton.transform.GetChild(0).gameObject);
             }
             else
             {
                 ActivateUI(_botMatchButtons, true);
                 ActivateUI(_playerMatchButton, false);
+                _eventSystem.SetSelectedGameObject(null);
                 _eventSystem.SetSelectedGameObject(_botMatchButtons.transform.GetChild(0).gameObject);
             }
         }
@@ -256,6 +267,7 @@ public class S_TournamentBracket : MonoBehaviour
     /// </summary>
     public void ClosePopUpButton()
     {
+        ActivateUI(_tournamentUI, false);
         ActivateUI(_playerMatchButton, false);
         ActivateUI(_botMatchButtons, false);
     }
@@ -403,5 +415,20 @@ public class S_TournamentBracket : MonoBehaviour
 
         winner.transform.position = waypoint.transform.position;
         //Add more system that allow the player to win his prize and open another UI for the occasion
+    }
+
+    public void OnChangeScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
+
+    public void OnActivateUI(GameObject gameObj)
+    {
+        gameObj.SetActive(true);
+    }
+
+    public void OnDeactivateUI(GameObject gameObj)
+    {
+        gameObj.SetActive(false);
     }
 }

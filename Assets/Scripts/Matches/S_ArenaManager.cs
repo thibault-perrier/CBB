@@ -42,7 +42,10 @@ public class S_ArenaManager : MonoBehaviour
     {
         _participantsStats.SetActive(false);
         _matchUI.SetActive(true);
+        _eventSystem.SetSelectedGameObject(null);
         _eventSystem.SetSelectedGameObject(_matchUI.transform.GetChild(0).gameObject);
+
+        _betSystem.ResetBetText();
     }
 
     public void CancelMatch()
@@ -57,6 +60,7 @@ public class S_ArenaManager : MonoBehaviour
     /// <param name="p2"></param>
     public void ShowStats(S_TournamentManager.Participant p1, S_TournamentManager.Participant p2)
     {
+        _eventSystem.SetSelectedGameObject(null);
         _eventSystem.SetSelectedGameObject(_p1Stats.transform.GetChild(0).gameObject);
 
         _participantsStats.SetActive(true);
@@ -110,7 +114,7 @@ public class S_ArenaManager : MonoBehaviour
         else
         {
             _keypad.SetActive(true);
-            _eventSystem.SetSelectedGameObject(_key.transform.GetChild(0).gameObject);
+            //_eventSystem.SetSelectedGameObject(_key.transform.GetChild(0).gameObject);
         }
     }
 
