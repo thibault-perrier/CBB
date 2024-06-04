@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: 1338517693599166746}
   - component: {fileID: 5469854486185535902}
   m_Layer: 0
-  m_Name: BotA
+  m_Name: BotAI
   m_TagString: BotA
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -243,7 +243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b8b3c67f5481534eb45a7eaed89d124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _aiState: 0
+  _aiState: 1
   _enemyTag: BotB
   _attackEnemyWeapon: 0
   _attackWithBestWeapon: 0
@@ -263,7 +263,7 @@ MonoBehaviour:
   _accidentalDirectionProbability: 0
   _trapLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   _fleeDirection: {fileID: 4355397142922914816}
   _fleeCooldown: 0
   _canAttack: 1
@@ -278,9 +278,7 @@ MonoBehaviour:
   Weapons:
   - {fileID: 7366022614066482494}
   - {fileID: 6469200042552923538}
-  EnemyWeapons:
-  - {fileID: 0}
-  - {fileID: 0}
+  EnemyWeapons: []
 --- !u!114 &5469854486185535902
 MonoBehaviour:
   m_ObjectHideFlags: 0

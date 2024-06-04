@@ -9,6 +9,7 @@ public class S_TournamentManager : MonoBehaviour
     [Serializable]
     public struct Participant
     {
+        public bool isPlayer;
         public int id;
         public string name;
         //public Sprite logo;
@@ -16,6 +17,7 @@ public class S_TournamentManager : MonoBehaviour
         public float rating;
         public bool hasLost;
         //public Robot robot;
+        public Rank rank;
     }
 
     public enum Rank
@@ -71,6 +73,8 @@ public class S_TournamentManager : MonoBehaviour
 
         //InitializeParticipationData();
 
+        _participant1.isPlayer = true;
+
         _participant1.name = "PLAYER";
         _participant2.name = "Participant nb 1";
         _participant3.name = "Participant nb 2";
@@ -88,6 +92,15 @@ public class S_TournamentManager : MonoBehaviour
         _participant6.logo = Color.cyan;
         _participant7.logo = Color.black;
         _participant8.logo = Color.magenta;
+
+        _participant1.rank = _currentTournament.rank;
+        _participant2.rank = _currentTournament.rank;
+        _participant3.rank = _currentTournament.rank;
+        _participant4.rank = _currentTournament.rank;
+        _participant5.rank = _currentTournament.rank;
+        _participant6.rank = _currentTournament.rank;
+        _participant7.rank = _currentTournament.rank;
+        _participant8.rank = _currentTournament.rank;
 
         InitializeCurrentTournament(_currentTournament);
         Debug.Log("Initialazing a " + _currentTournament.rank.ToString() + " tournament");

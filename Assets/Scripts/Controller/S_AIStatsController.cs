@@ -359,6 +359,9 @@ public class S_AIStatsController : MonoBehaviour
     /// <param name="stats">the statistique at set</param>
     private void SetBotStatistique(StatsBotRank stats)
     {
+        if (!_aiController)
+            _aiController = GetComponent<S_AIController>();
+
         // set the toggles actions
         _aiController.AttackEnemyWeapon = stats.AttackEnemyWeapon;
         _aiController.CanFleeEnemy = stats.CanFleeEnemy;

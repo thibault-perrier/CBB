@@ -105,6 +105,7 @@ public class S_AIController : MonoBehaviour
     private WaitForSeconds _attackCooldownCoroutine = new(1f);
     private WaitForSeconds _attackFailedCoroutine = new(1f);
     private WaitForSeconds _fleeFailureCooldownCoroutine = new(.5f);
+    private bool _getEnemyInStart;
 
     [SerializeField]
     private FleeType _fleeMethode = FleeType.None;
@@ -132,6 +133,8 @@ public class S_AIController : MonoBehaviour
         {
             _enemyTag = value;
             _enemy = GameObject.FindGameObjectWithTag(value);
+            _target = _enemy;
+            GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
         }
     }
 
@@ -316,11 +319,14 @@ public class S_AIController : MonoBehaviour
         _attackCooldownCoroutine = new(_attackCooldown);
         _fleeFailureCooldownCoroutine = new(_fleeCooldown);
 
-        _enemy = GameObject.FindGameObjectWithTag(_enemyTag);
-        _target = _enemy;
+        if (_getEnemyInStart)
+        {
+            _enemy = GameObject.FindGameObjectWithTag(_enemyTag);
+            _target = _enemy;
+            GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
+        }
 
         _wheelsController = GetComponent<S_WheelsController>();
-        GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
         _traps = FindGameObjectsInLayer(6);
     }
     private void FixedUpdate()
@@ -858,6 +864,9 @@ public class S_AIController : MonoBehaviour
     /// <returns>return the best weapon from the distance to the target</returns>
     private bool GetBestWeaponFromTarget(Transform target, ref GameObject weapon)
     {
+        if (!target)
+            return false;
+
         if (Weapons.Count < 1)
             return false;
 
@@ -944,6 +953,9 @@ public class S_AIController : MonoBehaviour
     /// <returns>return if he attack with current we hit something</returns>
     private bool CurrentWeaponCanAttack()
     {
+        if (!_currentWeapon)
+            return false;
+
         if (!_currentWeapon.activeSelf || !_target)
             return false;
 

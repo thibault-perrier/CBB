@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -13,8 +14,11 @@ public class S_ArenaManager : MonoBehaviour
 
     [SerializeField] private S_CameraView _cameraView;
 
-    [SerializeField] private GameObject _testP1, _testP2, _matchUI;
+    [SerializeField] private GameObject _matchUI;
+    [SerializeField] private GameObject _botPlayerPrefab, _botEnemyPrefab;
+    [SerializeField] private Transform _botPosition1, _botPosition2;
 
+    private GameObject _bot1, _bot2;
     private S_BetSystem _betSystem;
 
     private S_TournamentManager.Participant _p1;
@@ -46,6 +50,94 @@ public class S_ArenaManager : MonoBehaviour
         _eventSystem.SetSelectedGameObject(_matchUI.transform.GetChild(0).gameObject);
 
         _betSystem.ResetBetText();
+        EnableBot();
+    }
+    /// <summary>
+    /// Create all bot in the arena
+    /// </summary>
+    private void CreateBot()
+    {
+        ResetAreneBot();
+
+        // set all pair with bot and bot info
+        List<(Transform, S_TournamentManager.Participant)> botPair = new(2)
+        {
+            (_botPosition1, _p1),
+            (_botPosition2, _p2)
+        };
+
+        // for each bot in arena
+        foreach (var bot in botPair)
+        {
+            GameObject newBot;
+            // if one participant is the player
+            if (bot.Item2.isPlayer)
+            {
+                newBot = Instantiate(_botPlayerPrefab, bot.Item1.position, Quaternion.Euler(bot.Item1.eulerAngles));
+            }
+            else
+            {
+                newBot = Instantiate(_botEnemyPrefab, bot.Item1.position, Quaternion.Euler(bot.Item1.eulerAngles));
+                var stats = newBot.GetComponent<S_AIStatsController>();
+
+                stats.BotDifficulty = (S_AIStatsController.BotRank)bot.Item2.rank;
+            }
+
+            if (!_bot1)
+                _bot1 = newBot;
+            else
+                _bot2 = newBot;
+        }
+    }
+    /// <summary>
+    /// set the bot tag and the controller target tag
+    /// </summary>
+    private void SetBotTag()
+    {
+        _bot1.transform.tag = "Finish";
+        _bot2.transform.tag = "Respawn";
+
+        if (_bot1.TryGetComponent<S_AIController>(out var crtlA))
+            crtlA.EnemyTag = "Respawn";
+
+        if (_bot2.TryGetComponent<S_AIController>(out var crtlB))
+            crtlB.EnemyTag = "Finish";
+    }
+    /// <summary>
+    /// for each bot with AIController enable the state
+    /// </summary>
+    private void EnableBot()
+    {
+        List<GameObject> bots = new()
+        {
+            _bot1,
+            _bot2,
+        };
+
+        foreach (var bot in bots)
+        {
+            if (bot.TryGetComponent<S_AIController>(out var crtl))
+                crtl.State = S_AIController.AIState.Enable;
+        }
+    }
+    /// <summary>
+    /// Reset the bot with Untagged and destroy current bot
+    /// </summary>
+    private void ResetAreneBot()
+    {
+        if (_bot1)
+        {
+            _bot1.transform.tag = "Untagged";
+            Destroy(_bot1);
+            _bot1 = null;
+        }
+
+        if (_bot2)
+        {
+            _bot2.transform.tag = "Untagged";
+            Destroy(_bot2);
+            _bot2 = null;
+        }
     }
 
     public void CancelMatch()
@@ -60,6 +152,22 @@ public class S_ArenaManager : MonoBehaviour
     /// <param name="p2"></param>
     public void ShowStats(S_TournamentManager.Participant p1, S_TournamentManager.Participant p2)
     {
+        _p1 = p1;
+        _p2 = p2;
+
+        CreateBot();
+        SetBotTag();
+
+        _cameraView.ClearObjectToView();
+        _cameraView.AddObjectToView(_bot1.transform);
+        _cameraView.AddObjectToView(_bot2.transform);
+
+        if (p1.isPlayer ||p2.isPlayer)
+        {
+            StartMatch();
+            return;
+        }
+
         _eventSystem.SetSelectedGameObject(null);
         _eventSystem.SetSelectedGameObject(_p1Stats.transform.GetChild(0).gameObject);
 
@@ -67,13 +175,6 @@ public class S_ArenaManager : MonoBehaviour
 
         SetStatsOnUi(p1.rating.ToString(), p1.name, p1.logo, _p1Stats);
         SetStatsOnUi(p2.rating.ToString(), p2.name, p2.logo, _p2Stats);
-
-        _cameraView.ClearObjectToView();
-        _cameraView.AddObjectToView(_testP1.transform);
-        _cameraView.AddObjectToView(_testP2.transform);
-
-        _p1 = p1;
-        _p2 = p2;
     }
 
     /// <summary>
