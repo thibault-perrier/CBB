@@ -641,17 +641,17 @@ public class S_AIController : MonoBehaviour
             if (angleToDir > 0f)
             {
                 // turn right
-                turnAmount = dotWeaponBody > 0f ? Reverse(1f) : Reverse(-1f);
+                turnAmount = dotWeaponBody > 0f ? 1f : -1f;
             }
             else
             {
                 // turn left
-                turnAmount = dotWeaponBody > 0f ? Reverse(-1f) : Reverse(1f);
+                turnAmount = dotWeaponBody > 0f ? -1f : 1f;
             }
         }
 
         // set controller direction
-        _wheelsController.Direction = turnAmount;
+        _wheelsController.Direction = Reverse(turnAmount);
     }
     /// <summary>
     /// reverse the current movement with probability if
@@ -730,7 +730,7 @@ public class S_AIController : MonoBehaviour
         float turnAmount = 0f;
         bool tuchOneTime = false;
 
-        for (float angle = 0; angle <= 100f; angle += 10f)
+        for (float angle = 0; angle <= 100f; angle += 20f)
         {
             // calcul direction of ray
             float xDirection = Mathf.InverseLerp(-50f, 50f, angle - 50f) * 2f - 1f;
@@ -741,7 +741,7 @@ public class S_AIController : MonoBehaviour
             if (hit)
             {
                 // add the turn amount by the raycast angle
-                turnAmount += (angle - 50f) > 0f ? -1f : 1f;
+                turnAmount += ((angle - 50f) > 0f ? -1f : 1f) * scaleDirection;
                 tuchOneTime = true;
                 Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 5f, Color.green, 0f);
             }
@@ -755,7 +755,7 @@ public class S_AIController : MonoBehaviour
         if (turnAmount == 0f && tuchOneTime)
             return 1f;
 
-        return turnAmount;
+        return Mathf.Clamp(turnAmount, -1f, 1f);
     }
  
     /// <summary>

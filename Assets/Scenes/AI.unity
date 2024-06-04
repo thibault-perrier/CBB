@@ -148,7 +148,7 @@ Transform:
   m_GameObject: {fileID: 56649859}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.6, y: 0, z: 37.5}
+  m_LocalPosition: {x: -1.21, y: 0, z: 53.47}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2191,7 +2191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b8b3c67f5481534eb45a7eaed89d124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _aiState: 0
+  _aiState: 1
   _enemyTag: BotA
   _attackEnemyWeapon: 0
   _attackWithBestWeapon: 0
@@ -2865,7 +2865,7 @@ MonoBehaviour:
     _movementProbability: 95
     _dodgeProbability: 100
     _fleeProbability: 100
-    _accidentalMovementProbability: 10
+    _accidentalMovementProbability: 0
     _accidentalDirectionProbability: 0
     _attackCooldown: 1
     _fleeCooldown: 0
@@ -2877,7 +2877,7 @@ MonoBehaviour:
     _movementProbabilityRandom: {x: -5, y: 5}
     _dodgeProbabilityRandom: {x: 0, y: 0}
     _fleeProbabilityRandom: {x: -5, y: 5}
-    _accidentalMovementProbabilityRandom: {x: -10, y: 15}
+    _accidentalMovementProbabilityRandom: {x: 0, y: 0}
     _accidentalDirectionProbabilityRandom: {x: 0, y: 0}
     _attackCooldownRandom: {x: -0.01, y: 0.01}
     _fleeCooldownRandom: {x: 0, y: 0}
