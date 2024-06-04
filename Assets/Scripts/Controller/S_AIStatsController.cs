@@ -19,6 +19,8 @@ public struct StatsBotRank
     private bool _canFleeEnemy;
     [SerializeField, Tooltip("if he can ignore the trap when we are enough near the target")]
     private bool _canIgnoreTrap;
+    [SerializeField, Tooltip("if he can flee the enmy whith trap")]
+    private bool _canFleeWithTrap;
 
     [Space(15)]
     [SerializeField, Tooltip("if he can make an accidental movement with probability")]
@@ -143,7 +145,13 @@ public struct StatsBotRank
     public bool CanMakeAccidentalDirection
     {
         get => _canMakeAccidentalDirection;
-        set => _canMakeAccidentalDirection = value;
+    }
+    /// <summary>
+    /// if he can flee the enmy whith trap
+    /// </summary>
+    public bool CanFleeEnemyWithTrap
+    {
+        get => _canFleeWithTrap;
     }
 
     /// <summary>
@@ -371,6 +379,7 @@ public class S_AIStatsController : MonoBehaviour
         _aiController.DodgeTrap = stats.CanDodgeTrap;
         _aiController.CanMakeAccidentalMovement = stats.CanMakeAccidentalMovement;
         _aiController.CanMakeAccidentalDirection = stats.CanMakeAccidentalDirection;
+        _aiController.CanFleeEnemyWithTrap = stats.CanFleeEnemyWithTrap;
 
         // set the actions probability
         _aiController.AttackFailProbability = stats.AttackFailProbabiltiy;

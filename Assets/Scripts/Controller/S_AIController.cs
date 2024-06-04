@@ -41,6 +41,8 @@ public class S_AIController : MonoBehaviour
     private bool _canFleeEnemy;
     [SerializeField, Tooltip("if he can ignore the trap when we are enough near the target")]
     private bool _canIgnoreTrap;
+    [SerializeField, Tooltip("if he can flee the enmy whith trap")]
+    private bool _canFleeWithTrap;
 
     [Space(15)]
     [SerializeField, Tooltip("if he can make an accidental movement")]
@@ -77,6 +79,8 @@ public class S_AIController : MonoBehaviour
     private Transform _fleeDirection;
     [SerializeField, Min(0f), Tooltip("coolDown for the flee failure come back to None")]
     private float _fleeCooldown;
+    [SerializeField, Tooltip("if he get the current enemy and target in start")]
+    private bool _getEnemyInStart;
 
     [Header("Attack")]
     [SerializeField, Tooltip("if he can attack")]
@@ -105,7 +109,6 @@ public class S_AIController : MonoBehaviour
     private WaitForSeconds _attackCooldownCoroutine = new(1f);
     private WaitForSeconds _attackFailedCoroutine = new(1f);
     private WaitForSeconds _fleeFailureCooldownCoroutine = new(.5f);
-    private bool _getEnemyInStart;
 
     [SerializeField]
     private FleeType _fleeMethode = FleeType.None;
@@ -201,6 +204,14 @@ public class S_AIController : MonoBehaviour
     {
         get => _canMakeAccidentalDirection;
         set => _canMakeAccidentalDirection = value;
+    }
+    /// <summary>
+    /// if he can flee the enmy whith trap
+    /// </summary>
+    public bool CanFleeEnemyWithTrap
+    {
+        get => _canFleeWithTrap;
+        set => _canFleeWithTrap = value;
     }
 
     /// <summary>
@@ -422,6 +433,10 @@ public class S_AIController : MonoBehaviour
         if (_fleeMethode != FleeType.None)
             return;
 
+        // if he cant flee with trap force the distance mode
+        if (!_canFleeWithTrap)
+            _fleeMethode = FleeType.Distance;
+
         // if he cant move in the current direction
         if (IsBlocked())
             _fleeMethode = FleeType.Distance;
@@ -483,15 +498,7 @@ public class S_AIController : MonoBehaviour
         if (distanceToFleeDesination > 3f)
         {
             // choice the direction for flee the enemy
-            Vector3 dirToEnemy = (_enemy.transform.position - transform.position).normalized;
-            float dot = Vector3.Dot(transform.forward, dirToEnemy);
-            _fleeDirection.localPosition = Vector3.zero;
-
-            if (dot > 0)
-                _fleeDirection.localPosition = -Vector3.forward;
-            else
-                _fleeDirection.localPosition = Vector3.forward;
-
+            SelectTheFleeDirection(_fleeDestination);
             MoveToPoint(_fleeDestination, _fleeDirection);
         }
     }
@@ -500,18 +507,12 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     private void FleeEnemyWithDistance()
     {
-        Vector3 dirToEnemy = (_enemy.transform.position - transform.position);
-        Vector3 destination;
-        float dot = Vector3.Dot(transform.forward, dirToEnemy.normalized);
-
-        // if the enemy is front of self destination is behind us else she is front of us
-        if (dot > 0)
-            destination = transform.position - transform.forward;
-        else
-            destination = transform.position + transform.forward;
+        Vector3 dirToEnemy = (transform.position - _enemy.transform.position);
+        Vector3 destination = transform.position + (dirToEnemy.normalized * 5f);
 
         // move to the point
-        MoveToPoint(destination, transform);
+        SelectTheFleeDirection(destination);
+        MoveToPoint(destination, _fleeDirection);
     }
     /// <summary>
     /// start the cooldown for set the <b>Failure</b> flee and after 1 seconde the <b>None</b>
@@ -522,6 +523,22 @@ public class S_AIController : MonoBehaviour
         _fleeMethode = FleeType.Failure;
         yield return _fleeFailureCooldownCoroutine;
         _fleeMethode = FleeType.None;
+    }
+    /// <summary>
+    /// Select the flee direction
+    /// the flee direction is behind us when the target is in front and he is in front when the target is behind
+    /// </summary>
+    /// <param name="destination">final destination for calcul the flee direction</param>
+    private void SelectTheFleeDirection(Vector3 destination)
+    {
+        Vector3 dirToTarget = (destination - transform.position).normalized;
+        float dotTarget = Vector3.Dot(transform.forward, dirToTarget);
+        _fleeDirection.localPosition = Vector3.zero;
+
+        if (dotTarget > 0f)
+            _fleeDirection.localPosition = Vector3.forward;
+        else
+            _fleeDirection.localPosition = -Vector3.forward;
     }
 
     /// <summary>
@@ -924,7 +941,6 @@ public class S_AIController : MonoBehaviour
             if (!CurrentWeaponCanAttack())
             {
                 AttackWithCurrrentWeapon();
-                Debug.Log("fail attack");
             }
         }
     }
