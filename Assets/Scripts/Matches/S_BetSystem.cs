@@ -14,6 +14,7 @@ public class S_BetSystem : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _playerMoney;
 
     [SerializeField] private GameObject _launchMatch;
+    [SerializeField] private GameObject _betWinDisplay;
     private TextMeshProUGUI _launchMatchTxt;
 
     private int _betAmount = 0;
@@ -37,7 +38,6 @@ public class S_BetSystem : MonoBehaviour
     {
         _eventSystem = EventSystem.current;
         _launchMatchTxt = _launchMatch.GetComponentInChildren<TextMeshProUGUI>();
-        _launchMatchTxt.text = "Skip bet";
 
         _betInputTxt.onValidateInput += ValidateChar;
     }
@@ -45,13 +45,13 @@ public class S_BetSystem : MonoBehaviour
     private void Start()
     {
         gameObject.SetActive(false);
+        _betWinDisplay.SetActive(false);
         _currentBetTxt.transform.parent.gameObject.SetActive(false);
     }
 
     private void OnEnable()
     {
         _betInputTxt.text = "";
-        _launchMatchTxt.text = "Skip bet";
         _playerMoney.text = "$ " + _testMoney;
 
         _eventSystem.SetSelectedGameObject(null);
@@ -162,10 +162,12 @@ public class S_BetSystem : MonoBehaviour
                 _playerMoney.text = "$ " + _testMoney;
                 _eventSystem.SetSelectedGameObject(null);
                 _eventSystem.SetSelectedGameObject(_launchMatch);
+
+
+                _hasBet = _betAmount == 0 ? false : true;
             }
             else
             {
-                _launchMatchTxt.text = "Skip bet";
                 _eventSystem.SetSelectedGameObject(null);
                 _eventSystem.SetSelectedGameObject(_launchMatch);
                 _currentBetTxt.transform.parent.gameObject.SetActive(false);
@@ -197,16 +199,36 @@ public class S_BetSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Give the player his money back with some gain if he won the bet
+    /// </summary>
     public void WinBet()
     {
         if (_hasBet)
         {
-            if (!_currentParticipantChosen.hasLost)
+            if (!HasLostBet())
             {
-                int newMoney = _testMoney + _betAmount;
+                Debug.Log("YOU WON THE BET !");
+                int amountWon = _betAmount * 2; //Change this when we have the definitive calcul of the rating
+                int newMoney = _testMoney + amountWon;
+
                 _testMoney = newMoney > 999999999 ? 999999999 : newMoney; //Mathf.RoundToInt(_currentBetRating)
+                _playerMoney.text = "$ " + _testMoney;
+                _betWinDisplay.SetActive(true);
+                _betWinDisplay.GetComponentInChildren<TextMeshProUGUI>().text = "Bet : You won $ " + amountWon;
+
+                _betAmount = 0;
             }
         }
+    }
+
+    private bool HasLostBet()
+    {
+        if (_tournamentManager.GetCurrentLoser().name == _currentParticipantChosen.name)
+        {
+            return true;
+        }
+        return false;
     }
 
     /// <summary>
@@ -272,6 +294,10 @@ public class S_BetSystem : MonoBehaviour
     {
         _currentBetTxt.transform.parent.gameObject.SetActive(false);
         _currentBetTxt.text = "$ " + _betAmount;
-        _betAmount = 0;
+    }
+
+    public void SetHasBet(bool hasBet)
+    {
+        _hasBet = hasBet;
     }
 }

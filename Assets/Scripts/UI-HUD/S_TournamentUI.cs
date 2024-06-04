@@ -209,7 +209,8 @@ public class S_TournamentBracket : MonoBehaviour
             _tournamentManager.SimulateMatch();
 
             UpdateWinnerLogo(_currentUsedBracket.transform, _currentLevel, _currentMatch);
-            _betSystem.WinBet();
+            _betSystem.WinBet(); //check if the player has won the bet
+            _betSystem.SetHasBet(false);
         }
     }
 

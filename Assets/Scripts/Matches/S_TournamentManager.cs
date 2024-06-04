@@ -351,4 +351,9 @@ public class S_TournamentManager : MonoBehaviour
     {
         return 0; //need to get a way to get the participant's rating
     }
+
+    public Participant GetCurrentLoser()
+    {
+        return _roundLosers[_currentMatch];
+    }
 }

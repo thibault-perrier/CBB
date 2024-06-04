@@ -70,6 +70,7 @@ public class S_CameraView : MonoBehaviour
         _skipAction = new InputAction("Skip");
         _skipAction.AddBinding("<Gamepad>/buttonSouth");
         _skipAction.AddBinding("<Keyboard>/space");
+        _skipAction.AddBinding("<Mouse>/leftButton");
         _skipAction.Enable();
     }
 
