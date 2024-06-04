@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 7271685}
   - component: {fileID: 7271684}
   m_Layer: 0
-  m_Name: Spot Light
+  m_Name: Street Arena Spot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -191,7 +191,7 @@ Light:
   m_Shape: 0
   m_Color: {r: 1, g: 0.5983977, b: 0, a: 1}
   m_Intensity: 500
-  m_Range: 30
+  m_Range: 16
   m_SpotAngle: 73.90589
   m_InnerSpotAngle: 73.90589
   m_CookieSize: 10
@@ -588,9 +588,13 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 82d06fab6b3ddab4bb26ed2c3d655054, type: 2}
+    - target: {fileID: 6472100172759628147, guid: aa40a07c557ce3f408b14420180ce4a4, type: 3}
+      propertyPath: m_Name
+      value: Back Alley Spot Light
+      objectReference: {fileID: 0}
     - target: {fileID: 8561412097876729401, guid: aa40a07c557ce3f408b14420180ce4a4, type: 3}
       propertyPath: m_Range
-      value: 239.00224
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 8561412097876729401, guid: aa40a07c557ce3f408b14420180ce4a4, type: 3}
       propertyPath: m_Color.b
@@ -611,6 +615,10 @@ PrefabInstance:
     - target: {fileID: 8561412097876729401, guid: aa40a07c557ce3f408b14420180ce4a4, type: 3}
       propertyPath: m_SpotAngle
       value: 179
+      objectReference: {fileID: 0}
+    - target: {fileID: 8561412097876729401, guid: aa40a07c557ce3f408b14420180ce4a4, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1324,9 +1332,13 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 1b0dc555ee9d98742b00fec3cd561064, type: 2}
+    - target: {fileID: 6472100172759628147, guid: aa40a07c557ce3f408b14420180ce4a4, type: 3}
+      propertyPath: m_Name
+      value: Shop Spot Light
+      objectReference: {fileID: 0}
     - target: {fileID: 8561412097876729401, guid: aa40a07c557ce3f408b14420180ce4a4, type: 3}
       propertyPath: m_Range
-      value: 108.54093
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 8561412097876729401, guid: aa40a07c557ce3f408b14420180ce4a4, type: 3}
       propertyPath: m_Color.b
@@ -1446,7 +1458,6 @@ MonoBehaviour:
   m_Cameras: []
   m_RendererIndex: -1
   m_VolumeLayerMask:
-    serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
@@ -2361,9 +2372,13 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: f819f16f593b88947834a17e18244bd2, type: 2}
+    - target: {fileID: 6472100172759628147, guid: aa40a07c557ce3f408b14420180ce4a4, type: 3}
+      propertyPath: m_Name
+      value: Garage Door Outdoors Spot Light
+      objectReference: {fileID: 0}
     - target: {fileID: 8561412097876729401, guid: aa40a07c557ce3f408b14420180ce4a4, type: 3}
       propertyPath: m_Range
-      value: 179.29106
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 8561412097876729401, guid: aa40a07c557ce3f408b14420180ce4a4, type: 3}
       propertyPath: m_Color.b
@@ -2498,9 +2513,13 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 01f8bcd6b45f0304fb607388bc2f5f4d, type: 2}
+    - target: {fileID: 6472100172759628147, guid: aa40a07c557ce3f408b14420180ce4a4, type: 3}
+      propertyPath: m_Name
+      value: Tournament Spot Light
+      objectReference: {fileID: 0}
     - target: {fileID: 8561412097876729401, guid: aa40a07c557ce3f408b14420180ce4a4, type: 3}
       propertyPath: m_Range
-      value: 296.4536
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 8561412097876729401, guid: aa40a07c557ce3f408b14420180ce4a4, type: 3}
       propertyPath: m_Color.b
@@ -3027,6 +3046,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 03780817d02ef06409b926d7ef962a5d, type: 2}
+    - target: {fileID: 1168195263979733818, guid: 80eb6c9b1502da94885c6bc35352aeb0, type: 3}
+      propertyPath: m_Name
+      value: Parameters Spot Light
+      objectReference: {fileID: 0}
     - target: {fileID: 1286379654012830964, guid: 80eb6c9b1502da94885c6bc35352aeb0, type: 3}
       propertyPath: m_LocalPosition.x
       value: -53.94
@@ -3085,7 +3108,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8152170588211648888, guid: 80eb6c9b1502da94885c6bc35352aeb0, type: 3}
       propertyPath: m_Range
-      value: 32.461216
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 8152170588211648888, guid: 80eb6c9b1502da94885c6bc35352aeb0, type: 3}
       propertyPath: m_Color.b
@@ -3168,7 +3191,7 @@ GameObject:
   - component: {fileID: 980969555}
   - component: {fileID: 980969554}
   m_Layer: 0
-  m_Name: Spot Light
+  m_Name: Garage Indoors Spot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3225,7 +3248,7 @@ Light:
   m_Shape: 0
   m_Color: {r: 1, g: 0.9157081, b: 0, a: 1}
   m_Intensity: 900
-  m_Range: 26.704576
+  m_Range: 16
   m_SpotAngle: 179
   m_InnerSpotAngle: 0
   m_CookieSize: 10
@@ -4127,7 +4150,6 @@ MonoBehaviour:
   m_Cameras: []
   m_RendererIndex: -1
   m_VolumeLayerMask:
-    serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
@@ -4506,7 +4528,6 @@ Transform:
   - {fileID: 701544738}
   - {fileID: 1370312063}
   - {fileID: 58632818}
-  - {fileID: 2079351764}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1604729854
@@ -4864,7 +4885,6 @@ MonoBehaviour:
   m_Cameras: []
   m_RendererIndex: -1
   m_VolumeLayerMask:
-    serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
@@ -5541,124 +5561,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8aac27629f44f49498c624afd3177b1e, type: 3}
   m_PrefabInstance: {fileID: 2066918949}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2079351761
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2079351764}
-  - component: {fileID: 2079351763}
-  - component: {fileID: 2079351762}
-  m_Layer: 0
-  m_Name: Light_Main_Menu
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2079351762
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2079351761}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
-  m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
-  m_LightCookieSize: {x: 1, y: 1}
-  m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 0
---- !u!108 &2079351763
-Light:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2079351761}
-  m_Enabled: 1
-  serializedVersion: 10
-  m_Type: 0
-  m_Shape: 0
-  m_Color: {r: 0.3446598, g: 0, b: 1, a: 1}
-  m_Intensity: 10000
-  m_Range: 195.01747
-  m_SpotAngle: 98.51021
-  m_InnerSpotAngle: 71.80153
-  m_CookieSize: 10
-  m_Shadows:
-    m_Type: 0
-    m_Resolution: -1
-    m_CustomResolution: -1
-    m_Strength: 1
-    m_Bias: 0.05
-    m_NormalBias: 0.4
-    m_NearPlane: 0.2
-    m_CullingMatrixOverride:
-      e00: 1
-      e01: 0
-      e02: 0
-      e03: 0
-      e10: 0
-      e11: 1
-      e12: 0
-      e13: 0
-      e20: 0
-      e21: 0
-      e22: 1
-      e23: 0
-      e30: 0
-      e31: 0
-      e32: 0
-      e33: 1
-    m_UseCullingMatrixOverride: 0
-  m_Cookie: {fileID: 0}
-  m_DrawHalo: 0
-  m_Flare: {fileID: 0}
-  m_RenderMode: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingLayerMask: 1
-  m_Lightmapping: 4
-  m_LightShadowCasterMode: 0
-  m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
-  m_ColorTemperature: 6570
-  m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
-  m_UseBoundingSphereOverride: 0
-  m_UseViewFrustumForShadowCasterCull: 1
-  m_ShadowRadius: 0
-  m_ShadowAngle: 0
---- !u!4 &2079351764
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2079351761}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 19.499998, y: 75, z: 2.6069438}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1587735471}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1001 &77862238785499756
 PrefabInstance:
   m_ObjectHideFlags: 0
