@@ -6,25 +6,39 @@ public class S_EditorController : MonoBehaviour
 {
     [SerializeField] private GameObject _weaponGroup1;
     [SerializeField] private GameObject _weaponGroup2;
-    [SerializeField] private GameObject _chassisGroup1;
-    [SerializeField] private GameObject _chassisGroup2;
+    [SerializeField] private GameObject _frameGroup1;
+    [SerializeField] private GameObject _frameGroup2;
 
-    //[SerializeField] private List<Weapon> _weappons;   //list of scriptable object player's weapons
-    //[SerializeField] private List<Chassis> _chassis;    //list of scriptable object player's chassis
+    [SerializeField] private List<GameObject> _weapons;     //list of scriptable object player's weapons
+    [SerializeField] private List<S_WeaponData> _weaponsData;
+    [SerializeField] private List<GameObject> _frame;     //list of scriptable object player's chassis
+    [SerializeField] private List<S_FrameData> _frameData;
+
+    /// <summary>
+    /// number of Weapon on the line
+    /// </summary>
+    [SerializeField] private int _nbWeapon;
+    /// <summary>
+    /// number of Chassis on the line
+    /// </summary>
+    [SerializeField] private int _nbChassis;
 
     enum EditState
     {
         PresetChoice,
         WeaponChoice,
-        ChassisChoice
-        
+        FrameChoice
+    }
 
+    private void Awake()
+    {
+        //UpdatePiece();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        UpdatePiece();
     }
 
     // Update is called once per frame
@@ -74,5 +88,63 @@ public class S_EditorController : MonoBehaviour
     private void SetActiveChassisChoice(bool active)
     {
 
+    }
+
+    private void UpdatePiece()
+    {
+        //ClearPieces();
+
+        //get piece Data
+
+
+        //init piece prefab
+
+
+        foreach (S_FrameData frame in _frameData)
+        {
+            GameObject newFrame = Instantiate(frame.Prefab);
+            GameObject uiInstance = new GameObject(newFrame.name, typeof(RectTransform));
+            Destroy(newFrame);
+            _frame.Add(uiInstance);
+
+            
+
+            if (_frameGroup1.transform.childCount < 3)
+            {
+                uiInstance.transform.parent = _frameGroup1.transform;
+            }
+            else
+            {
+                uiInstance.transform.parent = _frameGroup2.transform;
+            }
+            
+
+        }
+
+        foreach (S_WeaponData weapon in _weaponsData)
+        {
+            GameObject newWeapon = Instantiate(weapon.Prefab);
+            GameObject uiInstance = new GameObject(newWeapon.name, typeof(RectTransform));
+            _weapons.Add(uiInstance);
+            //Destroy(newWeapon);
+            if (_weaponGroup1.transform.childCount < 6)
+            {
+                uiInstance.transform.parent = _weaponGroup1.transform;
+            }
+            else
+            {
+                uiInstance.transform.parent = _weaponGroup2.transform;
+            }
+            //uiInstance.transform.position = Vector3.zero;
+        }
+        
+    }
+
+    private void ClearPieces()
+    {
+        _frame.Clear();
+        _frameData.Clear();
+        _weapons.Clear();
+        _weaponsData.Clear();
     }
 }
