@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class S_CameraView : MonoBehaviour
 {
@@ -306,6 +307,22 @@ public class S_CameraView : MonoBehaviour
         }
     }
 
+    public IEnumerator WinFadeIn()
+    {
+        _animator = _currentCam.GetComponent<Animator>();
+
+        _lastParticipantInView = _currentCam.transform.position;
+
+        if (_animator != null)
+        {
+            _animator.SetTrigger("Start");
+        }
+
+        yield return new WaitForSeconds(_animator.GetCurrentAnimatorClipInfo(0).Length);
+
+        SceneManager.LoadScene("Garage");
+    }
+
     /// <summary>
     /// After a match is over (or skip is called) the camera return in front of the tournament tree
     /// </summary>
@@ -337,6 +354,11 @@ public class S_CameraView : MonoBehaviour
     public void StartZoomFadeIn()
     {
         StartCoroutine(ZoomFadeIn());
+    }
+
+    public void StartWinFadeIn()
+    {
+        StartCoroutine(WinFadeIn());
     }
 
     public void StartReturnToTournament()

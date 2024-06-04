@@ -356,4 +356,9 @@ public class S_TournamentManager : MonoBehaviour
     {
         return _roundLosers[_currentMatch];
     }
+
+    public int GetTournamentPrize()
+    {
+        return _currentTournament.prize;
+    }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -24,6 +25,8 @@ public class S_TournamentBracket : MonoBehaviour
 
     [Header("Win / Lost text")]
     [SerializeField] private GameObject _playerLose;
+    [SerializeField] private GameObject _playerWin;
+    [SerializeField] private GameObject _tournamentPrizeDisplay;
 
     private int _currentLevel = 0;
     private int _currentMatch = 0;
@@ -60,6 +63,8 @@ public class S_TournamentBracket : MonoBehaviour
 
         _botMatchButtons.SetActive(false);
         _playerMatchButton.SetActive(false);
+        _playerLose.SetActive(false);
+        _playerWin.SetActive(false);
 
         _cameraView.StartShowOffObjects(_logos[_logos.Count - 1].gameObject, _logos[0].gameObject);
     }
@@ -415,7 +420,14 @@ public class S_TournamentBracket : MonoBehaviour
         _movingLogoCoroutine = null;
 
         winner.transform.position = waypoint.transform.position;
-        //Add more system that allow the player to win his prize and open another UI for the occasion
+
+        yield return new WaitForSeconds(1);
+
+        DisplayWinLogo();
+
+        yield return new WaitForSeconds(5f);
+
+        _cameraView.StartWinFadeIn();
     }
 
     public void OnChangeScene(string sceneName)
@@ -431,5 +443,21 @@ public class S_TournamentBracket : MonoBehaviour
     public void OnDeactivateUI(GameObject gameObj)
     {
         gameObj.SetActive(false);
+    }
+
+    public void DisplayWinLogo()
+    {
+        _tournamentUI.SetActive(true);
+
+        foreach (Transform child in _tournamentUI.transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+
+        _playerWin.SetActive(true);
+        _tournamentPrizeDisplay.SetActive(true);
+        _tournamentPrizeDisplay.GetComponentInChildren<TextMeshProUGUI>().text = "Tournament : You won $ " + _tournamentManager.GetTournamentPrize();
+
+        //THE MONEY += THE PRIZE
     }
 }
