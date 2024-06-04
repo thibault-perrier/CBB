@@ -259,11 +259,13 @@ public class S_ShopManager : MonoBehaviour
 
     public void LeaveShop(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.performed && gameObject.activeInHierarchy)
         {
             S_ClickablesManager.Instance.mainMenu.SetActive(true);
             S_ClickablesManager.Instance.shopMenu.SetActive(false);
             S_DataGame.Instance.SaveInventory();
+            S_ObjectClickable.Instance.LaunchAnimBackToMenuFromShop();
+            S_ClickablesManager.Instance.ResetAllClickables();
         }
     }
 }

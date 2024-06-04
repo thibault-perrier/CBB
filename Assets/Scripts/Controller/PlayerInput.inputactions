@@ -283,6 +283,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "LeaveGarage",
+                    "type": "Button",
+                    "id": "0ce1f50d-c742-4e9b-823e-5dd6750d35f7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -646,6 +655,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "LeaveShop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "baf69a5e-0d57-45a8-9001-f418d1815fe6",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeaveGarage",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

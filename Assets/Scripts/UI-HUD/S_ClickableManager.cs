@@ -89,7 +89,6 @@ public class S_ClickablesManager : MonoBehaviour
             clickable.OnActivated();
         }
     }
-
     public void HideMainMenu()
     {
         mainMenu.SetActive(false);
@@ -101,9 +100,70 @@ public class S_ClickablesManager : MonoBehaviour
         mainMenu.SetActive(true);
         shopMenu.SetActive(false);
     }
+    public void ShowHideMainMenu()
+    {
+        shopMenu.SetActive(!shopMenu.activeSelf);
+        mainMenu.SetActive(!mainMenu.activeSelf);
+    }
 
     public void LoadTournament()
     {
         SceneManager.LoadScene("TournamentScene");
     }
+    public void ResetAllClickables()
+    {
+        foreach (GameObject clickable in _clickables)
+        {
+            var clickableScript = clickable.GetComponent<S_ObjectClickable>();
+            if (clickableScript != null)
+            {
+                clickableScript.ResetState();
+            }
+        }
+    }
+
+    public void StopAnimShop()
+    {
+       S_ObjectClickable.Instance.CurrentAnimFalse();
+       S_ObjectClickable.Instance.GoOnIdleShop();
+    }
+
+    public void StopAnimBackToMainMenuFromShop()
+    {
+        S_ObjectClickable.Instance.StopAnimBackToMenuFromShop();
+    }
+
+    public void StopIdleShop()
+    {
+        S_ObjectClickable.Instance.GoOnIdleDisableShop();
+    }
+
+    public void StopAnimBackToMainMenuFromGarage()
+    {
+        S_ObjectClickable.Instance.StopAnimBackToMenuFromGarage();
+    }
+
+    public void StartIdleGarage()
+    {
+        S_ObjectClickable.Instance.GoOnIdleGarage();
+    }
+
+    public void StopIdleGarage()
+    {
+        S_ObjectClickable.Instance.GoOnIdleDisableGarage();
+    }
+    
+    public void BackGarageDoorEnable()
+    {
+        S_ObjectClickable.Instance.BackGarageDoorEnable();
+    }
+
+    public void BackGarageDoorDisable()
+    {
+        S_ObjectClickable.Instance.BackGarageDoorDisable();
+    }
+
+  
+
+   
 }
