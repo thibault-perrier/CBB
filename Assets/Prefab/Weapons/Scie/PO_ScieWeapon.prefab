@@ -67,11 +67,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91febbad3ce4c4340b07aed5f677874c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _life: 0
+  _canAttack: 1
+  _alwayActive: 0
+  _attacking: 0
+  _hitZone: {fileID: 0}
   _data: {fileID: 11400000, guid: 069ab80a1918b9249b22a78e6978bbf3, type: 2}
   _state: 0
   _lifeBrakePoint: 15
-  _shotWeapon: 0
-  _active: 0
   _animator: {fileID: 0}
 --- !u!1001 &504532536301603868
 PrefabInstance:
