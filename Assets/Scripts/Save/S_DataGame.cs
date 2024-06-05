@@ -58,14 +58,9 @@ public class S_DataGame : MonoBehaviour
 [System.Serializable]
 public class InventorySaver // Inventory 
 {
-    private int _currentMoney;
-    public int PlayerMoney
-    { 
-        get => _currentMoney; 
-        set => _currentMoney = value; 
-    }
-    public List<Frame> frames = new List<Frame>();
-    public List<Weapons> weapons = new List<Weapons>();
+    public int CurrentMoney;
+    public List<Frame> Frames = new List<Frame>();
+    public List<Weapons> Weapons = new List<Weapons>();
 }
 
 [System.Serializable]

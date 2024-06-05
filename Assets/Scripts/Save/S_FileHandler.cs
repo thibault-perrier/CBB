@@ -14,9 +14,9 @@ public class S_FileHandler: MonoBehaviour
     {
         string inventoryData = JsonUtility.ToJson(S_DataGame.Instance.inventory);
         string filePath = Application.persistentDataPath + "/InventoryData.json";
-        Debug.Log(filePath);
         System.IO.File.WriteAllText(filePath, inventoryData);
         Debug.Log("Sauvegarde effectué");
+        Debug.Log(filePath);
     }
 
     public void LoadInventory()
@@ -25,6 +25,8 @@ public class S_FileHandler: MonoBehaviour
         string inventoryData = System.IO.File.ReadAllText(filePath);
         S_DataGame.Instance.inventory = JsonUtility.FromJson<InventorySaver>(inventoryData);
         Debug.Log("Changement effectué");
+        Debug.Log(S_DataGame.Instance.inventory.CurrentMoney);
+        Debug.Log(filePath);
     }
 
     public void SaveTournament()
