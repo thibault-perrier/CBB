@@ -7,7 +7,8 @@ public class S_ObjectClickable : MonoBehaviour
     [SerializeField] private Animator _animatorDoor;
     [SerializeField] private Animator _animatorCameraGarage;
 
-
+    [SerializeField] private Light _light;
+    private float _originalIntensity;
 
     private void Awake()
     {
@@ -15,11 +16,31 @@ public class S_ObjectClickable : MonoBehaviour
             _instance = this;
     }
 
+    private void Start()
+    {
+        _originalIntensity = _light.intensity;
+    }
+
+    public void OnMouseOver()
+    {
+        OnFocus();
+    }
+
+    public void OnMouseExit()
+    {
+        OnFocusLost();
+    }
+
+    public void OnMouseDown()
+    {
+        OnActivated();
+    }
+
     public void OnFocus()
     {
         if (!_interactionLocked) 
         {
-            SetColor(Color.blue);
+            _light.intensity = _originalIntensity * 2;
         }
     }
 
@@ -27,7 +48,7 @@ public class S_ObjectClickable : MonoBehaviour
     {
         if (!_interactionLocked) 
         {
-            SetColor(Color.white);
+            _light.intensity = _originalIntensity;
         }
     }
 
@@ -108,6 +129,7 @@ public class S_ObjectClickable : MonoBehaviour
     public void GoOnIdleShop()
     {
         _animatorCameraGarage.SetBool("Idle", true);
+        S_ClickablesManager.Instance.ReactivateAllClickables();
     }
 
     public void GoOnIdleDisableShop()
@@ -162,6 +184,4 @@ public class S_ObjectClickable : MonoBehaviour
     {
         _animatorDoor.SetBool("BackDoor", false);
     }
-
-
 }

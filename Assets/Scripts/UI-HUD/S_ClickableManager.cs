@@ -11,12 +11,35 @@ public class S_ClickablesManager : MonoBehaviour
     private float _nextNavigationTime = 0f;
     public GameObject mainMenu;
     public GameObject shopMenu;
+    public bool activeBackGarage = false;
+    private bool[] _clickableStates;
+    private bool _useMouse = false;
+
+    private InputAction mouseMoveAction;
+    private InputAction navigateAction;
 
     void Awake()
     {
         if (Instance == null)
             Instance = this;
+
+        _clickableStates = new bool[_clickables.Length];
+        for (int i = 0; i < _clickableStates.Length; i++)
+        {
+            _clickableStates[i] = true;
+        }
+
+        var inputActions = new InputActionMap("UI");
+
+        mouseMoveAction = inputActions.AddAction("MouseMove", binding: "<Pointer>/delta");
+        mouseMoveAction.performed += OnMouseMove;
+
+        navigateAction = inputActions.AddAction("Navigate", binding: "<Gamepad>/leftStick");
+        navigateAction.performed += OnNavigate;
+
+        inputActions.Enable();
     }
+
     void Start()
     {
         if (_clickables.Length > 0)
@@ -28,11 +51,43 @@ public class S_ClickablesManager : MonoBehaviour
     void Update()
     {
         var gamepad = Gamepad.current;
-        if (gamepad == null) return;
+        if (gamepad != null && !_useMouse)
+        {
+            if (Time.time >= _nextNavigationTime)
+            {
+                Vector2 joystickInput = gamepad.leftStick.ReadValue();
 
+                if (joystickInput.x > 0.5f)
+                {
+                    Navigate(-1);
+                    _nextNavigationTime = Time.time + _navigationCooldown;
+                }
+                else if (joystickInput.x < -0.5f)
+                {
+                    Navigate(1);
+                    _nextNavigationTime = Time.time + _navigationCooldown;
+                }
+            }
+
+            if (gamepad.buttonSouth.wasPressedThisFrame)
+            {
+                ActivateCurrent();
+            }
+        }
+    }
+
+    void OnMouseMove(InputAction.CallbackContext context)
+    {
+        _useMouse = true;
+        ResetAllClickables();
+    }
+
+    void OnNavigate(InputAction.CallbackContext context)
+    {
+        _useMouse = false;
         if (Time.time >= _nextNavigationTime)
         {
-            Vector2 joystickInput = gamepad.leftStick.ReadValue();
+            Vector2 joystickInput = context.ReadValue<Vector2>();
 
             if (joystickInput.x > 0.5f)
             {
@@ -45,20 +100,19 @@ public class S_ClickablesManager : MonoBehaviour
                 _nextNavigationTime = Time.time + _navigationCooldown;
             }
         }
-
-        if (gamepad.buttonSouth.wasPressedThisFrame) 
-        {
-            ActivateCurrent();
-        }
     }
 
     void Navigate(int direction)
     {
         RemoveFocus(_clickables[_currentIndex]);
 
-        _currentIndex += direction;
-        if (_currentIndex < 0) _currentIndex = _clickables.Length - 1;
-        else if (_currentIndex >= _clickables.Length) _currentIndex = 0;
+        do
+        {
+            _currentIndex += direction;
+            if (_currentIndex < 0) _currentIndex = _clickables.Length - 1;
+            else if (_currentIndex >= _clickables.Length) _currentIndex = 0;
+        }
+        while (!_clickableStates[_currentIndex]);
 
         SetFocus(_clickables[_currentIndex]);
     }
@@ -87,8 +141,29 @@ public class S_ClickablesManager : MonoBehaviour
         if (clickable != null)
         {
             clickable.OnActivated();
+            DisableAllClickablesExcept(_currentIndex);
         }
     }
+
+    void DisableAllClickablesExcept(int index)
+    {
+        for (int i = 0; i < _clickables.Length; i++)
+        {
+            if (i != index)
+            {
+                _clickableStates[i] = false;
+            }
+        }
+    }
+
+    public void ReactivateAllClickables()
+    {
+        for (int i = 0; i < _clickables.Length; i++)
+        {
+            _clickableStates[i] = true;
+        }
+    }
+
     public void HideMainMenu()
     {
         mainMenu.SetActive(false);
@@ -100,6 +175,7 @@ public class S_ClickablesManager : MonoBehaviour
         mainMenu.SetActive(true);
         shopMenu.SetActive(false);
     }
+
     public void ShowHideMainMenu()
     {
         shopMenu.SetActive(!shopMenu.activeSelf);
@@ -110,6 +186,7 @@ public class S_ClickablesManager : MonoBehaviour
     {
         SceneManager.LoadScene("TournamentScene");
     }
+
     public void ResetAllClickables()
     {
         foreach (GameObject clickable in _clickables)
@@ -124,8 +201,8 @@ public class S_ClickablesManager : MonoBehaviour
 
     public void StopAnimShop()
     {
-       S_ObjectClickable.Instance.CurrentAnimFalse();
-       S_ObjectClickable.Instance.GoOnIdleShop();
+        S_ObjectClickable.Instance.CurrentAnimFalse();
+        S_ObjectClickable.Instance.GoOnIdleShop();
     }
 
     public void StopAnimBackToMainMenuFromShop()
@@ -146,13 +223,14 @@ public class S_ClickablesManager : MonoBehaviour
     public void StartIdleGarage()
     {
         S_ObjectClickable.Instance.GoOnIdleGarage();
+        ReactivateAllClickables();
     }
 
     public void StopIdleGarage()
     {
         S_ObjectClickable.Instance.GoOnIdleDisableGarage();
     }
-    
+
     public void BackGarageDoorEnable()
     {
         S_ObjectClickable.Instance.BackGarageDoorEnable();
@@ -163,7 +241,23 @@ public class S_ClickablesManager : MonoBehaviour
         S_ObjectClickable.Instance.BackGarageDoorDisable();
     }
 
-  
+    public void ActiveBoolBackAnimGarage()
+    {
+        activeBackGarage = true;
+    }
 
-   
+    public void FalseBoolBackAnimGarage()
+    {
+        activeBackGarage = false;
+    }
+
+    public void ActiveBoolBackShop()
+    {
+        S_ShopManager.Instance.activeBackShop = true;
+    }
+
+    public void FalseBoolBackShop()
+    {
+        S_ShopManager.Instance.activeBackShop = false;
+    }
 }

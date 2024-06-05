@@ -292,6 +292,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "MouseDetection",
+                    "type": "Value",
+                    "id": "027714aa-465e-4386-96b4-98eb7adac7c3",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -666,6 +675,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "LeaveGarage",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7b1d8359-3f62-4de7-bb46-d78840ba022f",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MouseDetection",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
