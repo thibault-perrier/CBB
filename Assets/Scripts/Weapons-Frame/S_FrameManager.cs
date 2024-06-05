@@ -5,11 +5,10 @@ using UnityEngine;
 
 public class S_FrameManager : MonoBehaviour, I_Damageable
 {
-    private int _life;
+    [SerializeField] private float _life;
     [SerializeField] private S_FrameData _data;
     private Rigidbody _rb;
     [SerializeField] private List<GameObject> _weaponHookPoints;
-    [SerializeField] private bool _player = false;
     public List<S_WeaponManager> _weaponManagers;
 
     public int NBWeaponHookPoints
@@ -20,37 +19,29 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
 
     private void Awake()
     {
-        _rb = this.AddComponent<Rigidbody>();
+        _rb = this.GetComponent<Rigidbody>();
         _rb.mass = _data.Mass;
         _life = _data.MaxLife;
     }
+    
+    public event Action<S_FrameManager> OnDie;
 
-    // Start is called before the first frame update
-    void Start()
+    public void SelectWeapons()
     {
         foreach (GameObject gameObject in _weaponHookPoints)
         {
-            S_WeaponManager weaponManager = gameObject.GetComponentInChildren<S_WeaponManager>();
-            if(weaponManager != null)
+            S_WeaponManager weaponManager = gameObject.GetComponentInChildren<S_WeaponManager>(true);
+            if (weaponManager != null)
             {
                 _weaponManagers.Add(weaponManager);
             }
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    
-    public event Action<S_FrameManager> OnDie;
-
-    public void TakeDamage(int amount)
+    public void TakeDamage(float amount)
     {
         _life -= amount;
-        if (_life <= 0)
+        if (_life <= 0f)
         {
             Die();
         }

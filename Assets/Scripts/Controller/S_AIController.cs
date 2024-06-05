@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[RequireComponent(typeof(S_FrameManager))]
 public class S_AIController : MonoBehaviour
 {
     public enum FleeType
@@ -100,23 +101,19 @@ public class S_AIController : MonoBehaviour
     [SerializeField, Tooltip("this is the focus target he can be the enemy or the enemy weapons")]
     private GameObject _target;
     [SerializeField, Tooltip("this is the current weapon used for attack the target")]
-    private GameObject _currentWeapon;
+    private S_WeaponManager _currentWeapon;
 
     private S_WheelsController _wheelsController;
+    private S_FrameManager _frameManager;
     private GameObject[] _traps;
     private GameObject[] _fleeTraps;
     private Vector3 _fleeDestination;
     private WaitForSeconds _attackCooldownCoroutine = new(1f);
     private WaitForSeconds _attackFailedCoroutine = new(1f);
     private WaitForSeconds _fleeFailureCooldownCoroutine = new(.5f);
-
-    [SerializeField]
     private FleeType _fleeMethode = FleeType.None;
 
-    // test varaible
-    public List<GameObject> Weapons;
-    public List<GameObject> EnemyWeapons;
-
+    #region Property
     /// <summary>
     /// the current state of AI
     /// </summary>
@@ -124,6 +121,13 @@ public class S_AIController : MonoBehaviour
     {
         get => _aiState;
         set => _aiState = value;
+    }
+    /// <summary>
+    /// the current frame of the bot
+    /// </summary>
+    public S_FrameManager Frame
+    {
+        get => _frameManager;
     }
 
     /// <summary>
@@ -324,9 +328,14 @@ public class S_AIController : MonoBehaviour
         get => _attackFailDistance;
         set => _attackFailDistance = Mathf.Max(0f, value);
     }
+    #endregion
 
     private void Start()
     {
+        _wheelsController = GetComponent<S_WheelsController>();
+        _frameManager = GetComponent<S_FrameManager>();
+        _frameManager.SelectWeapons();
+
         _attackCooldownCoroutine = new(_attackCooldown);
         _fleeFailureCooldownCoroutine = new(_fleeCooldown);
 
@@ -337,13 +346,12 @@ public class S_AIController : MonoBehaviour
             GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
         }
 
-        _wheelsController = GetComponent<S_WheelsController>();
         _traps = FindGameObjectsInLayer(6);
     }
     private void FixedUpdate()
     {
         // reset the movement state
-        _wheelsController.Movement = S_WheelsController.Move.neutral;
+        _wheelsController.Movement = 0f;
 
         // verif if he is enable for work
         if (_aiState.Equals(AIState.Disable))
@@ -357,11 +365,9 @@ public class S_AIController : MonoBehaviour
         {
             AttackWithCurrrentWeapon();
         }
-        else
-        {
-            UpdateAIMovement();
-        }
+        UpdateAIMovement();
     }
+
 
     /// <summary>
     /// update the AI movement from target
@@ -376,7 +382,7 @@ public class S_AIController : MonoBehaviour
             return;
 
         // if he has not weapon for attack or he cant attack
-        if (!_currentWeapon.activeSelf || !_canAttack)
+        if (!_currentWeapon.CanAttack || !_canAttack)
         {
             FleeEnemy();
         }
@@ -385,11 +391,11 @@ public class S_AIController : MonoBehaviour
             // reset the flee
             _fleeDestination = Vector3.positiveInfinity;
             _fleeMethode = FleeType.None;
-
             MoveBotToTarget();
         }
     }
 
+    #region Flee
     /// <summary>
     /// flee the enemy, he go behind nearest trap if he can or he turn back
     /// </summary>
@@ -540,7 +546,9 @@ public class S_AIController : MonoBehaviour
         else
             _fleeDirection.localPosition = -Vector3.forward;
     }
+    #endregion
 
+    #region Movement
     /// <summary>
     /// if we are enough near the target just ignore trap
     /// </summary>
@@ -554,13 +562,13 @@ public class S_AIController : MonoBehaviour
         Vector3 dirToTarget = (_target.transform.position - transform.position);
         float dotAngle = Vector3.Dot(transform.forward, dirToTarget.normalized);
 
-        if (_wheelsController.Movement.Equals(S_WheelsController.Move.toward))
+        if (_wheelsController.Movement.Equals(1f))
         {
             // if he is in view of 40 degre and he is enough near he can ignore trap
             if (dotAngle > Mathf.Cos(40f) && dirToTarget.magnitude < 2.5f)
                 return true;
         }
-        else if (_wheelsController.Movement.Equals(S_WheelsController.Move.backward))
+        else if (_wheelsController.Movement.Equals(-1f))
         {
             // if he is in view of 40 degre and he is enough near he can ignore trap
             if (Mathf.Abs(dotAngle) > Mathf.Cos(40f) && dirToTarget.magnitude < 2.5f)
@@ -590,8 +598,12 @@ public class S_AIController : MonoBehaviour
             else
             {
                 // set the target from the nearest enemy weapon
-                GameObject playerBestWeapon = GetBestEnemyWeaponFromTarget(transform);
-                _target = playerBestWeapon;
+                S_WeaponManager enemyBestWeapon = GetBestEnemyWeaponFromTarget(transform);
+
+                if (enemyBestWeapon)
+                    _target = enemyBestWeapon.gameObject;
+                else
+                    _target = _enemy;
             }
         }
 
@@ -600,7 +612,24 @@ public class S_AIController : MonoBehaviour
 
         // if he get any weapon move to target with your current weapon
         if (succes)
-            MoveToPoint(_target.transform.position, _currentWeapon.transform);
+            MoveToPoint(_target.transform.position, _currentWeapon);
+    }
+    /// <summary>
+    /// set wheel velocity from the target
+    /// </summary>
+    /// <param name="target"></param>
+    private void MoveToPoint(Vector3 target, S_WeaponManager weapon)
+    {
+        // for set the movement
+        Vector3 dir = (target - weapon.HitZone.transform.position).normalized;
+        Vector3 weaponForward = GetForwardWeapon(weapon, transform);
+
+        float angleToDir = Vector3.SignedAngle(weaponForward, dir, Vector3.up);
+        float dotDirection = Vector3.Dot(weaponForward, dir);
+        float dotWeaponBody = Vector3.Dot(weaponForward, transform.forward);
+        float dotBehindEnemy = Vector3.Dot(transform.forward, dir);
+
+        ApplyWheelColliderPhysics(angleToDir, dotDirection, dotWeaponBody, dotBehindEnemy);
     }
     /// <summary>
     /// set wheel velocity from the target
@@ -608,17 +637,28 @@ public class S_AIController : MonoBehaviour
     /// <param name="target"></param>
     private void MoveToPoint(Vector3 target, Transform weapon)
     {
-        float turnAmount = 0f;
-        bool dodge = false;
-
         // for set the movement
         Vector3 dir = (target - weapon.position).normalized;
         Vector3 weaponForward = GetForwardWeapon(weapon, transform);
 
-        float dotDirection = Vector3.Dot(weaponForward, dir);
         float angleToDir = Vector3.SignedAngle(weaponForward, dir, Vector3.up);
+        float dotDirection = Vector3.Dot(weaponForward, dir);
         float dotWeaponBody = Vector3.Dot(weaponForward, transform.forward);
         float dotBehindEnemy = Vector3.Dot(transform.forward, dir);
+
+        ApplyWheelColliderPhysics(angleToDir, dotDirection, dotWeaponBody, dotBehindEnemy);
+    }
+    /// <summary>
+    /// Set the direction and movement of wheel collider
+    /// </summary>
+    /// <param name="angleToDir">angle of self bot from target</param>
+    /// <param name="dotDirection">the direction from the weapon forward and the target</param>
+    /// <param name="dotWeaponBody">the direction from the weapon forward and the self bot</param>
+    /// <param name="dotBehindEnemy">the direction from the self forward and the target</param>
+    private void ApplyWheelColliderPhysics(float angleToDir, float dotDirection, float dotWeaponBody, float dotBehindEnemy)
+    {
+        float turnAmount = 0f;
+        bool dodge = false;
 
         // get turn amount if he hit any trap
         float dodgeRnd = Random.Range(0, 101);
@@ -641,21 +681,21 @@ public class S_AIController : MonoBehaviour
         // if the weapon is behind the target
         if (dotDirection < 0f)
         {
-            _wheelsController.Direction = Reverse(2f);
+            _wheelsController.Direction = ReverseDir(2f);
             // if we are in front of the enemy go backward else fo toward
-            _wheelsController.Movement = dotBehindEnemy > 0f ? Reverse(S_WheelsController.Move.backward) : Reverse(S_WheelsController.Move.toward);
+            _wheelsController.Movement = dotBehindEnemy > 0f ? ReverseMov(-1f) : ReverseMov(1f);
             return;
         }
 
         if (dotDirection > 0f)
         {
             // go forward
-            _wheelsController.Movement = dotWeaponBody > 0f ? Reverse(S_WheelsController.Move.toward) : Reverse(S_WheelsController.Move.backward);
+            _wheelsController.Movement = dotWeaponBody > 0f ? ReverseMov(1f) : ReverseMov(-1f);
         }
         else
         {
             // go backward
-            _wheelsController.Movement = dotWeaponBody > 0f ? Reverse(S_WheelsController.Move.backward) : Reverse(S_WheelsController.Move.toward);
+            _wheelsController.Movement = dotWeaponBody > 0f ? ReverseMov(-1f) : ReverseMov(1f);
         }
 
         // if he hit any trap dont calcul turn amount
@@ -674,7 +714,7 @@ public class S_AIController : MonoBehaviour
         }
 
         // set controller direction
-        _wheelsController.Direction = Reverse(turnAmount);
+        _wheelsController.Direction = ReverseDir(turnAmount);
     }
     /// <summary>
     /// reverse the current movement with probability if
@@ -682,21 +722,16 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     /// <param name="currentMovement">the current movement for reverse</param>
     /// <returns>return the currentMovement reserve or just currentMovement</returns>
-    private S_WheelsController.Move Reverse(S_WheelsController.Move currentMovement)
+    private float ReverseMov(float currentMovement)
     {
-        // if he cant reverse the movement just return the current
+        // if he cant reverse movement return the current
         if (!_canMakeAccidentalMovement)
             return currentMovement;
 
         float reverseMovementRnd = Random.Range(0, 101);
+        // if movement equal 1 return -1 else return 1
         if (reverseMovementRnd < _accidentalMovementProbability)
-        {
-            // if he move toward return backward else return toward
-            if (currentMovement.Equals(S_WheelsController.Move.toward))
-                return S_WheelsController.Move.backward;
-
-            return S_WheelsController.Move.toward;
-        }
+            return currentMovement * -1f;
 
         return currentMovement;
     }
@@ -706,7 +741,7 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     /// <param name="direction">the current direction</param>
     /// <returns>return the direction reverse or not</returns>
-    private float Reverse(float direction)
+    private float ReverseDir(float direction)
     {
         // if he cant reverse direction return the current
         if (!_canMakeAccidentalDirection)
@@ -719,7 +754,9 @@ public class S_AIController : MonoBehaviour
 
         return direction;
     }
+    #endregion
 
+    #region Dodge
     /// <summary>
     /// get the scale for the GetTurnAmountForDodgeTrap methode
     /// </summary>
@@ -780,7 +817,9 @@ public class S_AIController : MonoBehaviour
 
         return Mathf.Clamp(turnAmount, -1f, 1f);
     }
- 
+    #endregion
+
+    #region Finder
     /// <summary>
     /// find all gameobject with layer
     /// </summary>
@@ -819,7 +858,23 @@ public class S_AIController : MonoBehaviour
             .OrderBy(x => Vector3.Distance(x.transform.position, position))
             .ToList()[0];
     }
+    #endregion
 
+    #region WeaponsFinder
+    /// <summary>
+    /// get the forward vector of weapon in relation of her hit zone
+    /// </summary>
+    /// <param name="weapon">current weapon</param>
+    /// <param name="bot">him self</param>
+    /// <returns>return the forward vector of current weapon</returns>
+    private Vector3 GetForwardWeapon(S_WeaponManager weapon, Transform bot)
+    {
+        // get the dot product of the weapon and the current bot
+        Vector2 dirSelfWeapon = (weapon.HitZone.transform.position - transform.position).normalized;
+        float dot = Vector3.Dot(bot.forward, dirSelfWeapon);
+
+        return dot >= 0f ? bot.forward : -bot.forward;
+    }
     /// <summary>
     /// get the forward vector of weapon in relation of bot
     /// </summary>
@@ -837,81 +892,110 @@ public class S_AIController : MonoBehaviour
     /// <summary>
     /// detect if the weapon is in view
     /// </summary>
-    /// <param name="weapon">current weapon of <b>bot one</b></param>
-    /// <param name="bot">the <b>seconde bot</b></param>
+    /// <param name="weapon">current weapon of the <b>bot</b></param>
     /// <returns>return True if he is in view</returns>
-    private bool RaycastWeapon(GameObject weapon, GameObject bot)
+    private bool IsValidEnemyWeapon(S_WeaponManager weapon)
     {
-        // make a raycast for know if bot can acces to weapon
-        // return True if he cant acces else return False
-        Vector3 dir = weapon.transform.position - bot.transform.position;
-        return Physics.Raycast(bot.transform.position, dir.normalized, dir.magnitude);
+        Vector3 enemyWeaponForward = GetForwardWeapon(weapon, _enemy.transform);
+        Vector3 enemyFromCurrentBot = (transform.position - _enemy.transform.position);
+        Vector3 enemyFromEnemyWeapon = (weapon.transform.position - _enemy.transform.position);
+
+        float dot = Vector3.Dot(enemyWeaponForward, enemyFromCurrentBot);
+        float angleFromCurrentBot = Vector3.SignedAngle(enemyWeaponForward, enemyFromCurrentBot.normalized, Vector3.up);
+        float angleFromCurrentWeapon = Vector3.SignedAngle(_enemy.transform.forward, enemyFromEnemyWeapon, Vector3.up);
+        float inSameSide = (angleFromCurrentBot / 180f) * (angleFromCurrentWeapon / 180f);
+
+        // if the weapon is behind the enemy
+        if (dot < 0f)
+            return false;
+
+        // if the weapon isnt in the same side of the player
+        if (inSameSide < 0f)
+            return false;
+
+        return true;
     }
     /// <summary>
     /// select the best player weapons
     /// </summary>
     /// <returns>return the best player weapon object</returns>
-    private GameObject GetBestEnemyWeaponFromTarget(Transform target)
+    private S_WeaponManager GetBestEnemyWeaponFromTarget(Transform target)
     {
+        S_FrameManager enemyWeapon = _enemy.GetComponent<S_FrameManager>();
+
         // return the current enemy if he has not weapons
-        if (EnemyWeapons.Count < 1)
-            return _enemy;
+        if (enemyWeapon._weaponManagers.Count < 1)
+            return null;
 
         // sort the weapon if he is behind him self
-        var cloneList = EnemyWeapons
+        var cloneList = enemyWeapon._weaponManagers
             .Where(x => Vector3.Dot(GetForwardWeapon(x.transform, _enemy.transform), (target.position - x.transform.position).normalized) > 0f)
-            .Where(x => !RaycastWeapon(x, gameObject))
+            .Where(x => IsValidEnemyWeapon(x))
             .ToList();
 
         // if all enemy weapons are behind him
         if (cloneList.Count < 1)
-            return _enemy;
+            return null;
 
         // sort the best weapon
         return cloneList
-            .Select(x => x.transform)
-            .OrderBy(x => int.Parse(x.name) - Vector3.Distance(x.position, target.position))
+            .OrderBy(x => Vector3.Distance(x.gameObject.transform.position, target.position))
             .Reverse()
-            .ToList()[0].gameObject;
+            .ToList()[0];
     }
     /// <summary>
     /// sort weapons from power, distance and if he is not behind to the target
     /// </summary>
     /// <param name="target"></param>
     /// <returns>return the best weapon from the distance to the target</returns>
-    private bool GetBestWeaponFromTarget(Transform target, ref GameObject weapon)
+    private bool GetBestWeaponFromTarget(Transform target, ref S_WeaponManager weapon)
     {
         if (!target)
             return false;
 
-        if (Weapons.Count < 1)
+        if (_frameManager._weaponManagers.Count < 1)
             return false;
-
-        // sort the weapon who can attack
-        var cloneList = Weapons
-            .Where(x => x.activeSelf)
-            .ToList();
 
         // if he not attack with best weapon return the random pick up of random weapon
         if (!_attackWithBestWeapon)
         {
-            weapon = Weapons[0];
+            weapon = _frameManager._weaponManagers[0];
             return true;
         }
 
-        // if all weapons cant attack
-        if (cloneList.Count < 1)
+        // if the current weapon is currently attacking dont change current weapon
+        if (_currentWeapon)
+        {
+            if (_currentWeapon.Attacking)
+                return true;
+        }
+
+        var alwaysActiveWeapons = _frameManager._weaponManagers.Where(x => x.AlwaysActive && x.CanAttack).ToList();
+        var notAlwaysActiveWeapons = _frameManager._weaponManagers.Where(x => !x.AlwaysActive && x.CanAttack).ToList();
+
+        if (alwaysActiveWeapons.Count < 1 && notAlwaysActiveWeapons.Count < 1)
             return false;
 
-        // sort by the distance
-        weapon = cloneList
-            .Select(x => x.transform)
-            .OrderBy(x => Vector3.Distance(x.position, target.position))
-            .ToList()[0].gameObject;
+        if (notAlwaysActiveWeapons.Count > 1)
+        {
+            // sort by the distance
+            weapon = notAlwaysActiveWeapons
+                .OrderBy(x => Vector3.Distance(x.gameObject.transform.position, target.position))
+                .ToList()[0];
+        }
+        else
+        {
+            // sort by the distance
+            weapon = alwaysActiveWeapons
+                .OrderBy(x => Vector3.Distance(x.gameObject.transform.position, target.position))
+                .ToList()[0];
+        }
 
         return true;
     }
+    #endregion
 
+    #region Attack
     /// <summary>
     /// try to failed any attack with probability
     /// </summary>
@@ -949,20 +1033,14 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     private void AttackWithCurrrentWeapon()
     {
-        if (!_canAttack)
-            return;
-
-        StartCoroutine(AttackCooldownCoroutine());
-
         // make a probabiblity for attack
         float attackRnd = Random.Range(0, 101);
         if (attackRnd > _attackSuccesProbability)
             return;
 
-        StartCoroutine(SetActiveWeapon(_currentWeapon));
         GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
-        // TO DO: make attack with current weapon
-    } // TODO make an attack with current weapon=========================================================================================================
+        _currentWeapon.LaunchAttack();
+    }
     /// <summary>
     /// if the target is closed the current weapon
     /// </summary>
@@ -972,15 +1050,11 @@ public class S_AIController : MonoBehaviour
         if (!_currentWeapon)
             return false;
 
-        if (!_currentWeapon.activeSelf || !_target)
+        if (!_currentWeapon.CanAttack || !_target)
             return false;
 
-        float targetDistance = Vector3.Distance(_target.transform.position, _currentWeapon.transform.position);
-        if (targetDistance < 1f)
-            return true;
-        
-        return false;
-    } // TODO Update this methode when we have weapon==========================================================================================================
+        return _currentWeapon.CanTakeAnyDamage;
+    }
     /// <summary>
     /// Cooldown for attack, set the _canAttack <b>False</b> and true with 1 seconde
     /// </summary>
@@ -1001,13 +1075,5 @@ public class S_AIController : MonoBehaviour
         yield return _attackFailedCoroutine;
         _failAttack = false;
     }
-    private IEnumerator SetActiveWeapon(GameObject weapon)
-    {
-        if (!weapon.activeSelf)
-            yield break;
-
-        weapon.SetActive(false);
-        yield return new WaitForSeconds(10f);
-        weapon.SetActive(true);
-    }
+    #endregion
 }

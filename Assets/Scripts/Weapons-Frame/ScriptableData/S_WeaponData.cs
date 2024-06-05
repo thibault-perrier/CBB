@@ -4,10 +4,13 @@ using UnityEngine;
 public class S_WeaponData : ScriptableObject
 {
     [SerializeField] private GameObject _prefab;
-    [SerializeField] private int _maxLife;
+    [SerializeField] private float _maxLife;
     [SerializeField] private int _cost;
-    [SerializeField] private int _damage;
+    [SerializeField] private float _damage;
     [SerializeField] private float _mass;
+    [SerializeField] private float _cooldownAttack;
+    [SerializeField] private float _attackTime;
+
     /// <summary>
     /// whether it's an active or passive weapon
     /// </summary>
@@ -17,7 +20,7 @@ public class S_WeaponData : ScriptableObject
     {
         get { return _prefab; }
     }
-    public int MaxLife
+    public float MaxLife
     {
         get { return _maxLife; }
     }
@@ -25,7 +28,7 @@ public class S_WeaponData : ScriptableObject
     {
         get { return _cost; }
     }
-    public int Damage
+    public float Damage
     {
         get { return _damage; }
     }
@@ -33,8 +36,16 @@ public class S_WeaponData : ScriptableObject
     {
         get { return _mass; }
     }
-    public bool Active
+    public bool AlwayActive
     {
         get { return _activeWeapon; }
+    }
+    public float AttackCooldown
+    {
+        get => _cooldownAttack;
+    }
+    public float AttackTime
+    {
+        get => _attackTime;
     }
 }
