@@ -244,12 +244,27 @@ public class S_CameraView : MonoBehaviour
     /// <returns></returns>
     private IEnumerator ShowOffObjects(GameObject firstObject, GameObject lastObject)
     {
-        _currentCam.transform.position = new Vector3(firstObject.transform.position.x, firstObject.transform.position.y, 260f);
+        Vector3 newPos = new Vector3(firstObject.transform.position.x, firstObject.transform.position.y, 260f);
+
+        while (Vector3.SqrMagnitude(_currentCam.transform.position - newPos) > 0.1f)
+        {
+            _currentCam.transform.position = Vector3.MoveTowards(_currentCam.transform.position, newPos, Time.deltaTime * 100f);
+
+            if (_skipAction.triggered) //to skip the showing off
+            {
+                break;
+            }
+
+            yield return null;
+        }
+
+        _currentCam.transform.position = newPos;
+
         Vector3 lastPos = new Vector3(lastObject.transform.position.x, lastObject.transform.position.y, 260f);
 
         while (Vector3.SqrMagnitude(_currentCam.transform.position - lastPos) > 0.1f)
         {
-            _currentCam.transform.position = Vector3.MoveTowards(_currentCam.transform.position, lastPos, Time.deltaTime * 20f);
+            _currentCam.transform.position = Vector3.MoveTowards(_currentCam.transform.position, lastPos, Time.deltaTime * 30f);
 
             if (_skipAction.triggered) //to skip the showing off
             {
@@ -265,13 +280,37 @@ public class S_CameraView : MonoBehaviour
     }
 
     /// <summary>
+    /// Show the whole tournament bracket before starting showing the participants
+    /// </summary>
+    /// <param name="firstObject"></param>
+    /// <param name="lastObject"></param>
+    /// <returns></returns>
+    public IEnumerator OverallTournamentView(GameObject firstObject, GameObject lastObject)
+    {
+        float timer = 0;
+        float timerDuration = 2f;
+
+        while (timer < timerDuration)
+        {
+            timer += Time.deltaTime;
+            if (_skipAction.triggered) //to skip the showing off
+            {
+                break; ;
+            }
+
+            yield return null;
+        }
+        _showMovement = StartCoroutine(ShowOffObjects(firstObject, lastObject));
+    }
+
+    /// <summary>
     /// Another class can starts the coroutine from there
     /// </summary>
     /// <param name="firstObject"></param>
     /// <param name="lastObject"></param>
     public void StartShowOffObjects(GameObject firstObject, GameObject lastObject)
     {
-        _showMovement = StartCoroutine(ShowOffObjects(firstObject, lastObject));
+        StartCoroutine(OverallTournamentView(firstObject, lastObject));
     }
 
     public void StopShowOffObject()
@@ -307,7 +346,11 @@ public class S_CameraView : MonoBehaviour
         }
     }
 
-    public IEnumerator WinFadeIn()
+    /// <summary>
+    /// Make the screen go black with a fade and get back to the main menu.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator FadeIn()
     {
         _animator = _currentCam.GetComponent<Animator>();
 
@@ -320,7 +363,8 @@ public class S_CameraView : MonoBehaviour
 
         yield return new WaitForSeconds(_animator.GetCurrentAnimatorClipInfo(0).Length);
 
-        SceneManager.LoadScene("Garage");
+        //SceneManager.LoadScene("Garage");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().rootCount);
     }
 
     /// <summary>
@@ -356,9 +400,9 @@ public class S_CameraView : MonoBehaviour
         StartCoroutine(ZoomFadeIn());
     }
 
-    public void StartWinFadeIn()
+    public void StartFadeIn()
     {
-        StartCoroutine(WinFadeIn());
+        StartCoroutine(FadeIn());
     }
 
     public void StartReturnToTournament()

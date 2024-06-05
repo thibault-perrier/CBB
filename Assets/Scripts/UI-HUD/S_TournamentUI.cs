@@ -27,6 +27,7 @@ public class S_TournamentBracket : MonoBehaviour
     [SerializeField] private GameObject _playerLose;
     [SerializeField] private GameObject _playerWin;
     [SerializeField] private GameObject _tournamentPrizeDisplay;
+    [SerializeField] private GameObject _sparksEffect;
 
     private int _currentLevel = 0;
     private int _currentMatch = 0;
@@ -44,6 +45,11 @@ public class S_TournamentBracket : MonoBehaviour
     private EventSystem _eventSystem;
 
     private GameObject _tournamentUI;
+
+    private void Awake()
+    {
+        _sparksEffect.SetActive(false);
+    }
 
     private void Start()
     {
@@ -65,6 +71,15 @@ public class S_TournamentBracket : MonoBehaviour
         _playerMatchButton.SetActive(false);
         _playerLose.SetActive(false);
         _playerWin.SetActive(false);
+
+        _cameraView.ClearObjectToView();
+        foreach (Transform t in _currentUsedBracket.transform.GetChild(3))
+        {
+            Debug.Log(t.name);
+            _cameraView.AddObjectToView(t);
+        }
+
+        _cameraView.IsTournamentView = true;
 
         _cameraView.StartShowOffObjects(_logos[_logos.Count - 1].gameObject, _logos[0].gameObject);
     }
@@ -176,7 +191,7 @@ public class S_TournamentBracket : MonoBehaviour
                 Transform winnerLogo = _winnersLogo[currentMatch];
                 Transform loserLogo = _losersLogo[currentMatch];
                 _movingLogoCoroutine = StartCoroutine(MoveWinner(bracket, currentMatch, currentRound, winnerLogo.gameObject));
-                StartCoroutine(LoserMoveBack(bracket, currentMatch, currentRound, loserLogo.gameObject));
+                StartCoroutine(LoserMoveBack(loserLogo.gameObject, false));
             }
         }
     }
@@ -213,9 +228,18 @@ public class S_TournamentBracket : MonoBehaviour
             ClosePopUpButton();
             _tournamentManager.SimulateMatch();
 
-            UpdateWinnerLogo(_currentUsedBracket.transform, _currentLevel, _currentMatch);
-            _betSystem.WinBet(); //check if the player has won the bet
-            _betSystem.SetHasBet(false);
+            if (_tournamentManager.GetCurrentLoser().name == "PLAYER")
+            {
+                StartCoroutine(LoserMoveBack(_losersLogo[_currentMatch].gameObject, true));
+                _cameraView.ClearObjectToView();
+                _cameraView.AddObjectToView(_losersLogo[_currentMatch]);
+            }
+            else
+            {
+                UpdateWinnerLogo(_currentUsedBracket.transform, _currentLevel, _currentMatch);
+                _betSystem.WinBet(); //check if the player has won the bet
+                _betSystem.SetHasBet(false);
+            }
         }
     }
 
@@ -379,19 +403,30 @@ public class S_TournamentBracket : MonoBehaviour
     /// </summary>
     /// <param name="loser"></param>
     /// <returns></returns>
-    private IEnumerator LoserMoveBack(Transform bracket, int currentMatch, int currentLevel, GameObject loser)
+    private IEnumerator LoserMoveBack(GameObject loser, bool playerLost)
     {
         Vector3 endPos = loser.transform.position - new Vector3(0, 42f, 0f);
-
-        //_cameraView.RemoveObjectToView(loser.transform);
 
         while (Vector3.SqrMagnitude(loser.transform.position - endPos) > 0.1f)
         {
             loser.transform.position = Vector3.MoveTowards(loser.transform.position, endPos, Time.deltaTime * _logoSpeed);
             yield return null;
         }
-
         loser.transform.position = endPos;
+        if (playerLost)
+        {
+            yield return new WaitForSeconds(1f);
+            PopUpButton();
+
+            foreach (Transform t in _tournamentUI.transform)
+            {
+                t.gameObject.SetActive(false);
+            }
+            _playerLose.SetActive(true);
+
+            yield return new WaitForSeconds(3f);
+            _cameraView.StartFadeIn();
+        }
     }
 
     /// <summary>
@@ -427,7 +462,7 @@ public class S_TournamentBracket : MonoBehaviour
 
         yield return new WaitForSeconds(5f);
 
-        _cameraView.StartWinFadeIn();
+        _cameraView.StartFadeIn();
     }
 
     public void OnChangeScene(string sceneName)
@@ -438,18 +473,26 @@ public class S_TournamentBracket : MonoBehaviour
     public void OnActivateUI(GameObject gameObj)
     {
         gameObj.SetActive(true);
+        if (gameObj.TryGetComponent(out Button button))
+        {
+            _eventSystem.SetSelectedGameObject(button.gameObject);
+        }
     }
 
     public void OnDeactivateUI(GameObject gameObj)
     {
         gameObj.SetActive(false);
+        if (_tournamentUI.TryGetComponent(out Button button))
+        {
+            _eventSystem.SetSelectedGameObject(button.gameObject);
+        }
     }
 
     public void DisplayWinLogo()
     {
         _tournamentUI.SetActive(true);
 
-        foreach (Transform child in _tournamentUI.transform)
+        foreach (Transform child in _tournamentUI.transform) //deactivate the ui we don't want to see
         {
             child.gameObject.SetActive(false);
         }
@@ -457,6 +500,7 @@ public class S_TournamentBracket : MonoBehaviour
         _playerWin.SetActive(true);
         _tournamentPrizeDisplay.SetActive(true);
         _tournamentPrizeDisplay.GetComponentInChildren<TextMeshProUGUI>().text = "Tournament : You won $ " + _tournamentManager.GetTournamentPrize();
+        _sparksEffect.SetActive(true);
 
         //THE MONEY += THE PRIZE
     }

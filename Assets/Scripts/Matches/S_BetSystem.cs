@@ -224,6 +224,7 @@ public class S_BetSystem : MonoBehaviour
 
     private bool HasLostBet()
     {
+        Debug.Log("Loser : " + _tournamentManager.GetCurrentLoser().name + " , the one chosen : " + _currentParticipantChosen.name);
         if (_tournamentManager.GetCurrentLoser().name == _currentParticipantChosen.name)
         {
             return true;
