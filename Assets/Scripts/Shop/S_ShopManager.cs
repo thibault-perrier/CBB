@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class S_ShopManager : MonoBehaviour
@@ -26,6 +27,8 @@ public class S_ShopManager : MonoBehaviour
 
     public int _currentFrameIndex = 0;
     public int _currentItemIndex = 0;
+
+    public bool activeBackShop = false;
 
 
     public static S_ShopManager Instance;
@@ -130,7 +133,7 @@ public class S_ShopManager : MonoBehaviour
 
     public void UpdateShopText()
     {
-        _moneyText.text = "Money: " + S_DataGame.Instance.inventory.PlayerMoney;//TODO: GET MONEY FROM PLAYER_DATA--------------------------------------
+        _moneyText.text = "Money: " + S_DataGame.Instance.inventory.CurrentMoney + " $";//TODO: GET MONEY FROM PLAYER_DATA--------------------------------------
         _pageText.text = "Page: " + (_currentFrameIndex + 1).ToString();
         if (_priceItem != null && _currentFrameIndex < frameData.Length && _currentItemIndex < frameData[_currentFrameIndex].frameElements.Length)
         {
@@ -199,9 +202,9 @@ public class S_ShopManager : MonoBehaviour
     {
         ElementInfo BuyElement = frameData[_currentFrameIndex].frameElements[_currentItemIndex];
       
-        if(S_DataGame.Instance.inventory.PlayerMoney >= BuyElement._price )
+        if(S_DataGame.Instance.inventory.CurrentMoney >= BuyElement._price )
         {
-            S_DataGame.Instance.inventory.PlayerMoney = S_DataGame.Instance.inventory.PlayerMoney - BuyElement._price;
+            S_DataGame.Instance.inventory.CurrentMoney = S_DataGame.Instance.inventory.CurrentMoney - BuyElement._price;
             UpdateShopText();
             //TODO : Update Inventory Quantity -------------------------------------------------------------------------------------
         }
@@ -221,7 +224,7 @@ public class S_ShopManager : MonoBehaviour
 
     public void OnShopControllers(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && gameObject.activeInHierarchy)
         {
             float horizontalInput = context.ReadValue<Vector2>().x;
             float verticalInput = context.ReadValue<Vector2>().y;   
@@ -254,5 +257,26 @@ public class S_ShopManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void LeaveShop(InputAction.CallbackContext context)
+    {
+        if (context.performed && gameObject.activeInHierarchy && activeBackShop == true)
+        {
+            S_ClickablesManager.Instance.mainMenu.SetActive(true);
+            S_ClickablesManager.Instance.shopMenu.SetActive(false);
+            S_DataGame.Instance.SaveInventory();
+            S_ObjectClickable.Instance.LaunchAnimBackToMenuFromShop();
+            S_ClickablesManager.Instance.ResetAllClickables();
+        }
+    }
+
+    public void LeaveShop()
+    {
+        S_ClickablesManager.Instance.mainMenu.SetActive(true);
+        S_ClickablesManager.Instance.shopMenu.SetActive(false);
+        S_DataGame.Instance.SaveInventory();
+        S_ObjectClickable.Instance.LaunchAnimBackToMenuFromShop();
+        S_ClickablesManager.Instance.ResetAllClickables();
     }
 }
