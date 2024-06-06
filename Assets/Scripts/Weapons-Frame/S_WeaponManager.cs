@@ -31,7 +31,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         {
             Vector3 worldCenter = _hitZone.transform.TransformPoint(_hitZone.center);
             Vector3 worldHalfExtents = Vector3.Scale(_hitZone.size, _hitZone.transform.lossyScale) * 0.5f;
-            var collide = Physics.OverlapBox(worldCenter, worldHalfExtents).Where(x => x != this.gameObject).ToList();
+            var collide = Physics.OverlapBox(worldCenter, worldHalfExtents).Where(x => x.gameObject != this.gameObject).ToList();
             var damagable = collide
                 .Select(x => x.transform.gameObject)
                 .Where(x => GetIDamageable(x, out _))
