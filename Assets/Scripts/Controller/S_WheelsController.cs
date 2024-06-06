@@ -34,6 +34,7 @@ public class S_WheelsController : MonoBehaviour
     public float Movement
     {
         set { this._move = value; }
+        get { return _move; }
     }
 
     private void Awake()
