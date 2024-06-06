@@ -244,7 +244,7 @@ public class S_CameraView : MonoBehaviour
     /// <returns></returns>
     private IEnumerator ShowOffObjects(GameObject firstObject, GameObject lastObject)
     {
-        Vector3 newPos = new Vector3(firstObject.transform.position.x, firstObject.transform.position.y, 260f);
+        Vector3 newPos = new Vector3(firstObject.transform.position.x, firstObject.transform.position.y, 250f);
 
         while (Vector3.SqrMagnitude(_currentCam.transform.position - newPos) > 0.1f)
         {
@@ -287,6 +287,7 @@ public class S_CameraView : MonoBehaviour
     /// <returns></returns>
     public IEnumerator OverallTournamentView(GameObject firstObject, GameObject lastObject)
     {
+        _currentCam.transform.position = new Vector3(0f, 0f, 100f);
         float timer = 0;
         float timerDuration = 2f;
 
