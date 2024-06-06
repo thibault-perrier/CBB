@@ -53,6 +53,10 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     {
         get => _alwayActive;
     }
+    public State CurrentState
+    {
+        get => _state;
+    }
 
     public enum State
     {
@@ -75,6 +79,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         _damage = _data.Damage;
         _brakePoint = (_lifeBrakePoint * _data.MaxLife) / 100;
         _alwayActive = _data.AlwayActive;
+        _attackOneTime = _data.AttackOneTime;
 
         if (_alwayActive)
             _animator.SetBool("_playAttack", true);
@@ -85,46 +90,19 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         Vector3 worldHalfExtents = Vector3.Scale(_collider.size, _collider.transform.lossyScale) * 0.5f;
         var collide = Physics.OverlapBox(worldCenter, worldHalfExtents, _collider.transform.rotation);
         
-        if (collide != null)
+        var hitObject = collide.Select(x => x.gameObject).Where(x => x != gameObject).ToList();
+        if (hitObject.Any())
         {
-            var hitObject = collide.Select(x => x.gameObject).Where(x => x != gameObject).ToList();
-            if (hitObject.Any())
+            foreach (var item in hitObject)
             {
-                foreach (var item in hitObject)
-                {
-                    AttackCollide(item);
-                }
+                AttackCollide(item);
             }
         }
     }
-
-    public void TakeDamage(float amount)
-    {
-        _life -= amount;
-        if (_life <= _brakePoint && _state == State.ok)
-        {
-            _state = State.broken;
-        }
-        if (_life <= 0)
-        {
-            Die();
-        }
-    }
-    public void Die()
-    {
-        transform.parent.gameObject.transform.parent = null;
-        _rb.isKinematic = false;
-        _state = State.destroy;
-    }
-    public void Repear()
-    {
-        _life = _data.MaxLife;
-        _state = State.ok;
-    }
-
+    
     private void AttackCollide(GameObject collision)
     {
-        if (!_attackOneTime)
+        if (!_attackOneTime && _data.AttackOneTime)
             return;
 
         if (_attacking || _alwayActive)
@@ -146,13 +124,39 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
             var scaleDamage = AlwaysActive ? Time.deltaTime : 1f;
             damagable.TakeDamage(_damage * scaleDamage);
 
-            if (_data.AttackTime.Equals(0f))
+            if (_data.AttackOneTime)
                 _attackOneTime = false;
 
             return true;
         }
 
         return false;
+    }
+
+    public void TakeDamage(float amount)
+    {
+        _life -= amount;
+        if (_life <= _brakePoint && _state == State.ok)
+        {
+            _state = State.broken;
+            _animator.SetBool("_playAttack", false);
+        }
+        if (_life <= 0)
+        {
+            Die();
+        }
+    }
+    public void Die()
+    {
+        transform.parent.gameObject.transform.parent = null;
+        _rb.isKinematic = false;
+        _state = State.destroy;
+        _animator.SetBool("_playAttack", false);
+    }
+    public void Repear()
+    {
+        _life = _data.MaxLife;
+        _state = State.ok;
     }
 
     public void LaunchAttack()
@@ -175,9 +179,9 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     private IEnumerator AttackOFF()
     {
         yield return new WaitForSeconds(_data.AttackTime);
-        // _animator.SetBool("_playAttack", false);
+        _animator.SetBool("_playAttack", false);
         _attacking = false;
-        _attackOneTime = true;
+        _attackOneTime = _data.AttackOneTime;
     }
     private IEnumerator AttackCooldown()
     {
