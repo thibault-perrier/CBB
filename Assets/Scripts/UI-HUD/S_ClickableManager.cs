@@ -184,7 +184,7 @@ public class S_ClickablesManager : MonoBehaviour
 
     public void LoadTournament()
     {
-        SceneManager.LoadScene("TournamentScene");
+        //SceneManager.LoadScene("TournamentScene");
     }
 
     public void ResetAllClickables()
