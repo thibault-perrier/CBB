@@ -355,7 +355,6 @@ public class S_AIController : MonoBehaviour
         }
     }
 
-
     /// <summary>
     /// update the AI movement from target
     /// </summary>
@@ -608,8 +607,8 @@ public class S_AIController : MonoBehaviour
     private void MoveToPoint(Vector3 target, S_WeaponManager weapon)
     {
         // for set the movement
-        Vector3 dir = (target - weapon.HitZone.transform.TransformPoint(weapon.HitZone.center)).normalized;
-        Vector3 weaponForward = GetForwardWeapon(weapon, transform);
+        Vector3 dir = (target - weapon.transform.position).normalized;
+        Vector3 weaponForward = GetForwardWeapon(weapon.transform, transform);
 
         float angleToDir = Vector3.SignedAngle(weaponForward, dir, Vector3.up);
         float dotDirection = Vector3.Dot(weaponForward, dir);
@@ -701,7 +700,8 @@ public class S_AIController : MonoBehaviour
         }
 
         // set controller direction, if he is in movement in same time he turn more
-        _wheelsController.Direction = ReverseDir(turnAmount + Mathf.Abs(_wheelsController.Movement));
+        float directionMovement = Mathf.Abs(turnAmount) > 0f ? 1f : 0f;
+        _wheelsController.Direction = ReverseDir(turnAmount + directionMovement);
     }
     /// <summary>
     /// reverse the current movement with probability if
@@ -849,20 +849,6 @@ public class S_AIController : MonoBehaviour
 
     #region WeaponsFinder
     /// <summary>
-    /// get the forward vector of weapon in relation of her hit zone
-    /// </summary>
-    /// <param name="weapon">current weapon</param>
-    /// <param name="bot">him self</param>
-    /// <returns>return the forward vector of current weapon</returns>
-    private Vector3 GetForwardWeapon(S_WeaponManager weapon, Transform bot)
-    {
-        // get the dot product of the weapon and the current bot
-        Vector2 dirSelfWeapon = (weapon.HitZone.transform.TransformPoint(weapon.HitZone.center) - transform.position).normalized;
-        float dot = Vector3.Dot(bot.forward, dirSelfWeapon);
-
-        return dot >= 0f ? bot.forward : -bot.forward;
-    }
-    /// <summary>
     /// get the forward vector of weapon in relation of bot
     /// </summary>
     /// <param name="weapon">current weapon</param>
@@ -871,7 +857,7 @@ public class S_AIController : MonoBehaviour
     private Vector3 GetForwardWeapon(Transform weapon, Transform bot)
     {
         // get the dot product of the weapon and the current bot
-        Vector3 dirSelfWeapon = (weapon.transform.position - bot.position).normalized;
+        Vector3 dirSelfWeapon = (weapon.position - bot.position).normalized;
         float dot = Vector3.Dot(bot.forward, dirSelfWeapon);
 
         return dot >= 0f ? bot.forward : -bot.forward;
@@ -883,7 +869,7 @@ public class S_AIController : MonoBehaviour
     /// <returns>return True if he is in view</returns>
     private bool IsValidEnemyWeapon(S_WeaponManager weapon)
     {
-        Vector3 enemyWeaponForward = GetForwardWeapon(weapon, _enemy.transform);
+        Vector3 enemyWeaponForward = GetForwardWeapon(weapon.transform, _enemy.transform);
         Vector3 enemyFromCurrentBot = (transform.position - _enemy.transform.position);
         Vector3 enemyFromEnemyWeapon = (weapon.transform.position - _enemy.transform.position);
 
@@ -1033,6 +1019,9 @@ public class S_AIController : MonoBehaviour
     {
         if (!_currentWeapon)
             return false;
+
+        if (_currentWeapon.Attacking)
+            return true;
 
         if (!_currentWeapon.CanAttack || !_target)
             return false;
