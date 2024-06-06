@@ -312,7 +312,7 @@ public class S_AIController : MonoBehaviour
     }
     #endregion
 
-    private void Start()
+    private void Awake()
     {
         _wheelsController = GetComponent<S_WheelsController>();
         _frameManager = GetComponent<S_FrameManager>();
@@ -337,10 +337,6 @@ public class S_AIController : MonoBehaviour
         if (_frameManager.AllWeaponIsBroken())
             return;
 
-        // verif if he is enable for work
-        if (_aiState.Equals(AIState.Disable))
-            return;
-
         if (!_enemy)
             return;
 
@@ -348,8 +344,15 @@ public class S_AIController : MonoBehaviour
         if (CurrentWeaponCanAttack())
         {
             AttackWithCurrrentWeapon();
+        } 
+        else
+        {
+            // verif if he is enable for work
+            if (_aiState.Equals(AIState.Disable))
+                return;
+
+            UpdateAIMovement();
         }
-        UpdateAIMovement();
     }
 
 
@@ -697,8 +700,8 @@ public class S_AIController : MonoBehaviour
             }
         }
 
-        // set controller direction
-        _wheelsController.Direction = ReverseDir(turnAmount);
+        // set controller direction, if he is in movement in same time he turn more
+        _wheelsController.Direction = ReverseDir(turnAmount + Mathf.Abs(_wheelsController.Movement));
     }
     /// <summary>
     /// reverse the current movement with probability if
