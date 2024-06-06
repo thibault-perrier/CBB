@@ -79,6 +79,10 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
             public Sprite rightStick;
             public Sprite leftStickPress;
             public Sprite rightStickPress;
+            public Sprite leftStickX;
+            public Sprite leftStickY;
+            public Sprite rightStickX;
+            public Sprite rightStickY;
 
             public Sprite GetSprite(string controlPath)
             {
@@ -105,6 +109,10 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                     case "rightStick": return rightStick;
                     case "leftStickPress": return leftStickPress;
                     case "rightStickPress": return rightStickPress;
+                    case "leftStick/x": return leftStickX;
+                    case "leftStick/y": return leftStickY;
+                    case "rightStick/x": return rightStickX;
+                    case "rightStick/y": return rightStickY;
                 }
                 return null;
             }
