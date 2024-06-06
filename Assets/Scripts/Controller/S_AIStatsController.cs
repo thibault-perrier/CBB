@@ -392,7 +392,6 @@ public class S_AIStatsController : MonoBehaviour
         _aiController.AccidentalDirectionProbability = stats.AccidentalDirectionProbability;
 
         // set the cooldown
-        _aiController.AttackCooldown = stats.AttackCooldown;
         _aiController.FleeCooldown = stats.FleeCooldown;
         _aiController.AttackFailCooldown = stats.AttackFailCooldown;
 

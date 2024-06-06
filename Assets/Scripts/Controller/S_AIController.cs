@@ -84,12 +84,8 @@ public class S_AIController : MonoBehaviour
     private bool _getEnemyInStart;
 
     [Header("Attack")]
-    [SerializeField, Tooltip("if he can attack")]
-    private bool _canAttack = true;
     [SerializeField, Tooltip("if he failed attack")]
     private bool _failAttack;
-    [SerializeField, Min(0f), Tooltip("cooldown for the next attack")]
-    private float _attackCooldown = 1f;
     [SerializeField, Min(0f), Tooltip("cooldown for try to fail any attack")]
     private float _attackFailCooldown = 1f;
     [SerializeField, Min(0f), Tooltip("min distance for fail an attack")]
@@ -108,7 +104,6 @@ public class S_AIController : MonoBehaviour
     private GameObject[] _traps;
     private GameObject[] _fleeTraps;
     private Vector3 _fleeDestination;
-    private WaitForSeconds _attackCooldownCoroutine = new(1f);
     private WaitForSeconds _attackFailedCoroutine = new(1f);
     private WaitForSeconds _fleeFailureCooldownCoroutine = new(.5f);
     private FleeType _fleeMethode = FleeType.None;
@@ -282,19 +277,6 @@ public class S_AIController : MonoBehaviour
         get => _accidentalDirectionProbability;
         set => _accidentalDirectionProbability = Mathf.Clamp(value, 0f, 100f);
     }
-
-    /// <summary>
-    /// cooldown for the next attack
-    /// </summary>
-    public float AttackCooldown
-    {
-        get => _attackCooldown;
-        set
-        {
-            _attackCooldown = Mathf.Max(0f, value);
-            _attackCooldownCoroutine = new(_attackCooldown);
-        }
-    }
     /// <summary>
     /// the cooldown for the failure flee
     /// </summary>
@@ -336,7 +318,6 @@ public class S_AIController : MonoBehaviour
         _frameManager = GetComponent<S_FrameManager>();
         _frameManager.SelectWeapons();
 
-        _attackCooldownCoroutine = new(_attackCooldown);
         _fleeFailureCooldownCoroutine = new(_fleeCooldown);
 
         if (_getEnemyInStart)
@@ -352,6 +333,9 @@ public class S_AIController : MonoBehaviour
     {
         // reset the movement state
         _wheelsController.Movement = 0f;
+
+        if (_frameManager.AllWeaponIsBroken())
+            return;
 
         // verif if he is enable for work
         if (_aiState.Equals(AIState.Disable))
@@ -382,7 +366,7 @@ public class S_AIController : MonoBehaviour
             return;
 
         // if he has not weapon for attack or he cant attack
-        if (!_currentWeapon.CanAttack || !_canAttack)
+        if (!_currentWeapon.CanAttack)
         {
             FleeEnemy();
         }
@@ -976,7 +960,7 @@ public class S_AIController : MonoBehaviour
         if (alwaysActiveWeapons.Count < 1 && notAlwaysActiveWeapons.Count < 1)
             return false;
 
-        if (notAlwaysActiveWeapons.Count > 1)
+        if (notAlwaysActiveWeapons.Count > 0)
         {
             // sort by the distance
             weapon = notAlwaysActiveWeapons
@@ -1006,9 +990,6 @@ public class S_AIController : MonoBehaviour
             return;
 
         StartCoroutine(AttackFailedCooldownCoroutine());
-
-        if (!_canAttack)
-            return;
 
         // if he is not enough close to the enemy
         float distanceToEnemy = Vector3.Distance(transform.position, _enemy.transform.position);
@@ -1054,16 +1035,6 @@ public class S_AIController : MonoBehaviour
             return false;
 
         return _currentWeapon.CanTakeAnyDamage;
-    }
-    /// <summary>
-    /// Cooldown for attack, set the _canAttack <b>False</b> and true with 1 seconde
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator AttackCooldownCoroutine()
-    {
-        _canAttack = false;
-        yield return _attackCooldownCoroutine;
-        _canAttack = true;
     }
     /// <summary>
     /// Cooldown for try to fail any attack

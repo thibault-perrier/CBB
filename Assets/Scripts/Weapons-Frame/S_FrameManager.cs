@@ -26,6 +26,16 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     
     public event Action<S_FrameManager> OnDie;
 
+    public bool AllWeaponIsBroken()
+    {
+        foreach (var weapon in _weaponManagers)
+        {
+            if (weapon.CurrentState.Equals(S_WeaponManager.State.ok))
+                return false;
+        }
+
+        return true;
+    }
     public void SelectWeapons()
     {
         foreach (GameObject gameObject in _weaponHookPoints)
@@ -37,7 +47,6 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
             }
         }
     }
-
     public void TakeDamage(float amount)
     {
         _life -= amount;
@@ -46,7 +55,6 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
             Die();
         }
     }
-
     public void Die()
     {
         OnDie?.Invoke(this);
@@ -54,7 +62,6 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
         Debug.Log("Player died!");
         // Logic to remove destroy items in inventory
     }
-
     public void Repear()
     {
         _life = _data.MaxLife;
