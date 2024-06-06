@@ -106,7 +106,7 @@ public class S_AIController : MonoBehaviour
     private Vector3 _fleeDestination;
     private WaitForSeconds _attackFailedCoroutine = new(1f);
     private WaitForSeconds _fleeFailureCooldownCoroutine = new(.5f);
-    private FleeType _fleeMethode = FleeType.None;
+    [SerializeField] private FleeType _fleeMethode = FleeType.None;
 
     #region Property
     /// <summary>
@@ -334,6 +334,10 @@ public class S_AIController : MonoBehaviour
         // reset the movement state
         _wheelsController.Movement = 0f;
 
+        // verif if he is enable for work
+        if (_aiState.Equals(AIState.Disable))
+            return;
+
         if (_frameManager.AllWeaponIsBroken())
             return;
 
@@ -347,10 +351,6 @@ public class S_AIController : MonoBehaviour
         } 
         else
         {
-            // verif if he is enable for work
-            if (_aiState.Equals(AIState.Disable))
-                return;
-
             UpdateAIMovement();
         }
     }
@@ -608,7 +608,7 @@ public class S_AIController : MonoBehaviour
     private void MoveToPoint(Vector3 target, S_WeaponManager weapon)
     {
         // for set the movement
-        Vector3 dir = (target - weapon.HitZone.transform.position).normalized;
+        Vector3 dir = (target - weapon.HitZone.transform.TransformPoint(weapon.HitZone.center)).normalized;
         Vector3 weaponForward = GetForwardWeapon(weapon, transform);
 
         float angleToDir = Vector3.SignedAngle(weaponForward, dir, Vector3.up);
@@ -857,7 +857,7 @@ public class S_AIController : MonoBehaviour
     private Vector3 GetForwardWeapon(S_WeaponManager weapon, Transform bot)
     {
         // get the dot product of the weapon and the current bot
-        Vector2 dirSelfWeapon = (weapon.HitZone.transform.position - transform.position).normalized;
+        Vector2 dirSelfWeapon = (weapon.HitZone.transform.TransformPoint(weapon.HitZone.center) - transform.position).normalized;
         float dot = Vector3.Dot(bot.forward, dirSelfWeapon);
 
         return dot >= 0f ? bot.forward : -bot.forward;
