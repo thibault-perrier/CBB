@@ -10,12 +10,12 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     private float _brakePoint;
     private Rigidbody _rb;
     private bool _attackOneTime = true;
-    private BoxCollider _collider;
 
+    [SerializeField] private BoxCollider _hitZone;
+    [SerializeField] private BoxCollider _damageZone;
     [SerializeField] private bool _canAttack = true;
     [SerializeField] private bool _alwayActive;
     [SerializeField] private bool _attacking = false;
-    [SerializeField] private BoxCollider _hitZone;
     [SerializeField] private S_WeaponData _data;
     [SerializeField] private State _state = State.ok;
     [SerializeField] private int _lifeBrakePoint = 15;    //In pourcent life level
@@ -31,11 +31,10 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         {
             Vector3 worldCenter = _hitZone.transform.TransformPoint(_hitZone.center);
             Vector3 worldHalfExtents = Vector3.Scale(_hitZone.size, _hitZone.transform.lossyScale) * 0.5f;
-            var collide = Physics.OverlapBox(worldCenter, worldHalfExtents);
+            var collide = Physics.OverlapBox(worldCenter, worldHalfExtents).Where(x => x != this.gameObject).ToList();
             var damagable = collide
                 .Select(x => x.transform.gameObject)
-                .Where(x => x.TryGetComponent<I_Damageable>(out _))
-                .Where(x => x != this.gameObject)
+                .Where(x => GetIDamageable(x, out _))
                 .ToArray();
 
             return damagable.Length > 0;
@@ -67,9 +66,8 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
     private void Awake()
     {
-        _rb = this.GetComponentInParent<Rigidbody>();
+        _rb = this.GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
-        _collider = GetComponent<BoxCollider>();
 
         _rb.isKinematic = true;
         _rb.centerOfMass = -transform.forward + (-Vector3.up / 2f);
@@ -86,9 +84,9 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     }
     private void Update()
     {
-        Vector3 worldCenter = _collider.transform.TransformPoint(_collider.center);
-        Vector3 worldHalfExtents = Vector3.Scale(_collider.size, _collider.transform.lossyScale) * 0.5f;
-        var collide = Physics.OverlapBox(worldCenter, worldHalfExtents, _collider.transform.rotation);
+        Vector3 worldCenter = _damageZone.transform.TransformPoint(_damageZone.center);
+        Vector3 worldHalfExtents = Vector3.Scale(_damageZone.size, _damageZone.transform.lossyScale) * 0.5f;
+        var collide = Physics.OverlapBox(worldCenter, worldHalfExtents, _damageZone.transform.rotation);
         
         var hitObject = collide.Select(x => x.gameObject).Where(x => x != gameObject).ToList();
         if (hitObject.Any())
@@ -107,21 +105,39 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
         if (_attacking || _alwayActive)
         {
-            I_Damageable iDamagable = collision.GetComponent<I_Damageable>();
-            bool succes = TryApplyDamage(iDamagable);
-
-            if (!succes)
-            {
-                iDamagable = collision.GetComponentInParent<I_Damageable>();
-                TryApplyDamage(iDamagable);
-            }
+            if (GetIDamageable(collision, out var damageable))
+                TryApplyDamage(damageable);
         }
+    }
+    private bool GetIDamageable(GameObject entity, out I_Damageable iDamageable)
+    {
+        if (entity == null)
+        {
+            iDamageable = null;
+            return false;
+        }
+
+        if (entity.TryGetComponent<I_Damageable>(out var id))
+        {
+            iDamageable = id;
+            return true;
+        }
+
+        var damageableParentComponent = entity.GetComponentInParent<I_Damageable>(true);
+        if (damageableParentComponent != null)
+        {
+            iDamageable = damageableParentComponent;
+            return true;
+        }
+
+        iDamageable = null;
+        return false;
     }
     private bool TryApplyDamage(I_Damageable damagable)
     {
         if (damagable != null)
         {
-            var scaleDamage = AlwaysActive ? Time.deltaTime : 1f;
+            var scaleDamage = _data.AttackOneTime ? 1f : Time.deltaTime;
             damagable.TakeDamage(_damage * scaleDamage);
 
             if (_data.AttackOneTime)
@@ -152,6 +168,9 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         _rb.isKinematic = false;
         _state = State.destroy;
         _animator.SetBool("_playAttack", false);
+
+        if (_damageZone.isTrigger)
+            _damageZone.isTrigger = false;
     }
     public void Repear()
     {
@@ -168,8 +187,8 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         {
             _animator.SetBool("_playAttack", true);
             AttackON();
-            StartCoroutine(AttackOFF());
             StartCoroutine(AttackCooldown());
+            StartCoroutine(AttackOFF());
         }
     }
     private void AttackON()
