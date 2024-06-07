@@ -80,6 +80,12 @@ public class S_ObjectClickable : MonoBehaviour
         {
             _animatorCameraGarage.SetBool("MoveToShop", true);
         }
+        else if (gameObject.CompareTag("Board"))
+        {
+            Debug.Log("chef");
+            _animatorCameraGarage.SetBool("Board", true);
+        }
+
     }
 
     private void SetColor(Color color)
