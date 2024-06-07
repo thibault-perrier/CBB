@@ -5,6 +5,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class S_EditorController : MonoBehaviour
 {
@@ -21,9 +22,11 @@ public class S_EditorController : MonoBehaviour
 
     [SerializeField] private List<GameObject> _weapons;     
     [SerializeField] private List<S_WeaponData> _weaponsData;       //list of scriptable object player's weapons
-    
+    [SerializeField] private List<Weapon> _inventoryWeapons;
+
     [SerializeField] private List<GameObject> _frame;       
     [SerializeField] private List<S_FrameData> _frameData;          //list of scriptable object player's frames
+    [SerializeField] private List<Frame> _invetoryFrames;
 
     [SerializeField] private Material _selectedMaterial;
     [SerializeField] private int _selecteIndex = 0;
@@ -31,8 +34,8 @@ public class S_EditorController : MonoBehaviour
     [SerializeField] private int _nbWeapon = 6;
     [SerializeField] private int _nbFrame = 3;
 
-    [SerializeField] private List<S_WeaponData> _selectedWeaponsData;
-    [SerializeField] private S_FrameData _selectedFrameData;
+    [SerializeField] private List<S_WeaponData> _presetWeaponsData;
+    [SerializeField] private S_FrameData _presetFrameData;
     [SerializeField] private int _selectedPreset;
 
     [SerializeField] private List<GameObject> _presetWeaponsHookPoints;
@@ -100,7 +103,16 @@ public class S_EditorController : MonoBehaviour
         foreach(Weapon weapon in S_DataGame.Instance.inventory.Weapons)
         {
             _weaponsData.Add(weapon.GetWeaponData());
+            _inventoryWeapons.Add(weapon);
         }
+
+        _invetoryFrames = S_DataGame.Instance.inventory.Frames.ToList();
+        foreach (Frame frame in S_DataGame.Instance.inventory.Frames)
+        {
+            _frameData.Add(frame.GetFrameData());
+        }
+
+        _presetFrameData = S_DataGame.Instance.inventory.Frames[_selectedPreset].GetFrameData();
     }
 
     /// <summary>
