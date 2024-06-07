@@ -51,8 +51,6 @@ public struct StatsBotRank
     private float _accidentalDirectionProbability;
 
     [Header("Cooldown")]
-    [SerializeField, Min(0f), Tooltip("cooldown for the next attack")]
-    private float _attackCooldown;
     [SerializeField, Min(0f), Tooltip("coolDown for the flee failure come back to None")]
     private float _fleeCooldown;
     [SerializeField, Min(0f), Tooltip("cooldown for try to fail any attack")]
@@ -83,8 +81,6 @@ public struct StatsBotRank
     private Vector2 _accidentalDirectionProbabilityRandom;
 
     [Space(15)]
-    [SerializeField, Tooltip("the offset of flee cooldown when he is gets, Y is exclusive")]
-    private Vector2 _attackCooldownRandom;
     [SerializeField, Tooltip("the offset of attack cooldown when he is gets, Y is exclusive")]
     private Vector2 _fleeCooldownRandom;
     [SerializeField, Tooltip("the offset of attack failed cooldown when he is gets, Y is exclusive")]
@@ -217,13 +213,6 @@ public struct StatsBotRank
     public float FleeCooldown 
     {
         get => Mathf.Max(_fleeCooldown + Random.Range(_fleeCooldownRandom.x, _fleeCooldownRandom.y), 0f);
-    }
-    /// <summary>
-    /// coolDown for the next attack
-    /// </summary>
-    public float AttackCooldown
-    {
-        get => Mathf.Max(_attackCooldown + Random.Range(_attackCooldownRandom.x, _attackCooldownRandom.y), 0f);
     }
     /// <summary>
     /// cooldown for try to fail any attack
