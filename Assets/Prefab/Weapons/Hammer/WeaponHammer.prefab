@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 9078970882318680198}
   - component: {fileID: 2511113132213244470}
   - component: {fileID: 4041184231136422925}
+  - component: {fileID: 6029796494467804746}
   m_Layer: 0
   m_Name: WeaponObject
   m_TagString: Untagged
@@ -188,10 +189,10 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!65 &4041184231136422925
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -213,6 +214,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.4, y: 0.4, z: 0.7}
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!65 &6029796494467804746
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8413263619878395255}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.17, y: 0.76, z: 0.15}
+  m_Center: {x: 0, y: 0.38, z: 0}
 --- !u!1001 &8463559007116484063
 PrefabInstance:
   m_ObjectHideFlags: 0
