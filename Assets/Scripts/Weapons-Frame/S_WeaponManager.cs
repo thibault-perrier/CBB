@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class S_WeaponManager : MonoBehaviour, I_Damageable
@@ -66,13 +67,8 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
     private void Awake()
     {
-        _rb = this.GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
 
-        _rb.isKinematic = true;
-        _rb.centerOfMass = -transform.forward + (-Vector3.up / 2f);
-        
-        _rb.mass = _data.Mass;
         _life = _data.MaxLife;
         _damage = _data.Damage;
         _brakePoint = (_lifeBrakePoint * _data.MaxLife) / 100;
@@ -84,6 +80,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     }
     private void Update()
     {
+        transform.localPosition = Vector3.zero;
         Vector3 worldCenter = _damageZone.transform.TransformPoint(_damageZone.center);
         Vector3 worldHalfExtents = Vector3.Scale(_damageZone.size, _damageZone.transform.lossyScale) * 0.5f;
         var collide = Physics.OverlapBox(worldCenter, worldHalfExtents, _damageZone.transform.rotation);
@@ -165,12 +162,17 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     public void Die()
     {
         transform.parent.gameObject.transform.parent = null;
-        _rb.isKinematic = false;
         _state = State.destroy;
         _animator.SetBool("_playAttack", false);
 
         if (_damageZone.isTrigger)
             _damageZone.isTrigger = false;
+
+        _rb = this.AddComponent<Rigidbody>();
+        _rb.isKinematic = false;
+        _rb.useGravity = true;
+        _rb.angularDrag = Mathf.Infinity;
+        _rb.drag = 0f;
     }
     public void Repear()
     {
