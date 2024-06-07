@@ -79,7 +79,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         _state = State.destroy;
     }
 
-    public void Repear()
+    public void Repair()
     {
         _life = _data.MaxLife;
         _state = State.ok;

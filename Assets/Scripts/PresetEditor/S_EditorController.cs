@@ -95,7 +95,12 @@ public class S_EditorController : MonoBehaviour
     /// </summary>
     public void GetPlayerItem()
     {
-        
+        _weaponsData.Clear();
+        S_DataGame.Instance.inventory.UpdateUseItem();
+        foreach(Weapon weapon in S_DataGame.Instance.inventory.Weapons)
+        {
+            _weaponsData.Add(weapon.GetWeaponData());
+        }
     }
 
     /// <summary>
