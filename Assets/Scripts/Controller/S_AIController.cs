@@ -704,9 +704,7 @@ public class S_AIController : MonoBehaviour
 
         // set controller direction and movement
         _wheelsController.Direction = ReverseDir(turnAmount);
-        _wheelsController.Movement = movementAmount - (Mathf.Abs(angleToDir) > 40f ? 0f : .5f);
-        Debug.Log(_wheelsController.Direction);
-        Debug.Log(_wheelsController.Movement);
+        _wheelsController.Movement = movementAmount;
     }
     /// <summary>
     /// reverse the current movement with probability if
@@ -1050,12 +1048,19 @@ public class S_AIController : MonoBehaviour
         if (!_currentWeapon)
             return false;
 
+        // if he is attacking and he cant take any damage with current weapon
+        if (_currentWeapon.Attacking && !_currentWeapon.CanTakeAnyDamage)
+            return false;
+
+        // if he is attacking
         if (_currentWeapon.Attacking)
             return true;
 
+        // if he can attack and he has not target
         if (!_currentWeapon.CanAttack || !_target)
             return false;
 
+        // return True if if can make any damage with current weapon
         return _currentWeapon.CanTakeAnyDamage;
     }
     /// <summary>
