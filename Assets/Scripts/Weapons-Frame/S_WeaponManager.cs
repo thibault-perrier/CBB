@@ -166,9 +166,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         transform.parent.gameObject.transform.parent = null;
         _state = State.destroy;
         _animator.SetBool("_playAttack", false);
-
-        if (_damageZone.isTrigger)
-            _damageZone.isTrigger = false;
+        _animator.enabled = false;
 
         _rb = this.AddComponent<Rigidbody>();
         _rb.isKinematic = false;
