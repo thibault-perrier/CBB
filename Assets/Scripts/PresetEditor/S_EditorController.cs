@@ -236,21 +236,25 @@ public class S_EditorController : MonoBehaviour
             case EditState.PresetChoice:
                 if (_selecteIndex > _presets.Count - 1)
                     _selecteIndex = 0;
+                _selecteIndex = _selecteIndex % _presets.Count;
                 _selectedMaterial.SetVector("_Selected_Object_Position", _presets[_selecteIndex].gameObject.transform.position);
                 break;
              case EditState.PartChoice:
                 if (_selecteIndex > _presetObjectPart.Count - 1)
                     _selecteIndex = 0;
+                _selecteIndex = _selecteIndex % _presetObjectPart.Count;
                 _selectedMaterial.SetVector("_Selected_Object_Position", _presetObjectPart[_selecteIndex].gameObject.transform.position);
                 break;
             case EditState.FrameChoice:
                 if (_selecteIndex > _frame.Count - 1)
                     _selecteIndex = 0;
+                _selecteIndex = _selecteIndex % _frame.Count;
                 _selectedMaterial.SetVector("_Selected_Object_Position", _frame[_selecteIndex].gameObject.transform.position);
                 break;
             case EditState.WeaponChoice:
                 if (_selecteIndex > _weapons.Count - 1)
                     _selecteIndex = 0;
+                _selecteIndex = _selecteIndex % _weapons.Count;
                 _selectedMaterial.SetVector("_Selected_Object_Position", _weapons[_selecteIndex].gameObject.transform.position);
                 break;
             default:
@@ -260,10 +264,12 @@ public class S_EditorController : MonoBehaviour
 
     private void SelectItem()
     {
+        
         switch (_editState)
         {
             case EditState.PresetChoice:
-                
+                _selectedPreset = _selecteIndex;
+                _editState = EditState.WeaponChoice;
                 break;
             case EditState.PartChoice:
 
@@ -276,9 +282,11 @@ public class S_EditorController : MonoBehaviour
                     _indexHookPointToModify = _selecteIndex;
                     _editState = EditState.WeaponChoice;
                 }
+
                 break;
             case EditState.FrameChoice:
 
+                _editState = EditState.PartChoice;
                 break;
             case EditState.WeaponChoice:
 
@@ -289,6 +297,8 @@ public class S_EditorController : MonoBehaviour
             default:
                 break;
         }
+        _selecteIndex = 0;
+        UpdatePrefabRobot();
     }
 
     /// <summary>
@@ -297,21 +307,23 @@ public class S_EditorController : MonoBehaviour
     /// <param name="weaponData"></param>
     private void UpdatePresetWeapon(S_WeaponData weaponData)
     {
-        List<Weapons> _weapons = new List<Weapons>();     //list of new weapons of robot
+        List<Weapon> _weapons = new List<Weapon>();     //list of new weapons of robot
 
         for (int i = 1; i < _presetObjectPart.Count(); i++)
         {
             if (i != _indexHookPointToModify)
             {
-                //Weapon weapon = Weapon relier au weaponData;
-                // _weapons.Add(weapon);
+                _weapons.Add(S_DataGame.Instance.inventory.GetWeapon(weaponData));
             }
             else
             {
                 _weapons.Add(null);
             }
-                
+
         }
+        S_DataGame.Instance.inventory.Robots[_selectedPreset]._weapons = _weapons;
+
+
         UpdatePrefabRobot();
     }
 
@@ -319,23 +331,10 @@ public class S_EditorController : MonoBehaviour
     /// Set save of robot for new frame selected
     /// </summary>
     /// <param name="weaponData"></param>
-    private void UpdatePresetFrame(S_WeaponData weaponData)
+    private void UpdatePresetFrame(S_FrameData frameData)
     {
-        List<Weapons> _weapons = new List<Weapons>();     //list of new weapons of robot
+        S_DataGame.Instance.inventory.Robots[_selectedPreset]._frame = S_DataGame.Instance.inventory.GetFrame(frameData);
 
-        for (int i = 1; i < _presetObjectPart.Count(); i++)
-        {
-            if (i != _indexHookPointToModify)
-            {
-                //Weapon weapon = Weapon relier au weaponData;
-                // _weapons.Add(weapon);
-            }
-            else
-            {
-                _weapons.Add(null);
-            }
-
-        }
         UpdatePrefabRobot();
     }
 
