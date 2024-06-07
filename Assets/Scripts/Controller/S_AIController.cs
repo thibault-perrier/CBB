@@ -607,8 +607,8 @@ public class S_AIController : MonoBehaviour
     private void MoveToPoint(Vector3 target, S_WeaponManager weapon)
     {
         // for set the movement
-        Vector3 dir = (target - weapon.transform.position).normalized;
-        Vector3 weaponForward = GetForwardWeapon(weapon.transform, transform);
+        Vector3 dir = (target - GetHitZone(weapon)).normalized;
+        Vector3 weaponForward = GetForwardWeapon(weapon, transform);
 
         float angleToDir = Vector3.SignedAngle(weaponForward, dir, Vector3.up);
         float dotDirection = Vector3.Dot(weaponForward, dir);
@@ -863,6 +863,20 @@ public class S_AIController : MonoBehaviour
         return dot >= 0f ? bot.forward : -bot.forward;
     }
     /// <summary>
+    /// get the forward vector of weapon in relation of bot
+    /// </summary>
+    /// <param name="weapon">current weapon</param>
+    /// <param name="bot">him self</param>
+    /// <returns>return the forward vector of current weapon</returns>
+    private Vector3 GetForwardWeapon(S_WeaponManager weapon, Transform bot)
+    {
+        // get the dot product of the weapon and the current bot
+        Vector3 dirSelfWeapon = (GetHitZone(weapon) - bot.position).normalized;
+        float dot = Vector3.Dot(bot.forward, dirSelfWeapon);
+
+        return dot >= 0f ? bot.forward : -bot.forward;
+    }
+    /// <summary>
     /// detect if the weapon is in view
     /// </summary>
     /// <param name="weapon">current weapon of the <b>bot</b></param>
@@ -967,6 +981,15 @@ public class S_AIController : MonoBehaviour
         }
 
         return true;
+    }
+    /// <summary>
+    /// get hit zone world position
+    /// </summary>
+    /// <param name="weapon">the current weapon</param>
+    /// <returns>Return the hitZone World position of the weapon</returns>
+    private Vector3 GetHitZone(S_WeaponManager weapon)
+    {
+        return weapon.HitZone.transform.TransformPoint(weapon.HitZone.center);
     }
     #endregion
 
