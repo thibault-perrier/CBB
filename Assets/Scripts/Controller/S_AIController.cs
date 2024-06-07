@@ -701,7 +701,7 @@ public class S_AIController : MonoBehaviour
 
         // set controller direction, if he is in movement in same time he turn more
         float directionMovement = Mathf.Abs(turnAmount) > 0f ? 1f : 0f;
-        _wheelsController.Direction = ReverseDir(turnAmount + directionMovement);
+        _wheelsController.Direction = ReverseDir(turnAmount);
     }
     /// <summary>
     /// reverse the current movement with probability if
@@ -878,6 +878,9 @@ public class S_AIController : MonoBehaviour
         float angleFromCurrentWeapon = Vector3.SignedAngle(_enemy.transform.forward, enemyFromEnemyWeapon, Vector3.up);
         float inSameSide = (angleFromCurrentBot / 180f) * (angleFromCurrentWeapon / 180f);
 
+        if (weapon.CurrentState != S_WeaponManager.State.ok)
+            return false;
+
         // if the weapon is behind the enemy
         if (dot < 0f)
             return false;
@@ -902,7 +905,6 @@ public class S_AIController : MonoBehaviour
 
         // sort the weapon if he is behind him self
         var cloneList = enemyWeapon._weaponManagers
-            .Where(x => Vector3.Dot(GetForwardWeapon(x.transform, _enemy.transform), (target.position - x.transform.position).normalized) > 0f)
             .Where(x => IsValidEnemyWeapon(x))
             .ToList();
 
