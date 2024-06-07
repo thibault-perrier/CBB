@@ -607,13 +607,14 @@ public class S_AIController : MonoBehaviour
     private void MoveToPoint(Vector3 target, S_WeaponManager weapon)
     {
         // for set the movement
-        Vector3 dir = (target - GetHitZone(weapon)).normalized;
+        Vector3 dir = (target - GetHitZone(weapon));
         Vector3 weaponForward = GetForwardWeapon(weapon, transform);
+        Debug.DrawRay(target, dir.normalized * (-1f * dir.magnitude), Color.red);
 
-        float angleToDir = Vector3.SignedAngle(weaponForward, dir, Vector3.up);
-        float dotDirection = Vector3.Dot(weaponForward, dir);
+        float angleToDir = Vector3.SignedAngle(weaponForward, dir.normalized, Vector3.up);
+        float dotDirection = Vector3.Dot(weaponForward, dir.normalized);
         float dotWeaponBody = Vector3.Dot(weaponForward, transform.forward);
-        float dotBehindEnemy = Vector3.Dot(transform.forward, dir);
+        float dotBehindEnemy = Vector3.Dot(transform.forward, dir.normalized);
 
         ApplyWheelColliderPhysics(angleToDir, dotDirection, dotWeaponBody, dotBehindEnemy);
     }
@@ -644,6 +645,8 @@ public class S_AIController : MonoBehaviour
     private void ApplyWheelColliderPhysics(float angleToDir, float dotDirection, float dotWeaponBody, float dotBehindEnemy)
     {
         float turnAmount = 0f;
+        float movementAmount = 0f;
+
         bool dodge = false;
 
         // get turn amount if he hit any trap
@@ -676,12 +679,12 @@ public class S_AIController : MonoBehaviour
         if (dotDirection > 0f)
         {
             // go forward
-            _wheelsController.Movement = dotWeaponBody > 0f ? ReverseMov(1f) : ReverseMov(-1f);
+            movementAmount = dotWeaponBody > 0f ? ReverseMov(1f) : ReverseMov(-1f);
         }
         else
         {
             // go backward
-            _wheelsController.Movement = dotWeaponBody > 0f ? ReverseMov(-1f) : ReverseMov(1f);
+            movementAmount = dotWeaponBody > 0f ? ReverseMov(-1f) : ReverseMov(1f);
         }
 
         // if he hit any trap dont calcul turn amount
@@ -699,9 +702,11 @@ public class S_AIController : MonoBehaviour
             }
         }
 
-        // set controller direction, if he is in movement in same time he turn more
-        float directionMovement = Mathf.Abs(turnAmount) > 0f ? 1f : 0f;
+        // set controller direction and movement
         _wheelsController.Direction = ReverseDir(turnAmount);
+        _wheelsController.Movement = movementAmount - (Mathf.Abs(angleToDir) > 40f ? 0f : .5f);
+        Debug.Log(_wheelsController.Direction);
+        Debug.Log(_wheelsController.Movement);
     }
     /// <summary>
     /// reverse the current movement with probability if
