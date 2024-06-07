@@ -26,6 +26,7 @@ public class S_WheelsController : MonoBehaviour
     public float Direction
     {
         set { _direction = value; }
+        get { return _direction; }
     }
 
     /// <summary>
