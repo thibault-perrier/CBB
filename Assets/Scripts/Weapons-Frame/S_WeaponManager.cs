@@ -80,7 +80,6 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     }
     private void Update()
     {
-        transform.localPosition = Vector3.zero;
         Vector3 worldCenter = _damageZone.transform.TransformPoint(_damageZone.center);
         Vector3 worldHalfExtents = Vector3.Scale(_damageZone.size, _damageZone.transform.lossyScale) * 0.5f;
         var collide = Physics.OverlapBox(worldCenter, worldHalfExtents, _damageZone.transform.rotation);
@@ -148,6 +147,9 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
     public void TakeDamage(float amount)
     {
+        if (_state.Equals(State.destroy))
+            return;
+
         _life -= amount;
         if (_life <= _brakePoint && _state == State.ok)
         {
@@ -171,8 +173,8 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         _rb = this.AddComponent<Rigidbody>();
         _rb.isKinematic = false;
         _rb.useGravity = true;
-        _rb.angularDrag = Mathf.Infinity;
-        _rb.drag = 0f;
+        _rb.angularDrag = 0f;
+        _rb.drag = 2f;
     }
     public void Repear()
     {
