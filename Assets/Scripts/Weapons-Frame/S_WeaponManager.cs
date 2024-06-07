@@ -187,24 +187,27 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         {
             _animator.SetBool("_playAttack", true);
             AttackON();
-            StartCoroutine(AttackCooldown());
-            StartCoroutine(AttackOFF());
+            StartCoroutine(AttackOFF(() =>
+            {
+                StartCoroutine(AttackCooldown());
+            }));
         }
     }
     private void AttackON()
     {
         _attacking = true;
+        _canAttack = false;
     }
-    private IEnumerator AttackOFF()
+    private IEnumerator AttackOFF(System.Action attackCooldown)
     {
         yield return new WaitForSeconds(_data.AttackTime);
         _animator.SetBool("_playAttack", false);
         _attacking = false;
         _attackOneTime = _data.AttackOneTime;
+        attackCooldown?.Invoke();
     }
     private IEnumerator AttackCooldown()
     {
-        _canAttack = false;
         yield return new WaitForSeconds(_data.AttackCooldown);
         _canAttack = true;
     }
