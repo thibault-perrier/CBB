@@ -334,6 +334,33 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "LeaveShop",
+                    "type": "Button",
+                    "id": "4b9d10f3-1cf6-4c43-9b62-435f9ffe11b5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeaveGarage",
+                    "type": "Button",
+                    "id": "0ce1f50d-c742-4e9b-823e-5dd6750d35f7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MouseDetection",
+                    "type": "Value",
+                    "id": "027714aa-465e-4386-96b4-98eb7adac7c3",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -602,6 +629,17 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "37ba019a-3b9d-4ba8-8765-eb21984d4533",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Buy",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "2D Vector",
                     "id": "53a9f92a-f1d1-47b8-8a75-4ac540816c35",
                     "path": "2DVector",
@@ -675,6 +713,39 @@
                     "processors": "InvertVector2(invertX=false)",
                     "groups": "",
                     "action": "ShopControllers",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "371e9c0d-11b9-4265-840c-efd6f620f894",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeaveShop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "baf69a5e-0d57-45a8-9001-f418d1815fe6",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeaveGarage",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7b1d8359-3f62-4de7-bb46-d78840ba022f",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MouseDetection",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
