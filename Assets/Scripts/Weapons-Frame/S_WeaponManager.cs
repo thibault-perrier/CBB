@@ -24,7 +24,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
     public bool CanAttack
     {
-        get => ((_canAttack && !_attacking) || _alwayActive) && _state == State.ok;
+        get => ((_canAttack && !_attacking) || _alwayActive || (_attacking && !CanTakeAnyDamage)) && _state == State.ok;
     }
     public bool CanTakeAnyDamage
     {
