@@ -14,6 +14,10 @@ public class S_PlayerController : MonoBehaviour
 
     private void Start()
     {
+        foreach (var device in InputSystem.devices)
+        {
+            Debug.Log($"Device: {device.displayName}, Layout: {device.layout}");
+        }
         _cam = GameObject.Find("CameraManager");
         _mainCam = Camera.main.GetComponent<S_CameraView>();
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
@@ -198,12 +199,14 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
             {
                 var bindingIndex = action.bindings.IndexOf(x => x.id.ToString() == m_BindingId);
                 if (bindingIndex != -1)
+                {
                     displayString = action.GetBindingDisplayString(bindingIndex, out deviceLayoutName, out controlPath, displayStringOptions);
+                }
             }
 
             // Set on label (if any).
             if (m_BindingText != null)
-                m_BindingText.text = displayString;
+                m_BindingText.text = displayString.ToUpper();
 
             // Give listeners a chance to configure UI in response.
             m_UpdateBindingUIEvent?.Invoke(this, displayString, deviceLayoutName, controlPath);
@@ -266,6 +269,9 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
             if (!ResolveActionAndBinding(out var action, out var bindingIndex))
                 return;
 
+            if (m_RebindOverlay.activeSelf)
+                return;
+
             // If the binding is a composite, we need to rebind each part in turn.
             if (action.bindings[bindingIndex].isComposite)
             {
@@ -296,19 +302,21 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 EventSystem.current.SetSelectedGameObject(currentSelected);
             }
 
+            var escapeRebing = new InputActionRebindingExtensions.RebindingOperation();
+
             //disable action to prevent errors
             action.Disable();
             // Configure the rebind.
             m_RebindOperation = action.PerformInteractiveRebinding(bindingIndex)
-                .WithCancelingThrough("<Keyboard>/escape")
-                .WithCancelingThrough("<GamePad>/start")
-                .WithCancelingThrough("<GamePad>/select")
-                .WithControlsExcluding("<Keyboard>/anyKey")
-                .WithControlsExcluding("<Gamepad>/dpad/up")
-                .WithControlsExcluding("<Gamepad>/dpad/down")
-                .WithControlsExcluding("<Gamepad>/leftStick/left")
-                .WithControlsExcluding("<Gamepad>/leftStick/right")
-                .WithControlsExcluding("<Gamepad>/start")
+                .WithCancelingThrough("<Gamepad>/start")
+                .OnPotentialMatch(operation => //This will ensure that we can cancel with two different buttons, not sure how it works though
+                {
+                    if (operation.selectedControl.path == "/Keyboard/escape")
+                    {
+                        operation.Cancel();
+                        return;
+                    }
+                })
                 .OnCancel(
                     operation =>
                     {
@@ -359,7 +367,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 var text = !string.IsNullOrEmpty(m_RebindOperation.expectedControlType)
                     ? $"{partName}Waiting for {m_RebindOperation.expectedControlType} input..."
                     : $"{partName}Waiting for input...";
-                m_RebindText.text = text;
+                m_RebindText.text = text.ToUpper();
             }
 
             // If we have no rebind overlay and no callback but we have a binding text label,
@@ -382,6 +390,21 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 if (binding.action == newBinding.action)
                 {
                     continue;
+                }
+
+                if (binding.isComposite)
+                {
+                    var compositeParts = action.bindings.Where(b => b.isPartOfComposite && b.effectivePath.Contains(binding.effectivePath)).ToList();
+                    foreach (var part in compositeParts)
+                    {
+                        if (part.effectivePath == newBinding.effectivePath)
+                        {
+                            Debug.LogWarning("A duplicate has been found " + newBinding.effectivePath);
+                            return true;
+                        }
+                    }
+
+                    //for (int i = 0; i < binding.effectivePath.Length; i++)
                 }
 
                 if (binding.effectivePath == newBinding.effectivePath)
