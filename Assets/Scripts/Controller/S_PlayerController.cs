@@ -5,7 +5,7 @@ public class S_PlayerController : MonoBehaviour
 {
     private GameObject _cam;
     private S_CameraView _cameraView;
-    private S_CameraMovement _mainCam;
+    private S_CameraView _mainCam;
 
     private S_WheelsController _wheelsController;
     private S_FrameManager _frameManager;
@@ -15,7 +15,7 @@ public class S_PlayerController : MonoBehaviour
     private void Start()
     {
         _cam = GameObject.Find("CameraManager");
-        _mainCam = Camera.main.GetComponent<S_CameraMovement>();
+        _mainCam = Camera.main.GetComponent<S_CameraView>();
         _wheelsController = GetComponent<S_WheelsController>();
         _frameManager = GetComponent<S_FrameManager>();
 
@@ -58,6 +58,8 @@ public class S_PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
+            Debug.Log(context.ReadValue<float>());
+
             _wheelsController.Direction = -context.ReadValue<float>();
         }
         else if (context.canceled)
@@ -78,10 +80,10 @@ public class S_PlayerController : MonoBehaviour
         }
     }
 
-    public void OnMoveTournamentCamera(InputAction.CallbackContext context)
-    {
-        _mainCam.SetMovement(context.ReadValue<Vector2>());
-    }
+    //public void OnMoveTournamentCamera(InputAction.CallbackContext context)
+    //{
+    //    _mainCam.SetMovement(context.ReadValue<Vector2>());
+    //}
 
     public void OnAttack1(InputAction.CallbackContext context)
     {

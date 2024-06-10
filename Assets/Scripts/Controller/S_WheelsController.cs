@@ -34,6 +34,7 @@ public class S_WheelsController : MonoBehaviour
     public float Direction
     {
         set { _direction = value; }
+        get { return _direction; }
     }
 
     /// <summary>
@@ -42,6 +43,7 @@ public class S_WheelsController : MonoBehaviour
     public float Movement
     {
         set { this._move = value; }
+        get { return this._move; }
     }
 
     private void Awake()
