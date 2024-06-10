@@ -3,16 +3,15 @@ using UnityEngine;
 public class S_ObjectClickable : MonoBehaviour
 {
     private static S_ObjectClickable _instance;
-    public bool _interactionLocked = false; 
+    public bool _interactionLocked = false;
     [SerializeField] private Animator _animatorDoor;
-    [SerializeField] private Animator _animatorCameraGarage;
-
+    [SerializeField] public Animator _animatorCameraGarage;
     [SerializeField] private Light _light;
     private float _originalIntensity;
 
     private void Awake()
     {
-        if(_instance == null)
+        if (_instance == null)
             _instance = this;
     }
 
@@ -38,7 +37,7 @@ public class S_ObjectClickable : MonoBehaviour
 
     public void OnFocus()
     {
-        if (!_interactionLocked) 
+        if (!_interactionLocked)
         {
             _light.intensity = _originalIntensity * 2;
         }
@@ -46,7 +45,7 @@ public class S_ObjectClickable : MonoBehaviour
 
     public void OnFocusLost()
     {
-        if (!_interactionLocked) 
+        if (!_interactionLocked)
         {
             _light.intensity = _originalIntensity;
         }
@@ -54,7 +53,7 @@ public class S_ObjectClickable : MonoBehaviour
 
     public void OnActivated()
     {
-        if (!_interactionLocked) 
+        if (!_interactionLocked)
         {
             Activate();
             SetColor(Color.white);
@@ -63,7 +62,7 @@ public class S_ObjectClickable : MonoBehaviour
 
     private void Activate()
     {
-        LockInteraction(); 
+        LockInteraction();
 
         if (gameObject.CompareTag("Garage"))
         {
@@ -82,8 +81,15 @@ public class S_ObjectClickable : MonoBehaviour
         }
         else if (gameObject.CompareTag("Board"))
         {
-            Debug.Log("chef");
             _animatorCameraGarage.SetBool("Board", true);
+        }
+        else if (gameObject.CompareTag("WorkBench"))
+        {
+            _animatorCameraGarage.SetBool("WorkBench", true);
+        }
+        else if (gameObject.CompareTag("Shelves"))
+        {
+            _animatorCameraGarage.SetBool("Shelves", true);
         }
 
     }
@@ -93,12 +99,12 @@ public class S_ObjectClickable : MonoBehaviour
         gameObject.LeanColor(color, 0.1f);
     }
 
-    private void LockInteraction() 
+    private void LockInteraction()
     {
         _interactionLocked = true;
     }
 
-    public void UnlockInteraction() 
+    public void UnlockInteraction()
     {
         _interactionLocked = false;
     }
@@ -189,5 +195,21 @@ public class S_ObjectClickable : MonoBehaviour
     public void BackGarageDoorDisable()
     {
         _animatorDoor.SetBool("BackDoor", false);
+    }
+    public void StopGarageAnim()
+    {
+        _animatorCameraGarage.SetBool("MoveToGarage", false);
+    }
+    public void StopAnimBoard()
+    {
+        _animatorCameraGarage.SetBool("Board", false);
+    }
+    public void EnableIdleInGarage()
+    {
+        _animatorCameraGarage.SetBool("IdleInGarage", true);
+    }
+    public void DisableInGarage()
+    {
+        _animatorCameraGarage.SetBool("IdleInGarage", false);
     }
 }

@@ -4,7 +4,6 @@ using UnityEngine.SceneManagement;
 
 public class S_ClickablesManager : MonoBehaviour
 {
-    public GameObject doorGarage;
     public GameObject[] clikableObjetGarage;
     public static S_ClickablesManager Instance;
     public GameObject[] clickables;
@@ -16,7 +15,7 @@ public class S_ClickablesManager : MonoBehaviour
     public bool activeBackGarage = false;
     private bool[] _clickableStates;
     private bool _useMouse = false;
-
+    private bool _garageNavigable = false;
     private InputAction mouseMoveAction;
     private InputAction navigateAction;
 
@@ -25,10 +24,14 @@ public class S_ClickablesManager : MonoBehaviour
         if (Instance == null)
             Instance = this;
 
-        _clickableStates = new bool[clickables.Length];
-        for (int i = 0; i < _clickableStates.Length; i++)
+        _clickableStates = new bool[clickables.Length + clikableObjetGarage.Length];
+        for (int i = 0; i < clickables.Length; i++)
         {
             _clickableStates[i] = true;
+        }
+        for (int i = clickables.Length; i < _clickableStates.Length; i++)
+        {
+            _clickableStates[i] = false;
         }
 
         var inputActions = new InputActionMap("UI");
@@ -47,11 +50,8 @@ public class S_ClickablesManager : MonoBehaviour
         if (clickables.Length > 0)
         {
             SetFocus(clickables[_currentIndex]);
+            DisableGarageNavigation();
         }
-
-
-
-     
     }
 
     void Update()
@@ -82,73 +82,6 @@ public class S_ClickablesManager : MonoBehaviour
         }
     }
 
-    public void ClikableObjectGarage()
-    {
-        Debug.Log("ClikableObjectGarage() called.");
-        foreach (var clickableGroup in clikableObjetGarage)
-        {
-            if (clickableGroup != null)
-            {
-                Debug.Log("clickableGroup found: " + clickableGroup.name);
-                var clickableScript = clickableGroup.GetComponent<S_ObjectClickable>();
-                if (clickableScript != null)
-                {
-                    Debug.Log("Clickable script found on: " + clickableGroup.name);
-                    clickableScript.enabled = true;
-                }
-            }
-        }
-    }
-
-
-
-
-    public void DisableObjectGarage()
-    {
-        foreach (var clickableGroup in clikableObjetGarage)
-        {
-            if (clickableGroup != null)
-            {
-                var clickableScript = clickableGroup.GetComponent<S_ObjectClickable>();
-                if (clickableScript != null)
-                {
-                    clickableScript.enabled = false;
-                }
-            }
-        }
-    }
-
-    public void ClikableObjectMainMenu()
-    {
-        foreach (var clickableGroup in clickables)
-        {
-            if (clickableGroup != null)
-            {
-                var clickableScript = clickableGroup.GetComponent<S_ObjectClickable>();
-                if (clickableScript != null)
-                {
-                    clickableScript.enabled = true;
-                }
-            }
-        }
-    }
-
-    public void DisableObjectMainMenu()
-    {
-        foreach (var clickableGroup in clickables)
-        {
-            if (clickableGroup != null && clickableGroup != doorGarage)
-            {
-                var clickableScript = clickableGroup.GetComponent<S_ObjectClickable>();
-                if (clickableScript != null)
-                {
-                    clickableScript.enabled = false;
-                }
-            }
-        }
-    }
-
-
     void OnMouseMove(InputAction.CallbackContext context)
     {
         _useMouse = true;
@@ -177,17 +110,29 @@ public class S_ClickablesManager : MonoBehaviour
 
     void Navigate(int direction)
     {
-        RemoveFocus(clickables[_currentIndex]);
+        RemoveFocus(GetCurrentClickable());
 
         do
         {
             _currentIndex += direction;
-            if (_currentIndex < 0) _currentIndex = clickables.Length - 1;
-            else if (_currentIndex >= clickables.Length) _currentIndex = 0;
+            if (_currentIndex < 0) _currentIndex = _clickableStates.Length - 1;
+            else if (_currentIndex >= _clickableStates.Length) _currentIndex = 0;
         }
         while (!_clickableStates[_currentIndex]);
 
-        SetFocus(clickables[_currentIndex]);
+        SetFocus(GetCurrentClickable());
+    }
+
+    GameObject GetCurrentClickable()
+    {
+        if (_currentIndex < clickables.Length)
+        {
+            return clickables[_currentIndex];
+        }
+        else
+        {
+            return clikableObjetGarage[_currentIndex - clickables.Length];
+        }
     }
 
     void SetFocus(GameObject obj)
@@ -210,7 +155,7 @@ public class S_ClickablesManager : MonoBehaviour
 
     void ActivateCurrent()
     {
-        var clickable = clickables[_currentIndex].GetComponent<S_ObjectClickable>();
+        var clickable = GetCurrentClickable().GetComponent<S_ObjectClickable>();
         if (clickable != null)
         {
             clickable.OnActivated();
@@ -220,7 +165,7 @@ public class S_ClickablesManager : MonoBehaviour
 
     void DisableAllClickablesExcept(int index)
     {
-        for (int i = 0; i < clickables.Length; i++)
+        for (int i = 0; i < _clickableStates.Length; i++)
         {
             if (i != index)
             {
@@ -231,9 +176,12 @@ public class S_ClickablesManager : MonoBehaviour
 
     public void ReactivateAllClickables()
     {
-        for (int i = 0; i < clickables.Length; i++)
+        for (int i = 0; i < _clickableStates.Length; i++)
         {
-            _clickableStates[i] = true;
+            if (i < clickables.Length || _garageNavigable)
+            {
+                _clickableStates[i] = true;
+            }
         }
     }
 
@@ -264,6 +212,66 @@ public class S_ClickablesManager : MonoBehaviour
             {
                 clickableScript.ResetState();
             }
+        }
+
+        foreach (GameObject clickable in clikableObjetGarage)
+        {
+            var clickableScript = clickable.GetComponent<S_ObjectClickable>();
+            if (clickableScript != null)
+            {
+                clickableScript.ResetState();
+            }
+        }
+    }
+
+    public void ClikableObjectGarage()
+    {
+        Debug.Log("ClikableObjectGarage() called.");
+        foreach (var clickableGroup in clikableObjetGarage)
+        {
+            if (clickableGroup != null)
+            {
+                Debug.Log("clickableGroup found: " + clickableGroup.name);
+                var clickableScript = clickableGroup.GetComponent<S_ObjectClickable>();
+                if (clickableScript != null)
+                {
+                    Debug.Log("Clickable script found on: " + clickableGroup.name);
+                    clickableScript.enabled = true;
+                }
+            }
+        }
+    }
+
+    public void DisableObjectGarage()
+    {
+        foreach (var clickableGroup in clikableObjetGarage)
+        {
+            if (clickableGroup != null)
+            {
+                var clickableScript = clickableGroup.GetComponent<S_ObjectClickable>();
+                if (clickableScript != null)
+                {
+                    clickableScript.enabled = false;
+                }
+            }
+        }
+    }
+
+    public void EnableGarageNavigation()
+    {
+        _garageNavigable = true;
+        for (int i = clickables.Length; i < _clickableStates.Length; i++)
+        {
+            _clickableStates[i] = true;
+        }
+    }
+
+    public void DisableGarageNavigation()
+    {
+        _garageNavigable = false;
+        for (int i = clickables.Length; i < _clickableStates.Length; i++)
+        {
+            _clickableStates[i] = false;
         }
     }
 
@@ -327,5 +335,24 @@ public class S_ClickablesManager : MonoBehaviour
     public void FalseBoolBackShop()
     {
         S_ShopManager.Instance.activeBackShop = false;
+    }
+    public void StopBoolGoToGarage()
+    {
+        S_ObjectClickable.Instance.StopGarageAnim();
+    }
+
+    public void StopAnimBoard()
+    {
+        S_ObjectClickable.Instance.StopAnimBoard();
+    }
+
+    public void EnableIdleInGarage()
+    {
+        S_ObjectClickable.Instance.EnableIdleInGarage();
+    }
+
+    public void DisableIdleInGarage()
+    {
+        S_ObjectClickable.Instance.DisableInGarage();
     }
 }

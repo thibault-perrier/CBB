@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,6 +10,30 @@ public class GarageManager : MonoBehaviour
             S_ObjectClickable.Instance.LaunchAnimBackToMenuFromGarage();
             S_DataGame.Instance.SaveInventory();
             S_ClickablesManager.Instance.ResetAllClickables();
+        }
+    }
+
+    public void LeaveBoard(InputAction.CallbackContext context)
+    {
+        if (context.performed && gameObject.activeInHierarchy)
+        {
+            S_ObjectClickable.Instance._animatorCameraGarage.SetBool("Board", false);
+        }
+    }
+
+    public void LeaveShelves(InputAction.CallbackContext context)
+    {
+        if (context.performed && gameObject.activeInHierarchy)
+        {
+            S_ObjectClickable.Instance._animatorCameraGarage.SetBool("Shelves", false);
+        }
+    }
+
+    public void LeaveWorkBench(InputAction.CallbackContext context)
+    {
+        if (context.performed && gameObject.activeInHierarchy)
+        {
+            S_ObjectClickable.Instance._animatorCameraGarage.SetBool("WorkBench", false);
         }
     }
 }
