@@ -220,13 +220,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _wheels:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 5632348922776442670}
+  - {fileID: 9108303251985503986}
+  - {fileID: 4699697515680902450}
+  - {fileID: 6057179754822128881}
   _directionWheelsCollider:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 5632348922776442670}
+  - {fileID: 9108303251985503986}
   _maxAngle: 30.3
   _maxSpeed: 10
   _maxMotorTorque: 200
@@ -608,7 +608,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7941983589671488304, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Name
-      value: Wheel (1)
+      value: WheelFrontLeft
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -618,6 +618,11 @@ PrefabInstance:
 --- !u!4 &2955309699659900349 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
+  m_PrefabInstance: {fileID: 707487789544708300}
+  m_PrefabAsset: {fileID: 0}
+--- !u!146 &9108303251985503986 stripped
+WheelCollider:
+  m_CorrespondingSourceObject: {fileID: 8626277753439424062, guid: 54d9a87acec8339438590167e68805de, type: 3}
   m_PrefabInstance: {fileID: 707487789544708300}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2574331708333677263
@@ -670,7 +675,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7941983589671488304, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Name
-      value: Wheel (3)
+      value: WheelBeckLeft
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -680,6 +685,11 @@ PrefabInstance:
 --- !u!4 &246294909697615806 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
+  m_PrefabInstance: {fileID: 2574331708333677263}
+  m_PrefabAsset: {fileID: 0}
+--- !u!146 &6057179754822128881 stripped
+WheelCollider:
+  m_CorrespondingSourceObject: {fileID: 8626277753439424062, guid: 54d9a87acec8339438590167e68805de, type: 3}
   m_PrefabInstance: {fileID: 2574331708333677263}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3931110397610730252
@@ -732,7 +742,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7941983589671488304, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Name
-      value: Wheel (2)
+      value: WheelBackRight
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -742,6 +752,11 @@ PrefabInstance:
 --- !u!4 &1611377115048779389 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
+  m_PrefabInstance: {fileID: 3931110397610730252}
+  m_PrefabAsset: {fileID: 0}
+--- !u!146 &4699697515680902450 stripped
+WheelCollider:
+  m_CorrespondingSourceObject: {fileID: 8626277753439424062, guid: 54d9a87acec8339438590167e68805de, type: 3}
   m_PrefabInstance: {fileID: 3931110397610730252}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4151384723911366928
@@ -794,7 +809,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7941983589671488304, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Name
-      value: Wheel
+      value: WheelFrontRight
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -804,6 +819,11 @@ PrefabInstance:
 --- !u!4 &1823518661457732705 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
+  m_PrefabInstance: {fileID: 4151384723911366928}
+  m_PrefabAsset: {fileID: 0}
+--- !u!146 &5632348922776442670 stripped
+WheelCollider:
+  m_CorrespondingSourceObject: {fileID: 8626277753439424062, guid: 54d9a87acec8339438590167e68805de, type: 3}
   m_PrefabInstance: {fileID: 4151384723911366928}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6445019770352853014
