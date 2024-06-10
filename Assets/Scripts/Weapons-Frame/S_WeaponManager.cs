@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Linq;
 using Unity.VisualScripting;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class S_WeaponManager : MonoBehaviour, I_Damageable
@@ -13,7 +12,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     private bool _attackOneTime = true;
 
     [SerializeField] private BoxCollider _hitZone;
-    [SerializeField] private BoxCollider _damageZone;
+    [SerializeField] private BoxCollider[] _damageZones;
     [SerializeField] private bool _canAttack = true;
     [SerializeField] private bool _alwayActive;
     [SerializeField] private bool _attacking = false;
@@ -80,30 +79,47 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     }
     private void Update()
     {
-        Vector3 worldCenter = _damageZone.transform.TransformPoint(_damageZone.center);
-        Vector3 worldHalfExtents = Vector3.Scale(_damageZone.size, _damageZone.transform.lossyScale) * 0.5f;
-        var collide = Physics.OverlapBox(worldCenter, worldHalfExtents, _damageZone.transform.rotation);
-        
-        var hitObject = collide.Select(x => x.gameObject).Where(x => x != gameObject).ToList();
-        if (hitObject.Any())
+        foreach (var hitZone in _damageZones)
         {
-            foreach (var item in hitObject)
+            // get all collider in damageZone
+            Vector3 worldCenter = hitZone.transform.TransformPoint(hitZone.center);
+            Vector3 worldHalfExtents = Vector3.Scale(hitZone.size, hitZone.transform.lossyScale) * 0.5f;
+            var collide = Physics.OverlapBox(worldCenter, worldHalfExtents, hitZone.transform.rotation);
+
+            // sort the collider if he is not him self weapon or if he not hit the him self bot
+            var hitObject = collide
+                .Select(x => x.gameObject)
+                .Where(x => x != gameObject)
+                .ToList();
+
+            if (hitObject.Any())
             {
-                AttackCollide(item);
+                foreach (var col in hitObject)
+                {
+                    bool succesAttack = AttackCollide(col);
+                    if (succesAttack)
+                        return;
+                }
             }
         }
     }
     
-    private void AttackCollide(GameObject collision)
+    private bool AttackCollide(GameObject collision)
     {
         if (!_attackOneTime && _data.AttackOneTime)
-            return;
+            return false;
 
         if (_attacking || _alwayActive)
         {
             if (GetIDamageable(collision, out var damageable))
-                TryApplyDamage(damageable);
+            {
+                bool succesToApplyDamage = TryApplyDamage(damageable);
+                if (succesToApplyDamage)
+                    return true;
+            }
         }
+
+        return false;
     }
     private bool GetIDamageable(GameObject entity, out I_Damageable iDamageable)
     {
@@ -142,6 +158,10 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
             return true;
         }
 
+        return false;
+    }
+    private bool IsCurrentBot(GameObject targetCollide)
+    {
         return false;
     }
 
