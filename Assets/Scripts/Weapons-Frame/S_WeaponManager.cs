@@ -215,7 +215,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         _rb.angularDrag = 0f;
         _rb.drag = 2f;
     }
-    public void Repear()
+    public void Repair()
     {
         _life = _data.MaxLife;
         _state = State.ok;

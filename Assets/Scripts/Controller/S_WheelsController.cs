@@ -10,6 +10,14 @@ public class S_WheelsController : MonoBehaviour
     [SerializeField] private float _maxSpeed;
     [SerializeField] private float _maxMotorTorque;
 
+    public void DestroyWheelsCollider()
+    {
+        foreach(WheelCollider wheelCollider in _wheels)
+        {
+            Destroy(wheelCollider);
+        }
+    }
+
     private float _direction;
     private float _move;
     private Rigidbody _rb;

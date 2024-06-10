@@ -16,6 +16,11 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
         get { return _weaponHookPoints.Count; }
     }
 
+    public List<GameObject> WeaponHookPoints
+    {
+        get { return _weaponHookPoints; }
+    }
+
 
     private void Awake()
     {
@@ -62,7 +67,8 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
         Debug.Log("Player died!");
         // Logic to remove destroy items in inventory
     }
-    public void Repear()
+
+    public void Repair()
     {
         _life = _data.MaxLife;
     }
