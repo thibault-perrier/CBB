@@ -84,7 +84,7 @@ public class S_AIController : MonoBehaviour
     private bool _getEnemyInStart;
 
     [Header("Attack")]
-    [SerializeField, Tooltip("if he failed attack")]
+    [SerializeField, Tooltip("if he failed an attack")]
     private bool _failAttack;
     [SerializeField, Min(0f), Tooltip("cooldown for try to fail any attack")]
     private float _attackFailCooldown = 1f;
@@ -1009,7 +1009,8 @@ public class S_AIController : MonoBehaviour
         StartCoroutine(AttackFailedCooldownCoroutine());
 
         // if he is not enough close to the enemy
-        float distanceToEnemy = Vector3.Distance(transform.position, _enemy.transform.position);
+        Vector3 hitZonePosition = _currentWeapon.HitZone.transform.TransformPoint(_currentWeapon.HitZone.center);
+        float distanceToEnemy = Vector3.Distance(hitZonePosition, _target.transform.position);
         if (distanceToEnemy > _attackFailDistance)
             return;
 
