@@ -226,7 +226,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         if (_alwayActive)
             return;
 
-        if (_state == State.ok && !_attacking)
+        if (CanAttack)
         {
             _animator.SetBool("_playAttack", true);
             AttackON();
