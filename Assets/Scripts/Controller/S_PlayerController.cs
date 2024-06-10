@@ -18,6 +18,7 @@ public class S_PlayerController : MonoBehaviour
         _mainCam = Camera.main.GetComponent<S_CameraView>();
         _wheelsController = GetComponent<S_WheelsController>();
         _frameManager = GetComponent<S_FrameManager>();
+        _frameManager.SelectWeapons();
 
         if (_cam != null )
         {
@@ -28,7 +29,6 @@ public class S_PlayerController : MonoBehaviour
     //Move the robot on the X axis
     public void OnMove(InputAction.CallbackContext context)
     {
-        Debug.Log(context.ReadValue<float>());
         float movement = context.ReadValue<float>();
 
         _wheelsController.Movement = movement;
@@ -58,8 +58,6 @@ public class S_PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            Debug.Log(context.ReadValue<float>());
-
             _wheelsController.Direction = -context.ReadValue<float>();
         }
         else if (context.canceled)
@@ -87,22 +85,29 @@ public class S_PlayerController : MonoBehaviour
 
     public void OnAttack1(InputAction.CallbackContext context)
     {
+        if (_frameManager._weaponManagers.Count < 1)
+            return;
+
         if (context.performed && _frameManager._weaponManagers[0] != null)
         {
             _frameManager._weaponManagers[0].LaunchAttack();
         }
     }
-
     public void OnAttack2(InputAction.CallbackContext context)
     {
+        if (_frameManager._weaponManagers.Count < 2)
+            return;
+
         if (context.performed && _frameManager._weaponManagers[1] != null)
         {
             _frameManager._weaponManagers[1].LaunchAttack();
         }
     }
-
     public void OnAttack3(InputAction.CallbackContext context)
     {
+        if (_frameManager._weaponManagers.Count < 3)
+            return;
+
         if (context.performed && _frameManager._weaponManagers[2] != null)
         {
             _frameManager._weaponManagers[2].LaunchAttack();
