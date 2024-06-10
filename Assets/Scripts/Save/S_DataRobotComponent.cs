@@ -17,7 +17,7 @@ namespace Systems
             {
                 if (_instance == null)
                 {
-                    _instance = Resources.Load<S_DataRobotComponent>("GameData"); 
+                    _instance = Resources.Load<S_DataRobotComponent>("RobotComponentData"); 
                 }
 
                 return _instance;

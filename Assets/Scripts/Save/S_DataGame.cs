@@ -215,7 +215,12 @@ public class Frame
 public class Robot
 {
     public Frame _frame;
-    public List<Weapon> _weapons;
+    public List<Weapon> _weapons = new List<Weapon>()
+    {
+        null,
+        null,
+        null
+    };
 }
 
 [System.Serializable]

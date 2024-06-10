@@ -48,6 +48,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7635826562936255635, guid: fe27bbc0aeaa88d4881ff3524d2ccdda, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 87faf2cbb6230cf40b39773d820946e4, type: 2}
     - target: {fileID: 919132149155446097, guid: fe27bbc0aeaa88d4881ff3524d2ccdda, type: 3}
       propertyPath: m_Name
       value: Circle_Blade
@@ -77,6 +81,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91febbad3ce4c4340b07aed5f677874c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _attacking: 0
   _data: {fileID: 11400000, guid: 7e18c405033ed1347879ca6d055eada5, type: 2}
   _state: 0
   _lifeBrakePoint: 15

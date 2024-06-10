@@ -25,7 +25,7 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
 
     private void Awake()
     {
-        _rb = this.AddComponent<Rigidbody>();
+        _rb = GetComponent<Rigidbody>();
         _rb.mass = _data.Mass;
         _life = _data.MaxLife;
     }
