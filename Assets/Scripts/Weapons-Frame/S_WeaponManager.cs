@@ -26,6 +26,10 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     [SerializeField] private int _lifeBrakePoint = 15;    //In pourcent life level
     [SerializeField] private float _life;
 
+    public S_WeaponData Data
+    {
+        get => _data;
+    }
     public bool CanAttack
     {
         get => ((_canAttack && !_attacking) || _alwayActive || (_attacking && !CanTakeAnyDamage)) && _state == State.ok;

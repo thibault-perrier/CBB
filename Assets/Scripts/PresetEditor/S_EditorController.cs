@@ -201,7 +201,7 @@ public class S_EditorController : MonoBehaviour
             RectTransform rectTransform = newWeapon.AddComponent<RectTransform>();
 
             rectTransform.sizeDelta = new Vector2(1, 1);
-
+            newWeapon.transform.localRotation = Quaternion.Euler(0, 45, 0);
             _weapons.Add(newWeapon);
             newWeapon.transform.position = Vector3.zero;
             if (_weaponGroup1.transform.childCount < _nbWeapon)
@@ -314,14 +314,12 @@ public class S_EditorController : MonoBehaviour
 
                 break;
             case EditState.FrameChoice:
-
+                UpdatePresetFrame(_frame[_selectedIndex].GetComponent<S_FrameManager>().Data);
                 _editState = EditState.PartChoice;
                 break;
             case EditState.WeaponChoice:
-
+                UpdatePresetWeapon(_weapons[_selectedIndex].GetComponent<S_WeaponManager>().Data);
                 _editState = EditState.PartChoice;
-
-
                 break;
             default:
                 break;

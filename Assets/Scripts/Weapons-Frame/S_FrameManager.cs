@@ -21,6 +21,11 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
         get { return _weaponHookPoints; }
     }
 
+    public S_FrameData Data
+    {
+        get { return _data; }
+    }
+
 
     private void Awake()
     {
