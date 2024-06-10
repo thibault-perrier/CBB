@@ -92,6 +92,13 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
                 .Where(x => x != gameObject)
                 .ToList();
 
+            if (hitObject.Count < 1)
+                return;
+
+            hitObject = hitObject
+                .Where(x => !IsCurrentBot(x))
+                .ToList();
+
             if (hitObject.Any())
             {
                 foreach (var col in hitObject)
@@ -162,6 +169,15 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     }
     private bool IsCurrentBot(GameObject targetCollide)
     {
+        var currentBot = transform.GetComponentInParent<S_WheelsController>(true);
+        var hitTarget = targetCollide.GetComponentInParent<S_WheelsController>(true);
+
+        if (!hitTarget)
+            return false;
+
+        if (currentBot.name.Equals(hitTarget.name))
+            return true;
+
         return false;
     }
 
