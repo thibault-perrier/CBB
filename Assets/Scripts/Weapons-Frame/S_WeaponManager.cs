@@ -5,21 +5,26 @@ using UnityEngine;
 
 public class S_WeaponManager : MonoBehaviour, I_Damageable
 {
-    [SerializeField] private float _life;
     private float _damage;
     private float _brakePoint;
     private Rigidbody _rb;
     private bool _attackOneTime = true;
+    private Animator _animator;
 
+    [Header("Hit zones data")]
     [SerializeField] private BoxCollider _hitZone;
     [SerializeField] private BoxCollider[] _damageZones;
+
+    [Header("Toggles weapon")]
     [SerializeField] private bool _canAttack = true;
     [SerializeField] private bool _alwayActive;
     [SerializeField] private bool _attacking = false;
+
+    [Header("Data")]
     [SerializeField] private S_WeaponData _data;
     [SerializeField] private State _state = State.ok;
     [SerializeField] private int _lifeBrakePoint = 15;    //In pourcent life level
-    [SerializeField] private Animator _animator;
+    [SerializeField] private float _life;
 
     public bool CanAttack
     {
