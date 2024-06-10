@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class S_WheelsController : MonoBehaviour
 {
@@ -10,20 +11,14 @@ public class S_WheelsController : MonoBehaviour
     [SerializeField] private float _maxMotorTorque;
 
     private float _direction;
-    private Move _move = Move.neutral;
+    private float _move;
     private Rigidbody _rb;
     private float _mass;
 
+    private PlayerInput _playerInput;
+
     private float _wheelRadius;     // in meter
     [SerializeField] private float _timeToMaxSpeed = 5f;    // in second
-
-
-    public enum Move
-    {
-        toward,
-        neutral,
-        backward
-    }
 
     /// <summary>
     /// Delta value internvale [1 , -1], 1 for right and -1 for left;
@@ -31,14 +26,16 @@ public class S_WheelsController : MonoBehaviour
     public float Direction
     {
         set { _direction = value; }
+        get { return _direction; }
     }
 
     /// <summary>
     /// defined direction move between toward, backward and neutral.
     /// </summary>
-    public Move Movement
+    public float Movement
     {
         set { this._move = value; }
+        get { return this._move; }
     }
 
     private void Awake()
@@ -47,8 +44,9 @@ public class S_WheelsController : MonoBehaviour
 
         _mass = _rb.mass + 4 * _wheels[0].mass;
         _wheelRadius = _wheels[0].radius;
+        _playerInput = new PlayerInput();
     }
-
+    
     private void FixedUpdate()
     {
         DirectionUpdate();
@@ -71,20 +69,15 @@ public class S_WheelsController : MonoBehaviour
 
         foreach (WheelCollider wheel in _wheels)
         {
-            switch (_move)
+            if(Mathf.Abs(_move) >= 0.1f)
             {
-                case Move.toward:
-                    wheel.brakeTorque = 0;
-                    wheel.motorTorque = motorTorque;
-                    break;
-                case Move.backward:
-                    wheel.brakeTorque = 0;
-                    wheel.motorTorque = -motorTorque;
-                    break;
-                default:
-                    wheel.motorTorque = 0;
-                    wheel.brakeTorque = 20;
-                    break;
+                wheel.brakeTorque = 0;
+                wheel.motorTorque = motorTorque * _move;
+            }
+            else
+            {
+                wheel.motorTorque = 0;
+                wheel.brakeTorque = 20;
             }
         }
     }
