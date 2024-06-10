@@ -134,16 +134,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91febbad3ce4c4340b07aed5f677874c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _life: 0
   _hitZone: {fileID: 5906055703847742885}
-  _damageZone: {fileID: 5055867562793978112}
+  _damageZones:
+  - {fileID: 5055867562793978112}
   _canAttack: 1
   _alwayActive: 0
   _attacking: 0
   _data: {fileID: 11400000, guid: 99dc4b8cd1b96684fbcf9bb45fc5b250, type: 2}
   _state: 0
   _lifeBrakePoint: 15
-  _animator: {fileID: 0}
+  _life: 0
 --- !u!95 &9078970882318680198
 Animator:
   serializedVersion: 5
