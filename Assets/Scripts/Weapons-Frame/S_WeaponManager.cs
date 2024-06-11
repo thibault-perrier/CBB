@@ -94,6 +94,43 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         get => _state;
     }
 
+    public bool CanAttack
+    {
+        get => ((_canAttack && !_attacking) || _alwayActive) && _state == State.ok;
+    }
+    public bool CanTakeAnyDamage
+    {
+        get
+        {
+            Vector3 worldCenter = _hitZone.transform.TransformPoint(_hitZone.center);
+            Vector3 worldHalfExtents = Vector3.Scale(_hitZone.size, _hitZone.transform.lossyScale) * 0.5f;
+            var collide = Physics.OverlapBox(worldCenter, worldHalfExtents);
+            var damagable = collide
+                .Select(x => x.transform.gameObject)
+                .Where(x => x.TryGetComponent<I_Damageable>(out _))
+                .Where(x => x != this.gameObject)
+                .ToArray();
+
+            return damagable.Length > 0;
+        }
+    }
+    public BoxCollider HitZone
+    {
+        get => _hitZone;
+    }
+    public bool Attacking
+    {
+        get => _attacking;
+    }
+    public bool AlwaysActive
+    {
+        get => _alwayActive;
+    }
+    public State CurrentState
+    {
+        get => _state;
+    }
+
     public enum State
     {
         ok,
