@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Systems;
 using UnityEngine;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class S_DataGame : MonoBehaviour
 {
@@ -69,7 +70,8 @@ public class InventorySaver // Inventory
     {
         foreach (Weapon weapon in Weapons)
         {
-            if (weapon.GetWeaponData() == weaponData)
+            S_WeaponData data = weapon.GetWeaponData();
+            if (data == weaponData)
             {
                 return weapon;
             }
@@ -149,6 +151,7 @@ public class InventorySaver // Inventory
 
         foreach (Robot robot in Robots)
         {
+            robot._frame._useNumber++;
             foreach(Weapon rbWeapon in robot._weapons)
             {
                 if(rbWeapon != null)
@@ -183,7 +186,7 @@ public class Weapon
     {
         _id = S_DataRobotComponent.Instance._weaponDatas.IndexOf(weaponData);
         _name = weaponData.name;
-        _number = 0;
+        _number = 1;
         _useNumber = 0;
     }
 
@@ -206,7 +209,7 @@ public class Frame
     {
         _id = S_DataRobotComponent.Instance._frameDatas.IndexOf(frameData);
         _name = frameData.name;
-        _number = 0;
+        _number = 1;
         _useNumber = 0;
     }
 }
@@ -215,12 +218,26 @@ public class Frame
 public class Robot
 {
     public Frame _frame;
-    public List<Weapon> _weapons = new List<Weapon>()
+    public List<Weapon> _weapons = new List<Weapon>();
+
+    public Robot(Frame frame)
     {
-        null,
-        null,
-        null
-    };
+        _frame = frame;
+        for(int i = 0; i < frame.GetFrameData().GetNbWeaponMax(); i++)
+        {
+            _weapons.Add(null);
+        }
+    }
+
+    public void UpdateWeaponMaxList()
+    {
+        List<Weapon> updateWeapons = new List<Weapon>();
+        for (int i = 0; i < _frame.GetFrameData().GetNbWeaponMax(); i++)
+        {
+            updateWeapons.Add(_weapons[i]);
+        }
+        _weapons = updateWeapons.ToList();
+    }
 }
 
 [System.Serializable]

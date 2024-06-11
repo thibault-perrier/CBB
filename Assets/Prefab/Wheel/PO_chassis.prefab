@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 8217365584326203965}
   - component: {fileID: 3263431631757145413}
   - component: {fileID: 5717321651809916657}
+  - component: {fileID: 8517676520247597412}
   m_Layer: 0
   m_Name: PO_chassis
   m_TagString: Untagged
@@ -228,6 +229,18 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 85a00946-9c5d-490a-a3a0-a977775739d4
     m_ActionName: Robot/Attack3[/Keyboard/numpad3]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 4b9d10f3-1cf6-4c43-9b62-435f9ffe11b5
+    m_ActionName: UI/LeaveShop
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0ce1f50d-c742-4e9b-823e-5dd6750d35f7
+    m_ActionName: UI/LeaveGarage
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 027714aa-465e-4386-96b4-98eb7adac7c3
+    m_ActionName: UI/MouseDetection[/Mouse/delta]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Robot
@@ -288,6 +301,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2b11c5ef50090243a65585265e1bd8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &8517676520247597412
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4888339025239788367}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &5296518528275003738
 GameObject:
   m_ObjectHideFlags: 0

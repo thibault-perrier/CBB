@@ -60,10 +60,24 @@ public class S_EditorController : MonoBehaviour
 
     private void Awake()
     {
-        Robot robot = new Robot();
-        robot._frame = new Frame(_frameData[0]);
+        
+        Frame frame = new Frame(_frameData[0]);
+
+        Robot robot = new Robot(frame);
+
+
+        //robot._weapons[0] = new Weapon(_weaponsData[0]);
+
         S_DataGame.Instance.inventory.Robots.Add(robot);
 
+        foreach(S_FrameData data in _frameData)
+        {
+            S_DataGame.Instance.inventory.Frames.Add(new Frame(data));
+        }
+        foreach (S_WeaponData data in _weaponsData)
+        {
+            S_DataGame.Instance.inventory.Weapons.Add(new Weapon(data));
+        }
         UpdatePiece();
         UpdatePresetRobotGroup();
     }
@@ -97,6 +111,10 @@ public class S_EditorController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             SelectItem();
+        }
+        if (Input.GetKeyDown(KeyCode.Delete))
+        {
+            RemoveWeapon();
         }
 
 
@@ -139,80 +157,113 @@ public class S_EditorController : MonoBehaviour
         
     }
 
-
-    /// <summary>
-    /// Set active state of this choice
-    /// </summary>
-    /// <param name="active">Active state</param>
-    private void SetActiveWeaponChoice(bool active)
-    {
-
-    }
-
-    /// <summary>
-    /// Set active state of this choice 
-    /// </summary>
-    /// <param name="active">Active state</param>
-    private void SetActiveChassisChoice(bool active)
-    {
-
-    }
-
     private void UpdatePiece()
     {
-        //ClearPieces();
+        Debug.Log(S_DataGame.Instance.inventory.Weapons.Count());
 
-        //get piece Data
-
-
-        //init piece prefab
-
-
-        foreach (S_FrameData frame in _frameData)
+        foreach (Weapon saveWeapon in S_DataGame.Instance.inventory.Weapons)
         {
-            GameObject newFrame = Instantiate(frame.Prefab);
+            //_weaponsData.Add(SaveWeapon.GetWeaponData());
 
-            newFrame.GetComponent<Rigidbody>().isKinematic = true;
+            S_WeaponData weapon = saveWeapon.GetWeaponData();
 
-
-            newFrame.transform.position = Vector3.zero;
-
-            RectTransform rectTransform = newFrame.AddComponent<RectTransform>();
-
-            rectTransform.sizeDelta = new Vector2(1, 1);
-
-            _frame.Add(newFrame);
-            newFrame.transform.position = Vector3.zero;
-            if (_frameGroup1.transform.childCount < _nbFrame)
+            if (saveWeapon._number - saveWeapon._useNumber > 0)
             {
-                newFrame.transform.parent = _frameGroup1.transform;
+                GameObject newWeapon = Instantiate(weapon.Prefab);
+                newWeapon.transform.position = Vector3.zero;
+
+                RectTransform rectTransform = newWeapon.AddComponent<RectTransform>();
+
+                rectTransform.sizeDelta = new Vector2(1, 1);
+                newWeapon.transform.localRotation = Quaternion.Euler(0, 45, 0);
+                _weapons.Add(newWeapon);
+                newWeapon.transform.position = Vector3.zero;
+                if (_weaponGroup1.transform.childCount < _nbWeapon)
+                {
+                    newWeapon.transform.parent = _weaponGroup1.transform;
+                }
+                else
+                {
+                    newWeapon.transform.parent = _weaponGroup2.transform;
+                }
             }
-            else
+        }
+            
+        foreach (Frame saveFrame in S_DataGame.Instance.inventory.Frames)
+        {
+            S_FrameData frame = saveFrame.GetFrameData();
+
+            if (saveFrame._number - saveFrame._useNumber > 0)
             {
-                newFrame.transform.parent = _frameGroup2.transform;
+                GameObject newFrame = Instantiate(frame.Prefab);
+
+                newFrame.GetComponent<Rigidbody>().isKinematic = true;
+
+
+                newFrame.transform.position = Vector3.zero;
+
+                RectTransform rectTransform = newFrame.AddComponent<RectTransform>();
+
+                rectTransform.sizeDelta = new Vector2(1, 1);
+
+                _frame.Add(newFrame);
+                newFrame.transform.position = Vector3.zero;
+                if (_frameGroup1.transform.childCount < _nbFrame)
+                {
+                    newFrame.transform.parent = _frameGroup1.transform;
+                }
+                else
+                {
+                    newFrame.transform.parent = _frameGroup2.transform;
+                }
             }
         }
 
-        foreach (S_WeaponData weapon in _weaponsData)
-        {
-            GameObject newWeapon = Instantiate(weapon.Prefab);
-            newWeapon.transform.position = Vector3.zero;
+        //foreach (S_FrameData frame in _frameData)
+        //{
+        //    GameObject newFrame = Instantiate(frame.Prefab);
 
-            RectTransform rectTransform = newWeapon.AddComponent<RectTransform>();
+        //    newFrame.GetComponent<Rigidbody>().isKinematic = true;
 
-            rectTransform.sizeDelta = new Vector2(1, 1);
-            newWeapon.transform.localRotation = Quaternion.Euler(0, 45, 0);
-            _weapons.Add(newWeapon);
-            newWeapon.transform.position = Vector3.zero;
-            if (_weaponGroup1.transform.childCount < _nbWeapon)
-            {
-                newWeapon.transform.parent = _weaponGroup1.transform;
-            }
-            else
-            {
-                newWeapon.transform.parent = _weaponGroup2.transform;
-            }
-        }
+
+        //    newFrame.transform.position = Vector3.zero;
+
+        //    RectTransform rectTransform = newFrame.AddComponent<RectTransform>();
+
+        //    rectTransform.sizeDelta = new Vector2(1, 1);
+
+        //    _frame.Add(newFrame);
+        //    newFrame.transform.position = Vector3.zero;
+        //    if (_frameGroup1.transform.childCount < _nbFrame)
+        //    {
+        //        newFrame.transform.parent = _frameGroup1.transform;
+        //    }
+        //    else
+        //    {
+        //        newFrame.transform.parent = _frameGroup2.transform;
+        //    }
+        //}
+
+        //foreach (S_WeaponData weapon in _weaponsData)
+        //{
+        //    GameObject newWeapon = Instantiate(weapon.Prefab);
+        //    newWeapon.transform.position = Vector3.zero;
+
+        //    RectTransform rectTransform = newWeapon.AddComponent<RectTransform>();
+
+        //    rectTransform.sizeDelta = new Vector2(1, 1);
+        //    newWeapon.transform.localRotation = Quaternion.Euler(0, 45, 0);
+        //    _weapons.Add(newWeapon);
+        //    newWeapon.transform.position = Vector3.zero;
+        //    if (_weaponGroup1.transform.childCount < _nbWeapon)
+        //    {
+        //        newWeapon.transform.parent = _weaponGroup1.transform;
+        //    }
+        //    else
+        //    {
+        //        newWeapon.transform.parent = _weaponGroup2.transform;
+        //    }
+        //}
 
         //foreach (GameObject  in )
         //{
@@ -242,7 +293,7 @@ public class S_EditorController : MonoBehaviour
         switch (_editState)
         {
             case EditState.PresetChoice:
-                // retour menu
+                
                 break;
             case EditState.PartChoice:
                 _editState = EditState.PresetChoice;
@@ -285,6 +336,7 @@ public class S_EditorController : MonoBehaviour
                     _selectedIndex = _weapons.Count-1;
                 _selectedIndex = _selectedIndex % _weapons.Count;
                 _selectedMaterial.SetVector("_Selected_Object_Position", _weapons[_selectedIndex].gameObject.transform.position);
+                Debug.Log(_weapons[_selectedIndex].GetComponentInChildren<S_WeaponManager>().Data);
                 break;
             default:
                 break;
@@ -297,6 +349,12 @@ public class S_EditorController : MonoBehaviour
         switch (_editState)
         {
             case EditState.PresetChoice:
+                
+                if (_presetObjectPart[_selectedIndex].GetComponent<S_FrameManager>() == null)
+                {
+                    Robot robot = new Robot(GetUnuseFrame());
+                    S_DataGame.Instance.inventory.Robots.Add(robot);
+                }
                 _selectedPreset = _selectedIndex;
                 _editState = EditState.PartChoice;
                 break;
@@ -314,11 +372,44 @@ public class S_EditorController : MonoBehaviour
 
                 break;
             case EditState.FrameChoice:
-                UpdatePresetFrame(_frame[_selectedIndex].GetComponent<S_FrameManager>().Data);
+
+                if (_frame[_selectedIndex].TryGetComponent<S_FrameManager>(out S_FrameManager frameManager))
+                {
+                    UpdatePresetFrame(frameManager.Data);
+                }
+                else
+                {
+                    Debug.LogWarning("S_FrameManager component not found on the selected frame. Checking children...");
+                    frameManager = _frame[_selectedIndex].GetComponentInChildren<S_FrameManager>();
+                    if (frameManager != null)
+                    {
+                        UpdatePresetFrame(frameManager.Data);
+                    }
+                    else
+                    {
+                        Debug.LogError("S_FrameManager component not found in the selected frame or its children.");
+                    }
+                }
                 _editState = EditState.PartChoice;
                 break;
             case EditState.WeaponChoice:
-                UpdatePresetWeapon(_weapons[_selectedIndex].GetComponent<S_WeaponManager>().Data);
+                if (_weapons[_selectedIndex].TryGetComponent<S_WeaponManager>(out S_WeaponManager weaponManager))
+                {
+                    UpdatePresetWeapon(weaponManager.Data);
+                }
+                else
+                {
+                    Debug.LogWarning("S_WeaponManager component not found on the selected weapon. Checking children...");
+                    weaponManager = _weapons[_selectedIndex].GetComponentInChildren<S_WeaponManager>();
+                    if (weaponManager != null)
+                    {
+                        UpdatePresetWeapon(weaponManager.Data);
+                    }
+                    else
+                    {
+                        Debug.LogError("S_WeaponManager component not found in the selected weapon or its children.");
+                    }
+                }
                 _editState = EditState.PartChoice;
                 break;
             default:
@@ -335,26 +426,7 @@ public class S_EditorController : MonoBehaviour
     /// <param name="weaponData"></param>
     private void UpdatePresetWeapon(S_WeaponData weaponData)
     {
-        List<Weapon> _weapons = new List<Weapon>();     //list of new weapons of robot
-
-        for (int i = 1; i < _presetObjectPart.Count(); i++)
-        {
-            if (i == _indexHookPointToModify)       //modify weapon on selected hookpoint
-            {
-                _weapons.Add(S_DataGame.Instance.inventory.GetWeapon(weaponData));
-            }
-            else if( i > _indexHookPointToModify)   //set null when no more hookpoint
-            {
-                _weapons.Add(null);
-            }
-            else        //set weapon on this hookpoint
-            {
-                _weapons.Add(S_DataGame.Instance.inventory.Robots[_selectedPreset]._weapons[i-1]);
-            }
-        }
-        S_DataGame.Instance.inventory.Robots[_selectedPreset]._weapons = _weapons.ToList();
-
-
+        S_DataGame.Instance.inventory.Robots[_selectedPreset]._weapons[_indexHookPointToModify] = S_DataGame.Instance.inventory.GetWeapon(weaponData);
         UpdatePrefabRobot();
     }
 
@@ -365,7 +437,7 @@ public class S_EditorController : MonoBehaviour
     private void UpdatePresetFrame(S_FrameData frameData)
     {
         S_DataGame.Instance.inventory.Robots[_selectedPreset]._frame = S_DataGame.Instance.inventory.GetFrame(frameData);
-
+        S_DataGame.Instance.inventory.Robots[_selectedPreset].UpdateWeaponMaxList();
         UpdatePrefabRobot();
     }
 
@@ -380,9 +452,18 @@ public class S_EditorController : MonoBehaviour
         }
     }
 
-    private void GetPreset()
+    private Frame GetUnuseFrame()
     {
-
+        S_DataGame.Instance.inventory.UpdateUseItem();
+        foreach (Frame frame in S_DataGame.Instance.inventory.Frames)
+        {
+            Debug.Log(frame._number - frame._useNumber > 1);
+            if(frame._number - frame._useNumber > 1)
+            {
+                return frame;
+            }
+        }
+        return null;
     }
 
     private void GetWeaponsHookPoint(S_FrameManager frameManager)
@@ -403,7 +484,6 @@ public class S_EditorController : MonoBehaviour
 
     private GameObject CreatePresetPrefab(Robot robot)
     {
-        //TO-DO recuperer les info du preset
         S_FrameData frameData = robot._frame.GetFrameData();
         List<S_WeaponData> weaponsData = new List<S_WeaponData>();
 
@@ -453,8 +533,7 @@ public class S_EditorController : MonoBehaviour
         GetWeaponsHookPoint(frame.GetComponent<S_FrameManager>());
 
         _presetObjectPart.Clear();
-        _presetObjectPart.Add(frame);
-
+        
         for (int i = 0; i < S_DataGame.Instance.inventory.Robots[_selectedPreset]._weapons.Count(); i++)
         {
             if (_presetWeaponsHookPoints.Count() - 1 >= i)
@@ -467,18 +546,20 @@ public class S_EditorController : MonoBehaviour
                     objWeapon.transform.parent = _presetWeaponsHookPoints[i].transform;
                     objWeapon.transform.localPosition = Vector3.zero;
                     objWeapon.transform.localRotation = Quaternion.identity;
+                    _presetWeaponsHookPoints[i].GetComponent<MeshRenderer>().enabled = false;
                 }
                 else
                 {
                     _presetObjectPart.Add(_presetWeaponsHookPoints[i]);
+                    _presetWeaponsHookPoints[i].GetComponent<MeshRenderer>().enabled = true;
                 }
             }
         }
+        _presetObjectPart.Add(frame);
     }
 
     private void UpdatePresetRobotGroup()
     {
-        //recuperer la list des robot preset
         foreach (Robot robot in S_DataGame.Instance.inventory.Robots)
         {
             GameObject frame = CreatePresetPrefab(robot);
@@ -489,6 +570,27 @@ public class S_EditorController : MonoBehaviour
             frame.transform.localPosition = Vector3.zero;
             frame.transform.localRotation = Quaternion.identity;
             _presets.Add(frame);
+        }
+        if (S_DataGame.Instance.inventory.Robots.Count() < 5 && GetUnuseFrame() != null)
+        {
+            GameObject add = Instantiate(_newPresetObjectIcon);
+
+            RectTransform rectTransform = add.AddComponent<RectTransform>();
+            rectTransform.sizeDelta = new Vector2(1, 1);
+
+            add.transform.parent = _presetGroup.transform;
+            add.transform.localPosition = Vector3.zero;
+            add.transform.localRotation = Quaternion.identity;
+            _presets.Add(add);
+        }
+    }
+
+    private void RemoveWeapon()
+    {
+        if (_presetObjectPart[_selectedIndex].GetComponent<S_FrameManager>() == null)
+        {
+            S_DataGame.Instance.inventory.Robots[_selectedPreset]._weapons[_selectedIndex] = null;
+            UpdatePrefabRobot();
         }
     }
 

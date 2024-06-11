@@ -58,8 +58,6 @@ public class S_PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            Debug.Log(context.ReadValue<float>());
-
             _wheelsController.Direction = -context.ReadValue<float>();
         }
         else if (context.canceled)
