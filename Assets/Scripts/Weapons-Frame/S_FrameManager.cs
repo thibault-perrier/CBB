@@ -63,9 +63,21 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
             if (weaponManager != null)
             {
                 _weaponManagers.Add(weaponManager);
+                weaponManager.OnDie += WeaponDestroy;
             }
         }
     }
+    /// <summary>
+    /// Start for each weapon when it die
+    /// </summary>
+    private void WeaponDestroy()
+    {
+        bool allWeaponBroken = AllWeaponIsBroken();
+
+        if (allWeaponBroken)
+            Die();
+    }
+
     /// <summary>
     /// take damage in the current frame
     /// </summary>

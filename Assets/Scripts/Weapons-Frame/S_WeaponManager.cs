@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using System;
 
 public class S_WeaponManager : MonoBehaviour, I_Damageable
 {
@@ -10,6 +11,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     private Rigidbody _rb;
     private bool _attackOneTime = true;
     private Animator _animator;
+    public event Action OnDie;
 
     [Header("Hit zones data")]
     [SerializeField, Tooltip("the zone who the weapon make her attack")]
@@ -285,6 +287,8 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         _rb.useGravity = true;
         _rb.angularDrag = 0f;
         _rb.drag = 2f;
+
+        OnDie?.Invoke();
     }
     /// <summary>
     /// repear the current weapon
