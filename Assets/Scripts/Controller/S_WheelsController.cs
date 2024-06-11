@@ -41,7 +41,7 @@ public class S_WheelsController : MonoBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
-        _rb.centerOfMass = -Vector3.up;
+        //_rb.centerOfMass = -Vector3.up * 3f;
 
         _mass = _rb.mass + 4 * _wheels[0].mass;
         _wheelRadius = _wheels[0].radius;
