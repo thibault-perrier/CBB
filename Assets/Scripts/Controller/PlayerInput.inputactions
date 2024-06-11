@@ -310,6 +310,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "LeaveWorkBench",
+                    "type": "Button",
+                    "id": "ebea3937-9822-469a-95bf-29d7ccbd1b1e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeaveShelves",
+                    "type": "Button",
+                    "id": "8736330a-3442-4c72-a828-edca008e9cad",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -706,6 +724,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "LeaveBoard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "feaa105f-86b8-411b-8d91-61eedb893fb3",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeaveWorkBench",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "710834a9-5bff-47c1-8cad-c3b7843718d8",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeaveShelves",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

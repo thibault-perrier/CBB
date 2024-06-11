@@ -5,8 +5,8 @@ public class GarageManager : MonoBehaviour
 {
     public void LeaveGarage(InputAction.CallbackContext context)
     {
-        if (context.performed && gameObject.activeInHierarchy && S_ClickablesManager.Instance.activeBackGarage == true)
-        {
+        if (context.performed && gameObject.activeInHierarchy && S_ClickablesManager.Instance.activeBackGarage == true )
+        {           
             S_ObjectClickable.Instance.LaunchAnimBackToMenuFromGarage();
             S_DataGame.Instance.SaveInventory();
             S_ClickablesManager.Instance.ResetAllClickables();
@@ -18,6 +18,7 @@ public class GarageManager : MonoBehaviour
         if (context.performed && gameObject.activeInHierarchy)
         {
             S_ObjectClickable.Instance._animatorCameraGarage.SetBool("Board", false);
+            S_ClickablesManager.Instance.ReactivateAllClickables();
         }
     }
 
@@ -26,6 +27,7 @@ public class GarageManager : MonoBehaviour
         if (context.performed && gameObject.activeInHierarchy)
         {
             S_ObjectClickable.Instance._animatorCameraGarage.SetBool("Shelves", false);
+            S_ClickablesManager.Instance.ReactivateAllClickables();
         }
     }
 
@@ -34,6 +36,7 @@ public class GarageManager : MonoBehaviour
         if (context.performed && gameObject.activeInHierarchy)
         {
             S_ObjectClickable.Instance._animatorCameraGarage.SetBool("WorkBench", false);
+            S_ClickablesManager.Instance.ReactivateAllClickables();
         }
     }
 }

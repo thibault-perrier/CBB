@@ -64,34 +64,44 @@ public class S_ObjectClickable : MonoBehaviour
     {
         LockInteraction();
 
-        if (gameObject.CompareTag("Garage"))
+        switch (gameObject.tag)
         {
-            SetColor(Color.white);
-            _animatorDoor.SetBool("Open", true);
-            _animatorCameraGarage.SetBool("MoveToGarage", true);
-        }
-        else if (gameObject.CompareTag("Tournament"))
-        {
-            SetColor(Color.white);
-            _animatorCameraGarage.SetBool("MoveToTournament", true);
-        }
-        else if (gameObject.CompareTag("Shop"))
-        {
-            _animatorCameraGarage.SetBool("MoveToShop", true);
-        }
-        else if (gameObject.CompareTag("Board"))
-        {
-            _animatorCameraGarage.SetBool("Board", true);
-        }
-        else if (gameObject.CompareTag("WorkBench"))
-        {
-            _animatorCameraGarage.SetBool("WorkBench", true);
-        }
-        else if (gameObject.CompareTag("Shelves"))
-        {
-            _animatorCameraGarage.SetBool("Shelves", true);
-        }
+            case "Garage":
+                _animatorDoor.SetBool("Open", true);
+                _animatorCameraGarage.SetBool("MoveToGarage", true);
+                break;
+            case "Tournament":
+                _animatorCameraGarage.SetBool("MoveToTournament", true);
+                break;
+            case "Shop":
+                _animatorCameraGarage.SetBool("MoveToShop", true);
+                break;
+            case "Board":
+                _animatorCameraGarage.SetBool("Board", true);
+                break;
+            case "WorkBench":
+                _animatorCameraGarage.SetBool("WorkBench", true);
+                break;
+            case "Shelves":
+                _animatorCameraGarage.SetBool("Shelves", true);
+                break;
+            case "Bronze":
+                Debug.Log("bronze");
+                break;
+            case "Silver":
+                Debug.Log("Silver");
+                break;
+            case "Gold":
+                Debug.Log("Gold");
+                break;
+            case "Diamond":
+                Debug.Log("Diamond");
+                break;
 
+            default:
+
+                break;
+        }
     }
 
     private void SetColor(Color color)
@@ -212,4 +222,11 @@ public class S_ObjectClickable : MonoBehaviour
     {
         _animatorCameraGarage.SetBool("IdleInGarage", false);
     }
+
+    public void ResetLightIntensity()
+    {
+        _light.intensity = _originalIntensity;
+    }
+
+
 }

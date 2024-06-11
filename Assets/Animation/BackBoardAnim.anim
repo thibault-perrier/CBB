@@ -54,7 +54,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: 6.05, y: 9.12, z: -7.9}
+        value: {x: 1.4, y: 10.2, z: -14.1}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -64,8 +64,8 @@ AnimationClip:
       - serializedVersion: 3
         time: 1.25
         value: {x: 3.8, y: 11, z: 7.2}
-        inSlope: {x: 0, y: 0, z: 11.08}
-        outSlope: {x: 0, y: 0, z: 11.08}
+        inSlope: {x: 1.12, y: 0, z: 13.559999}
+        outSlope: {x: 1.12, y: 0, z: 13.559999}
         tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
@@ -139,7 +139,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 6.05
+        value: 1.4
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -149,8 +149,8 @@ AnimationClip:
       - serializedVersion: 3
         time: 1.25
         value: 3.8
-        inSlope: 0
-        outSlope: 0
+        inSlope: 1.12
+        outSlope: 1.12
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
@@ -178,7 +178,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 9.12
+        value: 10.2
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -217,7 +217,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -7.9
+        value: -14.1
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -227,8 +227,8 @@ AnimationClip:
       - serializedVersion: 3
         time: 1.25
         value: 7.2
-        inSlope: 11.08
-        outSlope: 11.08
+        inSlope: 13.559999
+        outSlope: 13.559999
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
@@ -409,6 +409,20 @@ AnimationClip:
   m_Events:
   - time: 0
     functionName: EnableIdleInGarage
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 2.5
+    functionName: ActiveBoolBackAnimGarage
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 2.5
+    functionName: ResetNavigationInGarageObjects
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
