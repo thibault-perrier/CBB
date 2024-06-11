@@ -85,32 +85,32 @@ public class S_PlayerController : MonoBehaviour
 
     public void OnAttack1(InputAction.CallbackContext context)
     {
-        if (_frameManager._weaponManagers.Count < 1)
+        if (_frameManager.Weapons.Count < 1)
             return;
 
-        if (context.performed && _frameManager._weaponManagers[0] != null)
+        if (context.performed && _frameManager.Weapons[0] != null)
         {
-            _frameManager._weaponManagers[0].LaunchAttack();
+            _frameManager.Weapons[0].LaunchAttack();
         }
     }
     public void OnAttack2(InputAction.CallbackContext context)
     {
-        if (_frameManager._weaponManagers.Count < 2)
+        if (_frameManager.Weapons.Count < 2)
             return;
 
-        if (context.performed && _frameManager._weaponManagers[1] != null)
+        if (context.performed && _frameManager.Weapons[1] != null)
         {
-            _frameManager._weaponManagers[1].LaunchAttack();
+            _frameManager.Weapons[1].LaunchAttack();
         }
     }
     public void OnAttack3(InputAction.CallbackContext context)
     {
-        if (_frameManager._weaponManagers.Count < 3)
+        if (_frameManager.Weapons.Count < 3)
             return;
 
-        if (context.performed && _frameManager._weaponManagers[2] != null)
+        if (context.performed && _frameManager.Weapons[2] != null)
         {
-            _frameManager._weaponManagers[2].LaunchAttack();
+            _frameManager.Weapons[2].LaunchAttack();
         }
     }
 }

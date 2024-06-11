@@ -5,17 +5,21 @@ using UnityEngine;
 
 public class S_FrameManager : MonoBehaviour, I_Damageable
 {
+    private List<S_WeaponManager> _weaponManagers;
+    private Rigidbody _rb;
+    
     [SerializeField] private float _life;
     [SerializeField] private S_FrameData _data;
-    private Rigidbody _rb;
     [SerializeField] private List<GameObject> _weaponHookPoints;
-    public List<S_WeaponManager> _weaponManagers;
 
     public int NBWeaponHookPoints
     {
         get { return _weaponHookPoints.Count; }
     }
-
+    public List<S_WeaponManager> Weapons
+    {
+        get => _weaponManagers;
+    }
 
     private void Awake()
     {
@@ -58,9 +62,6 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     public void Die()
     {
         OnDie?.Invoke(this);
-
-        Debug.Log("Player died!");
-        // Logic to remove destroy items in inventory
     }
     public void Repear()
     {

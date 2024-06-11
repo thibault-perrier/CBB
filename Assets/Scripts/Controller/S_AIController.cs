@@ -917,11 +917,11 @@ public class S_AIController : MonoBehaviour
         S_FrameManager enemyWeapon = _enemy.GetComponent<S_FrameManager>();
 
         // return the current enemy if he has not weapons
-        if (enemyWeapon._weaponManagers.Count < 1)
+        if (enemyWeapon.Weapons.Count < 1)
             return null;
 
         // sort the weapon if he is behind him self
-        var cloneList = enemyWeapon._weaponManagers
+        var cloneList = enemyWeapon.Weapons
             .Where(x => IsValidEnemyWeapon(x))
             .ToList();
 
@@ -945,13 +945,13 @@ public class S_AIController : MonoBehaviour
         if (!target)
             return false;
 
-        if (_frameManager._weaponManagers.Count < 1)
+        if (_frameManager.Weapons.Count < 1)
             return false;
 
         // if he not attack with best weapon return the random pick up of random weapon
         if (!_attackWithBestWeapon)
         {
-            weapon = _frameManager._weaponManagers[0];
+            weapon = _frameManager.Weapons[0];
             return true;
         }
 
@@ -962,8 +962,8 @@ public class S_AIController : MonoBehaviour
                 return true;
         }
 
-        var alwaysActiveWeapons = _frameManager._weaponManagers.Where(x => x.AlwaysActive && x.CanAttack).ToList();
-        var notAlwaysActiveWeapons = _frameManager._weaponManagers.Where(x => !x.AlwaysActive && x.CanAttack).ToList();
+        var alwaysActiveWeapons = _frameManager.Weapons.Where(x => x.AlwaysActive && x.CanAttack).ToList();
+        var notAlwaysActiveWeapons = _frameManager.Weapons.Where(x => !x.AlwaysActive && x.CanAttack).ToList();
 
         if (alwaysActiveWeapons.Count < 1 && notAlwaysActiveWeapons.Count < 1)
             return false;
