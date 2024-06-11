@@ -84,6 +84,9 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     }
     private void Update()
     {
+        if (_state != State.ok)
+            return;
+
         foreach (var hitZone in _damageZones)
         {
             // get all collider in damageZone
@@ -97,17 +100,13 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
                 .Where(x => x != gameObject)
                 .ToList();
 
-            if (hitObject.Count < 1)
-                return;
-
-            hitObject = hitObject
-                .Where(x => !IsCurrentBot(x))
-                .ToList();
-
             if (hitObject.Any())
             {
                 foreach (var col in hitObject)
                 {
+                    if (!col)
+                        continue;
+
                     bool succesAttack = AttackCollide(col);
                     if (succesAttack)
                         return;
@@ -118,6 +117,9 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     
     private bool AttackCollide(GameObject collision)
     {
+        if (IsCurrentBot(collision))
+            return false;
+
         if (!_attackOneTime && _data.AttackOneTime)
             return false;
 
@@ -177,7 +179,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         var currentBot = transform.GetComponentInParent<S_WheelsController>(true);
         var hitTarget = targetCollide.GetComponentInParent<S_WheelsController>(true);
 
-        if (!hitTarget)
+        if (!hitTarget || !currentBot)
             return false;
 
         if (currentBot.name.Equals(hitTarget.name))
