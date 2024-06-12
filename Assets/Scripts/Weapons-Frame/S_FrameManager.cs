@@ -35,6 +35,11 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
         get => _life / _data.MaxLife;
     }
 
+    public List<GameObject> WeaponHookPoints
+    {
+        get { return _weaponHookPoints; }
+    }
+
     private void Awake()
     {
         _rb = this.GetComponent<Rigidbody>();
@@ -91,10 +96,11 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     {
         OnDie?.Invoke(this);
     }
+    
     /// <summary>
     /// repear the frame, set the life with the data
     /// </summary>
-    public void Repear()
+    public void Repair()
     {
         _life = _data.MaxLife;
     }

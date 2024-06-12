@@ -296,7 +296,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     /// <summary>
     /// repear the current weapon
     /// </summary>
-    public void Repear()
+    public void Repair()
     {
         _life = _data.MaxLife;
         _state = State.ok;

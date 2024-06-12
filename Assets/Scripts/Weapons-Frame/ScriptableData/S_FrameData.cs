@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections.Generic;
+
 
 [CreateAssetMenu(fileName = "S_FrameData", menuName = "Robot/Frame")]
 public class S_FrameData : ScriptableObject
