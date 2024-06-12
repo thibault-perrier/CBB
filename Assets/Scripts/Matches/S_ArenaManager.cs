@@ -16,11 +16,14 @@ public class S_ArenaManager : MonoBehaviour
     [SerializeField] private S_TournamentManager _tournamentManager;
 
     [SerializeField] private GameObject _matchUI;
+    [SerializeField] private Text _timerText;
     [SerializeField] private GameObject _botPlayerPrefab, _botEnemyPrefab;
     [SerializeField] private Transform _botPosition1, _botPosition2;
 
     private GameObject _bot1, _bot2;
     private S_BetSystem _betSystem;
+    private float _minutesTimer, _secondsTimer;
+    private bool _timerRunning = false;
 
     private S_TournamentManager.Participant _p1;
     private S_TournamentManager.Participant _p2;
@@ -37,6 +40,23 @@ public class S_ArenaManager : MonoBehaviour
         _participantsStats.SetActive(false);
         _matchUI.SetActive(false);
     }
+    private void Update()
+    {
+        if (_timerRunning)
+        {
+            _secondsTimer -= Time.deltaTime;
+            if (_secondsTimer <= 0f)
+            {
+                _secondsTimer += 60f;
+                _minutesTimer--;
+
+                if (_minutesTimer <= 0f)
+                    TimerFinish();
+            }
+
+            SetTimerText();
+        }
+    }
 
     /// <summary>
     /// Start the match
@@ -51,6 +71,7 @@ public class S_ArenaManager : MonoBehaviour
 
         _betSystem.ResetBetText();
         EnableBot();
+        _timerRunning = true;
     }
     /// <summary>
     /// Create all bot in the arena
@@ -168,25 +189,51 @@ public class S_ArenaManager : MonoBehaviour
         var frameBot1 = _bot1.GetComponent<S_FrameManager>();
         var frameBot2 = _bot2.GetComponent<S_FrameManager>();
 
-        frameBot1.OnDie += (_) =>
-        {
-            CancelMatch();
-            _tournamentManager.MakeWinForParticipantTwo();
-            _cameraView.StartReturnToTournament();
-            DesableBot();
-        };
-        frameBot2.OnDie += (_) =>
-        {
-            CancelMatch();
-            _tournamentManager.MakeWinForParticipantOne();
-            _cameraView.StartReturnToTournament();
-            DesableBot();
-        };
+        frameBot1.OnDie += (_) => Bot1Win();
+        frameBot2.OnDie += (_) => Bot2Win();
+    }
+    private void Bot1Win()
+    {
+        CancelMatch();
+        _tournamentManager.MakeWinForParticipantOne();
+        _cameraView.StartReturnToTournament();
+        DesableBot();
+    }
+    private void Bot2Win()
+    {
+        CancelMatch();
+        _tournamentManager.MakeWinForParticipantTwo();
+        _cameraView.StartReturnToTournament();
+        DesableBot();
     }
 
     public void CancelMatch()
     {
         _matchUI?.SetActive(false);
+    }
+    public void SetTimerText()
+    {
+        _timerText.text = _minutesTimer.ToString("00") + " : " + _secondsTimer.ToString("00");
+    }
+    public void ResetTimer()
+    {
+        _minutesTimer = 3f;
+        _secondsTimer = 0f;
+        _timerRunning = false;
+        SetTimerText();
+    }
+    public void TimerFinish()
+    {
+        var frameBot1 = _bot1.GetComponent<S_FrameManager>();
+        var frameBot2 = _bot2.GetComponent<S_FrameManager>();
+
+        if (frameBot1.PercentLife > frameBot2.PercentLife)
+        {
+            Bot1Win();
+            return;
+        }
+
+        Bot2Win();
     }
 
     /// <summary>
@@ -196,6 +243,8 @@ public class S_ArenaManager : MonoBehaviour
     /// <param name="p2"></param>
     public void ShowStats(S_TournamentManager.Participant p1, S_TournamentManager.Participant p2)
     {
+        ResetTimer();
+
         _p1 = p1;
         _p2 = p2;
 
@@ -207,7 +256,7 @@ public class S_ArenaManager : MonoBehaviour
         _cameraView.AddObjectToView(_bot1.transform);
         _cameraView.AddObjectToView(_bot2.transform);
 
-        if (p1.isPlayer ||p2.isPlayer)
+        if (p1.isPlayer || p2.isPlayer)
         {
             StartMatch();
             return;
@@ -220,6 +269,22 @@ public class S_ArenaManager : MonoBehaviour
 
         SetStatsOnUi(p1.rating.ToString(), p1.name, p1.logo, _p1Stats);
         SetStatsOnUi(p2.rating.ToString(), p2.name, p2.logo, _p2Stats);
+    }
+    public void ShowMatch(S_TournamentManager.Participant p1, S_TournamentManager.Participant p2)
+    {
+        ResetTimer();
+
+        _p1 = p1;
+        _p2 = p2;
+
+        CreateBot();
+        SetBotTag();
+        SetBotEventForEndGame();
+        StartMatch();
+
+        _cameraView.ClearObjectToView();
+        _cameraView.AddObjectToView(_bot1.transform);
+        _cameraView.AddObjectToView(_bot2.transform);
     }
 
     /// <summary>

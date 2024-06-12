@@ -30,6 +30,10 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     {
         get => _weaponManagers;
     }
+    public float PercentLife
+    {
+        get => _life / _data.MaxLife;
+    }
 
     private void Awake()
     {

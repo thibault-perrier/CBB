@@ -185,7 +185,7 @@ public class S_TournamentManager : MonoBehaviour
 
         if (_participants.Count > 0)
         {
-            // ShuffleParticipants(_participants);
+            ShuffleParticipants(_participants);
         }
 
         //Give participants ID to know where they are in the bracket

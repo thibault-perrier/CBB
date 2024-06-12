@@ -930,10 +930,12 @@ public class S_AIController : MonoBehaviour
             return null;
 
         // sort the best weapon
-        return cloneList
+        var bestWeapon = cloneList
             .OrderBy(x => Vector3.Distance(x.gameObject.transform.position, target.position))
             .Reverse()
             .ToList()[0];
+
+        return bestWeapon;
     }
     /// <summary>
     /// sort weapons from power, distance and if he is not behind to the target
