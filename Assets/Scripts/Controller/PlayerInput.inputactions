@@ -361,6 +361,42 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "LeaveBoard",
+                    "type": "Button",
+                    "id": "27cf1285-4998-4e75-9d55-4cd22dc2911b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeaveWorkBench",
+                    "type": "Button",
+                    "id": "ebea3937-9822-469a-95bf-29d7ccbd1b1e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeaveShelves",
+                    "type": "Button",
+                    "id": "8736330a-3442-4c72-a828-edca008e9cad",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeaveTournament",
+                    "type": "Button",
+                    "id": "75d1edfc-6101-4a93-8aa3-f20b2b3423fe",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -746,6 +782,50 @@
                     "processors": "",
                     "groups": "",
                     "action": "MouseDetection",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8e68f3b5-2ae2-4be4-954b-123cff4bc2ad",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeaveBoard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "feaa105f-86b8-411b-8d91-61eedb893fb3",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeaveWorkBench",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "710834a9-5bff-47c1-8cad-c3b7843718d8",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeaveShelves",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "57809cfc-d2a7-47b0-bb58-82a875d4faad",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeaveTournament",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
