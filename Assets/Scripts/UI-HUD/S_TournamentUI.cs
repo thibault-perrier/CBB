@@ -56,7 +56,6 @@ public class S_TournamentBracket : MonoBehaviour
         _eventSystem = EventSystem.current;
 
         _cameraView.ShowOffComplete += OnShowOffComplete; // Subscribe to the event
-        _cameraView.FadeInComplete += OnFadeInComplete;
         _cameraView.ReturnToToTournamentComplete += OnReturnToTournament;
 
         _tournamentUI = _botMatchButtons.transform.parent.gameObject;
@@ -87,7 +86,7 @@ public class S_TournamentBracket : MonoBehaviour
     private void OnDestroy()
     {
         _cameraView.ShowOffComplete -= OnShowOffComplete;
-        _cameraView.FadeInComplete -= OnFadeInComplete;
+        _cameraView.FadeInComplete -= OnFadeInCompleteShowState;
         _cameraView.ReturnToToTournamentComplete -= OnReturnToTournament;
     }
 
@@ -105,12 +104,21 @@ public class S_TournamentBracket : MonoBehaviour
     /// When the camera is done with the fade in it will set the ccurrent participants
     /// and show their stats in the UI
     /// </summary>
-    private void OnFadeInComplete()
+    private void OnFadeInCompleteShowState()
     {
         S_TournamentManager.Participant p1 = _tournamentManager.GetParticipants()[_currentMatch * 2];
         S_TournamentManager.Participant p2 = _tournamentManager.GetParticipants()[_currentMatch * 2 + 1];
 
+        _cameraView.FadeInComplete -= OnFadeInCompleteShowState;
         _arenaManager.ShowStats(p1, p2);
+    }
+    private void OnFadeCompleteShowMatch()
+    {
+        S_TournamentManager.Participant p1 = _tournamentManager.GetParticipants()[_currentMatch * 2];
+        S_TournamentManager.Participant p2 = _tournamentManager.GetParticipants()[_currentMatch * 2 + 1];
+
+        _cameraView.FadeInComplete -= OnFadeCompleteShowMatch;
+        _arenaManager.ShowMatch(p1, p2);
     }
 
     /// <summary>
@@ -269,6 +277,19 @@ public class S_TournamentBracket : MonoBehaviour
         if (_cameraView != null)
         {
             ClosePopUpButton();
+
+            _cameraView.FadeInComplete += OnFadeInCompleteShowState;
+            _cameraView.StartZoomFadeIn();
+        }
+    }
+
+    public void ShowMatch()
+    {
+        if (_cameraView != null)
+        {
+            ClosePopUpButton();
+
+            _cameraView.FadeInComplete += OnFadeCompleteShowMatch;
             _cameraView.StartZoomFadeIn();
         }
     }
