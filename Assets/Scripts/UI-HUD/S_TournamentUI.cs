@@ -121,7 +121,7 @@ public class S_TournamentBracket : MonoBehaviour
     {
         _cameraView.AddObjectToView(_logos[_currentMatch * 2]);
         _cameraView.AddObjectToView(_logos[_currentMatch * 2 + 1]);
-        SkipBotMatch();
+        EndBotMatch();
     }
 
     /// <summary>
@@ -227,6 +227,27 @@ public class S_TournamentBracket : MonoBehaviour
         {
             ClosePopUpButton();
             _tournamentManager.SimulateMatch();
+
+            if (_tournamentManager.GetCurrentLoser().name == "PLAYER")
+            {
+                StartCoroutine(LoserMoveBack(_losersLogo[_currentMatch].gameObject, true));
+                _cameraView.ClearObjectToView();
+                _cameraView.AddObjectToView(_losersLogo[_currentMatch]);
+            }
+            else
+            {
+                UpdateWinnerLogo(_currentUsedBracket.transform, _currentLevel, _currentMatch);
+                _betSystem.WinBet(); //check if the player has won the bet
+                _betSystem.SetHasBet(false);
+            }
+        }
+    }
+
+    public void EndBotMatch()
+    {
+        if (_tournamentManager.IsEven())
+        {
+            ClosePopUpButton();
 
             if (_tournamentManager.GetCurrentLoser().name == "PLAYER")
             {

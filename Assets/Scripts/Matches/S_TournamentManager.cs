@@ -56,6 +56,7 @@ public class S_TournamentManager : MonoBehaviour
 
     private bool _isRunning = false;
     public bool IsRunning { get { return _isRunning; } set { _isRunning = value; } }
+    public S_TournamentBracket Bracket { get => _tournamentBracket; }
 
     //TEST PARTICIPANTS
     private Participant _participant1; //lets pretend this is the player for testing
@@ -184,7 +185,7 @@ public class S_TournamentManager : MonoBehaviour
 
         if (_participants.Count > 0)
         {
-            ShuffleParticipants(_participants);
+            // ShuffleParticipants(_participants);
         }
 
         //Give participants ID to know where they are in the bracket
@@ -249,34 +250,56 @@ public class S_TournamentManager : MonoBehaviour
         {
             bool participant1Wins = UnityEngine.Random.Range(0f, 1f) >= 0.5f; //replace with cote calculation
 
-            Participant p1 = _participants[_currentMatch * 2]; //need to multiply so the previous participant does not fight again
-            Transform logo1 = _tournamentBracket.GetLogos()[_currentMatch * 2];
-
-            Participant p2 = _participants[(_currentMatch * 2) + 1];
-            Transform logo2 = _tournamentBracket.GetLogos()[(_currentMatch * 2) + 1];
-
             if (participant1Wins)
             {
-                p2.hasLost = true;
-                _roundWinners.Add(p1);
-                _roundLosers.Add(p2);
-                _tournamentBracket.AddWinnerLogo(logo1, logo2);
-                if (p2.name == "PLAYER")
-                {
-                    _tournamentBracket.PlayerLostScreen();
-                }
+                MakeWinForParticipantOne();
             }
             else
             {
-                p1.hasLost = true;
-                _roundWinners.Add(p2);
-                _roundLosers.Add(p1);
-                _tournamentBracket.AddWinnerLogo(logo2, logo1);
-                if (p1.name == "PLAYER")
-                {
-                    _tournamentBracket.PlayerLostScreen();
-                }
+                MakeWinForParticipantTwo();
             }
+        }
+    }
+    /// <summary>
+    /// Set the win for the participant number one
+    /// </summary>
+    public void MakeWinForParticipantOne()
+    {
+        Participant p1 = _participants[_currentMatch * 2]; //need to multiply so the previous participant does not fight again
+        Transform logo1 = _tournamentBracket.GetLogos()[_currentMatch * 2];
+
+        Participant p2 = _participants[(_currentMatch * 2) + 1];
+        Transform logo2 = _tournamentBracket.GetLogos()[(_currentMatch * 2) + 1];
+
+        p2.hasLost = true;
+        _roundWinners.Add(p1);
+        _roundLosers.Add(p2);
+        _tournamentBracket.AddWinnerLogo(logo1, logo2);
+        if (p2.isPlayer)
+        {
+            _tournamentBracket.PlayerLostScreen();
+            Debug.Log("Player lost screen");
+        }
+    }
+    /// <summary>
+    /// Set the win for the participant number two
+    /// </summary>
+    public void MakeWinForParticipantTwo()
+    {
+        Participant p1 = _participants[_currentMatch * 2]; //need to multiply so the previous participant does not fight again
+        Transform logo1 = _tournamentBracket.GetLogos()[_currentMatch * 2];
+
+        Participant p2 = _participants[(_currentMatch * 2) + 1];
+        Transform logo2 = _tournamentBracket.GetLogos()[(_currentMatch * 2) + 1];
+
+        p1.hasLost = true;
+        _roundWinners.Add(p2);
+        _roundLosers.Add(p1);
+        _tournamentBracket.AddWinnerLogo(logo2, logo1);
+        if (p1.isPlayer)
+        {
+            _tournamentBracket.PlayerLostScreen();
+            Debug.Log("Player lost screen");
         }
     }
 

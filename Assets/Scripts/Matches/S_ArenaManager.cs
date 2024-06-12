@@ -13,6 +13,7 @@ public class S_ArenaManager : MonoBehaviour
     [SerializeField] private GameObject _key;
 
     [SerializeField] private S_CameraView _cameraView;
+    [SerializeField] private S_TournamentManager _tournamentManager;
 
     [SerializeField] private GameObject _matchUI;
     [SerializeField] private GameObject _botPlayerPrefab, _botEnemyPrefab;
@@ -31,7 +32,6 @@ public class S_ArenaManager : MonoBehaviour
         _eventSystem = EventSystem.current;
         _betSystem = _keypad.GetComponent<S_BetSystem>();
     }
-
     private void Start()
     {
         _participantsStats.SetActive(false);
@@ -74,12 +74,16 @@ public class S_ArenaManager : MonoBehaviour
             if (bot.Item2.isPlayer)
             {
                 newBot = Instantiate(_botPlayerPrefab, bot.Item1.position, Quaternion.Euler(bot.Item1.eulerAngles));
+                var frame = newBot.GetComponent<S_FrameManager>();
+                frame.SelectWeapons();
             }
             else
             {
                 newBot = Instantiate(_botEnemyPrefab, bot.Item1.position, Quaternion.Euler(bot.Item1.eulerAngles));
                 var stats = newBot.GetComponent<S_AIStatsController>();
+                var aiController = newBot.GetComponent<S_AIController>();
 
+                aiController.State = S_AIController.AIState.Disable;
                 stats.BotDifficulty = (S_AIStatsController.BotRank)bot.Item2.rank;
             }
 
@@ -94,14 +98,14 @@ public class S_ArenaManager : MonoBehaviour
     /// </summary>
     private void SetBotTag()
     {
-        _bot1.transform.tag = "Finish";
-        _bot2.transform.tag = "Respawn";
+        _bot1.transform.tag = "BotA";
+        _bot2.transform.tag = "BotB";
 
         if (_bot1.TryGetComponent<S_AIController>(out var crtlA))
-            crtlA.EnemyTag = "Respawn";
+            crtlA.EnemyTag = "BotB";
 
         if (_bot2.TryGetComponent<S_AIController>(out var crtlB))
-            crtlB.EnemyTag = "Finish";
+            crtlB.EnemyTag = "BotA";
     }
     /// <summary>
     /// for each bot with AIController enable the state
@@ -118,6 +122,23 @@ public class S_ArenaManager : MonoBehaviour
         {
             if (bot.TryGetComponent<S_AIController>(out var crtl))
                 crtl.State = S_AIController.AIState.Enable;
+        }
+    }
+    /// <summary>
+    /// for each bot with ai controller desable the state
+    /// </summary>
+    private void DesableBot()
+    {
+        List<GameObject> bots = new()
+        {
+            _bot1,
+            _bot2,
+        };
+
+        foreach (var bot in bots)
+        {
+            if (bot.TryGetComponent<S_AIController>(out var crtl))
+                crtl.State = S_AIController.AIState.Disable;
         }
     }
     /// <summary>
@@ -139,6 +160,29 @@ public class S_ArenaManager : MonoBehaviour
             _bot2 = null;
         }
     }
+    /// <summary>
+    /// set the on die event in the bot one and two
+    /// </summary>
+    private void SetBotEventForEndGame()
+    {
+        var frameBot1 = _bot1.GetComponent<S_FrameManager>();
+        var frameBot2 = _bot2.GetComponent<S_FrameManager>();
+
+        frameBot1.OnDie += (_) =>
+        {
+            CancelMatch();
+            _tournamentManager.MakeWinForParticipantTwo();
+            _cameraView.StartReturnToTournament();
+            DesableBot();
+        };
+        frameBot2.OnDie += (_) =>
+        {
+            CancelMatch();
+            _tournamentManager.MakeWinForParticipantOne();
+            _cameraView.StartReturnToTournament();
+            DesableBot();
+        };
+    }
 
     public void CancelMatch()
     {
@@ -157,6 +201,7 @@ public class S_ArenaManager : MonoBehaviour
 
         CreateBot();
         SetBotTag();
+        SetBotEventForEndGame();
 
         _cameraView.ClearObjectToView();
         _cameraView.AddObjectToView(_bot1.transform);
