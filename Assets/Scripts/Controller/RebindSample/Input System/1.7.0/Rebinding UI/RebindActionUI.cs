@@ -1,3 +1,4 @@
+using PlasticPipe.PlasticProtocol.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -222,16 +223,16 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
 
             ResetBinding(action, bindingIndex);
 
-            //if (action.bindings[bindingIndex].isComposite)
-            //{
-            //    // It's a composite. Remove overrides from part bindings.
-            //    for (var i = bindingIndex + 1; i < action.bindings.Count && action.bindings[i].isPartOfComposite; ++i)
-            //        action.RemoveBindingOverride(i);
-            //}
-            //else
-            //{
-            //    action.RemoveBindingOverride(bindingIndex);
-            //}
+            if (action.bindings[bindingIndex].isComposite)
+            {
+                // It's a composite. Remove overrides from part bindings.
+                for (var i = bindingIndex + 1; i < action.bindings.Count && action.bindings[i].isPartOfComposite; ++i)
+                    action.RemoveBindingOverride(i);
+            }
+            else
+            {
+                action.RemoveBindingOverride(bindingIndex);
+            }
             UpdateBindingDisplay();
         }
 
@@ -385,26 +386,26 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
         {
             InputBinding newBinding = action.bindings[bindingIndex];
 
-            foreach (InputBinding binding in action.actionMap.bindings)
+            if (newBinding.isPartOfComposite)
             {
-                if (binding.action == newBinding.action)
+                for (int i = 0; i < action.bindings.Count; i++)
                 {
-                    continue;
-                }
-
-                if (binding.isComposite)
-                {
-                    var compositeParts = action.bindings.Where(b => b.isPartOfComposite && b.effectivePath.Contains(binding.effectivePath)).ToList();
-                    foreach (var part in compositeParts)
+                    if (i != bindingIndex)
                     {
-                        if (part.effectivePath == newBinding.effectivePath)
+                        if (action.bindings[i].effectivePath == newBinding.effectivePath)
                         {
                             Debug.LogWarning("A duplicate has been found " + newBinding.effectivePath);
                             return true;
                         }
                     }
+                }
+            }
 
-                    //for (int i = 0; i < binding.effectivePath.Length; i++)
+            foreach (InputBinding binding in action.actionMap.bindings)
+            {
+                if(binding.action == newBinding.action)
+                {
+                    continue;
                 }
 
                 if (binding.effectivePath == newBinding.effectivePath)

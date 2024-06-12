@@ -49,7 +49,8 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 var textComponent = component.bindingText;
 
             // Grab Image component.
-            var imageGO = textComponent.transform.parent.Find("ActionBindingIcon");
+            var iconGrp = textComponent.transform.parent.Find("IconGroup");
+            var imageGO = iconGrp.transform.GetChild(0);
             var imageComponent = imageGO.GetComponent<Image>();
 
             if (icon != null)

@@ -427,24 +427,92 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
-      propertyPath: m_ActionEvents.Array.size
-      value: 12
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_ActionId
+      propertyPath: m_ActionEvents.Array.size
+      value: 19
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
+      propertyPath: m_ActionEvents.Array.data[9].m_ActionId
       value: e0fb12dc-5d08-4340-91ae-5127029614a1
       objectReference: {fileID: 0}
     - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
-      propertyPath: m_ActionEvents.Array.data[11].m_ActionId
+      propertyPath: m_ActionEvents.Array.data[10].m_ActionId
       value: 6696da4d-359b-43ec-88d0-880dbcfdac73
       objectReference: {fileID: 0}
     - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_ActionName
+      propertyPath: m_ActionEvents.Array.data[11].m_ActionId
+      value: aaa98542-f8d5-414d-8f0c-51846d5ee541
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
+      propertyPath: m_ActionEvents.Array.data[12].m_ActionId
+      value: bf9b93bd-3acb-426e-ba3e-dd2739fbafe4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
+      propertyPath: m_ActionEvents.Array.data[13].m_ActionId
+      value: ac05d413-b475-4472-bf67-d9c6ef3e0670
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
+      propertyPath: m_ActionEvents.Array.data[14].m_ActionId
+      value: 85a00946-9c5d-490a-a3a0-a977775739d4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
+      propertyPath: m_ActionEvents.Array.data[15].m_ActionId
+      value: 771a205c-7e6f-4505-99ff-b8cfc79e0ce1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
+      propertyPath: m_ActionEvents.Array.data[16].m_ActionId
+      value: 4b9d10f3-1cf6-4c43-9b62-435f9ffe11b5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
+      propertyPath: m_ActionEvents.Array.data[17].m_ActionId
+      value: 0ce1f50d-c742-4e9b-823e-5dd6750d35f7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
+      propertyPath: m_ActionEvents.Array.data[18].m_ActionId
+      value: 027714aa-465e-4386-96b4-98eb7adac7c3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
+      propertyPath: m_ActionEvents.Array.data[9].m_ActionName
       value: UI/Buy
       objectReference: {fileID: 0}
     - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
-      propertyPath: m_ActionEvents.Array.data[11].m_ActionName
+      propertyPath: m_ActionEvents.Array.data[10].m_ActionName
       value: UI/ShopControllers[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
+      propertyPath: m_ActionEvents.Array.data[11].m_ActionName
+      value: Robot/ChangeView[/Keyboard/q,/Keyboard/e]
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
+      propertyPath: m_ActionEvents.Array.data[12].m_ActionName
+      value: Robot/Attack1[/Keyboard/downArrow]
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
+      propertyPath: m_ActionEvents.Array.data[13].m_ActionName
+      value: Robot/Attack2[/Keyboard/leftArrow]
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
+      propertyPath: m_ActionEvents.Array.data[14].m_ActionName
+      value: Robot/Attack3[/Keyboard/rightArrow]
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
+      propertyPath: m_ActionEvents.Array.data[15].m_ActionName
+      value: Robot/Attack4[/Keyboard/upArrow]
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
+      propertyPath: m_ActionEvents.Array.data[16].m_ActionName
+      value: UI/LeaveShop
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
+      propertyPath: m_ActionEvents.Array.data[17].m_ActionName
+      value: UI/LeaveGarage
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
+      propertyPath: m_ActionEvents.Array.data[18].m_ActionName
+      value: UI/MouseDetection[/Mouse/delta]
       objectReference: {fileID: 0}
     - target: {fileID: 3037640083119006212, guid: ad0e9e4e17d061144adb5e3f4c7d2fcd, type: 3}
       propertyPath: m_DeviceLostEvent.m_PersistentCalls.m_Calls.Array.size
