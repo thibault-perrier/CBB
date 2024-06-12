@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5777709181773950955}
   - component: {fileID: 6786911926935455215}
+  - component: {fileID: 6433975518594082516}
   m_Layer: 0
   m_Name: PO_WheelColid
   m_TagString: Untagged
@@ -25,13 +26,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 697665709204057158}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!146 &6786911926935455215
 WheelCollider:
   m_ObjectHideFlags: 0
@@ -49,7 +50,7 @@ WheelCollider:
   m_SuspensionDistance: 0.05
   m_ForceAppPointDistance: 0
   m_Mass: 2
-  m_WheelDampingRate: 0.25
+  m_WheelDampingRate: 1.5
   m_ForwardFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
@@ -61,7 +62,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.3
     m_AsymptoteValue: 0.5
-    m_Stiffness: 1
+    m_Stiffness: 3
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -71,3 +72,24 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
+--- !u!135 &6433975518594082516
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 697665709204057158}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.1
+  m_Center: {x: 0, y: 0, z: 0}

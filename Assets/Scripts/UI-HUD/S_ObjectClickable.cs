@@ -3,15 +3,16 @@ using UnityEngine;
 public class S_ObjectClickable : MonoBehaviour
 {
     private static S_ObjectClickable _instance;
-    public bool _interactionLocked = false;
+    public bool _interactionLocked = false; 
     [SerializeField] private Animator _animatorDoor;
-    [SerializeField] public Animator _animatorCameraGarage;
+    [SerializeField] private Animator _animatorCameraGarage;
+
     [SerializeField] private Light _light;
     private float _originalIntensity;
 
     private void Awake()
     {
-        if (_instance == null)
+        if(_instance == null)
             _instance = this;
     }
 
@@ -37,7 +38,7 @@ public class S_ObjectClickable : MonoBehaviour
 
     public void OnFocus()
     {
-        if (!_interactionLocked)
+        if (!_interactionLocked) 
         {
             _light.intensity = _originalIntensity * 2;
         }
@@ -45,7 +46,7 @@ public class S_ObjectClickable : MonoBehaviour
 
     public void OnFocusLost()
     {
-        if (!_interactionLocked)
+        if (!_interactionLocked) 
         {
             _light.intensity = _originalIntensity;
         }
@@ -53,7 +54,7 @@ public class S_ObjectClickable : MonoBehaviour
 
     public void OnActivated()
     {
-        if (!_interactionLocked)
+        if (!_interactionLocked) 
         {
             Activate();
             SetColor(Color.white);
@@ -62,45 +63,22 @@ public class S_ObjectClickable : MonoBehaviour
 
     private void Activate()
     {
-        LockInteraction();
+        LockInteraction(); 
 
-        switch (gameObject.tag)
+        if (gameObject.CompareTag("Garage"))
         {
-            case "Garage":
-                _animatorDoor.SetBool("Open", true);
-                _animatorCameraGarage.SetBool("MoveToGarage", true);
-                break;
-            case "Tournament":
-                _animatorCameraGarage.SetBool("MoveToTournament", true);
-                break;
-            case "Shop":
-                _animatorCameraGarage.SetBool("MoveToShop", true);
-                break;
-            case "Board":
-                _animatorCameraGarage.SetBool("Board", true);
-                break;
-            case "WorkBench":
-                _animatorCameraGarage.SetBool("WorkBench", true);
-                break;
-            case "Shelves":
-                _animatorCameraGarage.SetBool("Shelves", true);
-                break;
-            case "Bronze":
-                Debug.Log("bronze");
-                break;
-            case "Silver":
-                Debug.Log("Silver");
-                break;
-            case "Gold":
-                Debug.Log("Gold");
-                break;
-            case "Diamond":
-                Debug.Log("Diamond");
-                break;
-
-            default:
-
-                break;
+            SetColor(Color.white);
+            _animatorDoor.SetBool("Open", true);
+            _animatorCameraGarage.SetBool("MoveToGarage", true);
+        }
+        else if (gameObject.CompareTag("Tournament"))
+        {
+            SetColor(Color.white);
+            _animatorCameraGarage.SetBool("MoveToTournament", true);
+        }
+        else if (gameObject.CompareTag("Shop"))
+        {
+            _animatorCameraGarage.SetBool("MoveToShop", true);
         }
     }
 
@@ -109,12 +87,12 @@ public class S_ObjectClickable : MonoBehaviour
         gameObject.LeanColor(color, 0.1f);
     }
 
-    private void LockInteraction()
+    private void LockInteraction() 
     {
         _interactionLocked = true;
     }
 
-    public void UnlockInteraction()
+    public void UnlockInteraction() 
     {
         _interactionLocked = false;
     }
@@ -206,27 +184,4 @@ public class S_ObjectClickable : MonoBehaviour
     {
         _animatorDoor.SetBool("BackDoor", false);
     }
-    public void StopGarageAnim()
-    {
-        _animatorCameraGarage.SetBool("MoveToGarage", false);
-    }
-    public void StopAnimBoard()
-    {
-        _animatorCameraGarage.SetBool("Board", false);
-    }
-    public void EnableIdleInGarage()
-    {
-        _animatorCameraGarage.SetBool("IdleInGarage", true);
-    }
-    public void DisableInGarage()
-    {
-        _animatorCameraGarage.SetBool("IdleInGarage", false);
-    }
-
-    public void ResetLightIntensity()
-    {
-        _light.intensity = _originalIntensity;
-    }
-
-
 }
