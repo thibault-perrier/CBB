@@ -39,4 +39,13 @@ public class GarageManager : MonoBehaviour
             S_ClickablesManager.Instance.ReactivateAllClickables();
         }
     }
+
+    public void LeaveTournament(InputAction.CallbackContext context)
+    {
+        if (context.performed && gameObject.activeInHierarchy)
+        {
+            S_ObjectClickable.Instance._animatorCameraGarage.SetBool("MoveToTournament", false);
+            S_ClickablesManager.Instance.ReactivateAllClickables();
+        }
+    }
 }
