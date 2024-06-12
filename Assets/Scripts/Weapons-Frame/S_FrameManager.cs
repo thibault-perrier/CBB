@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class S_FrameManager : MonoBehaviour, I_Damageable
 {
-    private List<S_WeaponManager> _weaponManagers;
+    private List<S_WeaponManager> _weaponManagers = new();
     private Rigidbody _rb;
 
     public event Action<S_FrameManager> OnDie;
@@ -63,19 +63,8 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
             if (weaponManager != null)
             {
                 _weaponManagers.Add(weaponManager);
-                weaponManager.OnDie += WeaponDestroy;
             }
         }
-    }
-    /// <summary>
-    /// Start for each weapon when it die
-    /// </summary>
-    private void WeaponDestroy()
-    {
-        bool allWeaponBroken = AllWeaponIsBroken();
-
-        if (allWeaponBroken)
-            Die();
     }
 
     /// <summary>
