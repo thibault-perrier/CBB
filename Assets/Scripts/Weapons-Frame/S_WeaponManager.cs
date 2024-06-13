@@ -88,7 +88,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     }
     private void Update()
     {
-        if (!_attacking || _state != State.ok)
+        if ((!_attacking && !_alwayActive) || _state != State.ok)
             return;
 
         foreach (var hitZone in _damageZones)
