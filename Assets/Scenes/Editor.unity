@@ -479,13 +479,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 156849302}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.27, z: -13.07}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: -0.96, z: -3.21}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &277995350
 GameObject:
   m_ObjectHideFlags: 0
@@ -1468,7 +1468,7 @@ Transform:
   m_GameObject: {fileID: 862902368}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -20.36}
+  m_LocalPosition: {x: 0, y: 3.8, z: -13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2868,6 +2868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _newPresetObjectIcon: {fileID: 5936909084165271214, guid: 29bd894e500f02f40ae88154a7704d6d, type: 3}
+  _numberPanel: {fileID: 8015201481394080269, guid: 50ed7d045c5c1594b9a65ca73c465f10, type: 3}
   _presetGroup: {fileID: 1378559018}
   _presets: []
   _weaponGroup1: {fileID: 341203604}
@@ -2896,6 +2897,7 @@ MonoBehaviour:
   _presetWeaponsHookPoints: []
   _indexHookPointToModify: 0
   _presetObjectPart: []
+  _nbMaxPreset: 3
   _editState: 1
 --- !u!1 &2044505226
 GameObject:

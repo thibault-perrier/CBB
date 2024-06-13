@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class S_EditorController : MonoBehaviour
 {
     [SerializeField] private GameObject _newPresetObjectIcon;
+    [SerializeField] private GameObject _numberPanel;
 
     [SerializeField] private GameObject _presetGroup;
     [SerializeField] private List<GameObject> _presets;
@@ -44,6 +46,7 @@ public class S_EditorController : MonoBehaviour
     [SerializeField] private int _indexHookPointToModify;
 
     [SerializeField] private List<GameObject> _presetObjectPart;
+    [SerializeField] private int _nbMaxPreset;
 
 
     [SerializeField] private EditState _editState = EditState.PresetChoice;
@@ -60,24 +63,39 @@ public class S_EditorController : MonoBehaviour
 
     private void Awake()
     {
-        
-        Frame frame = new Frame(_frameData[0]);
 
-        Robot robot = new Robot(frame);
+        foreach (S_FrameData data in _frameData)
+        {
+            Frame frame2 = new Frame(data);
+            Debug.Log("frame name : " + frame2._name);
+            S_DataGame.Instance.inventory.Frames.Add(frame2);
+        }
+        foreach (S_WeaponData data in _weaponsData)
+        {
+            bool haveWeapon = false;
+            foreach (Weapon weapon in S_DataGame.Instance.inventory.Weapons)
+            {
+                if (weapon.GetWeaponData() == data)
+                {
+                    weapon._number++;
+                    haveWeapon = true;
+                }
+            }
+            if (!haveWeapon)
+            {
+                S_DataGame.Instance.inventory.Weapons.Add(new Weapon(data));
+            }
+            
+        }
+
+        Robot robot = new Robot(S_DataGame.Instance.inventory.Frames[0]);
 
 
         //robot._weapons[0] = new Weapon(_weaponsData[0]);
 
         S_DataGame.Instance.inventory.Robots.Add(robot);
 
-        foreach(S_FrameData data in _frameData)
-        {
-            S_DataGame.Instance.inventory.Frames.Add(new Frame(data));
-        }
-        foreach (S_WeaponData data in _weaponsData)
-        {
-            S_DataGame.Instance.inventory.Weapons.Add(new Weapon(data));
-        }
+        
         UpdatePiece();
         UpdatePresetRobotGroup();
     }
@@ -159,11 +177,21 @@ public class S_EditorController : MonoBehaviour
 
     private void UpdatePiece()
     {
-        Debug.Log(S_DataGame.Instance.inventory.Weapons.Count());
-
-        foreach (Weapon saveWeapon in S_DataGame.Instance.inventory.Weapons)
+        S_DataGame.Instance.inventory.UpdateUseItem();
+        foreach (GameObject gameObject in _weapons)
         {
-            //_weaponsData.Add(SaveWeapon.GetWeaponData());
+            Destroy(gameObject);
+        }
+        foreach (GameObject gameObject in _frame)
+        {
+            Destroy(gameObject);
+        }
+        _weapons.Clear();
+        _frame.Clear();
+
+        for (int i = 0; i < S_DataGame.Instance.inventory.Weapons.Count(); i++)
+        {
+            Weapon saveWeapon = S_DataGame.Instance.inventory.Weapons[i];
 
             S_WeaponData weapon = saveWeapon.GetWeaponData();
 
@@ -178,7 +206,7 @@ public class S_EditorController : MonoBehaviour
                 newWeapon.transform.localRotation = Quaternion.Euler(0, 45, 0);
                 _weapons.Add(newWeapon);
                 newWeapon.transform.position = Vector3.zero;
-                if (_weaponGroup1.transform.childCount < _nbWeapon)
+                if (i < _nbWeapon)
                 {
                     newWeapon.transform.parent = _weaponGroup1.transform;
                 }
@@ -186,11 +214,17 @@ public class S_EditorController : MonoBehaviour
                 {
                     newWeapon.transform.parent = _weaponGroup2.transform;
                 }
+                GameObject numberPanel = Instantiate(_numberPanel);
+                numberPanel.transform.parent = newWeapon.transform;
+                numberPanel.GetComponentInChildren<Text>().text = (saveWeapon._number - saveWeapon._useNumber).ToString();
             }
         }
-            
-        foreach (Frame saveFrame in S_DataGame.Instance.inventory.Frames)
+
+
+
+        for (int i = 0; i < S_DataGame.Instance.inventory.Frames.Count(); i++)
         {
+            Frame saveFrame = S_DataGame.Instance.inventory.Frames[i];
             S_FrameData frame = saveFrame.GetFrameData();
 
             if (saveFrame._number - saveFrame._useNumber > 0)
@@ -208,7 +242,7 @@ public class S_EditorController : MonoBehaviour
 
                 _frame.Add(newFrame);
                 newFrame.transform.position = Vector3.zero;
-                if (_frameGroup1.transform.childCount < _nbFrame)
+                if(i < _nbFrame)
                 {
                     newFrame.transform.parent = _frameGroup1.transform;
                 }
@@ -296,6 +330,7 @@ public class S_EditorController : MonoBehaviour
                 
                 break;
             case EditState.PartChoice:
+                UpdatePresetRobotGroup();
                 _editState = EditState.PresetChoice;
                 break;
             case EditState.FrameChoice:
@@ -350,7 +385,7 @@ public class S_EditorController : MonoBehaviour
         {
             case EditState.PresetChoice:
                 
-                if (_presetObjectPart[_selectedIndex].GetComponent<S_FrameManager>() == null)
+                if (_presets[_selectedIndex].GetComponent<S_FrameManager>() == null)
                 {
                     Robot robot = new Robot(GetUnuseFrame());
                     S_DataGame.Instance.inventory.Robots.Add(robot);
@@ -416,6 +451,7 @@ public class S_EditorController : MonoBehaviour
                 break;
         }
         _selectedIndex = 0;
+        UpdatePiece();
         UpdatePrefabRobot();
         Selector();
     }
@@ -455,10 +491,13 @@ public class S_EditorController : MonoBehaviour
     private Frame GetUnuseFrame()
     {
         S_DataGame.Instance.inventory.UpdateUseItem();
+
+
         foreach (Frame frame in S_DataGame.Instance.inventory.Frames)
         {
-            Debug.Log(frame._number - frame._useNumber > 1);
-            if(frame._number - frame._useNumber > 1)
+            Debug.Log("frame name : "+frame._name +" || "+ frame._number + " - " + frame._useNumber);
+            Debug.Log("calcul: "+ (frame._number - frame._useNumber));
+            if (frame._number - frame._useNumber >= 1)
             {
                 return frame;
             }
@@ -560,6 +599,12 @@ public class S_EditorController : MonoBehaviour
 
     private void UpdatePresetRobotGroup()
     {
+        foreach(GameObject robot in _presets)
+        {
+            Destroy(robot);
+        }
+
+
         foreach (Robot robot in S_DataGame.Instance.inventory.Robots)
         {
             GameObject frame = CreatePresetPrefab(robot);
@@ -571,7 +616,7 @@ public class S_EditorController : MonoBehaviour
             frame.transform.localRotation = Quaternion.identity;
             _presets.Add(frame);
         }
-        if (S_DataGame.Instance.inventory.Robots.Count() < 5 && GetUnuseFrame() != null)
+        if (S_DataGame.Instance.inventory.Robots.Count() < _nbMaxPreset && GetUnuseFrame() != null)
         {
             GameObject add = Instantiate(_newPresetObjectIcon);
 
@@ -592,6 +637,7 @@ public class S_EditorController : MonoBehaviour
             S_DataGame.Instance.inventory.Robots[_selectedPreset]._weapons[_selectedIndex] = null;
             UpdatePrefabRobot();
         }
+        UpdatePiece();
     }
 
 }
