@@ -62,8 +62,8 @@ public class S_TournamentBracket : MonoBehaviour
 
         if (!_tournamentManager.IsRunning)
         {
-            InitializeLogo(_eightParticipantsBracket.transform);
-            _currentUsedBracket = _eightParticipantsBracket;
+            InitializeLogo(_currentUsedBracket.transform);
+            //_currentUsedBracket = _eightParticipantsBracket;
         }
 
         _botMatchButtons.SetActive(false);
@@ -447,7 +447,7 @@ public class S_TournamentBracket : MonoBehaviour
     /// <returns></returns>
     private IEnumerator LoserMoveBack(GameObject loser, bool playerLost)
     {
-        Vector3 endPos = loser.transform.position - new Vector3(0, 42f, 0f);
+        Vector3 endPos = loser.transform.position - new Vector3(0, 26f, 0f);
 
         while (Vector3.SqrMagnitude(loser.transform.position - endPos) > 0.1f)
         {
@@ -545,5 +545,19 @@ public class S_TournamentBracket : MonoBehaviour
         _sparksEffect.SetActive(true);
 
         //THE MONEY += THE PRIZE
+    }
+
+    /// <summary>
+    ///Set the current bracket depending of tournament difficulty
+    /// </summary>
+    /// <param name="bracketNb">Put 8 for eight participant, 16 for sixteen participant brackets</param>
+    public void SetBracket(int bracketNb)
+    {
+        switch(bracketNb)
+        {
+            case 8: _currentUsedBracket = _eightParticipantsBracket; break;
+            case 16: _currentUsedBracket = _sixteenParticipantsBracket; break;
+            default: Debug.LogError("Please write '8' or '16' to use valid brackets !"); break;
+        }
     }
 }
