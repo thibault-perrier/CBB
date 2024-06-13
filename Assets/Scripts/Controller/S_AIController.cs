@@ -938,6 +938,12 @@ public class S_AIController : MonoBehaviour
             .Reverse()
             .ToList()[0];
 
+        float distanceToBestWeapon = Vector3.Distance(bestWeapon.transform.position, transform.position);
+        float distanceToEnemy = Vector3.Distance(_enemy.transform.position, transform.position);
+
+        if (distanceToBestWeapon > distanceToEnemy)
+            return null;
+
         return bestWeapon;
     }
     /// <summary>
