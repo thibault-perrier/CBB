@@ -339,7 +339,10 @@ public class S_AIController : MonoBehaviour
             return;
 
         if (_frameManager.AllWeaponIsBroken())
+        {
+            FleeEnemy();
             return;
+        }
 
         if (!_enemy)
             return;
