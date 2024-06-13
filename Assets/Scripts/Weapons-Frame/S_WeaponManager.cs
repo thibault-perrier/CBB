@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -91,6 +92,8 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         if ((!_attacking && !_alwayActive) || _state != State.ok)
             return;
 
+        List<GameObject> hitDamage = new() { gameObject };
+
         foreach (var hitZone in _damageZones)
         {
             // get all collider in damageZone
@@ -101,7 +104,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
             // sort the collider if he is not him self weapon or if he not hit the him self bot
             var hitObject = collide
                 .Select(x => x.gameObject)
-                .Where(x => x != gameObject)
+                .Where(x => !hitDamage.Contains(x))
                 .ToList();
 
             if (hitObject.Any())
@@ -113,7 +116,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
                     bool succesAttack = AttackCollide(col);
                     if (succesAttack)
-                        return;
+                        hitDamage.Add(col);
                 }
             }
         }
