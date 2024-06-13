@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class S_FrameManager : MonoBehaviour, I_Damageable
 {
     private List<S_WeaponManager> _weaponManagers = new();
     private Rigidbody _rb;
-
-    public event Action<S_FrameManager> OnDie;
     
     [SerializeField, Tooltip("the current health point of the frama")] 
     private float _life;
@@ -23,6 +22,12 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     {
         get { return _weaponHookPoints.Count; }
     }
+
+    public List<GameObject> WeaponHookPoints
+    {
+        get { return _weaponHookPoints; }
+    }
+
     /// <summary>
     /// return all the weapon in the frame
     /// </summary>
@@ -35,6 +40,12 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
         get => _life / _data.MaxLife;
     }
 
+    public S_FrameData Data
+    {
+        get { return _data; }
+    }
+
+
     private void Awake()
     {
         _rb = this.GetComponent<Rigidbody>();
@@ -42,6 +53,8 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
         _life = _data.MaxLife;
     }
     
+    public event Action<S_FrameManager> OnDie;
+
     /// <summary>
     /// detect if there is any weapon is always OK
     /// </summary>
@@ -56,6 +69,7 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
 
         return true;
     }
+
     /// <summary>
     /// Get all weapon with hook points
     /// </summary>
@@ -77,24 +91,28 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     /// <param name="amount"></param>
     public void TakeDamage(float amount)
     {
-        // remove life and if the life is lower or equal at 0 is die
         _life -= amount;
         if (_life <= 0f)
         {
             Die();
         }
     }
+
     /// <summary>
     /// Start when the life of the current frame is lower or equal at 0
     /// </summary>
     public void Die()
     {
         OnDie?.Invoke(this);
+
+        Debug.Log("Player died!");
+        // Logic to remove destroy items in inventory
     }
+
     /// <summary>
-    /// repear the frame, set the life with the data
+    /// repair the frame, set the life with the data
     /// </summary>
-    public void Repear()
+    public void Repair()
     {
         _life = _data.MaxLife;
     }
