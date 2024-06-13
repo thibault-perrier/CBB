@@ -1,9 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class S_StreetFightManager : MonoBehaviour
 {
@@ -14,21 +13,26 @@ public class S_StreetFightManager : MonoBehaviour
     private GameObject _AIBot;
 
     [Header("UI")]
-    [SerializeField, Tooltip("it is the 3, 2, 1 on begin of match")]
-    private TextMeshPro _timerBeforeStart;
     [SerializeField, Tooltip("the parent of street fight ui")]
     private GameObject _UIStreetFight;
+
+    [Space(10)]
+    [SerializeField, Tooltip("it is the 3, 2, 1 on begin of match")]
+    private Image _timerBeforeStart;
+    [SerializeField, Tooltip("the number for the timer in the begin match")]
+    private Sprite[] _numberForTimer;
 
     [Header("Camera")]
     [SerializeField, Tooltip("camera for focus the view on two bots")]
     private S_CameraView _cameraView;
 
     [Header("Event")]
-    [SerializeField]
+    [SerializeField, Tooltip("invoke when player or AI die")]
     private UnityEvent _onStreetFightEnd;
 
     private S_AIController _AIController;
     private PlayerInput _playerInput;
+    private S_ImmobileDefeat _immobilePlayer, _immobileAI;
 
     private void Start()
     {
@@ -36,10 +40,13 @@ public class S_StreetFightManager : MonoBehaviour
         _cameraView.AddObjectToView(_playerBot.transform);
         _cameraView.AddObjectToView(_AIBot.transform);
 
+        _cameraView.gameObject.SetActive(false);
+        _UIStreetFight.SetActive(false);
+
         _AIController = _AIBot.GetComponent<S_AIController>();
         _playerInput = _playerBot.GetComponent<PlayerInput>();
-        SetEnableBots(false);
         BindDeadEventForBots();
+        SetEnableBots(false);
     }
 
     /// <summary>
@@ -50,6 +57,9 @@ public class S_StreetFightManager : MonoBehaviour
     {
         _AIController.enabled = enabled;
         _playerInput.enabled = enabled;
+
+        _immobileAI.enabled = enabled;
+        _immobilePlayer.enabled = enabled;
     }
     private void BindDeadEventForBots()
     {
@@ -58,20 +68,31 @@ public class S_StreetFightManager : MonoBehaviour
 
         frameAI.OnDie       += (_) => BotPlayerVictorie();
         framePlayer.OnDie   += (_) => BotAiVictorie();
+
+        _immobileAI     = _AIBot.GetComponent<S_ImmobileDefeat>();
+        _immobilePlayer = _playerBot.GetComponent<S_ImmobileDefeat>();
+
+        _immobileAI.IsImmobile       += () => BotPlayerVictorie();
+        _immobilePlayer.IsImmobile   += () => BotAiVictorie();
     }
     private void BotAiVictorie()
     {
-
+        Debug.Log("AI victory");
+        SetEnableBots(false);
+        _onStreetFightEnd?.Invoke();
     }
     private void BotPlayerVictorie()
     {
-
+        Debug.Log("Player Victory");
+        SetEnableBots(false);
+        _onStreetFightEnd?.Invoke();
     }
-
+    [ContextMenu("Start fight")]
     public void StartStreetFight()
     {
         _UIStreetFight.SetActive(true);
-        
+        _cameraView.gameObject.SetActive(true);
+
         StartCoroutine(TimerBeforeStart(() =>
         {
             _UIStreetFight.SetActive(false);
@@ -81,17 +102,12 @@ public class S_StreetFightManager : MonoBehaviour
 
     private IEnumerator TimerBeforeStart(System.Action endTimer)
     {
-        _timerBeforeStart.text = "3";
-        yield return new WaitForSeconds(1f);
+        foreach (var number in _numberForTimer)
+        {
+            _timerBeforeStart.sprite = number;
+            yield return new WaitForSeconds(1f);
+        }
 
-        _timerBeforeStart.text = "2";
-        yield return new WaitForSeconds(1f);
-
-        _timerBeforeStart.text = "1";
-        yield return new WaitForSeconds(1f);
-
-        _timerBeforeStart.text = "0";
-        yield return new WaitForSeconds(1f);
         endTimer?.Invoke();
     }
 }
