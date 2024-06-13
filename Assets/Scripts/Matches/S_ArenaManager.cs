@@ -50,7 +50,7 @@ public class S_ArenaManager : MonoBehaviour
                 _secondsTimer += 60f;
                 _minutesTimer--;
 
-                if (_minutesTimer <= 0f)
+                if (_minutesTimer <= 0f && _secondsTimer <= 0f)
                     TimerFinish();
             }
 
@@ -180,6 +180,8 @@ public class S_ArenaManager : MonoBehaviour
             Destroy(_bot2);
             _bot2 = null;
         }
+
+        DestroyAllDroppedWeapon();
     }
     /// <summary>
     /// set the on die event in the bot one and two
@@ -205,6 +207,15 @@ public class S_ArenaManager : MonoBehaviour
         _tournamentManager.MakeWinForParticipantTwo();
         _cameraView.StartReturnToTournament();
         DesableBot();
+    }
+    private void DestroyAllDroppedWeapon()
+    {
+        var weaponsDropped = GameObject.FindGameObjectsWithTag("Weapon");
+
+        foreach (var weapon in weaponsDropped)
+        {
+            Destroy(weapon);
+        }
     }
 
     public void CancelMatch()
