@@ -329,7 +329,7 @@ public class S_TournamentBracket : MonoBehaviour
                 ActivateUI(_botMatchButtons, true);
                 ActivateUI(_playerMatchButton, false);
                 _eventSystem.SetSelectedGameObject(null);
-                _eventSystem.SetSelectedGameObject(_botMatchButtons.transform.GetChild(0).gameObject);
+                _eventSystem.SetSelectedGameObject(_botMatchButtons.transform.GetChild(0).GetChild(0).gameObject);
             }
         }
     }
