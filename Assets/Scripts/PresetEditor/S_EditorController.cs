@@ -70,38 +70,35 @@ public class S_EditorController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        foreach (S_FrameData data in _frameData)
-        {
-            Frame frame2 = new Frame(data);
-            Debug.Log("frame name : " + frame2._name);
-            S_DataGame.Instance.inventory.Frames.Add(frame2);
-        }
-        foreach (S_WeaponData data in _weaponsData)
-        {
-            bool haveWeapon = false;
-            foreach (Weapon weapon in S_DataGame.Instance.inventory.Weapons)
-            {
-                if (weapon.GetWeaponData() == data)
-                {
-                    weapon._number++;
-                    haveWeapon = true;
-                }
-            }
-            if (!haveWeapon)
-            {
-                S_DataGame.Instance.inventory.Weapons.Add(new Weapon(data));
-            }
+        //foreach (S_FrameData data in _frameData)
+        //{
+        //    Frame frame2 = new Frame(data);
+        //    Debug.Log("frame name : " + frame2._name);
+        //    S_DataGame.Instance.inventory.Frames.Add(frame2);
+        //}
+        //foreach (S_WeaponData data in _weaponsData)
+        //{
+        //    bool haveWeapon = false;
+        //    foreach (Weapon weapon in S_DataGame.Instance.inventory.Weapons)
+        //    {
+        //        if (weapon.GetWeaponData() == data)
+        //        {
+        //            weapon._number++;
+        //            haveWeapon = true;
+        //        }
+        //    }
+        //    if (!haveWeapon)
+        //    {
+        //        S_DataGame.Instance.inventory.Weapons.Add(new Weapon(data));
+        //    }
 
-        }
+        //}
 
-        Robot robot = new Robot(S_DataGame.Instance.inventory.Frames[0]);
+        //Robot robot = new Robot(S_DataGame.Instance.inventory.Frames[0]);
 
+        //S_DataGame.Instance.inventory.Robots.Add(robot);
 
-        //robot._weapons[0] = new Weapon(_weaponsData[0]);
-
-        S_DataGame.Instance.inventory.Robots.Add(robot);
-
-
+        S_DataGame.Instance.LoadInventory();
         UpdatePiece();
         UpdatePresetRobotGroup();
 
@@ -137,7 +134,22 @@ public class S_EditorController : MonoBehaviour
             RemoveWeapon();
         }
 
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            PresetRotation(1);
+        }
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            PresetRotation(-1);
+        }
 
+
+    }
+
+    private void PresetRotation(float move)
+    {
+        _presetObjectPart[_presetObjectPart.Count() - 1].transform.Rotate(Vector3.up, move * 200 * Time.deltaTime);
+        Selector();
     }
 
     /// <summary>
@@ -559,6 +571,8 @@ public class S_EditorController : MonoBehaviour
             add.transform.localRotation = Quaternion.identity;
             _presets.Add(add);
         }
+
+        S_DataGame.Instance.SaveInventory();
     }
 
     private void RemoveWeapon()

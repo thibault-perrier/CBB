@@ -27,6 +27,11 @@ public class S_DataGame : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        
+    }
+
+    private void Start()
+    {
         if (OnSceneLoad == Load.Inventory || OnSceneLoad == Load.InventoryAndTournament)
         {
             LoadInventory();
