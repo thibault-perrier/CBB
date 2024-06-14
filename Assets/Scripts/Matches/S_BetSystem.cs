@@ -214,7 +214,7 @@ public class S_BetSystem : MonoBehaviour
                 _testMoney = newMoney > _maxMoney ? _maxMoney : newMoney; //Mathf.RoundToInt(_currentBetRating)
                 _playerMoney.text = "$ " + _testMoney;
                 _betWinDisplay.SetActive(true);
-                _betWinDisplay.GetComponentInChildren<TextMeshProUGUI>().text = "Bet : You won $ " + amountWon;
+                _betWinDisplay.GetComponentInChildren<TextMeshProUGUI>().text = "BET : YOU WON $ " + amountWon + " !";
 
                 _betAmount = 0;
             }
