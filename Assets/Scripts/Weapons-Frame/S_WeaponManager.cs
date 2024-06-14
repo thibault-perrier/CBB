@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -88,6 +89,11 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     }
     private void Update()
     {
+        if ((!_attacking && !_alwayActive) || _state != State.ok)
+            return;
+
+        List<GameObject> hitDamage = new() { gameObject };
+
         foreach (var hitZone in _damageZones)
         {
             // get all collider in damageZone
@@ -98,23 +104,19 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
             // sort the collider if he is not him self weapon or if he not hit the him self bot
             var hitObject = collide
                 .Select(x => x.gameObject)
-                .Where(x => x != gameObject)
-                .ToList();
-
-            if (hitObject.Count < 1)
-                return;
-
-            hitObject = hitObject
-                .Where(x => !IsCurrentBot(x))
+                .Where(x => !hitDamage.Contains(x))
                 .ToList();
 
             if (hitObject.Any())
             {
                 foreach (var col in hitObject)
                 {
+                    if (!col)
+                        continue;
+
                     bool succesAttack = AttackCollide(col);
                     if (succesAttack)
-                        return;
+                        hitDamage.Add(col);
                 }
             }
         }
@@ -122,6 +124,9 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     
     private bool AttackCollide(GameObject collision)
     {
+        if (IsCurrentBot(collision))
+            return false;
+
         if (!_attackOneTime && _data.AttackOneTime)
             return false;
 
@@ -230,7 +235,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         if (_alwayActive)
             return;
 
-        if (_state == State.ok && !_attacking)
+        if (CanAttack)
         {
             _animator.SetBool("_playAttack", true);
             AttackON();

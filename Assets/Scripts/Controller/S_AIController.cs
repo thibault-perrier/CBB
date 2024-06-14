@@ -339,7 +339,10 @@ public class S_AIController : MonoBehaviour
             return;
 
         if (_frameManager.AllWeaponIsBroken())
+        {
+            FleeEnemy();
             return;
+        }
 
         if (!_enemy)
             return;
@@ -934,6 +937,12 @@ public class S_AIController : MonoBehaviour
             .OrderBy(x => Vector3.Distance(x.gameObject.transform.position, target.position))
             .Reverse()
             .ToList()[0];
+
+        float distanceToBestWeapon = Vector3.Distance(bestWeapon.transform.position, transform.position);
+        float distanceToEnemy = Vector3.Distance(_enemy.transform.position, transform.position);
+
+        if (distanceToBestWeapon > distanceToEnemy)
+            return null;
 
         return bestWeapon;
     }

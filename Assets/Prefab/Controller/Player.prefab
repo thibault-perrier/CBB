@@ -14,9 +14,10 @@ GameObject:
   - component: {fileID: 5526066540802086454}
   - component: {fileID: 1554409109303669790}
   - component: {fileID: 2563859038876599764}
+  - component: {fileID: 6831879879407640939}
   m_Layer: 0
   m_Name: Player
-  m_TagString: BotA
+  m_TagString: BotB
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -152,6 +153,34 @@ MonoBehaviour:
     m_ActionId: 6696da4d-359b-43ec-88d0-880dbcfdac73
     m_ActionName: UI/ShopControllers[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 4b9d10f3-1cf6-4c43-9b62-435f9ffe11b5
+    m_ActionName: UI/LeaveShop
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0ce1f50d-c742-4e9b-823e-5dd6750d35f7
+    m_ActionName: UI/LeaveGarage
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 027714aa-465e-4386-96b4-98eb7adac7c3
+    m_ActionName: UI/MouseDetection[/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 27cf1285-4998-4e75-9d55-4cd22dc2911b
+    m_ActionName: UI/LeaveBoard[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ebea3937-9822-469a-95bf-29d7ccbd1b1e
+    m_ActionName: UI/LeaveWorkBench[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8736330a-3442-4c72-a828-edca008e9cad
+    m_ActionName: UI/LeaveShelves[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 75d1edfc-6101-4a93-8aa3-f20b2b3423fe
+    m_ActionName: UI/LeaveTournament[/Keyboard/escape]
+  - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1554409109303669790}
         m_TargetAssemblyTypeName: S_PlayerController, Assembly-CSharp
@@ -165,8 +194,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: bf9b93bd-3acb-426e-ba3e-dd2739fbafe4
-    m_ActionName: Robot/Attack1[/Keyboard/k]
+    m_ActionId: 20cea2bf-374e-4d1d-9279-8eb28839dd94
+    m_ActionName: Robot/Attack1[/Keyboard/1]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1554409109303669790}
@@ -181,8 +210,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: ac05d413-b475-4472-bf67-d9c6ef3e0670
-    m_ActionName: Robot/Attack2[/Keyboard/numpad2]
+    m_ActionId: 39ae0f0f-665c-4d2f-ab10-097a2c03f97c
+    m_ActionName: Robot/Attack2[/Keyboard/2]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1554409109303669790}
@@ -197,20 +226,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 85a00946-9c5d-490a-a3a0-a977775739d4
-    m_ActionName: Robot/Attack3[/Keyboard/numpad3]
+    m_ActionId: 6d9d701a-0fdb-4aea-bf32-c23bafd4658a
+    m_ActionName: Robot/Attack3[/Keyboard/3]
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: 4b9d10f3-1cf6-4c43-9b62-435f9ffe11b5
-    m_ActionName: UI/LeaveShop
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 0ce1f50d-c742-4e9b-823e-5dd6750d35f7
-    m_ActionName: UI/LeaveGarage
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 027714aa-465e-4386-96b4-98eb7adac7c3
-    m_ActionName: UI/MouseDetection[/Mouse/delta]
+    m_ActionId: 36f01bb1-9989-4670-9cee-c571ab51b95e
+    m_ActionName: Robot/Attack4[/Keyboard/4]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Robot
@@ -296,6 +317,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &6831879879407640939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2864770155178023637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f05ae2ab5c3f60f4e84e2290b6c54df3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _immobileVelocity: 0.3
+  _immobileTimeRequirement: 5
 --- !u!1 &4974788559187099309
 GameObject:
   m_ObjectHideFlags: 0
