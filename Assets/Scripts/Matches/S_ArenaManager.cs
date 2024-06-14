@@ -78,7 +78,7 @@ public class S_ArenaManager : MonoBehaviour
     /// </summary>
     private void CreateBot()
     {
-        ResetAreneBot();
+        ResetArenaBot();
 
         // set all pair with bot and bot info
         List<(Transform, S_TournamentManager.Participant)> botPair = new(2)
@@ -148,7 +148,7 @@ public class S_ArenaManager : MonoBehaviour
     /// <summary>
     /// for each bot with ai controller desable the state
     /// </summary>
-    private void DesableBot()
+    private void DisableBot()
     {
         List<GameObject> bots = new()
         {
@@ -165,7 +165,7 @@ public class S_ArenaManager : MonoBehaviour
     /// <summary>
     /// Reset the bot with Untagged and destroy current bot
     /// </summary>
-    private void ResetAreneBot()
+    private void ResetArenaBot()
     {
         if (_bot1)
         {
@@ -199,14 +199,14 @@ public class S_ArenaManager : MonoBehaviour
         CancelMatch();
         _tournamentManager.MakeWinForParticipantOne();
         _cameraView.StartReturnToTournament();
-        DesableBot();
+        DisableBot();
     }
     private void Bot2Win()
     {
         CancelMatch();
         _tournamentManager.MakeWinForParticipantTwo();
         _cameraView.StartReturnToTournament();
-        DesableBot();
+        DisableBot();
     }
     private void DestroyAllDroppedWeapon()
     {
