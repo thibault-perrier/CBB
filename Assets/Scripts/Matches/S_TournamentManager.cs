@@ -67,6 +67,14 @@ public class S_TournamentManager : MonoBehaviour
     private Participant _participant6;
     private Participant _participant7;
     private Participant _participant8;
+    private Participant _participant9;
+    private Participant _participant10;
+    private Participant _participant11;
+    private Participant _participant12;
+    private Participant _participant13;
+    private Participant _participant14;
+    private Participant _participant15;
+    private Participant _participant16;
 
     private void Awake()
     {
@@ -74,9 +82,9 @@ public class S_TournamentManager : MonoBehaviour
 
         //InitializeParticipationData();
 
-        _participant1.isPlayer = true;
+        _participant1.isPlayer = false;
 
-        _participant1.name = "PLAYER";
+        _participant1.name = "Participant nb 0";
         _participant2.name = "Participant nb 1";
         _participant3.name = "Participant nb 2";
         _participant4.name = "Participant nb 3";
@@ -84,6 +92,14 @@ public class S_TournamentManager : MonoBehaviour
         _participant6.name = "Participant nb 5";
         _participant7.name = "Participant nb 6";
         _participant8.name = "Participant nb 7";
+        _participant9.name = "Participant nb 8";
+        _participant10.name = "Participant nb 9";
+        _participant11.name = "Participant nb 10";
+        _participant12.name = "Participant nb 11";
+        _participant13.name = "Participant nb 12";
+        _participant14.name = "Participant nb 13";
+        _participant15.name = "Participant nb 14";
+        _participant16.name = "Participant nb 15";
 
         _participant1.logo = Color.blue;
         _participant2.logo = Color.red;
@@ -93,6 +109,14 @@ public class S_TournamentManager : MonoBehaviour
         _participant6.logo = Color.cyan;
         _participant7.logo = Color.black;
         _participant8.logo = Color.magenta;
+        _participant9.logo = Color.blue;
+        _participant10.logo = Color.red;
+        _participant11.logo = Color.yellow;
+        _participant12.logo = Color.green;
+        _participant13.logo = Color.white;
+        _participant14.logo = Color.cyan;
+        _participant15.logo = Color.black;
+        _participant16.logo = Color.magenta;
 
         _participant1.rank = _currentTournament.rank;
         _participant2.rank = _currentTournament.rank;
@@ -102,11 +126,22 @@ public class S_TournamentManager : MonoBehaviour
         _participant6.rank = _currentTournament.rank;
         _participant7.rank = _currentTournament.rank;
         _participant8.rank = _currentTournament.rank;
+        _participant9.rank = _currentTournament.rank;
+        _participant10.rank = _currentTournament.rank;
+        _participant11.rank = _currentTournament.rank;
+        _participant12.rank = _currentTournament.rank;
+        _participant13.rank = _currentTournament.rank;
+        _participant14.rank = _currentTournament.rank;
+        _participant15.rank = _currentTournament.rank;
+        _participant16.rank = _currentTournament.rank;
 
         InitializeCurrentTournament(_currentTournament);
         Debug.Log("Initialazing a " + _currentTournament.rank.ToString() + " tournament");
 
+        _tournamentBracket.SetBracket(_currentTournament.maxMatchNb * 2);
+
         _currentTournament.maxMatchNb -= 1; //It's so we can use this as an index for arrays and lists
+
     }
 
     public void AddParticipant(Participant participant)
@@ -168,18 +203,45 @@ public class S_TournamentManager : MonoBehaviour
     {
         _currentTournament = tournament;
 
-        _participants = new List<Participant>(tournament.participantNb)
+        if (_currentTournament.rank == Rank.Bronze || _currentTournament.rank == Rank.Silver)
+        {
+            _participants = new List<Participant>(tournament.participantNb)
         {
              // TEST
-            _participant1, 
+            _participant1,
             _participant2,
             _participant3,
             _participant4,
             _participant5,
             _participant6,
             _participant7,
-            _participant8
+            _participant8,
+            _participant9,
+            _participant10,
+            _participant11,
+            _participant12,
+            _participant13,
+            _participant14,
+            _participant15,
+            _participant16,
         };
+        }
+        else
+        {
+            _participants = new List<Participant>(tournament.participantNb)
+        {
+             // TEST
+            _participant1,
+            _participant2,
+            _participant3,
+            _participant4,
+            _participant5,
+            _participant6,
+            _participant7,
+            _participant8,
+        };
+        }
+
 
         //Add random participants in the list with random robots, their strength depend of the difficulty
 
@@ -314,8 +376,8 @@ public class S_TournamentManager : MonoBehaviour
             return _participants.Count % 2 == 0;
         }
         else
-        { 
-            return false; 
+        {
+            return false;
         }
     }
 
@@ -365,7 +427,7 @@ public class S_TournamentManager : MonoBehaviour
     /// <returns></returns>
     public bool IsPlayerPlaying(Participant p1, Participant p2)
     {
-        if (p1.name == "PLAYER" ||  p2.name == "PLAYER")
+        if (p1.isPlayer || p2.isPlayer)
         {
             return true;
         }
