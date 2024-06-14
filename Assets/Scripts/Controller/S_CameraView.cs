@@ -244,11 +244,12 @@ public class S_CameraView : MonoBehaviour
     /// <returns></returns>
     private IEnumerator ShowOffObjects(GameObject firstObject, GameObject lastObject)
     {
+        float initSpeed = 200f;
         Vector3 newPos = new Vector3(firstObject.transform.position.x, firstObject.transform.position.y, 250f);
 
         while (Vector3.SqrMagnitude(_currentCam.transform.position - newPos) > 0.1f)
         {
-            _currentCam.transform.position = Vector3.MoveTowards(_currentCam.transform.position, newPos, Time.deltaTime * 100f);
+            _currentCam.transform.position = Vector3.MoveTowards(_currentCam.transform.position, newPos, Time.deltaTime * initSpeed);
 
             if (_skipAction.triggered) //to skip the showing off
             {
@@ -260,11 +261,12 @@ public class S_CameraView : MonoBehaviour
 
         _currentCam.transform.position = newPos;
 
+        float showSpeed = 60f;
         Vector3 lastPos = new Vector3(lastObject.transform.position.x, lastObject.transform.position.y, 260f);
 
         while (Vector3.SqrMagnitude(_currentCam.transform.position - lastPos) > 0.1f)
         {
-            _currentCam.transform.position = Vector3.MoveTowards(_currentCam.transform.position, lastPos, Time.deltaTime * 30f);
+            _currentCam.transform.position = Vector3.MoveTowards(_currentCam.transform.position, lastPos, Time.deltaTime * showSpeed);
 
             if (_skipAction.triggered) //to skip the showing off
             {
