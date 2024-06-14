@@ -7,10 +7,16 @@ using UnityEngine.UI;
 public class S_StreetFightManager : MonoBehaviour
 {
     [Header("paricipants")]
-    [SerializeField, Tooltip("the current player bot")]
-    private GameObject _playerBot;
-    [SerializeField, Tooltip("the current AI bot")]
-    private GameObject _AIBot;
+    [SerializeField, Tooltip("the current player bot prefab")]
+    private GameObject _playerBotPrefab;
+    [SerializeField, Tooltip("the current AI bot prefab")]
+    private GameObject _AIBotPrefab;
+
+    [Space(10)]
+    [SerializeField, Tooltip("where the player spawn in the start of fight")]
+    private Transform _botPlayerTransformSpawn;
+    [SerializeField, Tooltip("where the AI spawn in the start of fight")]
+    private Transform _botAITransformSpawn;
 
     [Header("UI")]
     [SerializeField, Tooltip("the parent of street fight ui")]
@@ -25,6 +31,14 @@ public class S_StreetFightManager : MonoBehaviour
     [Header("Camera")]
     [SerializeField, Tooltip("camera for focus the view on two bots")]
     private S_CameraView _cameraView;
+    [SerializeField, Tooltip("the main camera of menu")]
+    private GameObject _mainCamera;
+
+    [Header("Animation")]
+    [SerializeField, Min(0f), Tooltip("the millstone for the camera field of view in end fight zoom")]
+    private float _fliedOfViewEndAnimation = 5f;
+    [SerializeField, Min(0f), Tooltip("the speed of field of view animation")]
+    private float _fieldOfViewAnimationSpeed = 30f;
 
     [Header("Event")]
     [SerializeField, Tooltip("invoke when player or AI die")]
@@ -34,8 +48,14 @@ public class S_StreetFightManager : MonoBehaviour
     private PlayerInput _playerInput;
     private S_ImmobileDefeat _immobilePlayer, _immobileAI;
 
+    private GameObject _playerBot;
+    private GameObject _AIBot;
+
+    private float _startFieldOfView;
+
     private void Start()
     {
+        CreateStreetFightBot();
         _cameraView.ClearObjectToView();
         _cameraView.AddObjectToView(_playerBot.transform);
         _cameraView.AddObjectToView(_AIBot.transform);
@@ -47,6 +67,9 @@ public class S_StreetFightManager : MonoBehaviour
         _playerInput = _playerBot.GetComponent<PlayerInput>();
         BindDeadEventForBots();
         SetEnableBots(false);
+
+        var camera = _cameraView.gameObject.GetComponentInChildren<Camera>();
+        _startFieldOfView = camera.fieldOfView;
     }
 
     /// <summary>
@@ -61,6 +84,9 @@ public class S_StreetFightManager : MonoBehaviour
         _immobileAI.enabled = enabled;
         _immobilePlayer.enabled = enabled;
     }
+    /// <summary>
+    /// set the action for dead bot when thier life is lower 0 or if it immobile and not straight
+    /// </summary>
     private void BindDeadEventForBots()
     {
         var frameAI     = _AIBot.GetComponent<S_FrameManager>();
@@ -78,13 +104,21 @@ public class S_StreetFightManager : MonoBehaviour
     private void BotAiVictorie()
     {
         Debug.Log("AI victory");
-        SetEnableBots(false);
-        _onStreetFightEnd?.Invoke();
+        _cameraView.RemoveObjectToView(_playerBot.transform);
+        EndFight();
     }
     private void BotPlayerVictorie()
     {
         Debug.Log("Player Victory");
+        _cameraView.RemoveObjectToView(_AIBot.transform);
+        EndFight();
+    }
+    private void EndFight()
+    {
+        ClearDroppedWeapon();
         SetEnableBots(false);
+        _mainCamera?.SetActive(false);
+        StartCoroutine(AnimationFieldOfView());
         _onStreetFightEnd?.Invoke();
     }
     [ContextMenu("Start fight")]
@@ -92,12 +126,28 @@ public class S_StreetFightManager : MonoBehaviour
     {
         _UIStreetFight.SetActive(true);
         _cameraView.gameObject.SetActive(true);
+        _mainCamera?.SetActive(false);
 
         StartCoroutine(TimerBeforeStart(() =>
         {
             _UIStreetFight.SetActive(false);
             SetEnableBots(true);
         }));
+    }
+    private void ClearDroppedWeapon()
+    {
+        var droppedWeapons = GameObject.FindGameObjectsWithTag("Weapon");
+
+        foreach (var weapon in droppedWeapons)
+            Destroy(weapon);
+    }
+    private void CreateStreetFightBot()
+    {
+        Destroy(_AIBot);
+        Destroy(_playerBot);
+
+        _playerBot = Instantiate(_playerBotPrefab,   _botPlayerTransformSpawn.position,  Quaternion.Euler(_botPlayerTransformSpawn.eulerAngles));
+        _AIBot     = Instantiate(_AIBotPrefab,       _botAITransformSpawn.position,      Quaternion.Euler(_botAITransformSpawn.eulerAngles));
     }
 
     private IEnumerator TimerBeforeStart(System.Action endTimer)
@@ -109,5 +159,18 @@ public class S_StreetFightManager : MonoBehaviour
         }
 
         endTimer?.Invoke();
+    }
+    private IEnumerator AnimationFieldOfView()
+    {
+        var camera = _cameraView.gameObject.GetComponentInChildren<Camera>();
+
+        while (camera.fieldOfView > _fliedOfViewEndAnimation)
+        {
+            float speedScale = Mathf.InverseLerp(_fliedOfViewEndAnimation, _startFieldOfView, camera.fieldOfView);
+            speedScale = Mathf.Max(speedScale, .5f);
+
+            camera.fieldOfView -= Time.deltaTime * _fieldOfViewAnimationSpeed * speedScale;
+            yield return null;
+        }
     }
 }
