@@ -1,133 +1,126 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
-namespace CartoonFX 
+namespace CartoonFX
 {
     public class S_VFXPlayer : MonoBehaviour
     {
+        private GameObject[] _effectsList;
+        private int _singleVFXIndex = 0;
+        private int _flameThrowerIndex = 1;
 
 
-        [SerializeField] private GameObject parent; 
-        [SerializeField] GameObject[] effectsList;
-        public GameObject currentEffect;
-        int index = 0;
-        private GameObject currentGOVFX;
+        public enum VFXType
+        {
+            Single,
+            FlameThrower
+        }
+
+        [SerializeField] private VFXType _VFXType;
 
         void Awake()
         {
-            // var list = new List<GameObject>();
-            // for (int i = 0; i < this.transform.childCount; i++)
-            // {
-            //     var effect = this.transform.GetChild(i).gameObject;
-            //     list.Add(effect);
+            GetVFXInChildren();
 
-            //     var cfxrEffect= effect.GetComponent<CFXR_Effect>();
-            //     if (cfxrEffect != null) cfxrEffect.clearBehavior = CFXR_Effect.ClearBehavior.Disable;
-            // }
-            // effectsList = list.ToArray();
-
-            PlayAtIndex();
+            if (_VFXType == VFXType.FlameThrower)
+                PlayStopEffectAtIndex(_singleVFXIndex, true);
         }
 
-        public void PlayAtIndex()
-		{
-			if (currentGOVFX != null)
-			{
-                Destroy(currentGOVFX);
-			}
-
-			currentEffect = effectsList[index];
-			// currentEffect.SetActive(true);
-            currentGOVFX = Instantiate(currentEffect, parent.transform);
-		}
-
-        void WrapIndex()
+        private void GetVFXInChildren()
+        {
+            var list = new List<GameObject>();
+            for (int i = 0; i < this.transform.childCount; i++)
             {
-                if (index < 0) index = effectsList.Length - 1;
-                if (index >= effectsList.Length) index = 0;
-            }
+                var effect = this.transform.GetChild(i).gameObject;
+                list.Add(effect);
 
+                var cfxrEffect = effect.GetComponent<CFXR_Effect>();
+                if (cfxrEffect != null) cfxrEffect.clearBehavior = CFXR_Effect.ClearBehavior.Disable;
+            }
+            _effectsList = list.ToArray();
+        }
         void Update()
         {
+
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                Debug.Log("SPACE IS DOWN");
-                if (currentEffect != null)
-                {
-                    var ps = currentGOVFX.GetComponent<ParticleSystem>();
-                    Debug.Log(ps.isEmitting);
-                    if (ps.isEmitting)
-                    {
-                        Debug.Log("STOP");
-                        ps.Stop(true);
-                    }
-                    else
-                    {
-                        Debug.Log("Is not emitting");
-                        if (!currentGOVFX.gameObject.activeSelf)
-                        {
-                            Debug.Log("currentEffect is not active");
-                            currentGOVFX.SetActive(true);
-                        }
-                        else
-                        {
-                            ps.Play(true);
-                            var cfxrEffects = currentEffect.GetComponentsInChildren<CFXR_Effect>();
-                            Debug.Log(cfxrEffects);
-                            foreach (var cfxr in cfxrEffects)
-                            {
-                                cfxr.ResetState();
-                            }
-                        }
-                    }
-                }
+                int index = (_VFXType == VFXType.Single) ? _singleVFXIndex : _flameThrowerIndex;
+                PlayStopEffectAtIndex(index, !_effectsList[index].GetComponent<ParticleSystem>().isEmitting);
             }
+
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                if (currentGOVFX != null)
-                {
-                    Destroy(currentGOVFX);
-                }
-                else 
-                {
-                    PlayAtIndex();
-                }
+                int index = (_VFXType == VFXType.Single) ? _singleVFXIndex : _flameThrowerIndex;
+                PlayStopEffectAtIndex(index, true);
             }
-
-            if (Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace))
+            if (Input.GetKeyUp(KeyCode.Return))
             {
-                if (currentEffect != null)
-                {
-                    currentEffect.SetActive(false);
-                    currentEffect.SetActive(true);
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                PreviousEffect();
-            }
-
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                NextEffect();
+                Debug.Log("Key is released");
+                int index = (_VFXType == VFXType.Single) ? _singleVFXIndex : _flameThrowerIndex;
+                PlayStopEffectAtIndex(index, false);
             }
         }
 
-        public void NextEffect()
+        private void PlayStopEffectAtIndex(int index, bool toPlay)
         {
-            index++;
-            WrapIndex();
-            PlayAtIndex();
+            GameObject _currentEffect = _effectsList[index];
+            if (_currentEffect == null)
+                return;
+
+            var ps = _currentEffect.GetComponent<ParticleSystem>();
+
+            if (toPlay)
+            {
+                if (!_currentEffect.gameObject.activeSelf)
+                {
+                    _currentEffect.SetActive(true);
+                }
+                else
+                {
+                    ps.Play(true);
+                    var cfxrEffects = _currentEffect.GetComponentsInChildren<CFXR_Effect>();
+                    foreach (var cfxr in cfxrEffects)
+                    {
+                        cfxr.ResetState();
+                    }
+                }
+            }
+            else
+            {
+                if (ps.isEmitting)
+                {
+                    ps.Stop(true);
+
+                }
+            }
+
+            if (index == _flameThrowerIndex)
+                PlayStopEffectAtIndex(_singleVFXIndex, !toPlay);
         }
 
-        public void PreviousEffect()
+
+        public void PlayFlameThrowerEffect()
         {
-            index--;
-            WrapIndex();
-            PlayAtIndex();
+            PlayStopEffectAtIndex(_flameThrowerIndex, true);
         }
+
+        public void StopFlameThrowerEffect()
+        {
+            PlayStopEffectAtIndex(_flameThrowerIndex, false);
+        }
+
+        public void PlaySingleEffect()
+        {
+            PlayStopEffectAtIndex(_singleVFXIndex, true);
+        }
+
+        public void StopSingleEffect()
+        {
+            PlayStopEffectAtIndex(_singleVFXIndex, false);
+        }
+
     }
 }
