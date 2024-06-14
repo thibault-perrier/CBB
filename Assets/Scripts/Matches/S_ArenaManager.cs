@@ -208,6 +208,13 @@ public class S_ArenaManager : MonoBehaviour
         _cameraView.StartReturnToTournament();
         DisableBot();
     }
+    public void OnSimulateMatch()
+    {
+        CancelMatch();
+        _tournamentManager.SimulateMatch();
+        _cameraView.StartReturnToTournament();
+        DisableBot();
+    }
     private void DestroyAllDroppedWeapon()
     {
         var weaponsDropped = GameObject.FindGameObjectsWithTag("Weapon");

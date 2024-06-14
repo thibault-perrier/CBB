@@ -229,35 +229,13 @@ public class S_TournamentBracket : MonoBehaviour
     /// <summary>
     /// If the player don't want to watch the match it will simulate a match and get a random winner based on rating Also update automatically the logo in the UI
     /// </summary>
-    public void SkipBotMatch()
-    {
-        if (_tournamentManager.IsEven())
-        {
-            ClosePopUpButton();
-            _tournamentManager.SimulateMatch();
-
-            if (_tournamentManager.GetCurrentLoser().name == "PLAYER")
-            {
-                StartCoroutine(LoserMoveBack(_losersLogo[_currentMatch].gameObject, true));
-                _cameraView.ClearObjectToView();
-                _cameraView.AddObjectToView(_losersLogo[_currentMatch]);
-            }
-            else
-            {
-                UpdateWinnerLogo(_currentUsedBracket.transform, _currentLevel, _currentMatch);
-                _betSystem.WinBet(); //check if the player has won the bet
-                _betSystem.SetHasBet(false);
-            }
-        }
-    }
-
     public void EndBotMatch()
     {
         if (_tournamentManager.IsEven())
         {
             ClosePopUpButton();
 
-            if (_tournamentManager.GetCurrentLoser().name == "PLAYER")
+            if (_tournamentManager.GetCurrentLoser().isPlayer)
             {
                 StartCoroutine(LoserMoveBack(_losersLogo[_currentMatch].gameObject, true));
                 _cameraView.ClearObjectToView();
@@ -530,6 +508,9 @@ public class S_TournamentBracket : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Display the victory screen with some cool particle effect
+    /// </summary>
     public void DisplayWinLogo()
     {
         _tournamentUI.SetActive(true);
@@ -541,7 +522,7 @@ public class S_TournamentBracket : MonoBehaviour
 
         _playerWin.SetActive(true);
         _tournamentPrizeDisplay.SetActive(true);
-        _tournamentPrizeDisplay.GetComponentInChildren<TextMeshProUGUI>().text = "Tournament : You won $ " + _tournamentManager.GetTournamentPrize();
+        _tournamentPrizeDisplay.GetComponentInChildren<TextMeshProUGUI>().text = "TOURNAMENT : YOU WON $ " + _tournamentManager.GetTournamentPrize() + " !";
         _sparksEffect.SetActive(true);
 
         //THE MONEY += THE PRIZE
@@ -559,5 +540,11 @@ public class S_TournamentBracket : MonoBehaviour
             case 16: _currentUsedBracket = _sixteenParticipantsBracket; break;
             default: Debug.LogError("Please write '8' or '16' to use valid brackets !"); break;
         }
+    }
+
+    public void OnSkipMatch()
+    {
+        _tournamentManager.SimulateMatch();
+        OnReturnToTournament();
     }
 }
