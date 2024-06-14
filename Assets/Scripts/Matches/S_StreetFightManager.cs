@@ -14,6 +14,9 @@ public class S_StreetFightManager : MonoBehaviour
         BotPlayerVictory
     }
 
+    [SerializeField, Min(0f), Tooltip("if one bot is not in this radius")]
+    private float _radiusDefeat = 10f;
+
     [Header("paricipants")]
     [SerializeField, Tooltip("the current player bot prefab")]
     private GameObject _playerBotPrefab;
@@ -88,6 +91,16 @@ public class S_StreetFightManager : MonoBehaviour
                 EndStreetFight();
             }
         }
+        else
+        {
+            DetectDefeatRadius();
+        }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = new Color(1f, 1f, 1f, .2f);
+        Gizmos.DrawSphere(transform.position, _radiusDefeat);
+        Gizmos.color = new Color(1f, 1f, 1f, 1f);
     }
 
     [ContextMenu("Start fight")]
@@ -208,6 +221,20 @@ public class S_StreetFightManager : MonoBehaviour
         _cameraView.gameObject.SetActive(false);
         _uiEndFightWinner.SetActive(false);
         _onStreetFightEnd?.Invoke();
+    }
+    private void DetectDefeatRadius()
+    {
+        if (_playerBot == null || _AIBot == null)
+            return;
+
+        float distanceDefeatPlayer = Vector3.Distance(transform.position, _playerBot.transform.position);
+        float distanceDefeatEnemy = Vector3.Distance(transform.position, _AIBot.transform.position);
+
+        if (distanceDefeatEnemy > _radiusDefeat)
+            BotPlayerVictorie();
+
+        if (distanceDefeatPlayer > _radiusDefeat)
+            BotAiVictorie();
     }
 
     private IEnumerator TimerBeforeStart(System.Action endTimer)
