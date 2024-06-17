@@ -16,7 +16,7 @@ public class S_PlayerController : MonoBehaviour
     private void Start()
     {
         _cam = GameObject.Find("CameraManager");
-        _mainCam = Camera.main.GetComponent<S_CameraView>();
+        // _mainCam = Camera.main.GetComponent<S_CameraView>();
         _wheelsController = GetComponent<S_WheelsController>();
         _frameManager = GetComponent<S_FrameManager>();
         _frameManager.SelectWeapons();

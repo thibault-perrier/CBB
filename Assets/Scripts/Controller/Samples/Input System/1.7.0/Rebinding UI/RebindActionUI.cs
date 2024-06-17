@@ -1,7 +1,5 @@
-using PlasticPipe.PlasticProtocol.Messages;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
@@ -403,7 +401,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
 
             foreach (InputBinding binding in action.actionMap.bindings)
             {
-                if(binding.action == newBinding.action)
+                if (binding.action == newBinding.action)
                 {
                     continue;
                 }

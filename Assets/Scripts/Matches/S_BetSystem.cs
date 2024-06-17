@@ -31,6 +31,7 @@ public class S_BetSystem : MonoBehaviour
     public InputActionReference Confirm;
 
     public int _testMoney = 1000; //TODO : get the player's money in the inventory instead
+    private int _maxMoney = 999999999;
 
     private bool _hasBet = false;
 
@@ -145,8 +146,6 @@ public class S_BetSystem : MonoBehaviour
 
             if (_betInputTxt.text.Length > 0)
             {
-                _launchMatchTxt.text = "Launch Match";
-
                 for (int i = 0; i < _betScreenButtons.Length - 1; i++)
                 {
                     _betScreenButtons[i].interactable = false;
@@ -212,7 +211,7 @@ public class S_BetSystem : MonoBehaviour
                 int amountWon = _betAmount * 2; //Change this when we have the definitive calcul of the rating
                 int newMoney = _testMoney + amountWon;
 
-                _testMoney = newMoney > 999999999 ? 999999999 : newMoney; //Mathf.RoundToInt(_currentBetRating)
+                _testMoney = newMoney > _maxMoney ? _maxMoney : newMoney; //Mathf.RoundToInt(_currentBetRating)
                 _playerMoney.text = "$ " + _testMoney;
                 _betWinDisplay.SetActive(true);
                 _betWinDisplay.GetComponentInChildren<TextMeshProUGUI>().text = "Bet : You won $ " + amountWon;
@@ -274,11 +273,15 @@ public class S_BetSystem : MonoBehaviour
     {
         if (context.started && gameObject.activeSelf)
         {
-            if (context.ReadValue<Vector2>().y < 0f)
+            if (context.ReadValue<Vector2>().y < 0f && _eventSystem.currentSelectedGameObject == _betInputTxt.gameObject)
             {
                 _isLeavingInput = true;
 
                 _betInputTxt.DeactivateInputField();
+            }
+            else
+            {
+                _isLeavingInput = false;
             }
         }
     }
