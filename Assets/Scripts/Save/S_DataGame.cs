@@ -70,6 +70,7 @@ public class InventorySaver // Inventory
     public List<Frame> Frames = new List<Frame>();
     public List<Weapon> Weapons = new List<Weapon>();
     public List<Robot> Robots = new List<Robot>();
+    public int SelectedRobot;
 
     public Weapon GetWeapon(S_WeaponData weaponData)
     {
