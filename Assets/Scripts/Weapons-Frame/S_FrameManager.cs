@@ -15,6 +15,8 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     [SerializeField, Tooltip("All kook point for get weapons")] 
     private List<GameObject> _weaponHookPoints;
 
+    public event Action OnReceiveDamage;
+
     /// <summary>
     /// return the number of hook point
     /// </summary>
@@ -92,6 +94,8 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     public void TakeDamage(float amount)
     {
         _life -= amount;
+        OnReceiveDamage?.Invoke();
+
         if (_life <= 0f)
         {
             Die();

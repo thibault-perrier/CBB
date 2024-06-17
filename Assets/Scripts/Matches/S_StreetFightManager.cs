@@ -14,6 +14,9 @@ public class S_StreetFightManager : MonoBehaviour
         BotPlayerVictory
     }
 
+    [SerializeField, Min(0f), Tooltip("if one bot is not in this radius")]
+    private float _radiusDefeat = 10f;
+
     [Header("paricipants")]
     [SerializeField, Tooltip("the current player bot prefab")]
     private GameObject _playerBotPrefab;
@@ -49,9 +52,9 @@ public class S_StreetFightManager : MonoBehaviour
     private GameObject _mainCamera;
 
     [Header("Animation")]
-    [SerializeField, Min(0f), Tooltip("the millstone for the camera field of view in end fight zoom")]
+    [SerializeField, Min(1f), Tooltip("the millstone for the camera field of view in end fight zoom")]
     private float _zoomEndAnimation = 5f;
-    [SerializeField, Min(0f), Tooltip("the speed of field of view animation")]
+    [SerializeField, Min(1f), Tooltip("the speed of field of view animation")]
     private float _zoomAnimationSpeed = 30f;
 
     [Header("Event")]
@@ -88,8 +91,21 @@ public class S_StreetFightManager : MonoBehaviour
                 EndStreetFight();
             }
         }
+        else
+        {
+            DetectDefeatRadius();
+        }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = new Color(1f, 1f, 1f, .1f);
+        Gizmos.DrawSphere(transform.position, _radiusDefeat);
+        Gizmos.color = new Color(1f, 1f, 1f, 1f);
     }
 
+    /// <summary>
+    /// clear all, create the bot and launch the timer before start
+    /// </summary>
     [ContextMenu("Start fight")]
     public void StartStreetFight()
     {
@@ -103,6 +119,9 @@ public class S_StreetFightManager : MonoBehaviour
         _uiEndFightWinner.SetActive(false);
         _cameraView.gameObject.SetActive(true);
         _mainCamera?.SetActive(false);
+
+        var camera = _cameraView.gameObject.GetComponentInChildren<Camera>();
+        camera.fieldOfView = _startFieldOfView;
 
         StartCoroutine(TimerBeforeStart(() =>
         {
@@ -140,18 +159,27 @@ public class S_StreetFightManager : MonoBehaviour
         _immobileAI.IsImmobile       += () => BotPlayerVictorie();
         _immobilePlayer.IsImmobile   += () => BotAiVictorie();
     }
+    /// <summary>
+    /// make a victory for AI
+    /// </summary>
     private void BotAiVictorie()
     {
         _fightState = FightState.BotAIVictory;
         _cameraView.RemoveObjectToView(_playerBot.transform);
         EndCurrentFight();
     }
+    /// <summary>
+    /// make a victory for player
+    /// </summary>
     private void BotPlayerVictorie()
     {
         _fightState = FightState.BotPlayerVictory;
         _cameraView.RemoveObjectToView(_AIBot.transform);
         EndCurrentFight();
     }
+    /// <summary>
+    /// disable all bot in the street and zoom on sur winner
+    /// </summary>
     private void EndCurrentFight()
     {
         SetEnableBots(false);
@@ -163,6 +191,9 @@ public class S_StreetFightManager : MonoBehaviour
             _streetFightEnd = true;
         }));
     }
+    /// <summary>
+    /// get all weapon dropped and delete it
+    /// </summary>
     private void ClearDroppedWeapon()
     {
         var droppedWeapons = GameObject.FindGameObjectsWithTag("Weapon");
@@ -170,6 +201,9 @@ public class S_StreetFightManager : MonoBehaviour
         foreach (var weapon in droppedWeapons)
             Destroy(weapon);
     }
+    /// <summary>
+    /// destroy the last bot and create new bot
+    /// </summary>
     private void CreateStreetFightBot()
     {
         Destroy(_AIBot);
@@ -183,9 +217,14 @@ public class S_StreetFightManager : MonoBehaviour
 
         _AIController = _AIBot.GetComponent<S_AIController>();
         _playerInput = _playerBot.GetComponent<PlayerInput>();
+        _AIBot.GetComponent<S_AIStatsController>().BotDifficulty = S_AIStatsController.BotRank.Randomly;
+
         BindDeadEventForBots();
         SetEnableBots(false);
     }
+    /// <summary>
+    /// Select the text for display in the end text
+    /// </summary>
     private void DisplayEndFightText()
     {
         switch (_fightState)
@@ -200,6 +239,9 @@ public class S_StreetFightManager : MonoBehaviour
                 break;
         }
     }
+    /// <summary>
+    /// disable all canvas and switch camera
+    /// </summary>
     private void EndStreetFight()
     {
         _streetFightEnd = false;
@@ -209,7 +251,28 @@ public class S_StreetFightManager : MonoBehaviour
         _uiEndFightWinner.SetActive(false);
         _onStreetFightEnd?.Invoke();
     }
+    /// <summary>
+    /// look the distance and if one is not in the radius he lose
+    /// </summary>
+    private void DetectDefeatRadius()
+    {
+        if (_playerBot == null || _AIBot == null)
+            return;
 
+        float distanceDefeatPlayer = Vector3.Distance(transform.position, _playerBot.transform.position);
+        float distanceDefeatEnemy = Vector3.Distance(transform.position, _AIBot.transform.position);
+
+        if (distanceDefeatEnemy > _radiusDefeat)
+            BotPlayerVictorie();
+
+        if (distanceDefeatPlayer > _radiusDefeat)
+            BotAiVictorie();
+    }
+
+    /// <summary>
+    /// create a timer with each sprite in the array for the timer
+    /// </summary>
+    /// <param name="endTimer">launch at the end of the array</param>
     private IEnumerator TimerBeforeStart(System.Action endTimer)
     {
         foreach (var number in _numberForTimer)
@@ -220,6 +283,10 @@ public class S_StreetFightManager : MonoBehaviour
 
         endTimer?.Invoke();
     }
+    /// <summary>
+    /// update field of view
+    /// </summary>
+    /// <param name="endZoomAnimation">launch when the field of view is equal at 5</param>
     private IEnumerator AnimationZoom(System.Action endZoomAnimation = null)
     {
         var camera = _cameraView.gameObject.GetComponentInChildren<Camera>();

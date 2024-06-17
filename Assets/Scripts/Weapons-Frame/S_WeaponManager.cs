@@ -77,6 +77,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        _animator.updateMode = AnimatorUpdateMode.Normal;
 
         _life = _data.MaxLife;
         _damage = _data.Damage;
