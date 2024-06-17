@@ -287,7 +287,7 @@ public class S_EditorController : MonoBehaviour
                 break;
             case EditState.PartChoice:
                 UpdatePresetRobotGroup();
-                _editState = EditState.PresetChoice;
+                
                 break;
             case EditState.FrameChoice:
                 _editState = EditState.PartChoice;
@@ -350,7 +350,7 @@ public class S_EditorController : MonoBehaviour
                     S_DataGame.Instance.inventory.Robots.Add(robot);
                 }
                 _selectedPreset = _selectedIndex;
-                _editState = EditState.PartChoice;
+                UpdatePresetRobotGroup();
                 break;
             case EditState.PartChoice:
 
@@ -563,6 +563,7 @@ public class S_EditorController : MonoBehaviour
             Destroy(robot);
         }
 
+        _presets.Clear();
 
         foreach (Robot robot in S_DataGame.Instance.inventory.Robots)
         {
