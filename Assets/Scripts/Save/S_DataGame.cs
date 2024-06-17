@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Systems;
 using UnityEngine;
+using UnityEngine.UI;
 using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class S_DataGame : MonoBehaviour
@@ -31,7 +32,7 @@ public class S_DataGame : MonoBehaviour
         {
             LoadInventory();
         }
-        else if (OnSceneLoad == Load.Tournament || OnSceneLoad == Load.InventoryAndTournament)
+        if (OnSceneLoad == Load.Tournament || OnSceneLoad == Load.InventoryAndTournament)
         {
             LoadTournament();
         }
@@ -65,6 +66,27 @@ public class InventorySaver // Inventory
     public List<Frame> Frames = new List<Frame>();
     public List<Weapon> Weapons = new List<Weapon>();
     public List<Robot> Robots = new List<Robot>();
+
+    public string backgroundColorHex;
+    public float backgroundAlpha;
+
+    public int backgroundColorIndex;
+    public int overlayImageIndex;
+    public Vector2 overlayImagePosition;
+
+    public void SaveColors(string hexColor, float alpha)
+    {
+        PlayerPrefs.SetString("CurrentBackgroundColor", hexColor);
+        PlayerPrefs.SetFloat("CurrentBackgroundAlpha", alpha);
+        PlayerPrefs.Save();
+    }
+
+    public void LoadColors()
+    {
+        backgroundColorHex = PlayerPrefs.GetString("CurrentBackgroundColor", "#000000FF");
+        backgroundAlpha = PlayerPrefs.GetFloat("CurrentBackgroundAlpha", 1f);
+    }
+
 
     public Weapon GetWeapon(S_WeaponData weaponData)
     {
