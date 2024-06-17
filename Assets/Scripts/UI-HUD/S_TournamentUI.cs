@@ -127,6 +127,7 @@ public class S_TournamentBracket : MonoBehaviour
     /// </summary>
     private void OnReturnToTournament()
     {
+        DisplayBetScreen();
         _cameraView.AddObjectToView(_logos[_currentMatch * 2]);
         _cameraView.AddObjectToView(_logos[_currentMatch * 2 + 1]);
         EndBotMatch();
@@ -244,8 +245,6 @@ public class S_TournamentBracket : MonoBehaviour
             else
             {
                 UpdateWinnerLogo(_currentUsedBracket.transform, _currentLevel, _currentMatch);
-                _betSystem.WinBet(); //check if the player has won the bet
-                _betSystem.SetHasBet(false);
             }
         }
     }
@@ -534,12 +533,25 @@ public class S_TournamentBracket : MonoBehaviour
     /// <param name="bracketNb">Put 8 for eight participant, 16 for sixteen participant brackets</param>
     public void SetBracket(int bracketNb)
     {
-        switch(bracketNb)
+        _eightParticipantsBracket.SetActive(false);
+        _sixteenParticipantsBracket.SetActive(false);
+        switch (bracketNb)
         {
-            case 8: _currentUsedBracket = _eightParticipantsBracket; break;
-            case 16: _currentUsedBracket = _sixteenParticipantsBracket; break;
-            default: Debug.LogError("Please write '8' or '16' to use valid brackets !"); break;
+            case 8: _currentUsedBracket = _eightParticipantsBracket;
+                _eightParticipantsBracket.SetActive(true);
+                break;
+            case 16: _currentUsedBracket = _sixteenParticipantsBracket;
+                _sixteenParticipantsBracket.SetActive(true);
+                break;
+            default: Debug.LogError("Please write '8' or '16' to use valid brackets !");
+                break;
         }
+    }
+
+    public void DisplayBetScreen()
+    {
+        _betSystem.WinBet();
+        _betSystem.SetHasBet(false);
     }
 
     public void OnSkipMatch()

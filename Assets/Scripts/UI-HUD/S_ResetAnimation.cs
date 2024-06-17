@@ -15,7 +15,10 @@ public class S_ResetAnimation : MonoBehaviour, IPointerEnterHandler
 
     private void Start()
     {
-        _animator.writeDefaultValuesOnDisable = true;
+        if (_animator != null)
+        {
+            _animator.writeDefaultValuesOnDisable = true;
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)

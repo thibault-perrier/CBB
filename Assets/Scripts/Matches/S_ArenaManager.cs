@@ -6,17 +6,26 @@ using UnityEngine.UI;
 
 public class S_ArenaManager : MonoBehaviour
 {
+    [Header("Bet display")]
     [SerializeField] private GameObject _participantsStats;
     [SerializeField] private GameObject _p1Stats;
     [SerializeField] private GameObject _p2Stats;
     [SerializeField] private GameObject _keypad;
     [SerializeField] private GameObject _key;
 
+    [Header("Managers")]
     [SerializeField] private S_CameraView _cameraView;
     [SerializeField] private S_TournamentManager _tournamentManager;
 
+    [Header("Match UI")]
     [SerializeField] private GameObject _matchUI;
-    [SerializeField] private Text _timerText;
+    [SerializeField] private TextMeshProUGUI _timerText;
+    [SerializeField] private GameObject _playerUI;
+    [SerializeField] private GameObject _botsUI;
+    private Image _participant1Health;
+    private Image _participant2Health;
+
+    [Header("Bot Initialization")]
     [SerializeField] private GameObject _botPlayerPrefab, _botEnemyPrefab;
     [SerializeField] private Transform _botPosition1, _botPosition2;
 
@@ -30,6 +39,8 @@ public class S_ArenaManager : MonoBehaviour
 
     private EventSystem _eventSystem;
 
+    public float MatchDuration = 3f;
+
     private void Awake()
     {
         _eventSystem = EventSystem.current;
@@ -39,6 +50,8 @@ public class S_ArenaManager : MonoBehaviour
     {
         _participantsStats.SetActive(false);
         _matchUI.SetActive(false);
+        _playerUI.SetActive(false);
+        _botsUI.SetActive(false);
     }
     private void Update()
     {
@@ -47,14 +60,15 @@ public class S_ArenaManager : MonoBehaviour
             _secondsTimer -= Time.deltaTime;
             if (_secondsTimer <= 0f)
             {
-                _secondsTimer += 60f;
-                _minutesTimer--;
-
                 if (_minutesTimer <= 0f && _secondsTimer <= 0f)
                     TimerFinish();
+
+                _secondsTimer += 60f;
+                _minutesTimer--;
             }
 
             SetTimerText();
+            UpdateHPbars();
         }
     }
 
@@ -65,13 +79,64 @@ public class S_ArenaManager : MonoBehaviour
     public void StartMatch()
     {
         _participantsStats.SetActive(false);
-        _matchUI.SetActive(true);
-        _eventSystem.SetSelectedGameObject(null);
-        _eventSystem.SetSelectedGameObject(_matchUI.transform.GetChild(0).gameObject);
+        InitializeMatchUI();
 
         _betSystem.ResetBetText();
         EnableBot();
         _timerRunning = true;
+    }
+    /// <summary>
+    /// Initialize the UI, it changes if the match is bot vs bot or player vs bot
+    /// </summary>
+    private void InitializeMatchUI()
+    {
+        _matchUI.SetActive(true);
+        _playerUI.SetActive(false);
+        _botsUI.SetActive(false);
+
+        GameObject currentUI = null;
+
+        if (_p1.isPlayer || _p2.isPlayer)
+        {
+            _playerUI.SetActive(true);
+            currentUI = _playerUI;
+        }
+        else
+        {
+            _botsUI.SetActive(true);
+            currentUI = _botsUI;
+            _eventSystem.SetSelectedGameObject(null);
+            _eventSystem.SetSelectedGameObject(currentUI.transform.Find("Skip match").gameObject);
+        }
+
+        if (currentUI != null)
+        {
+            _participant1Health = currentUI.transform.Find("ChallengerLeft").transform.Find("Health").transform.Find("Forward").GetComponent<Image>();
+            _participant2Health = currentUI.transform.Find("ChallengerRight").transform.Find("Health").transform.Find("Forward").GetComponent<Image>();
+
+            //TODO : change color for Logo
+            currentUI.transform.Find("ChallengerLeft").transform.Find("Logo").GetComponent<Image>().color = _p1.logo;
+            currentUI.transform.Find("ChallengerRight").transform.Find("Logo").GetComponent<Image>().color = _p2.logo;
+        }
+    }
+    /// <summary>
+    /// Change the fill amount of the hp bar and the color depending of the total HP of the participants
+    /// </summary>
+    private void UpdateHPbars()
+    {
+        if (_participant1Health != null)
+        {
+            float botLife = _bot1.GetComponent<S_FrameManager>().PercentLife;
+            _participant1Health.fillAmount = botLife;
+            _participant1Health.color = Color.HSVToRGB(Mathf.Lerp(0f, 120f, botLife)/360f, 1f, 1f);
+        }
+        if (_participant2Health != null)
+        {
+            float botLife = _bot2.GetComponent<S_FrameManager>().PercentLife;
+            _participant2Health.fillAmount = botLife;
+
+            _participant2Health.color = Color.HSVToRGB(Mathf.Lerp(0f, 120f, botLife)/360f, 1f, 1f);
+        }
     }
     /// <summary>
     /// Create all bot in the arena
@@ -231,11 +296,11 @@ public class S_ArenaManager : MonoBehaviour
     }
     public void SetTimerText()
     {
-        _timerText.text = _minutesTimer.ToString("00") + " : " + _secondsTimer.ToString("00");
+        _timerText.text = _minutesTimer.ToString("00") + ":" + _secondsTimer.ToString("00");
     }
     public void ResetTimer()
     {
-        _minutesTimer = 3f;
+        _minutesTimer = MatchDuration;
         _secondsTimer = 0f;
         _timerRunning = false;
         SetTimerText();

@@ -342,7 +342,9 @@ public class S_CameraView : MonoBehaviour
         _camArena.transform.position = _arenaAnchor.transform.position;
         FadeInComplete?.Invoke();
 
-        yield return new WaitForSeconds(0.5f); //give time for the camera to rotate
+        _showMovement = null;
+
+        yield return new WaitForSeconds(1f); //give time for the camera to rotate
         if (_animator != null)
         {
             _animator.SetTrigger("Start");
@@ -367,6 +369,8 @@ public class S_CameraView : MonoBehaviour
         yield return new WaitForSeconds(_animator.GetCurrentAnimatorClipInfo(0).Length);
 
         SceneManager.LoadScene("MainMenu");
+
+        _showMovement = null;
         //SceneManager.LoadScene(SceneManager.GetActiveScene().rootCount);
     }
 
@@ -396,21 +400,25 @@ public class S_CameraView : MonoBehaviour
         {
             _animator.SetTrigger("Start");
         }
+        _showMovement = null;
     }
 
     public void StartZoomFadeIn()
     {
-        StartCoroutine(ZoomFadeIn());
+        if (_showMovement == null)
+            _showMovement = StartCoroutine(ZoomFadeIn());
     }
 
     public void StartFadeIn()
     {
-        StartCoroutine(FadeIn());
+        if (_showMovement == null)
+            _showMovement = StartCoroutine(FadeIn());
     }
 
     public void StartReturnToTournament()
     {
-        StartCoroutine(ReturnToTournament());
+        if (_showMovement == null)
+            _showMovement = StartCoroutine(ReturnToTournament());
     }
 
     /// <summary>

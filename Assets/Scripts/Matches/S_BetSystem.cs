@@ -35,12 +35,28 @@ public class S_BetSystem : MonoBehaviour
 
     private bool _hasBet = false;
 
+    public InputActionReference NavigateReference;
+    private InputAction _navigate;
+    private InputAction _confirmAction;
+    private InputAction _cancelAction;
+
     private void Awake()
     {
         _eventSystem = EventSystem.current;
         _launchMatchTxt = _launchMatch.GetComponentInChildren<TextMeshProUGUI>();
 
         _betInputTxt.onValidateInput += ValidateChar;
+        _navigate = NavigateReference.action;
+
+        _confirmAction = new InputAction("ConfirmBet");
+        _confirmAction.AddBinding("<Gamepad>/start");
+        _confirmAction.AddBinding("<Keyboard>/enter");
+        _cancelAction = new InputAction("CancelBet");
+        _cancelAction.AddBinding("<Gamepad>/buttonEast");
+        _cancelAction.AddBinding("<Keyboard>/escape");
+
+        _confirmAction.Enable();
+        _cancelAction.Enable();
     }
 
     private void Start()
@@ -57,19 +73,36 @@ public class S_BetSystem : MonoBehaviour
 
         _eventSystem.SetSelectedGameObject(null);
         _eventSystem.SetSelectedGameObject(_betInputTxt.gameObject);
+
+        _navigate.Enable();
     }
 
     private void OnDestroy()
     {
         _betInputTxt.onValidateInput -= ValidateChar;
+
+        _navigate?.Disable();
+        _cancelAction?.Disable();
+        _confirmAction?.Disable();
     }
 
     private void Update()
     {
+        BetInputs();
         if (_betInputTxt.isFocused && _isLeavingInput)
         {
             _isLeavingInput = false;
         }
+    }
+
+    private void BetInputs()
+    {
+        if (gameObject.activeSelf && _confirmAction.triggered)
+            ConfirmBet();
+        if (gameObject.activeSelf && _cancelAction.triggered)
+            EraseNumber();
+
+        InputFieldUnfocus();
     }
 
     /// <summary>
@@ -144,7 +177,7 @@ public class S_BetSystem : MonoBehaviour
             gameObject.SetActive(false);
             ActivateButtons();
 
-            if (_betInputTxt.text.Length > 0)
+            if (_betInputTxt.text.Length > 0 && _betAmount > 0)
             {
                 for (int i = 0; i < _betScreenButtons.Length - 1; i++)
                 {
@@ -195,6 +228,13 @@ public class S_BetSystem : MonoBehaviour
         {
             string nextAmountTxt = (currentAmountTxt.Substring(0, currentAmountTxt.Length - 1));
             _betInputTxt.text = nextAmountTxt;
+        }
+        else
+        {
+            gameObject.SetActive(false);
+            ActivateButtons();
+            _eventSystem.SetSelectedGameObject(null);
+            _eventSystem.SetSelectedGameObject(_launchMatch.gameObject);
         }
     }
 
@@ -269,11 +309,12 @@ public class S_BetSystem : MonoBehaviour
     /// without sending the OnEdit event
     /// </summary>
     /// <param name="context"></param>
-    public void OnInputFieldUnfocus(InputAction.CallbackContext context)
+    private void InputFieldUnfocus()
     {
-        if (context.started && gameObject.activeSelf)
+        Vector2 direction = _navigate.ReadValue<Vector2>();
+        if (_navigate.triggered && gameObject.activeSelf)
         {
-            if (context.ReadValue<Vector2>().y < 0f && _eventSystem.currentSelectedGameObject == _betInputTxt.gameObject)
+            if (direction.y < 0f && _eventSystem.currentSelectedGameObject == _betInputTxt.gameObject)
             {
                 _isLeavingInput = true;
 
