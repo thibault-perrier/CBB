@@ -82,7 +82,7 @@ public class S_TournamentManager : MonoBehaviour
 
         //InitializeParticipationData();
 
-        _participant1.isPlayer = false;
+        _participant1.isPlayer = true;
 
         _participant1.name = "Participant nb 0";
         _participant2.name = "Participant nb 1";
