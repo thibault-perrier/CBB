@@ -55,10 +55,26 @@ public class S_EditorController : MonoBehaviour
 
     enum EditState
     {
+        nullChoice,
         PartChoice,
         PresetChoice,
         WeaponChoice,
         FrameChoice
+    }
+
+    public void SetNullChoice()
+    {
+        _editState = EditState.nullChoice;
+    }
+
+    public void SetPartChoice()
+    {
+        _editState = EditState.PartChoice;
+    }
+
+    public void SetPresetChoice()
+    {
+        _editState = EditState.PresetChoice;
     }
 
     private void Awake()
