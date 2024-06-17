@@ -217,7 +217,7 @@ public class S_EditorController : MonoBehaviour
 
                 _weapons.Add(newWeapon);
                 
-                if (i < _nbWeapon)
+                if (_weaponGroup1.transform.childCount < _nbWeapon)
                 {
                     newWeapon.transform.parent = _weaponGroup1.transform;
                 }
@@ -255,8 +255,9 @@ public class S_EditorController : MonoBehaviour
 
                 _frame.Add(newFrame);
                 
-                if(i < _nbFrame)
+                if(_frameGroup1.transform.childCount < _nbFrame)
                 {
+                    Debug.Log(_nbFrame);
                     newFrame.transform.parent = _frameGroup1.transform;
                 }
                 else
@@ -569,7 +570,7 @@ public class S_EditorController : MonoBehaviour
         {
             GameObject frame = CreatePresetPrefab(robot);
             RectTransform rectTransform = frame.AddComponent<RectTransform>();
-            rectTransform.sizeDelta = new Vector2(0, 0);
+            rectTransform.sizeDelta = new Vector2(1, 2);
 
             frame.transform.parent = _presetGroup.transform;
             frame.transform.localPosition = Vector3.zero;
@@ -581,7 +582,7 @@ public class S_EditorController : MonoBehaviour
             GameObject add = Instantiate(_newPresetObjectIcon);
 
             RectTransform rectTransform = add.AddComponent<RectTransform>();
-            rectTransform.sizeDelta = new Vector2(0, 0);
+            rectTransform.sizeDelta = new Vector2(1, 2);
 
             add.transform.parent = _presetGroup.transform;
             add.transform.localPosition = Vector3.zero;
