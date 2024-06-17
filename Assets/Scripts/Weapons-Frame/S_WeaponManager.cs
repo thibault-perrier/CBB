@@ -27,6 +27,9 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     [SerializeField] private int _lifeBrakePoint = 15;    //In pourcent life level
     [SerializeField] private float _life;
 
+    [Header("SFX")]
+    [SerializeField] private GameObject _sfxHitContact;
+
     public S_WeaponData Data
     {
         get => _data;
@@ -104,13 +107,14 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
             // sort the collider if he is not him self weapon or if he not hit the him self bot
             var hitObject = collide
-                .Select(x => x.gameObject)
-                .Where(x => !hitDamage.Contains(x))
+                .Where(x => !hitDamage.Contains(x.gameObject))
                 .ToList();
 
             if (hitObject.Any())
             {
-                foreach (var col in hitObject)
+                InstanceSFX(hitObject[0], worldCenter, worldHalfExtents);
+
+                foreach (var col in hitObject.Select(x => x.gameObject))
                 {
                     if (!col)
                         continue;
@@ -123,6 +127,18 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         }
     }
     
+    private void InstanceSFX(Collider hitObject, Vector3 worldCenter, Vector3 worldHalfExtents)
+    {
+        if (hitObject.gameObject != gameObject)
+        {
+            Ray ray = new Ray(worldCenter, hitObject.transform.position - worldCenter);
+            if (hitObject.Raycast(ray, out RaycastHit hitInfo, worldHalfExtents.magnitude))
+            {
+                Vector3 hitPointContact = hitInfo.point;
+                Instantiate(_sfxHitContact, hitPointContact, Quaternion.identity);
+            }
+        }
+    }
     private bool AttackCollide(GameObject collision)
     {
         if (IsCurrentBot(collision))
