@@ -35,6 +35,10 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     [Header("SFX")]
     [SerializeField] private GameObject _vfxHitContact;
     [SerializeField] private Vector3 _scaleSfxHitContact = Vector3.one;
+    [SerializeField] private GameObject _vfxLowUp;
+    [SerializeField] private GameObject _vfxDestroy;
+
+    private GameObject _vfxSmoke;
 
     public S_WeaponData Data
     {
@@ -232,6 +236,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         if (_life <= _brakePoint && _state == State.ok)
         {
             _state = State.broken;
+            _vfxSmoke = Instantiate(_vfxLowUp, transform.position, Quaternion.identity, transform);
             _animator.SetBool("_playAttack", false);
         }
         if (_life <= 0)
@@ -240,6 +245,13 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         }
     }
     public void Die()
+    {
+        Destroy(_vfxSmoke);
+        Instantiate(_vfxDestroy, transform.position, Quaternion.identity);
+
+        DetachWeapon();
+    }
+    public void DetachWeapon()
     {
         transform.parent.gameObject.transform.parent = null;
         _state = State.destroy;
@@ -251,6 +263,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         _rb.useGravity = true;
         _rb.angularDrag = 0f;
         _rb.drag = 2f;
+        _rb.AddTorque(Vector3.one);
     }
     public void Repair()
     {

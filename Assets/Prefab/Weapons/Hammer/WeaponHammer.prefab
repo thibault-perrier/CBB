@@ -144,8 +144,16 @@ MonoBehaviour:
   _state: 0
   _lifeBrakePoint: 15
   _life: 0
+  _attackingStart:
+    m_PersistentCalls:
+      m_Calls: []
+  _attackingEnd:
+    m_PersistentCalls:
+      m_Calls: []
   _vfxHitContact: {fileID: 5359891238948782943, guid: 6d9c2ca111b4d80449bb9fc857679ad3, type: 3}
   _scaleSfxHitContact: {x: 1, y: 1, z: 1}
+  _vfxLowUp: {fileID: 2482073294565216197, guid: bcf64ff07c7c122419edb1e63d6dd6ec, type: 3}
+  _vfxDestroy: {fileID: 4817468644295895023, guid: 851254ef3dfc2cc4b840a1f59d6eedf4, type: 3}
 --- !u!95 &9078970882318680198
 Animator:
   serializedVersion: 5

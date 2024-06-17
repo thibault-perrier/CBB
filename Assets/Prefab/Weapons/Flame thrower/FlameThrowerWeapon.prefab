@@ -177,6 +177,8 @@ MonoBehaviour:
         m_CallState: 2
   _vfxHitContact: {fileID: 0}
   _scaleSfxHitContact: {x: 1, y: 1, z: 1}
+  _vfxLowUp: {fileID: 2482073294565216197, guid: bcf64ff07c7c122419edb1e63d6dd6ec, type: 3}
+  _vfxDestroy: {fileID: 4817468644295895023, guid: 851254ef3dfc2cc4b840a1f59d6eedf4, type: 3}
 --- !u!95 &9078970882318680198
 Animator:
   serializedVersion: 5
@@ -217,7 +219,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 1.7746414, y: 0.964056, z: 3.0041153}
+  m_Size: {x: 1.17, y: 0.964056, z: 3.0041153}
   m_Center: {x: 0.0035543242, y: -0.008101662, z: 1.8939081}
 --- !u!65 &8722000961936720713
 BoxCollider:
@@ -310,9 +312,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7618719975522978823}
     m_Modifications:
+    - target: {fileID: 993480385935276694, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3435969728041803024, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
       propertyPath: m_Name
       value: FlameThrowerHolder
+      objectReference: {fileID: 0}
+    - target: {fileID: 6536587068351869565, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7299464043658807772, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
+      propertyPath: m_Range
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7299464043658807772, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
+      propertyPath: m_Intensity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7800818031751537225, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
+      propertyPath: m_Intensity
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8050317530656237192, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
       propertyPath: m_LocalPosition.x
