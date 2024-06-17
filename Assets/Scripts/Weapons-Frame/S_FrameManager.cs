@@ -120,4 +120,9 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     {
         _life = _data.MaxLife;
     }
+
+    public bool CanRecieveDamage()
+    {
+        return _life > 0f;
+    }
 }

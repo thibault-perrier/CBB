@@ -901,6 +901,9 @@ public class S_AIController : MonoBehaviour
         if (weapon.CurrentState != S_WeaponManager.State.ok)
             return false;
 
+        if (!weapon.CanRecieveDamage())
+            return false;
+
         // if the weapon is behind the enemy
         if (dot < 0f)
             return false;
