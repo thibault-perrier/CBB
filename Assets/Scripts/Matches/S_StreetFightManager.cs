@@ -120,6 +120,9 @@ public class S_StreetFightManager : MonoBehaviour
         _cameraView.gameObject.SetActive(true);
         _mainCamera?.SetActive(false);
 
+        var camera = _cameraView.gameObject.GetComponentInChildren<Camera>();
+        camera.fieldOfView = _startFieldOfView;
+
         StartCoroutine(TimerBeforeStart(() =>
         {
             _uiTimerBeforeFight.SetActive(false);
@@ -214,6 +217,8 @@ public class S_StreetFightManager : MonoBehaviour
 
         _AIController = _AIBot.GetComponent<S_AIController>();
         _playerInput = _playerBot.GetComponent<PlayerInput>();
+        _AIBot.GetComponent<S_AIStatsController>().BotDifficulty = S_AIStatsController.BotRank.Randomly;
+
         BindDeadEventForBots();
         SetEnableBots(false);
     }
