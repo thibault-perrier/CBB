@@ -52,9 +52,9 @@ public class S_StreetFightManager : MonoBehaviour
     private GameObject _mainCamera;
 
     [Header("Animation")]
-    [SerializeField, Min(0f), Tooltip("the millstone for the camera field of view in end fight zoom")]
+    [SerializeField, Min(1f), Tooltip("the millstone for the camera field of view in end fight zoom")]
     private float _zoomEndAnimation = 5f;
-    [SerializeField, Min(0f), Tooltip("the speed of field of view animation")]
+    [SerializeField, Min(1f), Tooltip("the speed of field of view animation")]
     private float _zoomAnimationSpeed = 30f;
 
     [Header("Event")]
