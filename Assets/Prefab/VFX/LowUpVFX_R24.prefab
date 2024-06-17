@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 5524337472165085829}
   - component: {fileID: 6143808157445220541}
   - component: {fileID: 6306144668095323893}
-  - component: {fileID: 4648791288131269926}
+  - component: {fileID: -7722768283033562907}
   m_Layer: 0
-  m_Name: LowUpSFX_R24
+  m_Name: LowUpVFX_R24
   m_TagString: FxTemporaire
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4663,7 +4663,7 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &4648791288131269926
+--- !u!114 &-7722768283033562907
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4672,42 +4672,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2482073294565216197}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9205bc1bbacc90040a998067b5643d16, type: 3}
+  m_Script: {fileID: 11500000, guid: 6fd2e8874f60266498a388d7229a1bac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clearBehavior: 1
-  cameraShake:
-    enabled: 0
-    useMainCamera: 1
-    cameras: []
-    delay: 0
-    duration: 1
-    shakeSpace: 0
-    shakeStrength: {x: 0.1, y: 0.1, z: 0.1}
-    shakeCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: -1
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: -1
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    shakesDelay: 0
-  animatedLights: []
-  fadeOutReference: {fileID: 0}
+  OnlyDeactivate: 0

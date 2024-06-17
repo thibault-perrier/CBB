@@ -145,6 +145,38 @@ MonoBehaviour:
   _state: 0
   _lifeBrakePoint: 15
   _life: 0
+  _attackingStart:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7663099968806528757}
+        m_TargetAssemblyTypeName: CartoonFX.S_VFXPlayer, Assembly-CSharp
+        m_MethodName: PlayFlameThrowerEffect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _attackingEnd:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7663099968806528757}
+        m_TargetAssemblyTypeName: CartoonFX.S_VFXPlayer, Assembly-CSharp
+        m_MethodName: StopFlameThrowerEffect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _vfxHitContact: {fileID: 0}
+  _scaleSfxHitContact: {x: 1, y: 1, z: 1}
 --- !u!95 &9078970882318680198
 Animator:
   serializedVersion: 5
@@ -284,39 +316,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8050317530656237192, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.02841368
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8050317530656237192, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.099743
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8050317530656237192, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.00000013114334
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 8050317530656237192, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8050317530656237192, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8050317530656237192, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8050317530656237192, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8050317530656237192, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8050317530656237192, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8050317530656237192, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -332,3 +364,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8050317530656237192, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
   m_PrefabInstance: {fileID: 8817823762490000148}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7663099968806528757 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1155172394427622881, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
+  m_PrefabInstance: {fileID: 8817823762490000148}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9defc4a6785214849bee0db27335a802, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
