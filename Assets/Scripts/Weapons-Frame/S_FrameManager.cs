@@ -9,7 +9,7 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     private Rigidbody _rb;
     
     [SerializeField, Tooltip("the current health point of the frama")] 
-    private float _life;
+    public float _life;
     [SerializeField, Tooltip("all statistic in the frame")] 
     private S_FrameData _data;
     [SerializeField, Tooltip("All kook point for get weapons")] 
