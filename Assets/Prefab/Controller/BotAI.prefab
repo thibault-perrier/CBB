@@ -171,6 +171,164 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &3112831555211643717
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3380647541202585788}
+  - component: {fileID: 3474454827183146880}
+  - component: {fileID: 5751552723406329205}
+  - component: {fileID: 7256037363706842873}
+  m_Layer: 0
+  m_Name: DestroyFrameSFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3380647541202585788
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3112831555211643717}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: 0.00000008940696, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2297989736853939848}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &3474454827183146880
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3112831555211643717}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 1
+  MaxDistance: 50
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &5751552723406329205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3112831555211643717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42c4aa7a3a1fede47a29fc056730bf6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioType: 1
+--- !u!114 &7256037363706842873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3112831555211643717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc95e2d9efd334e488108293239285b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _SFXList:
+  - {fileID: 8300000, guid: 5c898289df578274da8d3152f6d4500e, type: 3}
+  - {fileID: 8300000, guid: ce213ab401e00434a87a7f2a6748476d, type: 3}
 --- !u!1 &3462867678676210357
 GameObject:
   m_ObjectHideFlags: 0
@@ -462,7 +620,7 @@ GameObject:
   - component: {fileID: 2294696611885579146}
   m_Layer: 0
   m_Name: BotAI
-  m_TagString: BotA
+  m_TagString: BotB
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -487,6 +645,7 @@ Transform:
   - {fileID: 1015342697599005483}
   - {fileID: 6649065114465815458}
   - {fileID: 2335496633760840160}
+  - {fileID: 3380647541202585788}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &814477326234807329
@@ -553,7 +712,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _aiState: 0
-  _enemyTag: BotB
+  _enemyTag: BotA
   _attackEnemyWeapon: 0
   _attackWithBestWeapon: 0
   _canFailedAnyAttack: 0
@@ -597,7 +756,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _updateStatsOnStart: 1
-  _botRank: 4
+  _botRank: 2
   _statsBotTutorialRank:
     _attackEnemyWeapon: 0
     _attackWithBestWeapon: 0
@@ -641,14 +800,14 @@ MonoBehaviour:
     _canMakeAccidentalDirection: 1
     _attackSuccesProbability: 60
     _attackEnemyWeaponProbabiltiy: 0
-    _attackFailProbability: 25
+    _attackFailProbability: 15
     _movementProbability: 80
     _dodgeProbability: 0
     _fleeProbability: 40
-    _accidentalMovementProbability: 25
-    _accidentalDirectionProbability: 25
+    _accidentalMovementProbability: 20
+    _accidentalDirectionProbability: 20
     _fleeCooldown: 0.1
-    _attackFailCooldown: 1
+    _attackFailCooldown: 0.7
     _attackFailDistance: 3
     _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
@@ -672,14 +831,14 @@ MonoBehaviour:
     _canMakeAccidentalDirection: 1
     _attackSuccesProbability: 70
     _attackEnemyWeaponProbabiltiy: 0
-    _attackFailProbability: 20
+    _attackFailProbability: 15
     _movementProbability: 85
     _dodgeProbability: 80
     _fleeProbability: 70
-    _accidentalMovementProbability: 20
-    _accidentalDirectionProbability: 20
+    _accidentalMovementProbability: 15
+    _accidentalDirectionProbability: 15
     _fleeCooldown: 0.1
-    _attackFailCooldown: 0.5
+    _attackFailCooldown: 0.7
     _attackFailDistance: 4.5
     _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
@@ -707,8 +866,8 @@ MonoBehaviour:
     _movementProbability: 95
     _dodgeProbability: 90
     _fleeProbability: 85
-    _accidentalMovementProbability: 17
-    _accidentalDirectionProbability: 17
+    _accidentalMovementProbability: 12
+    _accidentalDirectionProbability: 12
     _fleeCooldown: 0.1
     _attackFailCooldown: 0.7
     _attackFailDistance: 3.5
@@ -734,7 +893,7 @@ MonoBehaviour:
     _canMakeAccidentalDirection: 1
     _attackSuccesProbability: 95
     _attackEnemyWeaponProbabiltiy: 100
-    _attackFailProbability: 15
+    _attackFailProbability: 10
     _movementProbability: 100
     _dodgeProbability: 100
     _fleeProbability: 100
@@ -771,6 +930,21 @@ MonoBehaviour:
   - {fileID: 3462867678676210357}
   - {fileID: 5207187598846912309}
   _vfxDestroyFrame: {fileID: 1564341819385604237, guid: bd810a395ac4d5a4ebb37ca1f796c13d, type: 3}
+  onFrameDie:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7256037363706842873}
+        m_TargetAssemblyTypeName: S_SFXPlayer, Assembly-CSharp
+        m_MethodName: PlayEffect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &7920552870093215641
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -798,6 +972,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _vfxHitRobot: {fileID: 260199309943010057, guid: 96381aa699ef23745b2b0cdd05407a1e, type: 3}
+  _velocityRequireForVfxHitRobot: 2
 --- !u!1 &6022504595988651131
 GameObject:
   m_ObjectHideFlags: 0
