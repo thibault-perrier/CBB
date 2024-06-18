@@ -36,7 +36,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     [SerializeField, Tooltip("call when he take any damage")]
     private UnityEvent _onTakeDamage;
     [SerializeField, Tooltip("call when the weapon is broken")]
-    private UnityEvent _onWeaponBroken;
+    private UnityEvent _onWeaponUnuseable;
     [SerializeField, Tooltip("Call when the weapon is destroy and detached to bot")]
     private UnityEvent _onWeaponDestroy;
     [SerializeField, Tooltip("call when he begin to tuch a target who can take damage")]
@@ -259,7 +259,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
             _state = State.broken;
             _vfxSmoke = Instantiate(_data.VfxLowUp, transform.position, Quaternion.identity, transform);
             _animator.SetBool("_playAttack", false);
-            _onWeaponBroken?.Invoke();
+            _onWeaponUnuseable?.Invoke();
         }
         if (_life <= 0)
         {
@@ -279,7 +279,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         _state = State.destroy;
         _animator.SetBool("_playAttack", false);
         _animator.enabled = false;
-        _onWeaponBroken?.Invoke();
+        _onWeaponUnuseable?.Invoke();
 
         _rb = this.AddComponent<Rigidbody>();
         _rb.isKinematic = false;
