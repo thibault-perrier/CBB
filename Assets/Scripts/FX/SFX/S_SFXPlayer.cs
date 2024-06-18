@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class S_SFXPlayer : MonoBehaviour
 {
-    private AudioSource _SFXSource;
-    [SerializeField] private List<AudioClip> _SFXList = new List<AudioClip>();
-
     public enum SFXType
     {
         Single,
@@ -16,7 +13,10 @@ public class S_SFXPlayer : MonoBehaviour
 
     [SerializeField] private SFXType _SFXType;
 
-    private bool _isPlaying = false;
+    [SerializeField] private List<AudioClip> _SFXList = new List<AudioClip>();
+    private AudioSource _SFXSource;
+
+    public bool _isLooping = false;
 
 
     void Awake()
@@ -33,23 +33,36 @@ public class S_SFXPlayer : MonoBehaviour
             _SFXSource.PlayOneShot(_SFXList[UnityEngine.Random.Range(0, _SFXList.Count)]);
         else if (_SFXType == SFXType.MiddleLoop)
         {
-
+            _SFXSource.PlayOneShot(_SFXList[0]);
+            _isLooping = true;
+            StartCoroutine(PlayMiddleLoop());
         }
     }
 
-    public void PlaySaw()
+    private IEnumerator PlayMiddleLoop()
     {
+        yield return new WaitForSeconds(_SFXList[0].length);
 
+        while (_isLooping)
+        {
+            if (!_SFXSource.isPlaying)
+            {
+                _SFXSource.PlayOneShot(_SFXList[1]);
+                yield return new WaitForSeconds(0.1f);
+            }
+            yield return null;
+        }
+
+        PlayEndLoop();
     }
 
-    public void PlayNextEffect()
+    private void PlayEndLoop()
     {
-
+        _SFXSource.PlayOneShot(_SFXList[2]);
     }
 
-    void Update()
+    public void StopLoop()
     {
-        if (!_SFXSource.isPlaying)
-            Debug.Log("IS PLAYING!!");
+        _isLooping = false;
     }
 }
