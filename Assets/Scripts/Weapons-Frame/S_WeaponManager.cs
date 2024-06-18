@@ -25,7 +25,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     [SerializeField] private S_WeaponData _data;
     [SerializeField] private State _state = State.ok;
     [SerializeField] private int _lifeBrakePoint = 15;    //In pourcent life level
-    [SerializeField] private float _life;
+    public float _life;
 
     public S_WeaponData Data
     {

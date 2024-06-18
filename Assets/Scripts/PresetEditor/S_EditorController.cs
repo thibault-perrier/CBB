@@ -40,7 +40,6 @@ public class S_EditorController : MonoBehaviour
 
     [SerializeField] private List<S_WeaponData> _presetWeaponsData;
     [SerializeField] private S_FrameData _presetFrameData;
-    [SerializeField] private int _selectedPreset;
 
     [SerializeField] private List<GameObject> _presetWeaponsHookPoints;
     [SerializeField] private int _indexHookPointToModify;
@@ -118,8 +117,12 @@ public class S_EditorController : MonoBehaviour
         UpdatePiece();
         UpdatePresetRobotGroup();
 
+        if(S_DataGame.Instance.inventory.Robots.Count() > 0)
+        {
+            UpdatePrefabRobot();
+        }
+
         _selectedMaterial.SetFloat("_Selected", 1);
-        _selectedPreset = -1;
         Selector();
     }
 
@@ -350,7 +353,7 @@ public class S_EditorController : MonoBehaviour
                     Robot robot = new Robot(GetUnuseFrame());
                     S_DataGame.Instance.inventory.Robots.Add(robot);
                 }
-                _selectedPreset = _selectedIndex;
+                S_DataGame.Instance.inventory.SelectedRobot = _selectedIndex;
                 UpdatePresetRobotGroup();
                 break;
             case EditState.PartChoice:
@@ -422,7 +425,7 @@ public class S_EditorController : MonoBehaviour
     /// <param name="weaponData"></param>
     private void UpdatePresetWeapon(S_WeaponData weaponData)
     {
-        S_DataGame.Instance.inventory.Robots[_selectedPreset]._weapons[_indexHookPointToModify] = S_DataGame.Instance.inventory.GetWeapon(weaponData);
+        S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot]._weapons[_indexHookPointToModify] = S_DataGame.Instance.inventory.GetWeapon(weaponData);
         UpdatePrefabRobot();
     }
 
@@ -432,8 +435,8 @@ public class S_EditorController : MonoBehaviour
     /// <param name="weaponData"></param>
     private void UpdatePresetFrame(S_FrameData frameData)
     {
-        S_DataGame.Instance.inventory.Robots[_selectedPreset]._frame = S_DataGame.Instance.inventory.GetFrame(frameData);
-        S_DataGame.Instance.inventory.Robots[_selectedPreset].UpdateWeaponMaxList();
+        S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot]._frame = S_DataGame.Instance.inventory.GetFrame(frameData);
+        S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot].UpdateWeaponMaxList();
         UpdatePrefabRobot();
     }
 
@@ -513,7 +516,7 @@ public class S_EditorController : MonoBehaviour
 
     public void UpdatePrefabRobot()
     {
-        S_FrameData frameData = S_DataGame.Instance.inventory.Robots[_selectedPreset]._frame.GetFrameData();
+        S_FrameData frameData = S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot]._frame.GetFrameData();
         List<S_WeaponData> weaponsData = new List<S_WeaponData>();
 
         GameObject frame = Instantiate(frameData.Prefab);
@@ -533,11 +536,11 @@ public class S_EditorController : MonoBehaviour
 
         _presetObjectPart.Clear();
         
-        for (int i = 0; i < S_DataGame.Instance.inventory.Robots[_selectedPreset]._weapons.Count(); i++)
+        for (int i = 0; i < S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot]._weapons.Count(); i++)
         {
             if (_presetWeaponsHookPoints.Count() - 1 >= i)
             {     
-                Weapon weapon = S_DataGame.Instance.inventory.Robots[_selectedPreset]._weapons[i];
+                Weapon weapon = S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot]._weapons[i];
                 if (weapon != null)
                 {
                     GameObject objWeapon = Instantiate(weapon.GetWeaponData().Prefab);
@@ -597,7 +600,7 @@ public class S_EditorController : MonoBehaviour
     {
         if (_presetObjectPart[_selectedIndex].GetComponent<S_FrameManager>() == null)
         {
-            S_DataGame.Instance.inventory.Robots[_selectedPreset]._weapons[_selectedIndex] = null;
+            S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot]._weapons[_selectedIndex] = null;
             UpdatePrefabRobot();
         }
         UpdatePiece();

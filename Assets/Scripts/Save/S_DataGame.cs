@@ -255,5 +255,54 @@ public class TournamentSaver // Tournament
     public int _currentLevel;
     public S_TournamentManager.Tournament _tournamentInfo;
     public List<S_TournamentManager.Participant> _roundWinners;
+    public Dictionary<S_TournamentManager.Participant ,Robot> _participantsRobot;
+    public S_TournamentManager.Participant _player;
+    public List<float> _playerLife;
+
+    public void InitRobot()
+    {
+        foreach(S_TournamentManager.Participant participant in _participants)
+        {
+            if (participant.isPlayer)
+            {
+                _participantsRobot.Add(participant, S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot]);
+            }
+            else
+            {
+                _participantsRobot.Add(participant, S_DataRobotComponent.Instance.GetRandomRobot());
+            }
+        }
+    }
+
+    public void SavePlayerLife(S_FrameManager frameManager)
+    {
+        _playerLife.Add(frameManager._life);
+        foreach(GameObject hookPoint in frameManager.WeaponHookPoints)
+        {
+            S_WeaponManager weaponManager = hookPoint.GetComponentInChildren<S_WeaponManager>();
+            if (weaponManager != null)
+            {
+                _playerLife.Add(weaponManager._life);
+            }
+            else
+            {
+                _playerLife.Add(0);
+            }
+        }
+    }
+
+    public void SetPlayerLife(S_FrameManager frameManager)
+    {
+        frameManager._life = _playerLife[0];
+        for(int i=0; i < frameManager.WeaponHookPoints.Count();i++)
+        {
+            GameObject hookPoint = frameManager.WeaponHookPoints[i];
+            S_WeaponManager weaponManager = hookPoint.GetComponentInChildren<S_WeaponManager>();
+            if (weaponManager != null)
+            {
+                weaponManager._life = _playerLife[i + 1];
+            }
+        }
+    }
 }
 
