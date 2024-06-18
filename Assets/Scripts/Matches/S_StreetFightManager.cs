@@ -212,6 +212,7 @@ public class S_StreetFightManager : MonoBehaviour
         _playerBot = Instantiate(_playerBotPrefab,   _botPlayerTransformSpawn.position,  Quaternion.Euler(_botPlayerTransformSpawn.eulerAngles));
         _AIBot     = Instantiate(_AIBotPrefab,       _botAITransformSpawn.position,      Quaternion.Euler(_botAITransformSpawn.eulerAngles));
 
+        _AIBot.tag = "BotA";
         _playerBot.tag = "BotB";
         _AIBot.GetComponent<S_AIController>().EnemyTag = "BotB";
 

@@ -364,6 +364,8 @@ public class S_AIController : MonoBehaviour
     private void UpdateAIMovement()
     {
         TryFailedAttack();
+        TryToFindBestWeaponFromTarget(_target.transform);
+        TryToAttackWithAnyAttack();
 
         // get movement probability
         float movementRnd = Random.Range(0, 101);
@@ -972,7 +974,7 @@ public class S_AIController : MonoBehaviour
         // if the current weapon is currently attacking dont change current weapon
         if (_currentWeapon)
         {
-            if (_currentWeapon.Attacking)
+            if (_currentWeapon.Attacking || _currentWeapon.CanAttack)
                 return true;
         }
 
@@ -1007,6 +1009,24 @@ public class S_AIController : MonoBehaviour
     private Vector3 GetHitZone(S_WeaponManager weapon)
     {
         return weapon.HitZone.transform.TransformPoint(weapon.HitZone.center);
+    }
+    /// <summary>
+    /// when he move if the current weapon is behind the target reselect the best weapon form the target
+    /// </summary>
+    /// <param name="target"></param>
+    private void TryToFindBestWeaponFromTarget(Transform target)
+    {
+        if (!_currentWeapon)
+            return;
+
+        Vector3 dirToEnemy = _currentWeapon.transform.position - target.position;
+
+        if (dirToEnemy.magnitude > 10f)
+        {
+            float dotWeaponForward = Vector3.Dot(transform.forward, dirToEnemy.normalized);
+            if (dotWeaponForward < 0f)
+                GetBestWeaponFromTarget(target, ref _currentWeapon);
+        }
     }
     #endregion
 
@@ -1051,8 +1071,8 @@ public class S_AIController : MonoBehaviour
         if (attackRnd > _attackSuccesProbability)
             return;
 
-        GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
         _currentWeapon.LaunchAttack();
+        GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
     }
     /// <summary>
     /// if the target is closed the current weapon
@@ -1077,6 +1097,25 @@ public class S_AIController : MonoBehaviour
 
         // return True if if can make any damage with current weapon
         return _currentWeapon.CanTakeAnyDamage;
+    }
+    /// <summary>
+    /// try to attack with any weapon when it in movement
+    /// </summary>
+    private void TryToAttackWithAnyAttack()
+    {
+        foreach (var weapon in _frameManager.Weapons)
+        {
+            // if the weapon can make an attack and if he can take any damage with her attack
+            if (weapon.CanAttack && weapon.CanTakeAnyDamage)
+            {
+                // make a probabiblity for attack
+                float attackRnd = Random.Range(0, 101);
+                if (attackRnd > _attackSuccesProbability)
+                    return;
+
+                weapon.LaunchAttack();
+            }
+        }
     }
     /// <summary>
     /// Cooldown for try to fail any attack
