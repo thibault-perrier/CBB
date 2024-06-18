@@ -576,7 +576,7 @@ MonoBehaviour:
     m_Bits: 0
   _fleeDirection: {fileID: 2335496633760840160}
   _fleeCooldown: 0
-  _getEnemyInStart: 0
+  _getEnemyInStart: 1
   _failAttack: 0
   _attackFailCooldown: 2
   _attackFailDistance: 2.5
@@ -597,7 +597,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _updateStatsOnStart: 1
-  _botRank: 4
+  _botRank: 2
   _statsBotTutorialRank:
     _attackEnemyWeapon: 0
     _attackWithBestWeapon: 0
@@ -641,14 +641,14 @@ MonoBehaviour:
     _canMakeAccidentalDirection: 1
     _attackSuccesProbability: 60
     _attackEnemyWeaponProbabiltiy: 0
-    _attackFailProbability: 25
+    _attackFailProbability: 15
     _movementProbability: 80
     _dodgeProbability: 0
     _fleeProbability: 40
-    _accidentalMovementProbability: 25
-    _accidentalDirectionProbability: 25
+    _accidentalMovementProbability: 20
+    _accidentalDirectionProbability: 20
     _fleeCooldown: 0.1
-    _attackFailCooldown: 1
+    _attackFailCooldown: 0.7
     _attackFailDistance: 3
     _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
@@ -672,14 +672,14 @@ MonoBehaviour:
     _canMakeAccidentalDirection: 1
     _attackSuccesProbability: 70
     _attackEnemyWeaponProbabiltiy: 0
-    _attackFailProbability: 20
+    _attackFailProbability: 15
     _movementProbability: 85
     _dodgeProbability: 80
     _fleeProbability: 70
-    _accidentalMovementProbability: 20
-    _accidentalDirectionProbability: 20
+    _accidentalMovementProbability: 15
+    _accidentalDirectionProbability: 15
     _fleeCooldown: 0.1
-    _attackFailCooldown: 0.5
+    _attackFailCooldown: 0.7
     _attackFailDistance: 4.5
     _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
@@ -707,8 +707,8 @@ MonoBehaviour:
     _movementProbability: 95
     _dodgeProbability: 90
     _fleeProbability: 85
-    _accidentalMovementProbability: 17
-    _accidentalDirectionProbability: 17
+    _accidentalMovementProbability: 12
+    _accidentalDirectionProbability: 12
     _fleeCooldown: 0.1
     _attackFailCooldown: 0.7
     _attackFailDistance: 3.5
@@ -734,7 +734,7 @@ MonoBehaviour:
     _canMakeAccidentalDirection: 1
     _attackSuccesProbability: 95
     _attackEnemyWeaponProbabiltiy: 100
-    _attackFailProbability: 15
+    _attackFailProbability: 10
     _movementProbability: 100
     _dodgeProbability: 100
     _fleeProbability: 100
@@ -798,6 +798,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _vfxHitRobot: {fileID: 260199309943010057, guid: 96381aa699ef23745b2b0cdd05407a1e, type: 3}
+  _velocityRequireForVfxHitRobot: 2
 --- !u!1 &6022504595988651131
 GameObject:
   m_ObjectHideFlags: 0
