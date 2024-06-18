@@ -127,6 +127,7 @@ public class S_TournamentBracket : MonoBehaviour
     /// </summary>
     private void OnReturnToTournament()
     {
+        DisplayBetScreen();
         _cameraView.AddObjectToView(_logos[_currentMatch * 2]);
         _cameraView.AddObjectToView(_logos[_currentMatch * 2 + 1]);
         EndBotMatch();
@@ -229,35 +230,13 @@ public class S_TournamentBracket : MonoBehaviour
     /// <summary>
     /// If the player don't want to watch the match it will simulate a match and get a random winner based on rating Also update automatically the logo in the UI
     /// </summary>
-    public void SkipBotMatch()
-    {
-        if (_tournamentManager.IsEven())
-        {
-            ClosePopUpButton();
-            _tournamentManager.SimulateMatch();
-
-            if (_tournamentManager.GetCurrentLoser().name == "PLAYER")
-            {
-                StartCoroutine(LoserMoveBack(_losersLogo[_currentMatch].gameObject, true));
-                _cameraView.ClearObjectToView();
-                _cameraView.AddObjectToView(_losersLogo[_currentMatch]);
-            }
-            else
-            {
-                UpdateWinnerLogo(_currentUsedBracket.transform, _currentLevel, _currentMatch);
-                _betSystem.WinBet(); //check if the player has won the bet
-                _betSystem.SetHasBet(false);
-            }
-        }
-    }
-
     public void EndBotMatch()
     {
         if (_tournamentManager.IsEven())
         {
             ClosePopUpButton();
 
-            if (_tournamentManager.GetCurrentLoser().name == "PLAYER")
+            if (_tournamentManager.GetCurrentLoser().isPlayer)
             {
                 StartCoroutine(LoserMoveBack(_losersLogo[_currentMatch].gameObject, true));
                 _cameraView.ClearObjectToView();
@@ -266,8 +245,6 @@ public class S_TournamentBracket : MonoBehaviour
             else
             {
                 UpdateWinnerLogo(_currentUsedBracket.transform, _currentLevel, _currentMatch);
-                _betSystem.WinBet(); //check if the player has won the bet
-                _betSystem.SetHasBet(false);
             }
         }
     }
@@ -530,6 +507,9 @@ public class S_TournamentBracket : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Display the victory screen with some cool particle effect
+    /// </summary>
     public void DisplayWinLogo()
     {
         _tournamentUI.SetActive(true);
@@ -541,7 +521,7 @@ public class S_TournamentBracket : MonoBehaviour
 
         _playerWin.SetActive(true);
         _tournamentPrizeDisplay.SetActive(true);
-        _tournamentPrizeDisplay.GetComponentInChildren<TextMeshProUGUI>().text = "Tournament : You won $ " + _tournamentManager.GetTournamentPrize();
+        _tournamentPrizeDisplay.GetComponentInChildren<TextMeshProUGUI>().text = "TOURNAMENT : YOU WON $ " + _tournamentManager.GetTournamentPrize() + " !";
         _sparksEffect.SetActive(true);
 
         //THE MONEY += THE PRIZE
@@ -553,11 +533,40 @@ public class S_TournamentBracket : MonoBehaviour
     /// <param name="bracketNb">Put 8 for eight participant, 16 for sixteen participant brackets</param>
     public void SetBracket(int bracketNb)
     {
-        switch(bracketNb)
+        _eightParticipantsBracket.SetActive(false);
+        _sixteenParticipantsBracket.SetActive(false);
+        switch (bracketNb)
         {
-            case 8: _currentUsedBracket = _eightParticipantsBracket; break;
-            case 16: _currentUsedBracket = _sixteenParticipantsBracket; break;
-            default: Debug.LogError("Please write '8' or '16' to use valid brackets !"); break;
+            case 8: _currentUsedBracket = _eightParticipantsBracket;
+                _eightParticipantsBracket.SetActive(true);
+                break;
+            case 16: _currentUsedBracket = _sixteenParticipantsBracket;
+                _sixteenParticipantsBracket.SetActive(true);
+                break;
+            default: Debug.LogError("Please write '8' or '16' to use valid brackets !");
+                break;
         }
+    }
+
+    public void DisplayBetScreen()
+    {
+        _betSystem.WinBet();
+        _betSystem.SetHasBet(false);
+    }
+
+    public void OnSkipMatch()
+    {
+        _tournamentManager.SimulateMatch();
+        OnReturnToTournament();
+    }
+
+    /// <summary>
+    /// Set as selected a gameobject from the UI for the event system
+    /// </summary>
+    /// <param name="obj"></param>
+    public void OnSetAsSelected(GameObject obj)
+    {
+        if (obj.activeInHierarchy)
+            _eventSystem.SetSelectedGameObject(obj);
     }
 }

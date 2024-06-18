@@ -68,16 +68,16 @@ public class S_PlayerController : MonoBehaviour
     }
 
     //Change the camera view
-    public void OnCangeView(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-            int newValue = _viewIndex + (int)context.ReadValue<float>();
-            _viewIndex = newValue > 3 ? 0 : newValue < 0 ? 3 : newValue;
+    //public void OnCangeView(InputAction.CallbackContext context)
+    //{
+    //    if (context.started)
+    //    {
+    //        int newValue = _viewIndex + (int)context.ReadValue<float>();
+    //        _viewIndex = newValue > 3 ? 0 : newValue < 0 ? 3 : newValue;
 
-            _cameraView.SetViewType((S_CameraView.ViewType)_viewIndex);
-        }
-    }
+    //        _cameraView.SetViewType((S_CameraView.ViewType)_viewIndex);
+    //    }
+    //}
 
     //public void OnMoveTournamentCamera(InputAction.CallbackContext context)
     //{
