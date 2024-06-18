@@ -140,4 +140,14 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
             weapon.DetachWeapon();
         }
     }
+    
+    public void RepairAll()
+    {
+        Repair();
+        foreach (S_WeaponManager weaponManager in _weaponManagers)
+        {
+            if(weaponManager.CurrentState != S_WeaponManager.State.destroy)
+                weaponManager.Repair();
+        }
+    }
 }
