@@ -30,13 +30,22 @@ public class S_ChangeControlDisplay : MonoBehaviour
 
                 if (_lastActiveDevice is Gamepad)
                 {
-                    _keyboardControls.SetActive(false);
-                    _gamepadControls.SetActive(true);
+                    if (_keyboardControls != null)
+                        _keyboardControls?.SetActive(false);
+                    if (_gamepadControls != null)
+                        _gamepadControls?.SetActive(true);
+                    Cursor.visible = false;
                 }
                 else if (_lastActiveDevice is Keyboard)
                 {
-                    _keyboardControls.SetActive(true);
-                    _gamepadControls.SetActive(false);
+                    if (_keyboardControls != null)
+                        _keyboardControls?.SetActive(true);
+                    if (_gamepadControls != null)
+                        _gamepadControls?.SetActive(false);
+                }
+                else if (_lastActiveDevice is Mouse)
+                {
+                    Cursor.visible = true;
                 }
             };
         }

@@ -559,4 +559,14 @@ public class S_TournamentBracket : MonoBehaviour
         _tournamentManager.SimulateMatch();
         OnReturnToTournament();
     }
+
+    /// <summary>
+    /// Set as selected a gameobject from the UI for the event system
+    /// </summary>
+    /// <param name="obj"></param>
+    public void OnSetAsSelected(GameObject obj)
+    {
+        if (obj.activeInHierarchy)
+            _eventSystem.SetSelectedGameObject(obj);
+    }
 }
