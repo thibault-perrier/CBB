@@ -364,6 +364,7 @@ public class S_AIController : MonoBehaviour
     private void UpdateAIMovement()
     {
         TryFailedAttack();
+        TryToFindBestWeaponFromTarget(_target.transform);
         TryToAttackWithAnyAttack();
 
         // get movement probability
@@ -1008,6 +1009,24 @@ public class S_AIController : MonoBehaviour
     private Vector3 GetHitZone(S_WeaponManager weapon)
     {
         return weapon.HitZone.transform.TransformPoint(weapon.HitZone.center);
+    }
+    /// <summary>
+    /// when he move if the current weapon is behind the target reselect the best weapon form the target
+    /// </summary>
+    /// <param name="target"></param>
+    private void TryToFindBestWeaponFromTarget(Transform target)
+    {
+        if (!_currentWeapon)
+            return;
+
+        Vector3 dirToEnemy = _currentWeapon.transform.position - target.position;
+
+        if (dirToEnemy.magnitude > 10f)
+        {
+            float dotWeaponForward = Vector3.Dot(transform.forward, dirToEnemy.normalized);
+            if (dotWeaponForward < 0f)
+                GetBestWeaponFromTarget(target, ref _currentWeapon);
+        }
     }
     #endregion
 
