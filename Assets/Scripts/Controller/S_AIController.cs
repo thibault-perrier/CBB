@@ -364,6 +364,7 @@ public class S_AIController : MonoBehaviour
     private void UpdateAIMovement()
     {
         TryFailedAttack();
+        TryToAttackWithAnyAttack();
 
         // get movement probability
         float movementRnd = Random.Range(0, 101);
@@ -972,7 +973,7 @@ public class S_AIController : MonoBehaviour
         // if the current weapon is currently attacking dont change current weapon
         if (_currentWeapon)
         {
-            if (_currentWeapon.Attacking)
+            if (_currentWeapon.Attacking || _currentWeapon.CanAttack)
                 return true;
         }
 
@@ -1051,8 +1052,8 @@ public class S_AIController : MonoBehaviour
         if (attackRnd > _attackSuccesProbability)
             return;
 
-        GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
         _currentWeapon.LaunchAttack();
+        GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
     }
     /// <summary>
     /// if the target is closed the current weapon
@@ -1077,6 +1078,25 @@ public class S_AIController : MonoBehaviour
 
         // return True if if can make any damage with current weapon
         return _currentWeapon.CanTakeAnyDamage;
+    }
+    /// <summary>
+    /// try to attack with any weapon when it in movement
+    /// </summary>
+    private void TryToAttackWithAnyAttack()
+    {
+        foreach (var weapon in _frameManager.Weapons)
+        {
+            // if the weapon can make an attack and if he can take any damage with her attack
+            if (weapon.CanAttack && weapon.CanTakeAnyDamage)
+            {
+                // make a probabiblity for attack
+                float attackRnd = Random.Range(0, 101);
+                if (attackRnd > _attackSuccesProbability)
+                    return;
+
+                weapon.LaunchAttack();
+            }
+        }
     }
     /// <summary>
     /// Cooldown for try to fail any attack
