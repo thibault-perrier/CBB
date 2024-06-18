@@ -191,6 +191,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _onWeaponBroken:
+    m_PersistentCalls:
+      m_Calls: []
+  _onWeaponDestroy:
+    m_PersistentCalls:
+      m_Calls: []
+  _onBeginTuchTarget:
+    m_PersistentCalls:
+      m_Calls: []
+  _onEndTuchTarget:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!95 &9078970882318680198
 Animator:
   serializedVersion: 5
@@ -419,15 +431,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 993480385935276694, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3435969728041803024, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
       propertyPath: m_Name
       value: FlameThrowerHolder
       objectReference: {fileID: 0}
-    - target: {fileID: 6536587068351869565, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
+    - target: {fileID: 3435969728041803024, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6536587068351869565, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7299464043658807772, guid: c3b6be8b5ab4bda4e9a0499d8e1c6aa4, type: 3}
       propertyPath: m_Range

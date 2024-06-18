@@ -137,6 +137,9 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
             if (weapon.CurrentState == S_WeaponManager.State.broken)
                 continue;
 
+            if (!weapon.transform.parent.gameObject.transform.parent)
+                continue;
+
             weapon.DetachWeapon();
         }
     }

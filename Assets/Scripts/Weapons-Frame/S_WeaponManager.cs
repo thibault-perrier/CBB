@@ -219,6 +219,9 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     {
         if (damagable != null)
         {
+            if (!damagable.CanRecieveDamage())
+                return false;
+
             var scaleDamage = _data.AttackOneTime ? 1f : Time.deltaTime;
             damagable.TakeDamage(_damage * scaleDamage);
             _onTakeDamage?.Invoke();
