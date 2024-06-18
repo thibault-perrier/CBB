@@ -68,25 +68,41 @@ public class InventorySaver // Inventory
     public List<Robot> Robots = new List<Robot>();
 
     public string backgroundColorHex;
-    public float backgroundAlpha;
+    public string overlayColorHex;
+    public float backgroundAlpha = 255;
 
-    public int backgroundColorIndex;
     public int overlayImageIndex;
     public Vector2 overlayImagePosition;
 
-    public void SaveColors(string hexColor, float alpha)
+
+    public void SaveOverlayColor(string hexColor)
     {
-        PlayerPrefs.SetString("CurrentBackgroundColor", hexColor);
-        PlayerPrefs.SetFloat("CurrentBackgroundAlpha", alpha);
+        overlayColorHex = hexColor;
+        PlayerPrefs.SetString("CurrentOverlayColor", hexColor);
         PlayerPrefs.Save();
+        Debug.Log("Overlay Color Saved: " + hexColor);
     }
 
+    public void SaveBackgroundColor(string hexColor)
+    {
+        backgroundColorHex = hexColor;
+        PlayerPrefs.SetString("CurrentBackgroundColor", hexColor);
+        PlayerPrefs.Save();
+        Debug.Log("Background Color Saved: " + hexColor);
+    }
+
+    // Charger les couleurs
     public void LoadColors()
     {
-        backgroundColorHex = PlayerPrefs.GetString("CurrentBackgroundColor", "#000000FF");
-        backgroundAlpha = PlayerPrefs.GetFloat("CurrentBackgroundAlpha", 1f);
+        backgroundColorHex = PlayerPrefs.GetString("CurrentBackgroundColor", backgroundColorHex);
+        Debug.Log("Background Color Loaded: " + backgroundColorHex + " with Alpha: " + backgroundAlpha);
     }
 
+    public void LoadOverlayColor()
+    {
+        overlayColorHex = PlayerPrefs.GetString("CurrentOverlayColor", overlayColorHex);
+        Debug.Log("Overlay Color Loaded: " + overlayColorHex);
+    }
 
     public Weapon GetWeapon(S_WeaponData weaponData)
     {

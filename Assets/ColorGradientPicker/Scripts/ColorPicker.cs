@@ -84,7 +84,6 @@ public class ColorPicker : MonoBehaviour
         }
         else
         {
-            Done();
             return false;
         }
     }
@@ -276,9 +275,17 @@ public class ColorPicker : MonoBehaviour
         string hexR = ((int)(modifiedColor.r)).ToString("X");
         string hexG = ((int)(modifiedColor.g)).ToString("X");
         string hexB = ((int)(modifiedColor.b)).ToString("X");
-        string hexA = ((int)(modifiedColor.a)).ToString("X2");
+        string hexA = ((int)(modifiedColor.a)).ToString("X");
         string hexColor = "#" + hexR + hexG + hexB + hexA;
         Debug.Log("Hexadecimal Color: " + hexColor);
+
+        string overlayHexR = ((int)(modifiedColor.r)).ToString("X");
+        string overlayHexG = ((int)(modifiedColor.g)).ToString("X");
+        string overlayHexB = ((int)(modifiedColor.b)).ToString("X");
+        string overlayHexA = ((int)(modifiedColor.a)).ToString("X");
+        string overlayHexColor = "#" + overlayHexR + overlayHexG + overlayHexB + overlayHexA;
+        Debug.Log("Hexadecimal Overlay Color: " + overlayHexColor);
+                                 
         instance.transform.gameObject.SetActive(false);
     }
     
