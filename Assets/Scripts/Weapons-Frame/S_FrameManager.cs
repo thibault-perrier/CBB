@@ -140,7 +140,7 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
             weapon.DetachWeapon();
         }
     }
-
+    
     public void RepairAll()
     {
         Repair();
