@@ -20,6 +20,7 @@ public class S_ClickablesManager : MonoBehaviour
     private bool _garageNavigable = false;
     private InputAction mouseMoveAction;
     private InputAction navigateAction;
+    [SerializeField] private S_EditorController _editorController;
 
     void Awake()
     {
@@ -420,5 +421,20 @@ public class S_ClickablesManager : MonoBehaviour
         {
             _clickableStates[i] = true;
         }
+    }
+
+    public void SetNullChoice()
+    {
+        _editorController.SetNullChoice();
+    }
+
+    public void SetPartChoice()
+    {
+        _editorController.SetPartChoice();
+    }
+
+    public void SetPresetChoice()
+    {
+        _editorController.SetPresetChoice();
     }
 }
