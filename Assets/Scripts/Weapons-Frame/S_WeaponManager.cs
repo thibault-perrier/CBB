@@ -239,7 +239,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         if (!hitTarget)
             return false;
 
-        if (currentBot.name.Equals(hitTarget.name))
+        if (currentBot.tag.Equals(hitTarget.tag))
             return true;
 
         return false;
