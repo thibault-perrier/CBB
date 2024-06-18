@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class S_BotFVXController : MonoBehaviour
+public class S_BotVFXController : MonoBehaviour
 {
     private Rigidbody _rb;
 
