@@ -32,12 +32,6 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     [SerializeField] private UnityEvent _attackingStart;
     [SerializeField] private UnityEvent _attackingEnd;
 
-    [Header("SFX")]
-    [SerializeField] private GameObject _vfxHitContact;
-    [SerializeField] private Vector3 _scaleSfxHitContact = Vector3.one;
-    [SerializeField] private GameObject _vfxLowUp;
-    [SerializeField] private GameObject _vfxDestroy;
-
     private GameObject _vfxSmoke;
 
     public S_WeaponData Data
@@ -141,14 +135,14 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     
     private void InstanceVFX(Collider hitObject)
     {
-        if (!_vfxHitContact)
+        if (!_data.VfxHitContact)
             return;
 
         if (hitObject.gameObject != gameObject)
         {
             Vector3 vfxPosition = _damageZones[0].transform.TransformPoint(_damageZones[0].center);
-            var hitVfx = Instantiate(_vfxHitContact, vfxPosition, Quaternion.identity) as GameObject;
-            hitVfx.transform.localScale = _scaleSfxHitContact;
+            var hitVfx = Instantiate(_data.VfxHitContact, vfxPosition, Quaternion.identity) as GameObject;
+            hitVfx.transform.localScale = _data.ScaleVfxHitContact;
         }
     }
     private bool AttackCollide(GameObject collision)
@@ -236,7 +230,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         if (_life <= _brakePoint && _state == State.ok)
         {
             _state = State.broken;
-            _vfxSmoke = Instantiate(_vfxLowUp, transform.position, Quaternion.identity, transform);
+            _vfxSmoke = Instantiate(_data.VfxLowUp, transform.position, Quaternion.identity, transform);
             _animator.SetBool("_playAttack", false);
         }
         if (_life <= 0)
@@ -247,7 +241,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     public void Die()
     {
         Destroy(_vfxSmoke);
-        Instantiate(_vfxDestroy, transform.position, Quaternion.identity);
+        Instantiate(_data.VfxDestroy, transform.position, Quaternion.identity);
 
         DetachWeapon();
     }

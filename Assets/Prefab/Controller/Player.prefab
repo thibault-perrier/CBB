@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1554409109303669790}
   - component: {fileID: 2563859038876599764}
   - component: {fileID: 6831879879407640939}
+  - component: {fileID: 8657287993468827405}
   m_Layer: 0
   m_Name: Player
   m_TagString: BotB
@@ -332,6 +333,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _immobileVelocity: 0.3
   _immobileTimeRequirement: 5
+--- !u!114 &8657287993468827405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2864770155178023637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 081ca253a2c823944af18397f5138b8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _vfxHitRobot: {fileID: 260199309943010057, guid: 96381aa699ef23745b2b0cdd05407a1e, type: 3}
 --- !u!1 &4974788559187099309
 GameObject:
   m_ObjectHideFlags: 0

@@ -459,6 +459,7 @@ GameObject:
   - component: {fileID: 1264622569804197333}
   - component: {fileID: 1311143359725107705}
   - component: {fileID: 7920552870093215641}
+  - component: {fileID: 2294696611885579146}
   m_Layer: 0
   m_Name: BotAI
   m_TagString: BotA
@@ -784,6 +785,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _immobileVelocity: 0.3
   _immobileTimeRequirement: 5
+--- !u!114 &2294696611885579146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6019708789991135223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 081ca253a2c823944af18397f5138b8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _vfxHitRobot: {fileID: 260199309943010057, guid: 96381aa699ef23745b2b0cdd05407a1e, type: 3}
 --- !u!1 &6022504595988651131
 GameObject:
   m_ObjectHideFlags: 0
