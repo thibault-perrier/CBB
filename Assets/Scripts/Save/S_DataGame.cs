@@ -145,6 +145,7 @@ public class InventorySaver // Inventory
     public void RemoveRobot(int index)
     {
         Robots.RemoveAt(index);
+        SelectedRobot = 0;
     }
 
     public void UpdateUseItem()
@@ -154,10 +155,19 @@ public class InventorySaver // Inventory
         {
             weapon._useNumber = 0;
         }
+        foreach (Frame frame in Frames)
+        {
+            frame._useNumber = 0;
+        }
 
         foreach (Robot robot in Robots)
         {
-            robot._frame._useNumber++;
+            foreach (Frame frame in Frames)
+            {
+                if (frame._id == robot._frame._id)
+                    frame._useNumber++;
+            }
+            
             foreach(Weapon rbWeapon in robot._weapons)
             {
                 if(rbWeapon != null)

@@ -3086,16 +3086,8 @@ MonoBehaviour:
   OnSceneLoad: 1
   inventory:
     CurrentMoney: 0
-    Frames:
-    - _id: 0
-      _name: 
-      _number: 0
-      _useNumber: 0
-    Weapons:
-    - _id: 0
-      _name: 
-      _number: 0
-      _useNumber: 0
+    Frames: []
+    Weapons: []
     Robots: []
     SelectedRobot: 0
   tournament:
@@ -3110,6 +3102,15 @@ MonoBehaviour:
       prize: 0
       maxMatchNb: 0
     _roundWinners: []
+    _player:
+      isPlayer: 0
+      id: 0
+      name: 
+      logo: {r: 0, g: 0, b: 0, a: 0}
+      rating: 0
+      hasLost: 0
+      rank: 0
+    _playerLife: []
 --- !u!4 &368020107
 Transform:
   m_ObjectHideFlags: 0
@@ -14062,6 +14063,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 19550523e236b674d87b98d742cf9d1c, type: 3}
   m_PrefabInstance: {fileID: 1745100714}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1745465593
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3289098490591048998, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -34.19
+      objectReference: {fileID: 0}
+    - target: {fileID: 3289098490591048998, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 30.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3289098490591048998, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 94
+      objectReference: {fileID: 0}
+    - target: {fileID: 3289098490591048998, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3289098490591048998, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3289098490591048998, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.9890288
+      objectReference: {fileID: 0}
+    - target: {fileID: 3289098490591048998, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.14772311
+      objectReference: {fileID: 0}
+    - target: {fileID: 3289098490591048998, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 16.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 3289098490591048998, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 3289098490591048998, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6960293329802770740, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: m_Name
+      value: Edge Detection Camera
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
 --- !u!1001 &1761639145
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16998,3 +17056,4 @@ SceneRoots:
   - {fileID: 262291804}
   - {fileID: 1062218448}
   - {fileID: 1925019342}
+  - {fileID: 1745465593}

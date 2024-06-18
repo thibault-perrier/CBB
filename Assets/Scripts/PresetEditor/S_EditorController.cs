@@ -50,6 +50,13 @@ public class S_EditorController : MonoBehaviour
 
     [SerializeField] private EditState _editState = EditState.PresetChoice;
 
+    private static readonly int EmissionColorKey = Shader.PropertyToID("_EmissionColor");
+    private const string EmissionKey = "_EMISSION";
+
+    private Color emissionColor = Color.yellow;  // Couleur de base de l'émission
+    private float emissionIntensity = 50.0f;    // Intensité de l'émission
+
+    [SerializeField] private List<MeshRenderer> renderers = new List<MeshRenderer>();
 
 
     enum EditState
@@ -206,6 +213,8 @@ public class S_EditorController : MonoBehaviour
         _weapons.Clear();
         _frame.Clear();
 
+        int count = 0;
+
         for (int i = 0; i < S_DataGame.Instance.inventory.Weapons.Count(); i++)
         {
             Weapon saveWeapon = S_DataGame.Instance.inventory.Weapons[i];
@@ -219,8 +228,9 @@ public class S_EditorController : MonoBehaviour
                 RectTransform rectTransform = newWeapon.AddComponent<RectTransform>();
 
                 _weapons.Add(newWeapon);
-                
-                if (_weaponGroup1.transform.childCount < _nbWeapon)
+
+                count++;
+                if (count < _nbWeapon)
                 {
                     newWeapon.transform.parent = _weaponGroup1.transform;
                 }
@@ -241,7 +251,7 @@ public class S_EditorController : MonoBehaviour
             }
         }
 
-
+        count = 0;
 
         for (int i = 0; i < S_DataGame.Instance.inventory.Frames.Count(); i++)
         {
@@ -257,8 +267,9 @@ public class S_EditorController : MonoBehaviour
                 RectTransform rectTransform = newFrame.AddComponent<RectTransform>();
 
                 _frame.Add(newFrame);
-                
-                if(_frameGroup1.transform.childCount < _nbFrame)
+
+                count++;
+                if (count < _nbFrame)
                 {
                     Debug.Log(_nbFrame);
                     newFrame.transform.parent = _frameGroup1.transform;
@@ -313,6 +324,7 @@ public class S_EditorController : MonoBehaviour
                     _selectedIndex = _presets.Count - 1;
                 _selectedIndex = _selectedIndex % _presets.Count;
                 Debug.Log(_presets[_selectedIndex].name);
+                SetHovered(_presets[_selectedIndex].gameObject);
                 //_selectedMaterial.SetVector("_Selected_Object_Position", _presets[_selectedIndex].gameObject.transform.position);
                 break;
              case EditState.PartChoice:
@@ -320,6 +332,7 @@ public class S_EditorController : MonoBehaviour
                     _selectedIndex = _presetObjectPart.Count-1;
                 _selectedIndex = _selectedIndex % _presetObjectPart.Count;
                 Debug.Log(_presetObjectPart[_selectedIndex].name);
+                SetHovered(_presetObjectPart[_selectedIndex].gameObject);
                 //_selectedMaterial.SetVector("_Selected_Object_Position", _presetObjectPart[_selectedIndex].gameObject.transform.position);
                 break;
             case EditState.FrameChoice:
@@ -327,6 +340,7 @@ public class S_EditorController : MonoBehaviour
                     _selectedIndex = _frame.Count-1;
                 _selectedIndex = _selectedIndex % _frame.Count;
                 Debug.Log(_frame[_selectedIndex].name);
+                SetHovered(_frame[_selectedIndex].gameObject);
                 //_selectedMaterial.SetVector("_Selected_Object_Position", _frame[_selectedIndex].gameObject.transform.position);
                 break;
             case EditState.WeaponChoice:
@@ -334,6 +348,7 @@ public class S_EditorController : MonoBehaviour
                     _selectedIndex = _weapons.Count-1;
                 _selectedIndex = _selectedIndex % _weapons.Count;
                 Debug.Log(_weapons[_selectedIndex].name);
+                SetHovered(_weapons[_selectedIndex].gameObject);
                 //_selectedMaterial.SetVector("_Selected_Object_Position", _weapons[_selectedIndex].gameObject.transform.position);
                 break;
             default:
@@ -558,6 +573,8 @@ public class S_EditorController : MonoBehaviour
             }
         }
         _presetObjectPart.Add(frame);
+        S_DataGame.Instance.SaveInventory();
+        UpdatePresetRobotGroup();
     }
 
     private void UpdatePresetRobotGroup()
@@ -604,6 +621,48 @@ public class S_EditorController : MonoBehaviour
             UpdatePrefabRobot();
         }
         UpdatePiece();
+    }
+
+    /// <summary>
+    /// Makes the object glow when hovered.
+    /// </summary>
+    /// <param name="gameObject">object is hovered.</param>
+    public void SetHovered(GameObject gameObject)
+    {
+        DisableActiveRenderers();
+        FindRenderersAtPosition(gameObject);
+        for (int i = 0; i < renderers.Count; i++)
+        {
+            Renderer renderer = renderers[i];
+            renderer.material.EnableKeyword(EmissionKey);
+
+            // Augmenter l'émission en multipliant la couleur par l'intensité
+            Color finalEmissionColor = emissionColor * Mathf.LinearToGammaSpace(emissionIntensity);
+            renderer.material.SetColor(EmissionColorKey, finalEmissionColor);
+            renderer.material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+            renderer.material.EnableKeyword("_EMISSION");
+        }
+    }
+    
+    private void DisableActiveRenderers()
+    {
+        for (int i = 0; i < renderers.Count; i++)
+        {
+            MeshRenderer renderer = renderers[i];
+            renderer.material.DisableKeyword(EmissionKey);
+        }
+    }
+
+    /// <summary>
+    /// Shearch and return all Renderers of object at coordinate.
+    /// </summary>
+    /// <param name="position">shearch coordinate.</param>
+    private void FindRenderersAtPosition(GameObject obj)
+    {
+        renderers.Clear(); // Clear the list before adding new items
+
+        MeshRenderer[] objRenderers = obj.GetComponentsInChildren<MeshRenderer>();
+        renderers.AddRange(objRenderers);
     }
 
 }
