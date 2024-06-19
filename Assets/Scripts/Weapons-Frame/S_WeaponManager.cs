@@ -40,7 +40,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     [SerializeField, Tooltip("Call when the weapon is destroy and detached to bot")]
     private UnityEvent _onWeaponDestroy;
     [SerializeField, Tooltip("call when he begin to tuch a target who can take damage")]
-    private UnityEvent _onBeginTuchTarget;
+    private UnityEvent _onBeginTouchTarget;
     [SerializeField, Tooltip("call when he stop to tuch an target who can take any damage")]
     private UnityEvent _onEndTouchTarget;
 
@@ -142,13 +142,17 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
                     if (!succesAttack && _tuchDamageable)
                     {
                         _onEndTouchTarget?.Invoke();
+                        Debug.Log("On end touch");
                         _tuchDamageable = false;
                     }
 
                     if (succesAttack)
                     {
                         if (!_tuchDamageable)
-                            _onBeginTuchTarget?.Invoke();
+                        {
+                            _onBeginTouchTarget?.Invoke();
+                            Debug.Log("On begin touch");
+                        }
 
                         _tuchDamageable = true;
                         InstanceVFX(hitObject[0]);
