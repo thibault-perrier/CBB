@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class S_StreetFightManager : MonoBehaviour
@@ -16,6 +17,10 @@ public class S_StreetFightManager : MonoBehaviour
 
     [SerializeField, Min(0f), Tooltip("if one bot is not in this radius")]
     private float _radiusDefeat = 10f;
+    [SerializeField, Tooltip("Scene to load when the fight is end and when we press on any key")]
+    private string _sceneToLoadInEndFight = "MainMenu";
+    [SerializeField, Tooltip("the toogle who difine if the fight begin in the start")]
+    private bool _startStreetFightInStart = true;
 
     [Header("paricipants")]
     [SerializeField, Tooltip("the current player bot prefab")]
@@ -50,8 +55,6 @@ public class S_StreetFightManager : MonoBehaviour
     [Header("Camera")]
     [SerializeField, Tooltip("camera for focus the view on two bots")]
     private S_CameraView _cameraView;
-    [SerializeField, Tooltip("the main camera of menu")]
-    private GameObject _mainCamera;
 
     [Header("Animation")]
     [SerializeField, Min(1f), Tooltip("the millstone for the camera field of view in end fight zoom")]
@@ -83,6 +86,9 @@ public class S_StreetFightManager : MonoBehaviour
 
         var camera = _cameraView.gameObject.GetComponentInChildren<Camera>();
         _startFieldOfView = camera.fieldOfView;
+
+        if (_startStreetFightInStart)
+            StartStreetFight();
     }
     private void Update()
     {
@@ -121,7 +127,6 @@ public class S_StreetFightManager : MonoBehaviour
             _uiTimerBeforeFight.SetActive(true);
             _uiEndFightWinner.SetActive(false);
             _cameraView.gameObject.SetActive(true);
-            _mainCamera?.SetActive(false);
 
             var camera = _cameraView.gameObject.GetComponentInChildren<Camera>();
             camera.fieldOfView = _startFieldOfView;
@@ -188,7 +193,6 @@ public class S_StreetFightManager : MonoBehaviour
     private void EndCurrentFight()
     {
         SetEnableBots(false);
-        _mainCamera?.SetActive(false);
         StartCoroutine(AnimationZoom(() =>
         {
             _uiEndFightWinner.SetActive(true);
@@ -256,7 +260,7 @@ public class S_StreetFightManager : MonoBehaviour
     {
         _streetFightEnd = false;
 
-        _mainCamera.SetActive(true);
+        SceneManager.LoadScene(_sceneToLoadInEndFight, LoadSceneMode.Single);
         _cameraView.gameObject.SetActive(false);
         _uiEndFightWinner.SetActive(false);
         _onStreetFightEnd?.Invoke();
