@@ -181,7 +181,7 @@ public class S_BetSystem : MonoBehaviour
             {
                 for (int i = 0; i < _betScreenButtons.Length - 1; i++)
                 {
-                    _betScreenButtons[i].interactable = false;
+                    _betScreenButtons[i].enabled = false;
                 }
 
                 _currentBetTxt.transform.parent.gameObject.SetActive(true);

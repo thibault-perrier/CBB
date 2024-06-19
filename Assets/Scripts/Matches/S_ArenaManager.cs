@@ -326,6 +326,7 @@ public class S_ArenaManager : MonoBehaviour
     /// <param name="p2"></param>
     public void ShowStats(S_TournamentManager.Participant p1, S_TournamentManager.Participant p2)
     {
+        InitializeBetButtons();
         ResetTimer();
 
         _p1 = p1;
@@ -352,6 +353,18 @@ public class S_ArenaManager : MonoBehaviour
 
         SetStatsOnUi(p1.rating.ToString(), p1.name, p1.logo, _p1Stats);
         SetStatsOnUi(p2.rating.ToString(), p2.name, p2.logo, _p2Stats);
+    }
+    private void InitializeBetButtons()
+    {
+        Button[] buttons = _participantsStats.GetComponentsInChildren<Button>();
+
+        if (buttons.Length > 0)
+        {
+            foreach (Button button in buttons)
+            {
+                button.enabled = true;
+            }
+        }
     }
     public void ShowMatch(S_TournamentManager.Participant p1, S_TournamentManager.Participant p2)
     {
