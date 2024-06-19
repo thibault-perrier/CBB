@@ -270,6 +270,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     {
         Destroy(_vfxSmoke);
         Instantiate(_data.VfxDestroy, transform.position, Quaternion.identity);
+        _onWeaponDestroy?.Invoke();
 
         DetachWeapon();
     }
