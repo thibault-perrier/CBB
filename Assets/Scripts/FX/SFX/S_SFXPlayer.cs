@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class S_SFXPlayer : MonoBehaviour
 {
+    private AudioSource _firstSFXSource;
+    [SerializeField] private AudioSource _secondSFXSource;
     public enum SFXType
     {
         Single,
@@ -14,14 +16,14 @@ public class S_SFXPlayer : MonoBehaviour
     [SerializeField] private SFXType _SFXType;
 
     [SerializeField] private List<AudioClip> _SFXList = new List<AudioClip>();
-    private AudioSource _SFXSource;
 
     public bool _isLooping = false;
+    private bool _isFirstSourcePlaying = false;
 
 
     void Awake()
     {
-        _SFXSource = GetComponent<AudioSource>();
+        _firstSFXSource = GetComponent<AudioSource>();
     }
 
     /// <summary> 
@@ -30,10 +32,10 @@ public class S_SFXPlayer : MonoBehaviour
     public void PlayEffect()
     {
         if (_SFXType == SFXType.Single)
-            _SFXSource.PlayOneShot(_SFXList[UnityEngine.Random.Range(0, _SFXList.Count)]);
+            _firstSFXSource.PlayOneShot(_SFXList[UnityEngine.Random.Range(0, _SFXList.Count)]);
         else if (_SFXType == SFXType.MiddleLoop)
         {
-            _SFXSource.PlayOneShot(_SFXList[0]);
+            _firstSFXSource.PlayOneShot(_SFXList[0]);
             _isLooping = true;
             StartCoroutine(PlayMiddleLoop());
         }
@@ -41,16 +43,12 @@ public class S_SFXPlayer : MonoBehaviour
 
     private IEnumerator PlayMiddleLoop()
     {
-        yield return new WaitForSeconds(_SFXList[0].length);
+        yield return new WaitForSeconds(_SFXList[0].length - 0.1f);
 
         while (_isLooping)
         {
-            if (!_SFXSource.isPlaying)
-            {
-                _SFXSource.PlayOneShot(_SFXList[1]);
-                yield return new WaitForSeconds(0.1f);
-            }
-            yield return null;
+            (_isFirstSourcePlaying ? _secondSFXSource : _firstSFXSource).PlayOneShot(_SFXList[1]);
+            yield return new WaitForSeconds(_SFXList[1].length - 0.1f);
         }
 
         PlayEndLoop();
@@ -58,7 +56,7 @@ public class S_SFXPlayer : MonoBehaviour
 
     private void PlayEndLoop()
     {
-        _SFXSource.PlayOneShot(_SFXList[2]);
+        _firstSFXSource.PlayOneShot(_SFXList[2]);
     }
 
     public void StopLoop()
