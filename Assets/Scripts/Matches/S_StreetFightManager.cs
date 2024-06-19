@@ -221,7 +221,7 @@ public class S_StreetFightManager : MonoBehaviour
 
         _AIController = _AIBot.GetComponent<S_AIController>();
         _playerInput = _playerBot.GetComponent<PlayerInput>();
-        _AIBot.GetComponent<S_AIStatsController>().BotDifficulty = S_AIStatsController.BotRank.Diamond;
+        _AIBot.GetComponent<S_AIStatsController>().BotDifficulty = S_AIStatsController.BotRank.Randomly;
 
         _AIBot.tag = "BotA";
         _playerBot.tag = "BotB";
