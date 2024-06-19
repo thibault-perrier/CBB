@@ -98,6 +98,8 @@ public class S_AIController : MonoBehaviour
     private GameObject _target;
     [SerializeField, Tooltip("this is the current weapon used for attack the target")]
     private S_WeaponManager _currentWeapon;
+    [SerializeField] 
+    private FleeType _fleeMethode = FleeType.None;
 
     private S_WheelsController _wheelsController;
     private S_FrameManager _frameManager;
@@ -106,7 +108,7 @@ public class S_AIController : MonoBehaviour
     private Vector3 _fleeDestination;
     private WaitForSeconds _attackFailedCoroutine = new(1f);
     private WaitForSeconds _fleeFailureCooldownCoroutine = new(.5f);
-    [SerializeField] private FleeType _fleeMethode = FleeType.None;
+    private float _scaleMovement;
 
     #region Property
     /// <summary>
@@ -677,19 +679,19 @@ public class S_AIController : MonoBehaviour
         {
             _wheelsController.Direction = ReverseDir(2f);
             // if we are in front of the enemy go backward else fo toward
-            _wheelsController.Movement = dotBehindEnemy > 0f ? ReverseMov(-1f) : ReverseMov(1f);
+            _wheelsController.Movement = dotBehindEnemy > 0f ? ReverseMov(LerpMovement(-1f)) : ReverseMov(LerpMovement(1f));
             return;
         }
 
         if (dotDirection > 0f)
         {
             // go forward
-            movementAmount = dotWeaponBody > 0f ? ReverseMov(1f) : ReverseMov(-1f);
+            movementAmount = dotWeaponBody > 0f ? ReverseMov(LerpMovement(1f)) : ReverseMov(LerpMovement(-1f));
         }
         else
         {
             // go backward
-            movementAmount = dotWeaponBody > 0f ? ReverseMov(-1f) : ReverseMov(1f);
+            movementAmount = dotWeaponBody > 0f ? ReverseMov(LerpMovement(-1f)) : ReverseMov(LerpMovement(1f));
         }
 
         // if he hit any trap dont calcul turn amount
@@ -710,6 +712,20 @@ public class S_AIController : MonoBehaviour
         // set controller direction and movement
         _wheelsController.Direction = ReverseDir(turnAmount);
         _wheelsController.Movement = movementAmount;
+    }
+    /// <summary>
+    /// lerp the movement speed from the delta time
+    /// </summary>
+    /// <param name="movement">the millstone movement for lerp</param>
+    /// <returns>return the movement with a lerp</returns>
+    private float LerpMovement(float movement)
+    {
+        if (movement < 0f)
+            _scaleMovement = Mathf.Clamp(_scaleMovement - Time.deltaTime, -1f, 1f);
+        else
+            _scaleMovement = Mathf.Clamp(_scaleMovement + Time.deltaTime, -1f, 1f);
+
+        return _scaleMovement;
     }
     /// <summary>
     /// reverse the current movement with probability if
