@@ -974,7 +974,7 @@ public class S_AIController : MonoBehaviour
         // if the current weapon is currently attacking dont change current weapon
         if (_currentWeapon)
         {
-            if (_currentWeapon.Attacking || _currentWeapon.CanAttack)
+            if (_currentWeapon.Attacking && _currentWeapon.CanAttack)
                 return true;
         }
 
@@ -1023,7 +1023,7 @@ public class S_AIController : MonoBehaviour
 
         if (dirToEnemy.magnitude > 5f)
         {
-            float dotWeaponForward = Vector3.Dot(GetForwardWeapon(_currentWeapon.transform, transform), dirToEnemy.normalized);
+            float dotWeaponForward = Vector3.Dot(GetForwardWeapon(_currentWeapon, transform), dirToEnemy.normalized);
             
             if (dotWeaponForward < 0f)
                 GetBestWeaponFromTarget(target, ref _currentWeapon);
