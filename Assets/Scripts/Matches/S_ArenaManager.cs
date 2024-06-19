@@ -326,6 +326,7 @@ public class S_ArenaManager : MonoBehaviour
     /// <param name="p2"></param>
     public void ShowStats(S_TournamentManager.Participant p1, S_TournamentManager.Participant p2)
     {
+        InitializeBetButtons();
         ResetTimer();
 
         _p1 = p1;
@@ -355,7 +356,7 @@ public class S_ArenaManager : MonoBehaviour
     }
     private void InitializeBetButtons()
     {
-        Button[] buttons = _participantsStats.GetComponents<Button>();
+        Button[] buttons = _participantsStats.GetComponentsInChildren<Button>();
 
         if (buttons.Length > 0)
         {
