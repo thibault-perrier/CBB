@@ -18,7 +18,6 @@ public class CustomLogo : MonoBehaviour
 
     void Start()
     {
-        ResetLogo();
         S_DataGame.Instance.LoadInventory();
         overlayImageDropdown.onValueChanged.AddListener(delegate { ChangeOverlayImage(); });
 
