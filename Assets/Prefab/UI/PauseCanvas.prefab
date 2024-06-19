@@ -401,9 +401,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df57a024337230943b4bf173dbe3ec9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sceneToLoadForGiveUp: MainScene
+  _sceneToLoadForGiveUp: MainMenu
   _uiPausePanel: {fileID: 5642949570447947015}
-  _uiSettingsPanel: {fileID: 0}
   _uiGiveUpButton: {fileID: 1470797002127753108}
   _uiQuitButton: {fileID: 4859734947866319324}
   _location: 0
@@ -1174,6 +1173,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: S_PauseController, Assembly-CSharp
         m_MethodName: GiveUpButtonPress
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5642949570447947015}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2496,10 +2507,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5642949570447947015}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 8289501393523047550}
+        m_TargetAssemblyTypeName: S_PauseController, Assembly-CSharp
+        m_MethodName: ResumeButtonPress
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4796,7 +4807,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1004707437807702830, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_text
-      value: 2 (PAVE NUM.)
+      value: HAUT
       objectReference: {fileID: 0}
     - target: {fileID: 1029818463412766368, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_Action
@@ -4840,7 +4851,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1315695497420700349, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_text
-      value: 4 (PAVE NUM.)
+      value: BAS
       objectReference: {fileID: 0}
     - target: {fileID: 1350696681222332646, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_Action
@@ -4852,7 +4863,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2413016984734685186, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_text
-      value: 4 (PAVE NUM.)
+      value: BAS
       objectReference: {fileID: 0}
     - target: {fileID: 3803510133997349856, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_Action
@@ -4928,15 +4939,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5056467102368482984, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_text
-      value: 3 (PAVE NUM.)
+      value: DROITE
       objectReference: {fileID: 0}
     - target: {fileID: 5287772918797635545, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_text
-      value: 1 (PAVE NUM.)
+      value: GAUCHE
       objectReference: {fileID: 0}
     - target: {fileID: 5676070321873655150, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_text
-      value: 2 (PAVE NUM.)
+      value: HAUT
       objectReference: {fileID: 0}
     - target: {fileID: 6495530349497645749, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_Action
@@ -4948,7 +4959,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6546029457814741230, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_text
-      value: 3 (PAVE NUM.)
+      value: DROITE
       objectReference: {fileID: 0}
     - target: {fileID: 6571847246599950436, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_Pivot.x
@@ -5152,7 +5163,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8984188903116680168, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_text
-      value: 1 (PAVE NUM.)
+      value: GAUCHE
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
