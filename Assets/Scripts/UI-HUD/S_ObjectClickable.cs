@@ -71,6 +71,9 @@ public class S_ObjectClickable : MonoBehaviour
                 _animatorDoor.SetBool("Open", true);
                 _animatorCameraGarage.SetBool("MoveToGarage", true);
                 break;
+            case "Rue":
+
+                break;
             case "Tournament":
                 _animatorCameraGarage.SetBool("MoveToTournament", true);
                 break;
