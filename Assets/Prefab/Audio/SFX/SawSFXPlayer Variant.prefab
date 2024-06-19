@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4546663446092292347}
   - component: {fileID: 2983808270309373292}
+  - component: {fileID: 1343083362699262526}
   m_Layer: 0
   m_Name: SecondSFXPlayer
   m_TagString: Untagged
@@ -128,6 +129,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1343083362699262526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3735582257918218313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42c4aa7a3a1fede47a29fc056730bf6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioType: 1
 --- !u!1001 &7294462467481388243
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -179,6 +193,10 @@ PrefabInstance:
     - target: {fileID: 3345641408977788348, guid: 57480676f04a8ad47b0f671a94bc473a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3509390863446594176, guid: 57480676f04a8ad47b0f671a94bc473a, type: 3}
+      propertyPath: m_Volume
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 3509390863446594176, guid: 57480676f04a8ad47b0f671a94bc473a, type: 3}
       propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value

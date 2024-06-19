@@ -296,6 +296,7 @@ GameObject:
   - component: {fileID: 5883786973409480738}
   - component: {fileID: 8289501393523047550}
   - component: {fileID: 7786400924182504001}
+  - component: {fileID: 5365259994427502585}
   m_Layer: 5
   m_Name: PauseCanvas
   m_TagString: Untagged
@@ -544,6 +545,30 @@ MonoBehaviour:
   m_DefaultActionMap: UI
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &5365259994427502585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783579526372647860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2ca807d1954ee0498a219d38fdec362, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _masterSoundVolume: {fileID: 5331147613564559526}
+  _musicSoundVolume: {fileID: 2956404176784959950}
+  _SFXSoundVolume: {fileID: 5034934884301055936}
+  MasterVolume: 1
+  MusicVolume: 1
+  SFXVolume: 1
+  MusicChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  SFXChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &944312816283253336
 GameObject:
   m_ObjectHideFlags: 0
@@ -630,11 +655,11 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5634413881913723351}
+      - m_Target: {fileID: 5365259994427502585}
         m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
         m_MethodName: OnSFXChanged
         m_Mode: 1
@@ -2295,11 +2320,11 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5634413881913723351}
+      - m_Target: {fileID: 5365259994427502585}
         m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
         m_MethodName: OnMusicChanged
         m_Mode: 1
@@ -3309,7 +3334,6 @@ GameObject:
   - component: {fileID: 3819330768346800913}
   - component: {fileID: 2032820873633749386}
   - component: {fileID: 4767775680049313415}
-  - component: {fileID: 5634413881913723351}
   m_Layer: 5
   m_Name: BackgroundAudioSetting
   m_TagString: Untagged
@@ -3377,30 +3401,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5634413881913723351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5483683901238394811}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2ca807d1954ee0498a219d38fdec362, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _masterSoundVolume: {fileID: 5331147613564559526}
-  _musicSoundVolume: {fileID: 2956404176784959950}
-  _SFXSoundVolume: {fileID: 5034934884301055936}
-  MasterVolume: 0.5
-  MusicVolume: 0.5
-  SFXVolume: 0.5
-  MusicChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  SFXChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &5600150224921219491
 GameObject:
   m_ObjectHideFlags: 0
@@ -3982,11 +3982,11 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5634413881913723351}
+      - m_Target: {fileID: 5365259994427502585}
         m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
         m_MethodName: OnMasterChanged
         m_Mode: 1
