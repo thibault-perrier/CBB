@@ -19,6 +19,7 @@ public class GarageManager : MonoBehaviour
         {
             S_ObjectClickable.Instance._animatorCameraGarage.SetBool("Board", false);
             S_ClickablesManager.Instance.ReactivateAllClickables();
+            S_ClickablesManager.Instance.CircleFade.SetActive(false);
         }
     }
 
@@ -28,6 +29,7 @@ public class GarageManager : MonoBehaviour
         {
             S_ObjectClickable.Instance._animatorCameraGarage.SetBool("Shelves", false);
             S_ClickablesManager.Instance.ReactivateAllClickables();
+            S_ClickablesManager.Instance.CircleFade.SetActive(false);
         }
     }
 
@@ -37,6 +39,7 @@ public class GarageManager : MonoBehaviour
         {
             S_ObjectClickable.Instance._animatorCameraGarage.SetBool("WorkBench", false);
             S_ClickablesManager.Instance.ReactivateAllClickables();
+            S_ClickablesManager.Instance.CircleFade.SetActive(false);
         }
     }
 
@@ -45,6 +48,15 @@ public class GarageManager : MonoBehaviour
         if (context.performed && gameObject.activeInHierarchy)
         {
             S_ObjectClickable.Instance._animatorCameraGarage.SetBool("MoveToTournament", false);
+            S_ClickablesManager.Instance.ReactivateAllClickables();
+        }
+    }
+
+    public void LeaveRue(InputAction.CallbackContext context)
+    {
+        if (context.performed && gameObject.activeInHierarchy)
+        {
+            S_ObjectClickable.Instance._animatorCameraGarage.SetBool("MoveToRue", false);
             S_ClickablesManager.Instance.ReactivateAllClickables();
         }
     }

@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class S_ClickablesManager : MonoBehaviour
 {
+    public GameObject CircleFade;
     public GameObject destroyCup;
     public static S_ClickablesManager Instance;
     public GameObject[] clikableObjetGarage;
@@ -436,5 +437,10 @@ public class S_ClickablesManager : MonoBehaviour
     public void SetPresetChoice()
     {
         _editorController.SetPresetChoice();
+    }
+
+    public void ActiveCircleFade()
+    {
+        CircleFade.SetActive(true);
     }
 }
