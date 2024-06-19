@@ -42,7 +42,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     [SerializeField, Tooltip("call when he begin to tuch a target who can take damage")]
     private UnityEvent _onBeginTuchTarget;
     [SerializeField, Tooltip("call when he stop to tuch an target who can take any damage")]
-    private UnityEvent _onEndTuchTarget;
+    private UnityEvent _onEndTouchTarget;
 
     private GameObject _vfxSmoke;
     private bool _tuchDamageable = false;
@@ -141,7 +141,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
                     if (!succesAttack && _tuchDamageable)
                     {
-                        _onEndTuchTarget?.Invoke();
+                        _onEndTouchTarget?.Invoke();
                         _tuchDamageable = false;
                     }
 
