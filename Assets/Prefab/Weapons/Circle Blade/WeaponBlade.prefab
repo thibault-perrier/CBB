@@ -215,6 +215,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: def4fe6a67e5c194190240a2136da3de, type: 3}
   - {fileID: 8300000, guid: 3ea906d3a34730e4db7f932b8a977f79, type: 3}
   - {fileID: 8300000, guid: 89ec7cae9bccbdb4e809d5e407e5fb06, type: 3}
+  _scaleSfxVolume: 0.1
   _isLooping: 0
 --- !u!1 &1121099920563409720
 GameObject:
@@ -653,6 +654,7 @@ MonoBehaviour:
   _SFXType: 0
   _SFXList:
   - {fileID: 8300000, guid: 7b6f39488b0fe9d45b268743fa58ef8a, type: 3}
+  _scaleSfxVolume: 1
   _isLooping: 0
 --- !u!1 &5374838329923816041
 GameObject:
@@ -806,7 +808,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _onBeginTuchTarget:
+  _onBeginTouchTarget:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4730290680810339638}
@@ -819,9 +821,9 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
-  _onEndTuchTarget:
+  _onEndTouchTarget:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4730290680810339638}

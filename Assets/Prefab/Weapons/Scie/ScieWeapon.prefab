@@ -159,6 +159,7 @@ MonoBehaviour:
   _SFXType: 0
   _SFXList:
   - {fileID: 8300000, guid: 7b6f39488b0fe9d45b268743fa58ef8a, type: 3}
+  _scaleSfxVolume: 1
   _isLooping: 0
 --- !u!1 &179582343399597570
 GameObject:
@@ -170,6 +171,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5434170085039991228}
   - component: {fileID: 7879343277666698409}
+  - component: {fileID: 5312297426620302950}
   m_Layer: 0
   m_Name: SecondSFXPlayer
   m_TagString: Untagged
@@ -288,6 +290,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5312297426620302950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 179582343399597570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42c4aa7a3a1fede47a29fc056730bf6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioType: 1
 --- !u!1 &1637001209306066373
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,6 +553,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: def4fe6a67e5c194190240a2136da3de, type: 3}
   - {fileID: 8300000, guid: 3ea906d3a34730e4db7f932b8a977f79, type: 3}
   - {fileID: 8300000, guid: 89ec7cae9bccbdb4e809d5e407e5fb06, type: 3}
+  _scaleSfxVolume: 0.2
   _isLooping: 0
 --- !u!1 &8413263619878395255
 GameObject:
@@ -624,7 +640,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _onBeginTuchTarget:
+  _onBeginTouchTarget:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6787462496368416297}
@@ -637,9 +653,9 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
-  _onEndTuchTarget:
+  _onEndTouchTarget:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6787462496368416297}
