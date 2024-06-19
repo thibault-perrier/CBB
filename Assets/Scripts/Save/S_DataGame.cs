@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Systems;
 using UnityEngine;
-using UnityEngine.UI;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class S_DataGame : MonoBehaviour
 {
@@ -71,10 +69,13 @@ public class InventorySaver // Inventory
     public string overlayColorHex;
     public float backgroundAlpha = 255;
 
+    public int prefixIndex;
+    public int suffixIndex;
+
     public int overlayImageIndex;
     public Vector2 overlayImagePosition;
 
-
+    #region Color Load/Save
     public void SaveOverlayColor(string hexColor)
     {
         overlayColorHex = hexColor;
@@ -103,6 +104,42 @@ public class InventorySaver // Inventory
         overlayColorHex = PlayerPrefs.GetString("CurrentOverlayColor", overlayColorHex);
         Debug.Log("Overlay Color Loaded: " + overlayColorHex);
     }
+    #endregion
+    #region Name Load/Save
+    public void SavePrefixName(int prefix)
+    {
+        prefixIndex = prefix;
+        PlayerPrefs.SetInt("CurrentPrefixName", prefix);
+        PlayerPrefs.Save();
+    }
+    public void SaveSuffixname(int suffix)
+    {
+        suffixIndex = suffix;
+        PlayerPrefs.SetInt("CurrentSuffixName", suffix);
+        PlayerPrefs.Save();
+    }
+
+    public bool LoadPrefixName()
+    {
+        if (PlayerPrefs.HasKey("CurrentPrefixName"))
+        {
+            prefixIndex = PlayerPrefs.GetInt("CurrentPrefixName", prefixIndex);
+            return true;
+        }
+        return false;
+    }
+    public bool LoadSuffixName()
+    {
+        if (PlayerPrefs.HasKey("CurrentSuffixName"))
+        {
+            suffixIndex = PlayerPrefs.GetInt("CurrentSuffixName", suffixIndex);
+            return true;
+        }
+
+        return false;
+    }
+
+    #endregion
 
     public Weapon GetWeapon(S_WeaponData weaponData)
     {
@@ -136,8 +173,7 @@ public class InventorySaver // Inventory
             weapon._number--;
             if (weapon._number <= 0)
                 Weapons.Remove(weapon);
-        }
-        
+        } 
     }
 
     public Frame GetFrame(S_FrameData frameData)

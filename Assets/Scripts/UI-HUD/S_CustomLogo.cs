@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
 
-public class CustomLogo : MonoBehaviour
+public class S_CustomLogo : MonoBehaviour
 {
     public TMP_Dropdown overlayImageDropdown;
     public Image backgroundImage;
