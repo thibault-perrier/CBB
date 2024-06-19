@@ -1115,6 +1115,7 @@ public class S_AIController : MonoBehaviour
                     return;
 
                 weapon.LaunchAttack();
+                GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
             }
         }
     }
