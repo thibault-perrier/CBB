@@ -256,11 +256,18 @@ public class S_ArenaManager : MonoBehaviour
         var frameBot1 = _bot1.GetComponent<S_FrameManager>();
         var frameBot2 = _bot2.GetComponent<S_FrameManager>();
 
+        var immobileBot1 = _bot1.GetComponent<S_ImmobileDefeat>();
+        var immobileBot2 = _bot2.GetComponent<S_ImmobileDefeat>();
+
         frameBot1.OnDie += (_) => Bot2Win();
         frameBot2.OnDie += (_) => Bot1Win();
+
+        immobileBot1.IsImmobile += () => Bot2Win();
+        immobileBot2.IsImmobile += () => Bot1Win();
     }
     private void Bot1Win()
     {
+        DisableDeathBot();
         CancelMatch();
         _tournamentManager.MakeWinForParticipantOne();
         _cameraView.StartReturnToTournament();
@@ -268,10 +275,23 @@ public class S_ArenaManager : MonoBehaviour
     }
     private void Bot2Win()
     {
+        DisableDeathBot();
         CancelMatch();
         _tournamentManager.MakeWinForParticipantTwo();
         _cameraView.StartReturnToTournament();
         DisableBot();
+    }
+    private void DisableDeathBot()
+    {
+        var frameBot1 = _bot1.GetComponent<S_FrameManager>();
+        var frameBot2 = _bot2.GetComponent<S_FrameManager>();
+        var immobileBot1 = _bot1.GetComponent<S_ImmobileDefeat>();
+        var immobileBot2 = _bot2.GetComponent<S_ImmobileDefeat>();
+
+        frameBot1.enabled = false;
+        frameBot2.enabled = false;
+        immobileBot1.enabled = false;
+        immobileBot2.enabled = false;
     }
     public void OnSimulateMatch()
     {
