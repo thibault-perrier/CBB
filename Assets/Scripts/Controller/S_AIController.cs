@@ -1019,11 +1019,12 @@ public class S_AIController : MonoBehaviour
         if (!_currentWeapon)
             return;
 
-        Vector3 dirToEnemy = _currentWeapon.transform.position - target.position;
+        Vector3 dirToEnemy = target.position - _currentWeapon.transform.position;
 
-        if (dirToEnemy.magnitude > 10f)
+        if (dirToEnemy.magnitude > 5f)
         {
-            float dotWeaponForward = Vector3.Dot(transform.forward, dirToEnemy.normalized);
+            float dotWeaponForward = Vector3.Dot(GetForwardWeapon(_currentWeapon.transform, transform), dirToEnemy.normalized);
+            
             if (dotWeaponForward < 0f)
                 GetBestWeaponFromTarget(target, ref _currentWeapon);
         }
@@ -1114,6 +1115,7 @@ public class S_AIController : MonoBehaviour
                     return;
 
                 weapon.LaunchAttack();
+                GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
             }
         }
     }
