@@ -46,6 +46,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
     private GameObject _vfxSmoke;
     private bool _tuchDamageable = false;
+    private bool _touchEvent = true;
 
     public S_WeaponData Data
     {
@@ -141,9 +142,13 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
                     if (!succesAttack && _tuchDamageable)
                     {
-                        _onEndTouchTarget?.Invoke();
-                        Debug.Log("On end touch");
-                        _tuchDamageable = false;
+                        if (_touchEvent)
+                        {
+                            _onEndTouchTarget?.Invoke();
+                            Debug.Log("On end touch");
+                            _tuchDamageable = false;
+                            _touchEvent = false;
+                        }
                     }
 
                     if (succesAttack)
@@ -154,7 +159,10 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
                             Debug.Log("On begin touch");
                         }
 
-                        _tuchDamageable = true;
+                        StartCoroutine(Delay(.5f, () => {
+                            _tuchDamageable = true;
+                            _touchEvent = true;
+                        }));
                         InstanceVFX(hitObject[0]);
                         return;
                     }
@@ -333,6 +341,11 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     {
         yield return new WaitForSeconds(_data.AttackCooldown);
         _canAttack = true;
+    }
+    private IEnumerator Delay(float time, System.Action callBack)
+    {
+        yield return new WaitForSeconds(time);
+        callBack?.Invoke();
     }
 
     public bool CanRecieveDamage()
