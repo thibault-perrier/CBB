@@ -17,8 +17,8 @@ public class SoundManager : MonoBehaviour
     public float MusicVolume;
     public float SFXVolume;
 
-    public UnityEvent MusicChangedEvent;
-    public UnityEvent SFXChangedEvent;
+    public UnityEvent MusicChangedEvent = new();
+    public UnityEvent SFXChangedEvent = new();
 
     private void Awake()
     {

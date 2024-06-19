@@ -13,9 +13,12 @@ public class S_SFXPlayer : MonoBehaviour
         MiddleLoop
     }
 
-    [SerializeField] private SFXType _SFXType;
-
-    [SerializeField] private List<AudioClip> _SFXList = new List<AudioClip>();
+    [SerializeField] 
+    private SFXType _SFXType;
+    [SerializeField] 
+    private List<AudioClip> _SFXList = new List<AudioClip>();
+    [SerializeField, Min(0f)]
+    private float _scaleSfxVolume = 1f;
 
     public bool _isLooping = false;
     private bool _isFirstSourcePlaying = false;
@@ -32,10 +35,10 @@ public class S_SFXPlayer : MonoBehaviour
     public void PlayEffect()
     {
         if (_SFXType == SFXType.Single)
-            _firstSFXSource.PlayOneShot(_SFXList[UnityEngine.Random.Range(0, _SFXList.Count)]);
+            _firstSFXSource.PlayOneShot(_SFXList[UnityEngine.Random.Range(0, _SFXList.Count)], _scaleSfxVolume);
         else if (_SFXType == SFXType.MiddleLoop)
         {
-            _firstSFXSource.PlayOneShot(_SFXList[0]);
+            _firstSFXSource.PlayOneShot(_SFXList[0], _scaleSfxVolume);
             _isLooping = true;
             StartCoroutine(PlayMiddleLoop());
         }
@@ -47,7 +50,7 @@ public class S_SFXPlayer : MonoBehaviour
 
         while (_isLooping)
         {
-            (_isFirstSourcePlaying ? _secondSFXSource : _firstSFXSource).PlayOneShot(_SFXList[1]);
+            (_isFirstSourcePlaying ? _secondSFXSource : _firstSFXSource).PlayOneShot(_SFXList[1], _scaleSfxVolume);
             yield return new WaitForSeconds(_SFXList[1].length - 0.1f);
         }
 
@@ -56,7 +59,7 @@ public class S_SFXPlayer : MonoBehaviour
 
     private void PlayEndLoop()
     {
-        _firstSFXSource.PlayOneShot(_SFXList[2]);
+        _firstSFXSource.PlayOneShot(_SFXList[2], _scaleSfxVolume);
     }
 
     public void StopLoop()

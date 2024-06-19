@@ -40,12 +40,13 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     [SerializeField, Tooltip("Call when the weapon is destroy and detached to bot")]
     private UnityEvent _onWeaponDestroy;
     [SerializeField, Tooltip("call when he begin to tuch a target who can take damage")]
-    private UnityEvent _onBeginTuchTarget;
+    private UnityEvent _onBeginTouchTarget;
     [SerializeField, Tooltip("call when he stop to tuch an target who can take any damage")]
-    private UnityEvent _onEndTuchTarget;
+    private UnityEvent _onEndTouchTarget;
 
     private GameObject _vfxSmoke;
     private bool _tuchDamageable = false;
+    private bool _touchEvent = true;
 
     public S_WeaponData Data
     {
@@ -141,16 +142,27 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
                     if (!succesAttack && _tuchDamageable)
                     {
-                        _onEndTuchTarget?.Invoke();
-                        _tuchDamageable = false;
+                        if (_touchEvent)
+                        {
+                            _onEndTouchTarget?.Invoke();
+                            Debug.Log("On end touch");
+                            _tuchDamageable = false;
+                            _touchEvent = false;
+                        }
                     }
 
                     if (succesAttack)
                     {
                         if (!_tuchDamageable)
-                            _onBeginTuchTarget?.Invoke();
+                        {
+                            _onBeginTouchTarget?.Invoke();
+                            Debug.Log("On begin touch");
+                        }
 
-                        _tuchDamageable = true;
+                        StartCoroutine(Delay(.5f, () => {
+                            _tuchDamageable = true;
+                            _touchEvent = true;
+                        }));
                         InstanceVFX(hitObject[0]);
                         return;
                     }
@@ -329,6 +341,11 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     {
         yield return new WaitForSeconds(_data.AttackCooldown);
         _canAttack = true;
+    }
+    private IEnumerator Delay(float time, System.Action callBack)
+    {
+        yield return new WaitForSeconds(time);
+        callBack?.Invoke();
     }
 
     public bool CanRecieveDamage()
