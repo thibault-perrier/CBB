@@ -57,7 +57,6 @@ public class S_ObjectClickable : MonoBehaviour
         if (!_interactionLocked)
         {
             Activate();
-            SetColor(Color.white);
         }
     }
 
@@ -68,8 +67,10 @@ public class S_ObjectClickable : MonoBehaviour
         switch (gameObject.tag)
         {
             case "Garage":
-                _animatorDoor.SetBool("Open", true);
                 _animatorCameraGarage.SetBool("MoveToGarage", true);
+                break;
+            case "Rue":
+                _animatorCameraGarage.SetBool("MoveToRue", true);
                 break;
             case "Tournament":
                 _animatorCameraGarage.SetBool("MoveToTournament", true);
@@ -139,11 +140,11 @@ public class S_ObjectClickable : MonoBehaviour
     public void ResetState()
     {
         _interactionLocked = false;
-        SetColor(Color.white);
     }
 
     public void LaunchAnimBackToMenuFromShop()
     {
+
         _animatorCameraGarage.SetBool("BackToMainFromShop", true);
     }
 
@@ -157,12 +158,6 @@ public class S_ObjectClickable : MonoBehaviour
         UnlockInteraction();
     }
 
-    public void GoOnIdleShop()
-    {
-        _animatorCameraGarage.SetBool("Idle", true);
-        S_ClickablesManager.Instance.ReactivateAllClickables();
-    }
-
     public void GoOnIdleDisableShop()
     {
         _animatorCameraGarage.SetBool("Idle", false);
@@ -172,13 +167,11 @@ public class S_ObjectClickable : MonoBehaviour
     {
         _animatorCameraGarage.SetBool("MoveToGarage", false);
         _animatorCameraGarage.SetBool("BackToMainFromGarage", true);
-        _animatorDoor.SetBool("BackDoor", true);
     }
 
     public void StopAnimBackToMenuFromGarage()
     {
         _animatorCameraGarage.SetBool("BackToMainFromGarage", false);
-        _animatorDoor.SetBool("BackDoor", false);
     }
 
     public void GoOnIdleGarage()

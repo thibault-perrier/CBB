@@ -4,6 +4,13 @@ using UnityEngine;
 public class S_WeaponData : ScriptableObject
 {
     [SerializeField] private GameObject _prefab;
+    [SerializeField] private Sprite _weaponSprite;
+
+    [Header("SFX")]
+    [SerializeField] private GameObject _vfxHitContact;
+    [SerializeField] private Vector3 _scaleVfxHitContact = Vector3.one;
+    [SerializeField] private GameObject _vfxLowUp;
+    [SerializeField] private GameObject _vfxDestroy;
 
     [Header("Statistiques")]
     [SerializeField] private float _maxLife;
@@ -23,6 +30,28 @@ public class S_WeaponData : ScriptableObject
     {
         get { return _prefab; }
     }
+    public Sprite WeaponSrite
+    {
+        get => _weaponSprite;
+    }
+
+    public GameObject VfxHitContact
+    {
+        get => _vfxHitContact;
+    }
+    public Vector3 ScaleVfxHitContact
+    {
+        get => _scaleVfxHitContact;
+    }
+    public GameObject VfxLowUp
+    {
+        get => _vfxLowUp;
+    }
+    public GameObject VfxDestroy
+    {
+        get => _vfxDestroy;
+    }
+
     public float MaxLife
     {
         get { return _maxLife; }
@@ -39,14 +68,7 @@ public class S_WeaponData : ScriptableObject
     {
         get { return _mass; }
     }
-    public bool AlwayActive
-    {
-        get { return _alwaysActive; }
-    }
-    public bool AttackOneTime
-    {
-        get => _attackOneTime;
-    }
+
     public float AttackCooldown
     {
         get => _cooldownAttack;
@@ -54,5 +76,14 @@ public class S_WeaponData : ScriptableObject
     public float AttackTime
     {
         get => _attackTime;
+    }
+
+    public bool AlwayActive
+    {
+        get { return _alwaysActive; }
+    }
+    public bool AttackOneTime
+    {
+        get => _attackOneTime;
     }
 }

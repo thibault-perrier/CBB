@@ -82,24 +82,24 @@ public class S_TournamentManager : MonoBehaviour
 
         //InitializeParticipationData();
 
-        _participant1.isPlayer = false;
+        _participant1.isPlayer = true;
 
-        _participant1.name = "Participant nb 0";
-        _participant2.name = "Participant nb 1";
-        _participant3.name = "Participant nb 2";
-        _participant4.name = "Participant nb 3";
-        _participant5.name = "Participant nb 4";
-        _participant6.name = "Participant nb 5";
-        _participant7.name = "Participant nb 6";
-        _participant8.name = "Participant nb 7";
-        _participant9.name = "Participant nb 8";
-        _participant10.name = "Participant nb 9";
-        _participant11.name = "Participant nb 10";
-        _participant12.name = "Participant nb 11";
-        _participant13.name = "Participant nb 12";
-        _participant14.name = "Participant nb 13";
-        _participant15.name = "Participant nb 14";
-        _participant16.name = "Participant nb 15";
+        _participant1.name = "PARTICIPANT NB 0";
+        _participant2.name = "PARTICIPANT NB 1";
+        _participant3.name = "PARTICIPANT NB 2";
+        _participant4.name = "PARTICIPANT NB 3";
+        _participant5.name = "PARTICIPANT NB 4";
+        _participant6.name = "PARTICIPANT NB 5";
+        _participant7.name = "PARTICIPANT NB 6";
+        _participant8.name = "PARTICIPANT NB 7";
+        _participant9.name = "PARTICIPANT NB 8";
+        _participant10.name = "PARTICIPANT NB 9";
+        _participant11.name = "PARTICIPANT NB 10";
+        _participant12.name = "PARTICIPANT NB 11";
+        _participant13.name = "PARTICIPANT NB 12";
+        _participant14.name = "PARTICIPANT NB 13";
+        _participant15.name = "PARTICIPANT NB 14";
+        _participant16.name = "PARTICIPANT NB 15";
 
         _participant1.logo = Color.blue;
         _participant2.logo = Color.red;

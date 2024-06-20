@@ -29,8 +29,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1862928412614733942}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4808318582566961754
@@ -51,63 +50,14 @@ MonoBehaviour:
   _keypad: {fileID: 0}
   _key: {fileID: 0}
   _cameraView: {fileID: 0}
+  _tournamentManager: {fileID: 0}
   _matchUI: {fileID: 0}
-  _botPlayerPrefab: {fileID: 0}
-  _botEnemyPrefab: {fileID: 0}
+  _timerText: {fileID: 0}
+  _playerUI: {fileID: 0}
+  _botsUI: {fileID: 0}
+  _skills: {fileID: 0}
+  _botPlayerPrefab: {fileID: 2864770155178023637, guid: ae5607602c62e244e92a1767c72b8ea7, type: 3}
+  _botEnemyPrefab: {fileID: 6019708789991135223, guid: ed768662b6954004c98b1c6e4c9e99f6, type: 3}
   _botPosition1: {fileID: 0}
   _botPosition2: {fileID: 0}
---- !u!1 &5577151231821139597
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1862928412614733942}
-  - component: {fileID: 2220992085066713465}
-  m_Layer: 0
-  m_Name: Placeholder for referenced MonoBehaviour in Prefab instance (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1862928412614733942
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5577151231821139597}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6258996279949906668}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2220992085066713465
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5577151231821139597}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa1b63fc4d554844796572067b3aeaac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _participantsStats: {fileID: 0}
-  _p1Stats: {fileID: 0}
-  _p2Stats: {fileID: 0}
-  _keypad: {fileID: 0}
-  _key: {fileID: 0}
-  _cameraView: {fileID: 0}
-  _matchUI: {fileID: 0}
-  _botPlayerPrefab: {fileID: 0}
-  _botEnemyPrefab: {fileID: 0}
-  _botPosition1: {fileID: 0}
-  _botPosition2: {fileID: 0}
+  MatchDuration: 3

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class S_FrameManager : MonoBehaviour, I_Damageable
 {
@@ -9,11 +10,17 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     private Rigidbody _rb;
     
     [SerializeField, Tooltip("the current health point of the frama")] 
-    private float _life;
+    public float _life;
     [SerializeField, Tooltip("all statistic in the frame")] 
     private S_FrameData _data;
     [SerializeField, Tooltip("All kook point for get weapons")] 
     private List<GameObject> _weaponHookPoints;
+    [SerializeField, Tooltip("vfx spawned when the frame is destroy")]
+    private GameObject _vfxDestroyFrame;
+    [SerializeField]
+    private UnityEvent onFrameDie;
+
+    public event Action OnReceiveDamage;
 
     /// <summary>
     /// return the number of hook point
@@ -92,6 +99,8 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     public void TakeDamage(float amount)
     {
         _life -= amount;
+        OnReceiveDamage?.Invoke();
+
         if (_life <= 0f)
         {
             Die();
@@ -103,7 +112,10 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     /// </summary>
     public void Die()
     {
+        Instantiate(_vfxDestroyFrame, transform.position, Quaternion.identity);
+        DetachAllWeapons();
         OnDie?.Invoke(this);
+        onFrameDie?.Invoke();
 
         Debug.Log("Player died!");
         // Logic to remove destroy items in inventory
@@ -115,5 +127,34 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     public void Repair()
     {
         _life = _data.MaxLife;
+    }
+
+    public bool CanRecieveDamage()
+    {
+        return _life > 0f;
+    }
+
+    private void DetachAllWeapons()
+    {
+        foreach (var weapon in _weaponManagers)
+        {
+            if (weapon.CurrentState == S_WeaponManager.State.broken)
+                continue;
+
+            if (!weapon.transform.parent.gameObject.transform.parent)
+                continue;
+
+            weapon.DetachWeapon();
+        }
+    }
+    
+    public void RepairAll()
+    {
+        Repair();
+        foreach (S_WeaponManager weaponManager in _weaponManagers)
+        {
+            if(weaponManager.CurrentState != S_WeaponManager.State.destroy)
+                weaponManager.Repair();
+        }
     }
 }
