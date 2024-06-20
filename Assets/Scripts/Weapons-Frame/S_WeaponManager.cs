@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class S_WeaponManager : MonoBehaviour, I_Damageable
 {
@@ -20,12 +21,33 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     [SerializeField] private bool _canAttack = true;
     [SerializeField] private bool _alwayActive;
     [SerializeField] private bool _attacking = false;
+    [SerializeField] private bool _isTrap = false;
 
     [Header("Data")]
     [SerializeField] private S_WeaponData _data;
     [SerializeField] private State _state = State.ok;
     [SerializeField] private int _lifeBrakePoint = 15;    //In pourcent life level
     public float _life;
+
+    [Header("Event")]
+    [SerializeField, Tooltip("call when he start Attack")]
+    private UnityEvent _attackingStart;
+    [SerializeField, Tooltip("call when he stop attack after attacking time")]
+    private UnityEvent _attackingEnd;
+    [SerializeField, Tooltip("call when he take any damage")]
+    private UnityEvent _onTakeDamage;
+    [SerializeField, Tooltip("call when the weapon is broken")]
+    private UnityEvent _onWeaponUnuseable;
+    [SerializeField, Tooltip("Call when the weapon is destroy and detached to bot")]
+    private UnityEvent _onWeaponDestroy;
+    [SerializeField, Tooltip("call when he begin to tuch a target who can take damage")]
+    private UnityEvent _onBeginTouchTarget;
+    [SerializeField, Tooltip("call when he stop to tuch an target who can take any damage")]
+    private UnityEvent _onEndTouchTarget;
+
+    private GameObject _vfxSmoke;
+    private bool _tuchDamageable = false;
+    private bool _touchEvent = true;
 
     public S_WeaponData Data
     {
@@ -93,7 +115,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         if ((!_attacking && !_alwayActive) || _state != State.ok)
             return;
 
-        List<GameObject> hitDamage = new() { gameObject };
+        List<GameObject> ignoreObjects = new() { gameObject };
 
         foreach (var hitZone in _damageZones)
         {
@@ -104,30 +126,79 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
             // sort the collider if he is not him self weapon or if he not hit the him self bot
             var hitObject = collide
-                .Select(x => x.gameObject)
-                .Where(x => !hitDamage.Contains(x))
+                .Where(x => !ignoreObjects.Contains(x.gameObject))
                 .ToList();
 
             if (hitObject.Any())
             {
-                foreach (var col in hitObject)
+                foreach (var col in hitObject.Select(x => x.gameObject))
                 {
                     if (!col)
                         continue;
 
-                    bool succesAttack = AttackCollide(col);
-                    if (succesAttack)
-                        hitDamage.Add(col);
+                    if (!_isTrap)
+                    {
+                        if (IsCurrentBot(col))
+                            continue;
+
+                        MakeAttackEvent(hitObject, col);
+                    }
+                    else
+                    {
+                        MakeAttackEvent(hitObject, col);
+                    }
                 }
             }
         }
     }
-    
+
+    private void MakeAttackEvent(List<Collider> hitObject, GameObject col)
+    {
+        bool succesAttack = AttackCollide(col);
+
+        if (!succesAttack && _tuchDamageable)
+        {
+            if (_touchEvent)
+            {
+                _onEndTouchTarget?.Invoke();
+                Debug.Log("On end touch");
+                _tuchDamageable = false;
+                _touchEvent = false;
+            }
+        }
+
+        if (succesAttack)
+        {
+            if (!_tuchDamageable)
+            {
+                _onBeginTouchTarget?.Invoke();
+                Debug.Log("On begin touch");
+            }
+
+            StartCoroutine(Delay(.5f, () =>
+            {
+                _tuchDamageable = true;
+                _touchEvent = true;
+            }));
+            InstanceVFX(hitObject[0]);
+            return;
+        }
+    }
+
+    private void InstanceVFX(Collider hitObject)
+    {
+        if (!_data.VfxHitContact)
+            return;
+
+        if (hitObject.gameObject != gameObject)
+        {
+            Vector3 vfxPosition = _damageZones[0].transform.TransformPoint(_damageZones[0].center);
+            var hitVfx = Instantiate(_data.VfxHitContact, vfxPosition, Quaternion.identity) as GameObject;
+            hitVfx.transform.localScale = _data.ScaleVfxHitContact;
+        }
+    }
     private bool AttackCollide(GameObject collision)
     {
-        if (IsCurrentBot(collision))
-            return false;
-
         if (!_attackOneTime && _data.AttackOneTime)
             return false;
 
@@ -135,6 +206,9 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         {
             if (GetIDamageable(collision, out var damageable))
             {
+                if (!damageable.CanRecieveDamage())
+                    return false;
+
                 bool succesToApplyDamage = TryApplyDamage(damageable);
                 if (succesToApplyDamage)
                     return true;
@@ -171,8 +245,12 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     {
         if (damagable != null)
         {
+            if (!damagable.CanRecieveDamage())
+                return false;
+
             var scaleDamage = _data.AttackOneTime ? 1f : Time.deltaTime;
             damagable.TakeDamage(_damage * scaleDamage);
+            _onTakeDamage?.Invoke();
 
             if (_data.AttackOneTime)
                 _attackOneTime = false;
@@ -190,7 +268,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         if (!hitTarget)
             return false;
 
-        if (currentBot.name.Equals(hitTarget.name))
+        if (currentBot.tag.Equals(hitTarget.tag))
             return true;
 
         return false;
@@ -198,14 +276,16 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
     public void TakeDamage(float amount)
     {
-        if (_state.Equals(State.destroy))
+        if (_state.Equals(State.destroy) || _isTrap)
             return;
 
         _life -= amount;
         if (_life <= _brakePoint && _state == State.ok)
         {
             _state = State.broken;
+            _vfxSmoke = Instantiate(_data.VfxLowUp, transform.position, Quaternion.identity, transform);
             _animator.SetBool("_playAttack", false);
+            _onWeaponUnuseable?.Invoke();
         }
         if (_life <= 0)
         {
@@ -214,16 +294,27 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     }
     public void Die()
     {
+        Destroy(_vfxSmoke);
+        Instantiate(_data.VfxDestroy, transform.position, Quaternion.identity);
+        _onWeaponDestroy?.Invoke();
+
+        DetachWeapon();
+        // S_DataGame.Instance.inventory.RemoveWeapon(_data);
+    }
+    public void DetachWeapon()
+    {
         transform.parent.gameObject.transform.parent = null;
         _state = State.destroy;
         _animator.SetBool("_playAttack", false);
         _animator.enabled = false;
+        _onWeaponUnuseable?.Invoke();
 
         _rb = this.AddComponent<Rigidbody>();
         _rb.isKinematic = false;
         _rb.useGravity = true;
         _rb.angularDrag = 0f;
         _rb.drag = 2f;
+        _rb.AddTorque(Vector3.one);
     }
     public void Repair()
     {
@@ -250,6 +341,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     {
         _attacking = true;
         _canAttack = false;
+        _attackingStart?.Invoke();
     }
     private IEnumerator AttackOFF(System.Action attackCooldown)
     {
@@ -258,10 +350,24 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         _attacking = false;
         _attackOneTime = _data.AttackOneTime;
         attackCooldown?.Invoke();
+        _attackingEnd?.Invoke();
     }
     private IEnumerator AttackCooldown()
     {
         yield return new WaitForSeconds(_data.AttackCooldown);
         _canAttack = true;
+    }
+    private IEnumerator Delay(float time, System.Action callBack)
+    {
+        yield return new WaitForSeconds(time);
+        callBack?.Invoke();
+    }
+
+    public bool CanRecieveDamage()
+    {
+        if (_isTrap)
+            return false;
+
+        return _state != State.destroy;
     }
 }
