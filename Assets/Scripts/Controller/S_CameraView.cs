@@ -368,10 +368,10 @@ public class S_CameraView : MonoBehaviour
 
         yield return new WaitForSeconds(_animator.GetCurrentAnimatorClipInfo(0).Length);
 
-        SceneManager.LoadScene("MainMenu");
+        //SceneManager.LoadScene("MainMenu");
 
         _showMovement = null;
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().rootCount);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     /// <summary>

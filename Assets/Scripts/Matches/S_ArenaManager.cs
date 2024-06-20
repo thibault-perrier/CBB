@@ -22,6 +22,7 @@ public class S_ArenaManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _timerText;
     [SerializeField] private GameObject _playerUI;
     [SerializeField] private GameObject _botsUI;
+    [SerializeField] private S_SkillsController _skills;
     private Image _participant1Health;
     private Image _participant2Health;
 
@@ -100,6 +101,17 @@ public class S_ArenaManager : MonoBehaviour
         {
             _playerUI.SetActive(true);
             currentUI = _playerUI;
+
+            if (_p1.isPlayer)
+            {
+                var frame = _bot1.GetComponent<S_FrameManager>();
+                _skills.InitializeSkills(frame);
+            }
+            else
+            {
+                var frame = _bot2.GetComponent<S_FrameManager>();
+                _skills.InitializeSkills(frame);
+            }
         }
         else
         {
@@ -256,11 +268,18 @@ public class S_ArenaManager : MonoBehaviour
         var frameBot1 = _bot1.GetComponent<S_FrameManager>();
         var frameBot2 = _bot2.GetComponent<S_FrameManager>();
 
+        var immobileBot1 = _bot1.GetComponent<S_ImmobileDefeat>();
+        var immobileBot2 = _bot2.GetComponent<S_ImmobileDefeat>();
+
         frameBot1.OnDie += (_) => Bot2Win();
         frameBot2.OnDie += (_) => Bot1Win();
+
+        immobileBot1.IsImmobile += () => Bot2Win();
+        immobileBot2.IsImmobile += () => Bot1Win();
     }
     private void Bot1Win()
     {
+        DisableDeathBot();
         CancelMatch();
         _tournamentManager.MakeWinForParticipantOne();
         _cameraView.StartReturnToTournament();
@@ -268,10 +287,23 @@ public class S_ArenaManager : MonoBehaviour
     }
     private void Bot2Win()
     {
+        DisableDeathBot();
         CancelMatch();
         _tournamentManager.MakeWinForParticipantTwo();
         _cameraView.StartReturnToTournament();
         DisableBot();
+    }
+    private void DisableDeathBot()
+    {
+        var frameBot1 = _bot1.GetComponent<S_FrameManager>();
+        var frameBot2 = _bot2.GetComponent<S_FrameManager>();
+        var immobileBot1 = _bot1.GetComponent<S_ImmobileDefeat>();
+        var immobileBot2 = _bot2.GetComponent<S_ImmobileDefeat>();
+
+        frameBot1.enabled = false;
+        frameBot2.enabled = false;
+        immobileBot1.enabled = false;
+        immobileBot2.enabled = false;
     }
     public void OnSimulateMatch()
     {
@@ -326,6 +358,7 @@ public class S_ArenaManager : MonoBehaviour
     /// <param name="p2"></param>
     public void ShowStats(S_TournamentManager.Participant p1, S_TournamentManager.Participant p2)
     {
+        InitializeBetButtons();
         ResetTimer();
 
         _p1 = p1;
@@ -352,6 +385,18 @@ public class S_ArenaManager : MonoBehaviour
 
         SetStatsOnUi(p1.rating.ToString(), p1.name, p1.logo, _p1Stats);
         SetStatsOnUi(p2.rating.ToString(), p2.name, p2.logo, _p2Stats);
+    }
+    private void InitializeBetButtons()
+    {
+        Button[] buttons = _participantsStats.GetComponentsInChildren<Button>();
+
+        if (buttons.Length > 0)
+        {
+            foreach (Button button in buttons)
+            {
+                button.enabled = true;
+            }
+        }
     }
     public void ShowMatch(S_TournamentManager.Participant p1, S_TournamentManager.Participant p2)
     {

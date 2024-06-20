@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class S_FrameManager : MonoBehaviour, I_Damageable
 {
@@ -16,6 +17,8 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     private List<GameObject> _weaponHookPoints;
     [SerializeField, Tooltip("vfx spawned when the frame is destroy")]
     private GameObject _vfxDestroyFrame;
+    [SerializeField]
+    private UnityEvent onFrameDie;
 
     public event Action OnReceiveDamage;
 
@@ -112,6 +115,7 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
         Instantiate(_vfxDestroyFrame, transform.position, Quaternion.identity);
         DetachAllWeapons();
         OnDie?.Invoke(this);
+        onFrameDie?.Invoke();
 
         Debug.Log("Player died!");
         // Logic to remove destroy items in inventory

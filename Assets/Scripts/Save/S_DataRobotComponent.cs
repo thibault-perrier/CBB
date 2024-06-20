@@ -46,7 +46,7 @@ namespace Systems
                 int randomIndex = Random.Range(0, availableIndices.Count);
                 int arrayIndex = availableIndices[randomIndex];
                 Weapon weapon = new Weapon(_weaponDatas[Random.Range(0, _weaponDatas.Count)]);
-                robot._weapons[arrayIndex] = weapon;
+                robot._weapons.Add(new Robot.HookPoint(arrayIndex, weapon));
 
                 
                 availableIndices.RemoveAt(randomIndex);
