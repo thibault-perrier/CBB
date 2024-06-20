@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.EventSystems;
+using System.Collections;
 
 public class S_CustomLogo : MonoBehaviour
 {
@@ -9,12 +11,25 @@ public class S_CustomLogo : MonoBehaviour
     public Image backgroundImage;
     public Image overlayImage;
     public List<Sprite> overlayImages;
+    public List<GameObject> buttons;
+    public GameObject logosScrollView;
+    public GameObject logoCustomize;
 
-    private Color defaultBackgroundColor = Color.white; // Couleur par défaut de fond
-    private Color defaultOverlayColor = Color.white;    // Couleur par défaut d'incrustation
+    private Color _defaultBackgroundColor = Color.white; // Couleur par défaut de fond
+    private Color _defaultOverlayColor = Color.white;    // Couleur par défaut d'incrustation
 
-    private Color currentBackgroundColor;
-    private Color currentOverlayColor;
+    private Color _currentBackgroundColor;
+    private Color _currentOverlayColor;
+    private int _currentOverlayImageIndex;
+
+    private S_ShopManager _shopManager;
+    private bool _isChoosingLogo = false;
+
+    private void Awake()
+    {
+        _shopManager = GetComponentInChildren<S_ShopManager>();
+        _shopManager.ChooseLogoComplete += OnSetLogo;
+    }
 
     void Start()
     {
@@ -23,28 +38,61 @@ public class S_CustomLogo : MonoBehaviour
 
         // Charger les données sauvegardées
         LoadLogo();
+        logosScrollView.SetActive(false);
+
+        logoCustomize.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        _shopManager.ChooseLogoComplete -= OnSetLogo;
+    }
+
+    /// <summary>
+    /// Event that make it possible to set a sprite to the logo creation
+    /// </summary>
+    /// <param name="sprite"></param>
+    private void OnSetLogo(int index)
+    {
+        if (_isChoosingLogo)
+        {
+            overlayImage.sprite = overlayImages[index];
+            _currentOverlayImageIndex = index;
+
+            EventSystem.current.SetSelectedGameObject(null);
+
+            foreach (GameObject button in buttons)
+            {
+                button.SetActive(true);
+            }
+
+            StartCoroutine(SetButtonAsSelected(buttons[0]));
+
+            logosScrollView.SetActive(false);
+            _isChoosingLogo = false;
+        }
     }
 
     public void OpenColorPickerForBackground()
     {
-        ColorPicker.Create(currentBackgroundColor, "Select Background Color", OnBackgroundColorChanged, SaveBackgroundColor, true);
+        ColorPicker.Create(_currentBackgroundColor, "SELECT BACKGROUND COLOR", OnBackgroundColorChanged, SaveBackgroundColor, true);
     }
 
     public void OpenColorPickerForOverlay()
     {
-        ColorPicker.Create(currentOverlayColor, "Select Overlay Color", OnOverlayColorChanged, SaveOverlayColor, true);
+        ColorPicker.Create(_currentOverlayColor, "SELECT OVERLAY COLOR", OnOverlayColorChanged, SaveOverlayColor, true);
     }
 
     void OnBackgroundColorChanged(Color color)
     {
-        currentBackgroundColor = color;
+        _currentBackgroundColor = color;
         backgroundImage.color = color;
         SaveBackgroundColor(color);
     }
 
     void OnOverlayColorChanged(Color color)
     {
-        currentOverlayColor = color;
+        _currentOverlayColor = color;
         overlayImage.color = color;
         SaveOverlayColor(color);
     }
@@ -62,16 +110,15 @@ public class S_CustomLogo : MonoBehaviour
     public void SaveLogo()
     {
         // Sauvegarder la couleur de fond
-        string hexColor = ColorUtility.ToHtmlStringRGBA(currentBackgroundColor);
+        string hexColor = ColorUtility.ToHtmlStringRGBA(_currentBackgroundColor);
         S_DataGame.Instance.inventory.SaveBackgroundColor(hexColor);
 
         // Sauvegarder la couleur d'incrustation
-        string overlayHexColor = ColorUtility.ToHtmlStringRGBA(currentOverlayColor);
+        string overlayHexColor = ColorUtility.ToHtmlStringRGBA(_currentOverlayColor);
         S_DataGame.Instance.inventory.SaveOverlayColor(overlayHexColor);
 
         // Sauvegarder l'index de l'image d'incrustation
-        PlayerPrefs.SetInt("OverlayImageIndex", overlayImageDropdown.value);
-        PlayerPrefs.Save();
+        S_DataGame.Instance.inventory.SaveOverlayImage(_currentOverlayImageIndex);
 
         // Sauvegarder les données de jeu
         S_DataGame.Instance.SaveInventory();
@@ -92,7 +139,8 @@ public class S_CustomLogo : MonoBehaviour
                 if (ColorUtility.TryParseHtmlString("#" + backgroundColorHex, out backgroundColor))
                 {
                     // Appliquer la couleur de fond chargée avec alpha
-                    backgroundImage.color = new Color(backgroundColor.r, backgroundColor.g, backgroundColor.b, 255f);
+                    backgroundImage.color = backgroundColor;
+                    _currentBackgroundColor = backgroundImage.color;
                     Debug.Log("Background Color Applied: " + backgroundColorHex);
                 }
                 else
@@ -108,6 +156,7 @@ public class S_CustomLogo : MonoBehaviour
             if (ColorUtility.TryParseHtmlString("#" + overlayColorHex, out overlayColor))
             {
                 overlayImage.color = overlayColor;
+                _currentOverlayColor = overlayColor;
                 Debug.Log("Overlay Color Applied: " + overlayColorHex);
             }
             else
@@ -116,12 +165,12 @@ public class S_CustomLogo : MonoBehaviour
             }
 
             // Charger l'image d'incrustation sélectionnée dans le dropdown
-            int overlayImageIndex = PlayerPrefs.GetInt("OverlayImageIndex", 0);
+            S_DataGame.Instance.inventory.LoadOverlayImageIndex();
+            int overlayImageIndex = S_DataGame.Instance.inventory.overlayImageIndex;
             if (overlayImageIndex >= 0 && overlayImageIndex < overlayImages.Count)
             {
                 overlayImage.sprite = overlayImages[overlayImageIndex];
-                overlayImageDropdown.value = overlayImageIndex;
-                overlayImageDropdown.RefreshShownValue(); // Assurez-vous que la valeur affichée est mise à jour
+                _currentOverlayImageIndex = overlayImageIndex;
                 Debug.Log("Overlay Image Applied: Index " + overlayImageIndex);
             }
             else
@@ -138,12 +187,12 @@ public class S_CustomLogo : MonoBehaviour
     public void ResetLogo()
     {
         // Réinitialiser les couleurs aux valeurs par défaut
-        currentBackgroundColor = defaultBackgroundColor;
-        currentOverlayColor = defaultOverlayColor;
+        _currentBackgroundColor = _defaultBackgroundColor;
+        _currentOverlayColor = _defaultOverlayColor;
 
         // Appliquer les couleurs par défaut
-        backgroundImage.color = new Color(defaultBackgroundColor.r, defaultBackgroundColor.g, defaultBackgroundColor.b, 1f);
-        overlayImage.color = new Color(defaultOverlayColor.r, defaultOverlayColor.g, defaultOverlayColor.b, 1f);
+        backgroundImage.color = new Color(_defaultBackgroundColor.r, _defaultBackgroundColor.g, _defaultBackgroundColor.b, 1f);
+        overlayImage.color = new Color(_defaultOverlayColor.r, _defaultOverlayColor.g, _defaultOverlayColor.b, 1f);
 
         // Réinitialiser l'image d'incrustation à la première image ou à une valeur par défaut
         overlayImageDropdown.value = 0;
@@ -153,13 +202,24 @@ public class S_CustomLogo : MonoBehaviour
 
     private void SaveBackgroundColor(Color color)
     {
-        currentBackgroundColor = color;
+        _currentBackgroundColor = color;
         SaveLogo();
     }
 
     private void SaveOverlayColor(Color color)
     {
-        currentOverlayColor = color;
+        _currentOverlayColor = color;
         SaveLogo();
+    }
+
+    private IEnumerator SetButtonAsSelected(GameObject button)
+    {
+        yield return new WaitForSeconds(0.1f);
+        EventSystem.current.SetSelectedGameObject(button);
+    }
+
+    public void SetIsChoosingLogo(bool isChoosingLogo)
+    {
+        _isChoosingLogo = isChoosingLogo;
     }
 }

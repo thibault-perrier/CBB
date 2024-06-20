@@ -1,4 +1,5 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 public class ColorPicker : MonoBehaviour
@@ -41,6 +42,8 @@ public class ColorPicker : MonoBehaviour
     public InputField hexaComponent;
     public RawImage colorComponent;
 
+    public string hexaString;
+
     private void Awake()
     {
         instance = this;
@@ -75,7 +78,7 @@ public class ColorPicker : MonoBehaviour
             onCS = onColorSelected;
             useA = useAlpha;
             instance.gameObject.SetActive(true);
-            instance.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = message;
+            instance.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = message;
             instance.aComponent.gameObject.SetActive(useAlpha);
             instance.aComponent.value = useAlpha ? modifiedColor.a : 255;
             instance.RecalculateMenu(true);

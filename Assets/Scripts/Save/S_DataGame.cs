@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Systems;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class S_DataGame : MonoBehaviour
@@ -92,6 +93,13 @@ public class InventorySaver // Inventory
         Debug.Log("Background Color Saved: " + hexColor);
     }
 
+    public void SaveOverlayImage(int imageIndex)
+    {
+        overlayImageIndex = imageIndex;
+        PlayerPrefs.SetInt("OverlayImageIndex", imageIndex);
+        PlayerPrefs.Save();
+    }
+
     // Charger les couleurs
     public void LoadColors()
     {
@@ -103,6 +111,11 @@ public class InventorySaver // Inventory
     {
         overlayColorHex = PlayerPrefs.GetString("CurrentOverlayColor", overlayColorHex);
         Debug.Log("Overlay Color Loaded: " + overlayColorHex);
+    }
+
+    public void LoadOverlayImageIndex()
+    {
+        overlayImageIndex = PlayerPrefs.GetInt("OverlayImageIndex", overlayImageIndex);
     }
     #endregion
     #region Name Load/Save
