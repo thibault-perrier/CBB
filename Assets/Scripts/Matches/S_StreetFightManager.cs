@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class S_StreetFightManager : MonoBehaviour
@@ -16,6 +17,10 @@ public class S_StreetFightManager : MonoBehaviour
 
     [SerializeField, Min(0f), Tooltip("if one bot is not in this radius")]
     private float _radiusDefeat = 10f;
+    [SerializeField, Tooltip("Scene to load when the fight is end and when we press on any key")]
+    private string _sceneToLoadInEndFight = "MainMenu";
+    [SerializeField, Tooltip("the toogle who difine if the fight begin in the start")]
+    private bool _startStreetFightInStart = true;
 
     [Header("paricipants")]
     [SerializeField, Tooltip("the current player bot prefab")]
@@ -38,6 +43,8 @@ public class S_StreetFightManager : MonoBehaviour
     [Space(10)]
     [SerializeField, Tooltip("it is the 3, 2, 1 on begin of match")]
     private Image _timerBeforeStart;
+    [SerializeField, Tooltip("it is the parent of the fight text")]
+    private GameObject _fightParentText;
     [SerializeField, Tooltip("the number for the timer in the begin match")]
     private Sprite[] _numberForTimer;
 
@@ -48,8 +55,6 @@ public class S_StreetFightManager : MonoBehaviour
     [Header("Camera")]
     [SerializeField, Tooltip("camera for focus the view on two bots")]
     private S_CameraView _cameraView;
-    [SerializeField, Tooltip("the main camera of menu")]
-    private GameObject _mainCamera;
 
     [Header("Animation")]
     [SerializeField, Min(1f), Tooltip("the millstone for the camera field of view in end fight zoom")]
@@ -81,6 +86,9 @@ public class S_StreetFightManager : MonoBehaviour
 
         var camera = _cameraView.gameObject.GetComponentInChildren<Camera>();
         _startFieldOfView = camera.fieldOfView;
+
+        if (_startStreetFightInStart)
+            StartStreetFight();
     }
     private void Update()
     {
@@ -110,23 +118,25 @@ public class S_StreetFightManager : MonoBehaviour
     public void StartStreetFight()
     {
         ClearDroppedWeapon();
-        CreateStreetFightBot();
-        _cameraView.ClearObjectToView();
-        _cameraView.AddObjectToView(_playerBot.transform);
-        _cameraView.AddObjectToView(_AIBot.transform);
-
-        _uiTimerBeforeFight.SetActive(true);
-        _uiEndFightWinner.SetActive(false);
-        _cameraView.gameObject.SetActive(true);
-        _mainCamera?.SetActive(false);
-
-        var camera = _cameraView.gameObject.GetComponentInChildren<Camera>();
-        camera.fieldOfView = _startFieldOfView;
-
-        StartCoroutine(TimerBeforeStart(() =>
+        StartCoroutine(CreateStreetFightBot(() =>
         {
-            _uiTimerBeforeFight.SetActive(false);
-            SetEnableBots(true);
+            _cameraView.ClearObjectToView();
+            _cameraView.AddObjectToView(_playerBot.transform);
+            _cameraView.AddObjectToView(_AIBot.transform);
+
+            _uiTimerBeforeFight.SetActive(true);
+            _uiEndFightWinner.SetActive(false);
+            _cameraView.gameObject.SetActive(true);
+
+            var camera = _cameraView.gameObject.GetComponentInChildren<Camera>();
+            camera.fieldOfView = _startFieldOfView;
+
+            _timerBeforeStart.gameObject.SetActive(true);
+            StartCoroutine(TimerBeforeStart(() =>
+            {
+                _uiTimerBeforeFight.SetActive(false);
+                SetEnableBots(true);
+            }));
         }));
     }
 
@@ -183,7 +193,6 @@ public class S_StreetFightManager : MonoBehaviour
     private void EndCurrentFight()
     {
         SetEnableBots(false);
-        _mainCamera?.SetActive(false);
         StartCoroutine(AnimationZoom(() =>
         {
             _uiEndFightWinner.SetActive(true);
@@ -204,24 +213,28 @@ public class S_StreetFightManager : MonoBehaviour
     /// <summary>
     /// destroy the last bot and create new bot
     /// </summary>
-    private void CreateStreetFightBot()
+    private IEnumerator CreateStreetFightBot(System.Action endCreationOfBots)
     {
         Destroy(_AIBot);
         Destroy(_playerBot);
 
+        yield return new WaitForSeconds(.1f);
+
         _playerBot = Instantiate(_playerBotPrefab,   _botPlayerTransformSpawn.position,  Quaternion.Euler(_botPlayerTransformSpawn.eulerAngles));
         _AIBot     = Instantiate(_AIBotPrefab,       _botAITransformSpawn.position,      Quaternion.Euler(_botAITransformSpawn.eulerAngles));
-
-        _AIBot.tag = "BotA";
-        _playerBot.tag = "BotB";
-        _AIBot.GetComponent<S_AIController>().EnemyTag = "BotB";
 
         _AIController = _AIBot.GetComponent<S_AIController>();
         _playerInput = _playerBot.GetComponent<PlayerInput>();
         _AIBot.GetComponent<S_AIStatsController>().BotDifficulty = S_AIStatsController.BotRank.Diamond;
 
+        _AIBot.tag = "BotA";
+        _playerBot.tag = "BotB";
+        _AIBot.GetComponent<S_AIController>().EnemyTag = "BotB";
+
         BindDeadEventForBots();
         SetEnableBots(false);
+
+        endCreationOfBots?.Invoke();
     }
     /// <summary>
     /// Select the text for display in the end text
@@ -246,8 +259,8 @@ public class S_StreetFightManager : MonoBehaviour
     private void EndStreetFight()
     {
         _streetFightEnd = false;
-        
-        _mainCamera.SetActive(true);
+
+        SceneManager.LoadScene(_sceneToLoadInEndFight, LoadSceneMode.Single);
         _cameraView.gameObject.SetActive(false);
         _uiEndFightWinner.SetActive(false);
         _onStreetFightEnd?.Invoke();
@@ -281,6 +294,11 @@ public class S_StreetFightManager : MonoBehaviour
             _timerBeforeStart.sprite = number;
             yield return new WaitForSeconds(1f);
         }
+
+        _timerBeforeStart.gameObject.SetActive(false);
+        _fightParentText.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        _fightParentText.SetActive(false);
 
         endTimer?.Invoke();
     }

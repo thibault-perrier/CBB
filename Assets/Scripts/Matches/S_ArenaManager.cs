@@ -22,6 +22,7 @@ public class S_ArenaManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _timerText;
     [SerializeField] private GameObject _playerUI;
     [SerializeField] private GameObject _botsUI;
+    [SerializeField] private S_SkillsController _skills;
     private Image _participant1Health;
     private Image _participant2Health;
 
@@ -100,6 +101,17 @@ public class S_ArenaManager : MonoBehaviour
         {
             _playerUI.SetActive(true);
             currentUI = _playerUI;
+
+            if (_p1.isPlayer)
+            {
+                var frame = _bot1.GetComponent<S_FrameManager>();
+                _skills.InitializeSkills(frame);
+            }
+            else
+            {
+                var frame = _bot2.GetComponent<S_FrameManager>();
+                _skills.InitializeSkills(frame);
+            }
         }
         else
         {
