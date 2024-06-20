@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Systems;
 using UnityEngine;
+using static Robot;
 using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class S_DataGame : MonoBehaviour
 {
@@ -27,7 +29,6 @@ public class S_DataGame : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        
     }
 
     private void Start()
@@ -167,14 +168,13 @@ public class InventorySaver // Inventory
                 if (frame._id == robot._frame._id)
                     frame._useNumber++;
             }
-            
-            foreach(Weapon rbWeapon in robot._weapons)
+            if(robot._weapons != null)
             {
-                if(rbWeapon != null)
+                foreach (HookPoint hookPoint in robot._weapons)
                 {
-                    foreach(Weapon weapon in Weapons)
+                    foreach (Weapon weapon in Weapons)
                     {
-                        if(weapon._id == rbWeapon._id)
+                        if (weapon._id == hookPoint._weapon._id)
                         {
                             weapon._useNumber++;
                         }
@@ -234,25 +234,76 @@ public class Frame
 public class Robot
 {
     public Frame _frame;
-    public List<Weapon> _weapons = new List<Weapon>();
+
+    public List<HookPoint> _weapons = new List<HookPoint>();
 
     public Robot(Frame frame)
     {
         _frame = frame;
-        for(int i = 0; i < frame.GetFrameData().GetNbWeaponMax(); i++)
-        {
-            _weapons.Add(null);
-        }
     }
 
     public void UpdateWeaponMaxList()
     {
-        List<Weapon> updateWeapons = new List<Weapon>();
-        for (int i = 0; i < _frame.GetFrameData().GetNbWeaponMax(); i++)
+        //int max = _frame.GetFrameData().GetNbWeaponMax();
+        //List<HookPoint> updateWeapons = new List<HookPoint>();
+
+        //for (int i = 0; i < max; i++)
+        //{
+        //    foreach (HookPoint weapon in _weapons)
+        //    {
+        //        if (weapon._hookPointIndex == i)
+        //        {
+        //            updateWeapons.Add(weapon);
+        //        }
+        //    }
+        //}
+        //_weapons = updateWeapons.ToList();
+
+        _weapons.Clear();
+    }
+
+    public void AddWeapon(Weapon weapon, int index)
+    {
+        HookPoint hookPoint = new HookPoint(index, weapon);
+        _weapons.Add(hookPoint);
+    }
+
+    public void RemoveWeapon(int hookPointIndex)
+    {
+        List<HookPoint> updateWeapons = new List<HookPoint>();
+        foreach (HookPoint hookPoint in _weapons)
         {
-            updateWeapons.Add(_weapons[i]);
+            if (hookPoint._hookPointIndex != hookPointIndex)
+            {
+                updateWeapons.Add(hookPoint);
+            }
         }
         _weapons = updateWeapons.ToList();
+    }
+
+    public Weapon GetHookPointWeapon(int hookPointIndex)
+    {
+        foreach (HookPoint hookPoint in _weapons)
+        {
+            if (hookPoint._hookPointIndex == hookPointIndex)
+            {
+                return hookPoint._weapon;
+            }
+        }
+        return null;
+    }
+
+    [System.Serializable]
+    public struct HookPoint
+    {
+        public int _hookPointIndex;
+        public Weapon _weapon;
+
+        public HookPoint(int index, Weapon weapon)
+        {
+            _hookPointIndex = index;
+            _weapon = weapon;
+        }
     }
 }
 

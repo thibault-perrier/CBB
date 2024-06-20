@@ -34,6 +34,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7446333704277853579}
   - {fileID: 5864206811944723979}
   - {fileID: 874598024395942012}
   - {fileID: 8269275063938692176}
@@ -41,7 +42,6 @@ Transform:
   - {fileID: 2083867640904899208}
   - {fileID: 7660476797477047090}
   - {fileID: 6451212904666030495}
-  - {fileID: 7446333704277853579}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4728570109280104325
@@ -181,6 +181,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 75d1edfc-6101-4a93-8aa3-f20b2b3423fe
     m_ActionName: UI/LeaveTournament[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 20cea2bf-374e-4d1d-9279-8eb28839dd94
+    m_ActionName: Robot/Attack1[/Keyboard/numpad1]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 39ae0f0f-665c-4d2f-ab10-097a2c03f97c
+    m_ActionName: Robot/Attack2[/Keyboard/numpad2]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6d9d701a-0fdb-4aea-bf32-c23bafd4658a
+    m_ActionName: Robot/Attack3[/Keyboard/numpad3]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 36f01bb1-9989-4670-9cee-c571ab51b95e
+    m_ActionName: Robot/Attack4[/Keyboard/numpad4]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Robot
@@ -545,7 +561,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 5699944776cbd984e9dd773e3553d2cb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5699944776cbd984e9dd773e3553d2cb, type: 3}
       propertyPath: m_LocalPosition.y

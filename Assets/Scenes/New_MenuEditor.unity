@@ -8185,6 +8185,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 949367434057676266, guid: fc0d11b6a7bfceb4d97a4f8d288e60f9, type: 3}
+      propertyPath: _editState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2444525451032061138, guid: fc0d11b6a7bfceb4d97a4f8d288e60f9, type: 3}
       propertyPath: m_SizeDelta.y
       value: 4.1692
@@ -8236,6 +8240,10 @@ PrefabInstance:
     - target: {fileID: 5942104804423944619, guid: fc0d11b6a7bfceb4d97a4f8d288e60f9, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 1.04645
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754590203820458975, guid: fc0d11b6a7bfceb4d97a4f8d288e60f9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.85
       objectReference: {fileID: 0}
     - target: {fileID: 9094905064709954715, guid: fc0d11b6a7bfceb4d97a4f8d288e60f9, type: 3}
       propertyPath: m_SizeDelta.x
@@ -12190,7 +12198,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1467993744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14071,6 +14079,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 686674767837662444, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3289098490591048998, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
       propertyPath: m_LocalPosition.x
       value: -34.19
@@ -14111,9 +14123,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4995841407149795661, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: m_HDR
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4995841407149795661, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: m_RenderingPath
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 6960293329802770740, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
       propertyPath: m_Name
       value: Edge Detection Camera
+      objectReference: {fileID: 0}
+    - target: {fileID: 7992302806998868392, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7992302806998868392, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: depthSensitivity
+      value: 0.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 7992302806998868392, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: depthSensitivity2
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 7992302806998868392, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: normalsSensitivity
+      value: 0.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 8049486736392849308, guid: 3865e82b49ce72d488375cfe9c234085, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
