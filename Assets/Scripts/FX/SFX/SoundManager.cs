@@ -17,8 +17,8 @@ public class SoundManager : MonoBehaviour
     public float MusicVolume;
     public float SFXVolume;
 
-    public UnityEvent MusicChangedEvent;
-    public UnityEvent SFXChangedEvent;
+    public UnityEvent MusicChangedEvent = new();
+    public UnityEvent SFXChangedEvent = new();
 
     private void Awake()
     {
@@ -44,7 +44,7 @@ public class SoundManager : MonoBehaviour
     public void OnMasterChanged()
     {
         MasterVolume = _masterSoundVolume.value;
-        //PlayerPrefs.SetFloat("MasterVolume", MasterVolume);
+        PlayerPrefs.SetFloat("MasterVolume", MasterVolume);
         MusicChangedEvent.Invoke();
         SFXChangedEvent.Invoke();   
     }
@@ -52,14 +52,14 @@ public class SoundManager : MonoBehaviour
     public void OnMusicChanged()
     {
         MusicVolume = _musicSoundVolume.value;
-        //PlayerPrefs.SetFloat("MusicVolume", MusicVolume);
+        PlayerPrefs.SetFloat("MusicVolume", MusicVolume);
         MusicChangedEvent.Invoke();
     }
 
     public void OnSFXChanged()
     {
         SFXVolume = _SFXSoundVolume.value;
-        //PlayerPrefs.SetFloat("SFXVolume", SFXVolume);
+        PlayerPrefs.SetFloat("SFXVolume", SFXVolume);
         SFXChangedEvent.Invoke();
     }
 }

@@ -98,6 +98,8 @@ public class S_AIController : MonoBehaviour
     private GameObject _target;
     [SerializeField, Tooltip("this is the current weapon used for attack the target")]
     private S_WeaponManager _currentWeapon;
+    [SerializeField] 
+    private FleeType _fleeMethode = FleeType.None;
 
     private S_WheelsController _wheelsController;
     private S_FrameManager _frameManager;
@@ -106,7 +108,8 @@ public class S_AIController : MonoBehaviour
     private Vector3 _fleeDestination;
     private WaitForSeconds _attackFailedCoroutine = new(1f);
     private WaitForSeconds _fleeFailureCooldownCoroutine = new(.5f);
-    [SerializeField] private FleeType _fleeMethode = FleeType.None;
+    private float _scaleMovement;
+    private float _scaleDirection;
 
     #region Property
     /// <summary>
@@ -115,7 +118,15 @@ public class S_AIController : MonoBehaviour
     public AIState State
     {
         get => _aiState;
-        set => _aiState = value;
+        set
+        {
+            _aiState = value;
+            if (_aiState == AIState.Disable)
+            {
+                _wheelsController.Movement = 0f;
+                _wheelsController.Direction = 0f;
+            }
+        }
     }
     /// <summary>
     /// the current frame of the bot
@@ -332,17 +343,11 @@ public class S_AIController : MonoBehaviour
     private void FixedUpdate()
     {
         // reset the movement state
-        _wheelsController.Movement = 0f;
+        //_wheelsController.Movement = 0f;
 
         // verif if he is enable for work
         if (_aiState.Equals(AIState.Disable))
             return;
-
-        if (_frameManager.AllWeaponIsBroken())
-        {
-            FleeEnemy();
-            return;
-        }
 
         if (!_enemy)
             return;
@@ -351,7 +356,12 @@ public class S_AIController : MonoBehaviour
         if (CurrentWeaponCanAttack())
         {
             AttackWithCurrrentWeapon();
-        } 
+        }
+
+        if (_frameManager.AllWeaponIsBroken())
+        {
+            FleeEnemy();
+        }
         else
         {
             UpdateAIMovement();
@@ -364,6 +374,8 @@ public class S_AIController : MonoBehaviour
     private void UpdateAIMovement()
     {
         TryFailedAttack();
+        TryToFindBestWeaponFromTarget(_target.transform);
+        TryToAttackWithAnyWeapon();
 
         // get movement probability
         float movementRnd = Random.Range(0, 101);
@@ -675,19 +687,19 @@ public class S_AIController : MonoBehaviour
         {
             _wheelsController.Direction = ReverseDir(2f);
             // if we are in front of the enemy go backward else fo toward
-            _wheelsController.Movement = dotBehindEnemy > 0f ? ReverseMov(-1f) : ReverseMov(1f);
+            _wheelsController.Movement = dotBehindEnemy > 0f ? ReverseMov(-.5f) : ReverseMov(.5f);
             return;
         }
 
         if (dotDirection > 0f)
         {
             // go forward
-            movementAmount = dotWeaponBody > 0f ? ReverseMov(1f) : ReverseMov(-1f);
+            movementAmount = dotWeaponBody > 0f ? ReverseMov(LerpMovement(1f)) : ReverseMov(LerpMovement(-1f));
         }
         else
         {
             // go backward
-            movementAmount = dotWeaponBody > 0f ? ReverseMov(-1f) : ReverseMov(1f);
+            movementAmount = dotWeaponBody > 0f ? ReverseMov(LerpMovement(-1f)) : ReverseMov(LerpMovement(1f));
         }
 
         // if he hit any trap dont calcul turn amount
@@ -696,18 +708,51 @@ public class S_AIController : MonoBehaviour
             if (angleToDir > 0f)
             {
                 // turn right
-                turnAmount = dotWeaponBody > 0f ? 1f : -1f;
+                turnAmount = dotWeaponBody > 0f ? CalCulDirection(angleToDir, 1f) : CalCulDirection(angleToDir, -1f);
             }
             else
             {
                 // turn left
-                turnAmount = dotWeaponBody > 0f ? -1f : 1f;
+                turnAmount = dotWeaponBody > 0f ? CalCulDirection(angleToDir, -1f) : CalCulDirection(angleToDir, 1f);
             }
         }
 
         // set controller direction and movement
         _wheelsController.Direction = ReverseDir(turnAmount);
-        _wheelsController.Movement = movementAmount;
+        _wheelsController.Movement = movementAmount * CalculScaleMovement(angleToDir);
+    }
+    /// <summary>
+    /// lerp the movement speed from the delta time
+    /// </summary>
+    /// <param name="movement">the millstone movement for lerp</param>
+    /// <returns>return the movement with a lerp</returns>
+    private float LerpMovement(float movement)
+    {
+        if (movement <= 0f)
+            _scaleMovement = Mathf.Clamp(_scaleMovement - Time.deltaTime, -1f, 1f);
+        else
+            _scaleMovement = Mathf.Clamp(_scaleMovement + Time.deltaTime, -1f, 1f);
+
+        return _scaleMovement;
+    }
+    /// <summary>
+    /// lerp the direction from the angle
+    /// </summary>
+    /// <param name="angle">the angle to make</param>
+    /// <param name="scale">the scale of angle for turn amount</param>
+    /// <returns>return the lerp direction</returns>
+    private float CalCulDirection(float angle, float scale)
+    {
+        return ((Mathf.Abs(angle) / 180f) * scale);
+    }
+    /// <summary>
+    /// reduce the movemen if he need to turn
+    /// </summary>
+    /// <param name="angle">the angle to turn</param>
+    /// <returns>return 0.5 if he need turn else return 1</returns>
+    private float CalculScaleMovement(float angle)
+    {
+        return (Mathf.Abs(angle) > 20f ? .5f : 1f);
     }
     /// <summary>
     /// reverse the current movement with probability if
@@ -790,17 +835,17 @@ public class S_AIController : MonoBehaviour
             var direction = new Vector3(xDirection, 0f, scaleDirection);
 
             // make a raycast and add the turn amount
-            bool hit = Physics.Raycast(transform.position, transform.TransformDirection(direction), 5f, _trapLayer);
+            bool hit = Physics.Raycast(transform.position, transform.TransformDirection(direction), 10f, _trapLayer);
             if (hit)
             {
                 // add the turn amount by the raycast angle
-                turnAmount += ((angle - 50f) > 0f ? -1f : 1f) * scaleDirection;
+                turnAmount += ((angle - 50f) > 0f ? -.1f : .1f) * scaleDirection;
                 tuchOneTime = true;
-                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 5f, Color.green, 0f);
+                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 10f, Color.green, 0f);
             }
             else
             {
-                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 5f, Color.red, 0f);
+                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 10f, Color.red, 0f);
             }
         }
 
@@ -972,7 +1017,7 @@ public class S_AIController : MonoBehaviour
         // if the current weapon is currently attacking dont change current weapon
         if (_currentWeapon)
         {
-            if (_currentWeapon.Attacking)
+            if (_currentWeapon.Attacking && _currentWeapon.CanAttack)
                 return true;
         }
 
@@ -1007,6 +1052,25 @@ public class S_AIController : MonoBehaviour
     private Vector3 GetHitZone(S_WeaponManager weapon)
     {
         return weapon.HitZone.transform.TransformPoint(weapon.HitZone.center);
+    }
+    /// <summary>
+    /// when he move if the current weapon is behind the target reselect the best weapon form the target
+    /// </summary>
+    /// <param name="target"></param>
+    private void TryToFindBestWeaponFromTarget(Transform target)
+    {
+        if (!_currentWeapon)
+            return;
+
+        Vector3 dirToEnemy = target.position - _currentWeapon.transform.position;
+
+        if (dirToEnemy.magnitude > 5f)
+        {
+            float dotWeaponForward = Vector3.Dot(GetForwardWeapon(_currentWeapon, transform), dirToEnemy.normalized);
+            
+            if (dotWeaponForward < 0f)
+                GetBestWeaponFromTarget(target, ref _currentWeapon);
+        }
     }
     #endregion
 
@@ -1051,8 +1115,8 @@ public class S_AIController : MonoBehaviour
         if (attackRnd > _attackSuccesProbability)
             return;
 
-        GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
         _currentWeapon.LaunchAttack();
+        GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
     }
     /// <summary>
     /// if the target is closed the current weapon
@@ -1067,6 +1131,9 @@ public class S_AIController : MonoBehaviour
         if (_currentWeapon.Attacking && !_currentWeapon.CanTakeAnyDamage)
             return false;
 
+        if (!_currentWeapon.CanRecieveDamage())
+            return false;
+
         // if he is attacking
         if (_currentWeapon.Attacking)
             return true;
@@ -1077,6 +1144,26 @@ public class S_AIController : MonoBehaviour
 
         // return True if if can make any damage with current weapon
         return _currentWeapon.CanTakeAnyDamage;
+    }
+    /// <summary>
+    /// try to attack with any weapon when it in movement
+    /// </summary>
+    private void TryToAttackWithAnyWeapon()
+    {
+        foreach (var weapon in _frameManager.Weapons)
+        {
+            // if the weapon can make an attack and if he can take any damage with her attack
+            if (weapon.CanAttack && weapon.CanTakeAnyDamage)
+            {
+                // make a probabiblity for attack
+                float attackRnd = Random.Range(0, 101);
+                if (attackRnd > _attackSuccesProbability)
+                    return;
+
+                weapon.LaunchAttack();
+                GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
+            }
+        }
     }
     /// <summary>
     /// Cooldown for try to fail any attack

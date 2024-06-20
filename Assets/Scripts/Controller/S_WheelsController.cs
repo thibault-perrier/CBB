@@ -38,6 +38,11 @@ public class S_WheelsController : MonoBehaviour
         get { return this._move; }
     }
 
+    public Rigidbody RigidBody
+    {
+        get => _rb;
+    }
+
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
