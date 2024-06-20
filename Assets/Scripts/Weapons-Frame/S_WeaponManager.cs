@@ -21,6 +21,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     [SerializeField] private bool _canAttack = true;
     [SerializeField] private bool _alwayActive;
     [SerializeField] private bool _attacking = false;
+    [SerializeField] private bool _isTrap = false;
 
     [Header("Data")]
     [SerializeField] private S_WeaponData _data;
@@ -135,42 +136,55 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
                     if (!col)
                         continue;
 
-                    if (IsCurrentBot(col))
-                        continue;
-
-                    bool succesAttack = AttackCollide(col);
-
-                    if (!succesAttack && _tuchDamageable)
+                    if (!_isTrap)
                     {
-                        if (_touchEvent)
-                        {
-                            _onEndTouchTarget?.Invoke();
-                            Debug.Log("On end touch");
-                            _tuchDamageable = false;
-                            _touchEvent = false;
-                        }
+                        if (IsCurrentBot(col))
+                            continue;
+
+                        MakeAttackEvent(hitObject, col);
                     }
-
-                    if (succesAttack)
+                    else
                     {
-                        if (!_tuchDamageable)
-                        {
-                            _onBeginTouchTarget?.Invoke();
-                            Debug.Log("On begin touch");
-                        }
-
-                        StartCoroutine(Delay(.5f, () => {
-                            _tuchDamageable = true;
-                            _touchEvent = true;
-                        }));
-                        InstanceVFX(hitObject[0]);
-                        return;
+                        MakeAttackEvent(hitObject, col);
                     }
                 }
             }
         }
     }
-    
+
+    private void MakeAttackEvent(List<Collider> hitObject, GameObject col)
+    {
+        bool succesAttack = AttackCollide(col);
+
+        if (!succesAttack && _tuchDamageable)
+        {
+            if (_touchEvent)
+            {
+                _onEndTouchTarget?.Invoke();
+                Debug.Log("On end touch");
+                _tuchDamageable = false;
+                _touchEvent = false;
+            }
+        }
+
+        if (succesAttack)
+        {
+            if (!_tuchDamageable)
+            {
+                _onBeginTouchTarget?.Invoke();
+                Debug.Log("On begin touch");
+            }
+
+            StartCoroutine(Delay(.5f, () =>
+            {
+                _tuchDamageable = true;
+                _touchEvent = true;
+            }));
+            InstanceVFX(hitObject[0]);
+            return;
+        }
+    }
+
     private void InstanceVFX(Collider hitObject)
     {
         if (!_data.VfxHitContact)
@@ -262,7 +276,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
     public void TakeDamage(float amount)
     {
-        if (_state.Equals(State.destroy))
+        if (_state.Equals(State.destroy) || _isTrap)
             return;
 
         _life -= amount;
