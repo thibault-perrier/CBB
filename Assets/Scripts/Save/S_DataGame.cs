@@ -264,8 +264,22 @@ public class Robot
 
     public void AddWeapon(Weapon weapon, int index)
     {
-        HookPoint hookPoint = new HookPoint(index, weapon);
-        _weapons.Add(hookPoint);
+        int replaceIndex = -1;
+
+        for (int i = 0; i < _weapons.Count(); i++)
+        {
+            if (_weapons[i]._hookPointIndex == index)
+            {
+                replaceIndex = i;
+            }
+        }
+
+        if(replaceIndex >= 0)
+        {
+            this.RemoveWeapon(replaceIndex);
+        }
+
+        _weapons.Add(new HookPoint(index, weapon));
     }
 
     public void RemoveWeapon(int hookPointIndex)
