@@ -62,6 +62,10 @@ public class S_SkillsController : MonoBehaviour
                 currentSkill.Weapon.AttackingEnd.AddListener(actionCooldown[skill.index]);
                 currentSkill.Weapon.WeaponDestroy.AddListener(actionDestroy[skill.index]);
             }
+            else
+            {
+                currentSkill.WeaponIcon.gameObject.SetActive(false);
+            }
         }
     }
 
