@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class S_ClickablesManager : MonoBehaviour
 {
+    public GameObject CircleFade;
     public GameObject destroyCup;
     public static S_ClickablesManager Instance;
     public GameObject[] clikableObjetGarage;
@@ -27,12 +28,14 @@ public class S_ClickablesManager : MonoBehaviour
         if (Instance == null)
             Instance = this;
 
-        _clickableStates = new bool[clickables.Length + clikableObjetGarage.Length + clickables.Length + clikableObjetTournament.Length];
+        int totalClickableCount = clickables.Length + clikableObjetGarage.Length + clikableObjetTournament.Length;
+        _clickableStates = new bool[totalClickableCount];
+
         for (int i = 0; i < clickables.Length; i++)
         {
             _clickableStates[i] = true;
         }
-        for (int i = clickables.Length; i < _clickableStates.Length; i++)
+        for (int i = clickables.Length; i < totalClickableCount; i++)
         {
             _clickableStates[i] = false;
         }
@@ -139,14 +142,6 @@ public class S_ClickablesManager : MonoBehaviour
         }
     }
 
-
-
-    void OnMouseMove(InputAction.CallbackContext context)
-    {
-        _useMouse = true;
-        ResetAllClickables();
-    }
-
     void OnNavigate(InputAction.CallbackContext context)
     {
         _useMouse = false;
@@ -167,6 +162,14 @@ public class S_ClickablesManager : MonoBehaviour
         }
     }
 
+
+
+    void OnMouseMove(InputAction.CallbackContext context)
+    {
+        _useMouse = true;
+        ResetAllClickables();
+    }
+
     void Navigate(int direction)
     {
         RemoveFocus(GetCurrentClickable());
@@ -176,6 +179,8 @@ public class S_ClickablesManager : MonoBehaviour
             _currentIndex += direction;
             if (_currentIndex < 0) _currentIndex = _clickableStates.Length - 1;
             else if (_currentIndex >= _clickableStates.Length) _currentIndex = 0;
+
+            Debug.Log($"Navigating: _currentIndex={_currentIndex}, _clickableStates.Length={_clickableStates.Length}");
         }
         while (!_clickableStates[_currentIndex]);
 
@@ -184,15 +189,27 @@ public class S_ClickablesManager : MonoBehaviour
 
     GameObject GetCurrentClickable()
     {
+        Debug.Log($"GetCurrentClickable: _currentIndex={_currentIndex}, clickables.Length={clickables.Length}, clikableObjetGarage.Length={clikableObjetGarage.Length}, clikableObjetTournament.Length={clikableObjetTournament.Length}");
+
         if (_currentIndex < clickables.Length)
         {
             return clickables[_currentIndex];
         }
-        else
+        else if (_currentIndex < clickables.Length + clikableObjetGarage.Length)
         {
             return clikableObjetGarage[_currentIndex - clickables.Length];
         }
+        else if (_currentIndex < clickables.Length + clikableObjetGarage.Length + clikableObjetTournament.Length)
+        {
+            return clikableObjetTournament[_currentIndex - clickables.Length - clikableObjetGarage.Length];
+        }
+        else
+        {
+            Debug.LogError("Index out of range in GetCurrentClickable. _currentIndex: " + _currentIndex);
+            return null;
+        }
     }
+
 
     void SetFocus(GameObject obj)
     {
@@ -316,28 +333,28 @@ public class S_ClickablesManager : MonoBehaviour
         }
     }
 
-    public void EnableGarageNavigation()
-    {
-        _garageNavigable = true;
-        for (int i = clickables.Length; i < _clickableStates.Length; i++)
-        {
-            _clickableStates[i] = true;
-        }
-    }
-
     public void DisableGarageNavigation()
     {
         _garageNavigable = false;
-        for (int i = clickables.Length; i < _clickableStates.Length; i++)
+        for (int i = clickables.Length; i < clickables.Length + clikableObjetGarage.Length; i++)
         {
             _clickableStates[i] = false;
         }
     }
 
+    public void EnableGarageNavigation()
+    {
+        _garageNavigable = true;
+        for (int i = clickables.Length; i < clickables.Length + clikableObjetGarage.Length; i++)
+        {
+            _clickableStates[i] = true;
+        }
+    }
+
+
     public void StopAnimShop()
     {
         S_ObjectClickable.Instance.CurrentAnimFalse();
-        S_ObjectClickable.Instance.GoOnIdleShop();
     }
 
     public void StopAnimBackToMainMenuFromShop()
@@ -436,5 +453,10 @@ public class S_ClickablesManager : MonoBehaviour
     public void SetPresetChoice()
     {
         _editorController.SetPresetChoice();
+    }
+
+    public void ActiveCircleFade()
+    {
+        CircleFade.SetActive(true);
     }
 }
