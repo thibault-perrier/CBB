@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5635308219679348048}
+  - component: {fileID: 4762014890461424958}
   m_Layer: 0
   m_Name: Wall_Trap
   m_TagString: Untagged
@@ -34,6 +35,49 @@ Transform:
   - {fileID: 5552965890526017482}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4762014890461424958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8370123698488621880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91febbad3ce4c4340b07aed5f677874c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hitZone: {fileID: 0}
+  _damageZones: []
+  _canAttack: 1
+  _alwayActive: 0
+  _attacking: 0
+  _isTrap: 1
+  _data: {fileID: 11400000, guid: 7e18c405033ed1347879ca6d055eada5, type: 2}
+  _state: 0
+  _lifeBrakePoint: 15
+  _life: 0
+  _attackingStart:
+    m_PersistentCalls:
+      m_Calls: []
+  _attackingEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  _onTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  _onWeaponUnuseable:
+    m_PersistentCalls:
+      m_Calls: []
+  _onWeaponDestroy:
+    m_PersistentCalls:
+      m_Calls: []
+  _onBeginTouchTarget:
+    m_PersistentCalls:
+      m_Calls: []
+  _onEndTouchTarget:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &5220653443698076008
 PrefabInstance:
   m_ObjectHideFlags: 0

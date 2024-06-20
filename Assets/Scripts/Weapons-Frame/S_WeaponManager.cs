@@ -299,7 +299,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         _onWeaponDestroy?.Invoke();
 
         DetachWeapon();
-        S_DataGame.Instance.inventory.RemoveWeapon(_data);
+        // S_DataGame.Instance.inventory.RemoveWeapon(_data);
     }
     public void DetachWeapon()
     {
@@ -365,6 +365,9 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
     public bool CanRecieveDamage()
     {
+        if (_isTrap)
+            return false;
+
         return _state != State.destroy;
     }
 }
