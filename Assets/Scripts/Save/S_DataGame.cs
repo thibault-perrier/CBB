@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Systems;
 using UnityEngine;
+using static Robot;
 using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class S_DataGame : MonoBehaviour
 {
@@ -27,7 +29,6 @@ public class S_DataGame : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        
     }
 
     private void Start()
@@ -145,6 +146,7 @@ public class InventorySaver // Inventory
     public void RemoveRobot(int index)
     {
         Robots.RemoveAt(index);
+        SelectedRobot = 0;
     }
 
     public void UpdateUseItem()
@@ -154,17 +156,25 @@ public class InventorySaver // Inventory
         {
             weapon._useNumber = 0;
         }
+        foreach (Frame frame in Frames)
+        {
+            frame._useNumber = 0;
+        }
 
         foreach (Robot robot in Robots)
         {
-            robot._frame._useNumber++;
-            foreach(Weapon rbWeapon in robot._weapons)
+            foreach (Frame frame in Frames)
             {
-                if(rbWeapon != null)
+                if (frame._id == robot._frame._id)
+                    frame._useNumber++;
+            }
+            if(robot._weapons != null)
+            {
+                foreach (HookPoint hookPoint in robot._weapons)
                 {
-                    foreach(Weapon weapon in Weapons)
+                    foreach (Weapon weapon in Weapons)
                     {
-                        if(weapon._id == rbWeapon._id)
+                        if (weapon._id == hookPoint._weapon._id)
                         {
                             weapon._useNumber++;
                         }
@@ -224,25 +234,90 @@ public class Frame
 public class Robot
 {
     public Frame _frame;
-    public List<Weapon> _weapons = new List<Weapon>();
+
+    public List<HookPoint> _weapons = new List<HookPoint>();
 
     public Robot(Frame frame)
     {
         _frame = frame;
-        for(int i = 0; i < frame.GetFrameData().GetNbWeaponMax(); i++)
-        {
-            _weapons.Add(null);
-        }
     }
 
     public void UpdateWeaponMaxList()
     {
-        List<Weapon> updateWeapons = new List<Weapon>();
-        for (int i = 0; i < _frame.GetFrameData().GetNbWeaponMax(); i++)
+        //int max = _frame.GetFrameData().GetNbWeaponMax();
+        //List<HookPoint> updateWeapons = new List<HookPoint>();
+
+        //for (int i = 0; i < max; i++)
+        //{
+        //    foreach (HookPoint weapon in _weapons)
+        //    {
+        //        if (weapon._hookPointIndex == i)
+        //        {
+        //            updateWeapons.Add(weapon);
+        //        }
+        //    }
+        //}
+        //_weapons = updateWeapons.ToList();
+
+        _weapons.Clear();
+    }
+
+    public void AddWeapon(Weapon weapon, int index)
+    {
+        int replaceIndex = -1;
+
+        for (int i = 0; i < _weapons.Count(); i++)
         {
-            updateWeapons.Add(_weapons[i]);
+            if (_weapons[i]._hookPointIndex == index)
+            {
+                replaceIndex = i;
+            }
+        }
+
+        if(replaceIndex >= 0)
+        {
+            this.RemoveWeapon(replaceIndex);
+        }
+
+        _weapons.Add(new HookPoint(index, weapon));
+    }
+
+    public void RemoveWeapon(int hookPointIndex)
+    {
+        List<HookPoint> updateWeapons = new List<HookPoint>();
+        foreach (HookPoint hookPoint in _weapons)
+        {
+            if (hookPoint._hookPointIndex != hookPointIndex)
+            {
+                updateWeapons.Add(hookPoint);
+            }
         }
         _weapons = updateWeapons.ToList();
+    }
+
+    public Weapon GetHookPointWeapon(int hookPointIndex)
+    {
+        foreach (HookPoint hookPoint in _weapons)
+        {
+            if (hookPoint._hookPointIndex == hookPointIndex)
+            {
+                return hookPoint._weapon;
+            }
+        }
+        return null;
+    }
+
+    [System.Serializable]
+    public struct HookPoint
+    {
+        public int _hookPointIndex;
+        public Weapon _weapon;
+
+        public HookPoint(int index, Weapon weapon)
+        {
+            _hookPointIndex = index;
+            _weapon = weapon;
+        }
     }
 }
 
@@ -255,5 +330,54 @@ public class TournamentSaver // Tournament
     public int _currentLevel;
     public S_TournamentManager.Tournament _tournamentInfo;
     public List<S_TournamentManager.Participant> _roundWinners;
+    public Dictionary<S_TournamentManager.Participant ,Robot> _participantsRobot;
+    public S_TournamentManager.Participant _player;
+    public List<float> _playerLife;
+
+    public void InitRobot()
+    {
+        foreach(S_TournamentManager.Participant participant in _participants)
+        {
+            if (participant.isPlayer)
+            {
+                _participantsRobot.Add(participant, S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot]);
+            }
+            else
+            {
+                _participantsRobot.Add(participant, S_DataRobotComponent.Instance.GetRandomRobot());
+            }
+        }
+    }
+
+    public void SavePlayerLife(S_FrameManager frameManager)
+    {
+        _playerLife.Add(frameManager._life);
+        foreach(GameObject hookPoint in frameManager.WeaponHookPoints)
+        {
+            S_WeaponManager weaponManager = hookPoint.GetComponentInChildren<S_WeaponManager>();
+            if (weaponManager != null)
+            {
+                _playerLife.Add(weaponManager._life);
+            }
+            else
+            {
+                _playerLife.Add(0);
+            }
+        }
+    }
+
+    public void SetPlayerLife(S_FrameManager frameManager)
+    {
+        frameManager._life = _playerLife[0];
+        for(int i=0; i < frameManager.WeaponHookPoints.Count();i++)
+        {
+            GameObject hookPoint = frameManager.WeaponHookPoints[i];
+            S_WeaponManager weaponManager = hookPoint.GetComponentInChildren<S_WeaponManager>();
+            if (weaponManager != null)
+            {
+                weaponManager._life = _playerLife[i + 1];
+            }
+        }
+    }
 }
 

@@ -28,19 +28,20 @@ public class S_RobotSpawner : MonoBehaviour
         frame.transform.position = transform.position;
         frame.transform.rotation = transform.rotation;
 
-        if (robot._weapons.Count() == 0)
+        if (robot._weapons == null || robot._weapons.Count() == 0)
             return frame;
 
         List<GameObject> hookPoits = frame.GetComponent<S_FrameManager>().WeaponHookPoints.ToList();
 
-        for (int i = 0; i < robot._weapons.Count(); i++)
+        for (int i = 0; i < hookPoits.Count(); i++)
         {
-            if (robot._weapons[i] != null)
+            Weapon weapon = S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot].GetHookPointWeapon(i);
+            if (weapon != null)
             {
-                GameObject weapon = Instantiate(robot._weapons[i].GetWeaponData().Prefab);
-                weapon.transform.parent = hookPoits[i].transform;
-                weapon.transform.localPosition = Vector3.zero;
-                weapon.transform.localRotation = Quaternion.identity;
+                GameObject objWeapon = Instantiate(weapon.GetWeaponData().Prefab);
+                objWeapon.transform.parent = hookPoits[i].transform;
+                objWeapon.transform.localPosition = Vector3.zero;
+                objWeapon.transform.localRotation = Quaternion.identity;
             }
         }
 
