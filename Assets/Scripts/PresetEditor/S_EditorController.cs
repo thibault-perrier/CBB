@@ -179,7 +179,7 @@ public class S_EditorController : MonoBehaviour
 
     private void PresetRotation(float move)
     {
-        _presetObjectPart[_presetObjectPart.Count() - 1].transform.Rotate(Vector3.up, move * 200 * Time.deltaTime);
+        _presetHold.transform.Rotate(Vector3.up, move * 200 * Time.deltaTime);
         Selector();
     }
 
