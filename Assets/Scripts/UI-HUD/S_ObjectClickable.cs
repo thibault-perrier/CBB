@@ -57,7 +57,6 @@ public class S_ObjectClickable : MonoBehaviour
         if (!_interactionLocked)
         {
             Activate();
-            SetColor(Color.white);
         }
     }
 
@@ -141,11 +140,11 @@ public class S_ObjectClickable : MonoBehaviour
     public void ResetState()
     {
         _interactionLocked = false;
-        SetColor(Color.white);
     }
 
     public void LaunchAnimBackToMenuFromShop()
     {
+
         _animatorCameraGarage.SetBool("BackToMainFromShop", true);
     }
 
@@ -157,12 +156,6 @@ public class S_ObjectClickable : MonoBehaviour
     {
         _animatorCameraGarage.SetBool("MoveToShop", false);
         UnlockInteraction();
-    }
-
-    public void GoOnIdleShop()
-    {
-        _animatorCameraGarage.SetBool("Idle", true);
-        S_ClickablesManager.Instance.ReactivateAllClickables();
     }
 
     public void GoOnIdleDisableShop()
