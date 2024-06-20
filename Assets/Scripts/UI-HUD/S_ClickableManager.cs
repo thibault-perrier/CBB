@@ -22,6 +22,7 @@ public class S_ClickablesManager : MonoBehaviour
     private InputAction mouseMoveAction;
     private InputAction navigateAction;
     [SerializeField] private S_EditorController _editorController;
+    private bool _navigatingGarage = false;
 
     void Awake()
     {
@@ -51,24 +52,7 @@ public class S_ClickablesManager : MonoBehaviour
         inputActions.Enable();
     }
 
-    public void ClickableObjectTournament()
-    {
-        destroyCup.SetActive(false);
-        //Debug.Log("ClickableObjectTournament() called.");
-        foreach (var clickableGroup in clikableObjetTournament)
-        {
-            if (clickableGroup != null)
-            {
-            //    Debug.Log("clickableGroup found: " + clickableGroup.name);
-                var clickableScript = clickableGroup.GetComponent<S_ObjectClickable>();
-                if (clickableScript != null)
-                {
-                    //Debug.Log("Clickable script found on: " + clickableGroup.name);
-                    clickableScript.enabled = true;
-                }
-            }
-        }
-    }
+
 
     public void DisableObjectTournament()
     {
@@ -85,6 +69,23 @@ public class S_ClickablesManager : MonoBehaviour
             }
         }
     }
+
+    public void ActiveObjectTournament()
+    {
+        destroyCup.SetActive(true);
+        foreach (var clickableGroup in clikableObjetTournament)
+        {
+            if (clickableGroup != null)
+            {
+                var clickableScript = clickableGroup.GetComponent<S_ObjectClickable>();
+                if (clickableScript != null)
+                {
+                    clickableScript.enabled = true;
+                }
+            }
+        }
+    }
+
 
     void Start()
     {
@@ -162,12 +163,10 @@ public class S_ClickablesManager : MonoBehaviour
         }
     }
 
-
-
     void OnMouseMove(InputAction.CallbackContext context)
     {
         _useMouse = true;
-        ResetAllClickables();
+        //ResetAllClickables();
     }
 
     void Navigate(int direction)
@@ -177,8 +176,18 @@ public class S_ClickablesManager : MonoBehaviour
         do
         {
             _currentIndex += direction;
-            if (_currentIndex < 0) _currentIndex = _clickableStates.Length - 1;
-            else if (_currentIndex >= _clickableStates.Length) _currentIndex = 0;
+
+            // Adjust bounds based on current navigation context
+            if (_navigatingGarage)
+            {
+                if (_currentIndex < clickables.Length) _currentIndex = clickables.Length + clikableObjetGarage.Length - 1;
+                else if (_currentIndex >= clickables.Length + clikableObjetGarage.Length) _currentIndex = clickables.Length;
+            }
+            else
+            {
+                if (_currentIndex < 0) _currentIndex = _clickableStates.Length - 1;
+                else if (_currentIndex >= _clickableStates.Length) _currentIndex = 0;
+            }
 
             Debug.Log($"Navigating: _currentIndex={_currentIndex}, _clickableStates.Length={_clickableStates.Length}");
         }
