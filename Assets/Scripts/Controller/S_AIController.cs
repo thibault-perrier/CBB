@@ -118,7 +118,15 @@ public class S_AIController : MonoBehaviour
     public AIState State
     {
         get => _aiState;
-        set => _aiState = value;
+        set
+        {
+            _aiState = value;
+            if (_aiState == AIState.Disable)
+            {
+                _wheelsController.Movement = 0f;
+                _wheelsController.Direction = 0f;
+            }
+        }
     }
     /// <summary>
     /// the current frame of the bot
@@ -725,7 +733,6 @@ public class S_AIController : MonoBehaviour
         else
             _scaleMovement = Mathf.Clamp(_scaleMovement + Time.deltaTime, -1f, 1f);
 
-        Debug.Log(movement);
         return _scaleMovement;
     }
     /// <summary>
