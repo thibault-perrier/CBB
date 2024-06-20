@@ -326,9 +326,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc95e2d9efd334e488108293239285b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _secondSFXSource: {fileID: 0}
+  _SFXType: 0
   _SFXList:
   - {fileID: 8300000, guid: 5c898289df578274da8d3152f6d4500e, type: 3}
   - {fileID: 8300000, guid: ce213ab401e00434a87a7f2a6748476d, type: 3}
+  _scaleSfxVolume: 1
+  _isLooping: 0
 --- !u!1 &3462867678676210357
 GameObject:
   m_ObjectHideFlags: 0
@@ -733,7 +737,7 @@ MonoBehaviour:
   _accidentalDirectionProbability: 0
   _trapLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   _fleeDirection: {fileID: 2335496633760840160}
   _fleeCooldown: 0
   _getEnemyInStart: 0
@@ -888,30 +892,30 @@ MonoBehaviour:
     _canFailAnyAttack: 1
     _dodgeTrap: 1
     _canFleeEnemy: 1
-    _canIgnoreTrap: 1
+    _canIgnoreTrap: 0
     _canFleeWithTrap: 1
     _canMakeAccidentalMovement: 1
     _canMakeAccidentalDirection: 1
-    _attackSuccesProbability: 85
+    _attackSuccesProbability: 100
     _attackEnemyWeaponProbabiltiy: 100
-    _attackFailProbability: 10
-    _movementProbability: 100
-    _dodgeProbability: 100
-    _fleeProbability: 100
+    _attackFailProbability: 15
+    _movementProbability: 95
+    _dodgeProbability: 90
+    _fleeProbability: 85
     _accidentalMovementProbability: 12
     _accidentalDirectionProbability: 12
-    _fleeCooldown: 0
+    _fleeCooldown: 0.1
     _attackFailCooldown: 0.7
     _attackFailDistance: 3.5
     _attackSuccesProbabilityRandom: {x: -10, y: 10}
-    _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
-    _attackFailProbabilityRandom: {x: -7, y: 7}
-    _movementProbabilityRandom: {x: -10, y: 10}
-    _dodgeProbabilityRandom: {x: 0, y: 0}
-    _fleeProbabilityRandom: {x: -5, y: 5}
+    _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
+    _attackFailProbabilityRandom: {x: -5, y: 5}
+    _movementProbabilityRandom: {x: -15, y: 15}
+    _dodgeProbabilityRandom: {x: -5, y: 5}
+    _fleeProbabilityRandom: {x: 0, y: 20}
     _accidentalMovementProbabilityRandom: {x: -2, y: 2}
     _accidentalDirectionProbabilityRandom: {x: -2, y: 2}
-    _fleeCooldownRandom: {x: 0, y: 0}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
     _attackFailCooldownRandom: {x: 0, y: 0}
 --- !u!114 &1311143359725107705
 MonoBehaviour:
@@ -1434,8 +1438,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc95e2d9efd334e488108293239285b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _secondSFXSource: {fileID: 0}
+  _SFXType: 0
   _SFXList:
   - {fileID: 8300000, guid: 7b6f39488b0fe9d45b268743fa58ef8a, type: 3}
+  _scaleSfxVolume: 1
+  _isLooping: 0
 --- !u!1 &7438000341053764334
 GameObject:
   m_ObjectHideFlags: 0

@@ -243,8 +243,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc95e2d9efd334e488108293239285b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _secondSFXSource: {fileID: 0}
+  _SFXType: 0
   _SFXList:
   - {fileID: 8300000, guid: 7b6f39488b0fe9d45b268743fa58ef8a, type: 3}
+  _scaleSfxVolume: 1
+  _isLooping: 0
 --- !u!1 &8280464962659473246
 GameObject:
   m_ObjectHideFlags: 0
@@ -400,8 +404,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc95e2d9efd334e488108293239285b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _secondSFXSource: {fileID: 0}
+  _SFXType: 0
   _SFXList:
   - {fileID: 8300000, guid: 0a16511613085c24b85187352b3847c4, type: 3}
+  _scaleSfxVolume: 1
+  _isLooping: 0
 --- !u!1 &8413263619878395255
 GameObject:
   m_ObjectHideFlags: 0
@@ -457,6 +465,7 @@ MonoBehaviour:
   _canAttack: 1
   _alwayActive: 0
   _attacking: 0
+  _isTrap: 0
   _data: {fileID: 11400000, guid: 12e12b1c4dddd2340990cfd8d30a00e5, type: 2}
   _state: 0
   _lifeBrakePoint: 15
@@ -524,10 +533,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _onBeginTuchTarget:
+  _onBeginTouchTarget:
     m_PersistentCalls:
       m_Calls: []
-  _onEndTuchTarget:
+  _onEndTouchTarget:
     m_PersistentCalls:
       m_Calls: []
 --- !u!95 &9078970882318680198
@@ -570,8 +579,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 1.17, y: 0.964056, z: 3.0041153}
-  m_Center: {x: 0.0035543242, y: -0.008101662, z: 1.8939081}
+  m_Size: {x: 1.4, y: 1, z: 4}
+  m_Center: {x: 0.0035543242, y: -0.008101662, z: 2.43}
 --- !u!65 &8722000961936720713
 BoxCollider:
   m_ObjectHideFlags: 0
