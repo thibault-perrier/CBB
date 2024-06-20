@@ -88,6 +88,14 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     {
         get => _state;
     }
+    public UnityEvent AttackingEnd
+    {
+        get => _attackingEnd;
+    }
+    public UnityEvent WeaponDestroy
+    {
+        get => _onWeaponDestroy;
+    }
 
     public enum State
     {
@@ -161,7 +169,6 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
             if (_touchEvent)
             {
                 _onEndTouchTarget?.Invoke();
-                Debug.Log("On end touch");
                 _tuchDamageable = false;
                 _touchEvent = false;
             }
@@ -172,7 +179,6 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
             if (!_tuchDamageable)
             {
                 _onBeginTouchTarget?.Invoke();
-                Debug.Log("On begin touch");
             }
 
             StartCoroutine(Delay(.5f, () =>
@@ -327,7 +333,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         if (_alwayActive)
             return;
 
-        if (CanAttack)
+        if (_canAttack)
         {
             _animator.SetBool("_playAttack", true);
             AttackON();
