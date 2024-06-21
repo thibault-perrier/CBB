@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class S_FileHandler: MonoBehaviour
+public class S_FileHandler : MonoBehaviour
 {
     public static S_FileHandler Instance;
 
@@ -15,7 +15,7 @@ public class S_FileHandler: MonoBehaviour
         string inventoryData = JsonUtility.ToJson(S_DataGame.Instance.inventory);
         string filePath = Application.persistentDataPath + "/InventoryData.json";
         System.IO.File.WriteAllText(filePath, inventoryData);
-        Debug.Log("Sauvegarde effectué");
+        Debug.Log("Sauvegarde effectuÃ©e");
         Debug.Log(filePath);
     }
 
@@ -25,7 +25,7 @@ public class S_FileHandler: MonoBehaviour
         string inventoryData = System.IO.File.ReadAllText(filePath);
         InventorySaver inventorySaver = JsonUtility.FromJson<InventorySaver>(inventoryData);
         S_DataGame.Instance.inventory = inventorySaver;
-        Debug.Log("Changement effectué");
+        Debug.Log("Changement effectuÃ©e");
         Debug.Log(S_DataGame.Instance.inventory.CurrentMoney);
         Debug.Log(filePath);
     }
@@ -36,7 +36,7 @@ public class S_FileHandler: MonoBehaviour
         string filePath = Application.persistentDataPath + "/TournamentData.json";
         Debug.Log(filePath);
         System.IO.File.WriteAllText(filePath, tournamentData);
-        Debug.Log("Sauvegarde effectué");
+        Debug.Log("Sauvegarde effectuÃ©e");
     }
 
     public void LoadTournament()
@@ -45,6 +45,6 @@ public class S_FileHandler: MonoBehaviour
         string tournamentData = System.IO.File.ReadAllText(filePath);
 
         S_DataGame.Instance.tournament = JsonUtility.FromJson<TournamentSaver>(tournamentData);
-        Debug.Log("Changement effectué");
+        Debug.Log("Changement effectuÃ©e");
     }
 }
