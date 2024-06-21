@@ -309,10 +309,22 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         _onWeaponDestroy?.Invoke();
 
         DetachWeapon();
-
-        if (S_DataGame.Instance)
-            S_DataGame.Instance.inventory.RemoveWeapon(_data);
+        RemoveWeaponInInventory();
     }
+
+    private void RemoveWeaponInInventory()
+    {
+        var player = transform.GetComponentInParent<S_PlayerController>(true);
+        if (player)
+        {
+            if (player.enabled)
+            {
+                if (S_DataGame.Instance)
+                    S_DataGame.Instance.inventory.RemoveWeapon(_data);
+            }
+        }
+    }
+
     public void DetachWeapon()
     {
         transform.parent.gameObject.transform.parent = null;
