@@ -36,7 +36,7 @@ public class S_ShopManager : MonoBehaviour
 
     private int[] _lastSelectedIndexes;
 
-    public delegate void OnChooseLogoComplete(int index);
+    public delegate void OnChooseLogoComplete(int index, Sprite sprite);
     public event OnChooseLogoComplete ChooseLogoComplete;
 
     [Serializable]
@@ -223,8 +223,13 @@ public class S_ShopManager : MonoBehaviour
         {
             if (S_DataGame.Instance.inventory.CurrentMoney >= BuyElement.Price)
             {
+                if (BuyElement.Sprite != null)
+                {
+
+                }
                 S_DataGame.Instance.inventory.CurrentMoney = S_DataGame.Instance.inventory.CurrentMoney - BuyElement.Price;
                 UpdateShopText();
+
                 //TODO : Update Inventory Quantity -------------------------------------------------------------------------------------
             }
             else
@@ -234,7 +239,7 @@ public class S_ShopManager : MonoBehaviour
         }
         else
         {
-            ChooseLogoComplete?.Invoke(_currentItemIndex);
+            ChooseLogoComplete?.Invoke(_currentItemIndex, BuyElement.Sprite);
         }
     }
 

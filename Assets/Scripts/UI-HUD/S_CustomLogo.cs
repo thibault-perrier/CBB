@@ -52,11 +52,11 @@ public class S_CustomLogo : MonoBehaviour
     /// Event that make it possible to set a sprite to the logo creation
     /// </summary>
     /// <param name="sprite"></param>
-    private void OnSetLogo(int index)
+    private void OnSetLogo(int index, Sprite sprite)
     {
         if (_isChoosingLogo)
         {
-            overlayImage.sprite = overlayImages[index];
+            overlayImage.sprite = sprite;
             _currentOverlayImageIndex = index;
 
             EventSystem.current.SetSelectedGameObject(null);
@@ -66,7 +66,7 @@ public class S_CustomLogo : MonoBehaviour
                 button.SetActive(true);
             }
 
-            StartCoroutine(SetButtonAsSelected(buttons[0]));
+            StartCoroutine(SetButtonAsSelected(buttons[2])); //change logo button
 
             logosScrollView.SetActive(false);
             _isChoosingLogo = false;

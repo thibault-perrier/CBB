@@ -177,8 +177,17 @@ public class InventorySaver // Inventory
 
     public void AddWeapon(S_WeaponData weaponData)
     {
+        foreach (Weapon w in Weapons)
+        {
+            if (w.GetWeaponData() == weaponData)
+            {
+                w._number++;
+                return;
+            }
+        }
+
         Weapon weapon = GetWeapon(weaponData);
-        if(weapon == null)
+        if (weapon == null)
         {
             weapon = new Weapon(weaponData);
             Weapons.Add(weapon);
@@ -211,6 +220,15 @@ public class InventorySaver // Inventory
 
     public void AddFrame(S_FrameData frameData)
     {
+        foreach(Frame f in Frames)
+        {
+            if (f.GetFrameData() == frameData)
+            {
+                f._number++;
+                return;
+            }
+        }
+
         Frame frame = GetFrame(frameData);
         if (frame == null)
         {
