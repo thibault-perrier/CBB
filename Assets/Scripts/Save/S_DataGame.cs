@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Systems;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Robot;
 using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
@@ -37,7 +38,7 @@ public class S_DataGame : MonoBehaviour
         {
             LoadInventory();
         }
-        else if (OnSceneLoad == Load.Tournament || OnSceneLoad == Load.InventoryAndTournament)
+        if (OnSceneLoad == Load.Tournament || OnSceneLoad == Load.InventoryAndTournament)
         {
             LoadTournament();
         }
@@ -73,6 +74,94 @@ public class InventorySaver // Inventory
     public List<Robot> Robots = new List<Robot>();
     public int SelectedRobot;
 
+    public string backgroundColorHex;
+    public string overlayColorHex;
+    public float backgroundAlpha = 255;
+
+    public int prefixIndex;
+    public int suffixIndex;
+
+    public int overlayImageIndex;
+    public Vector2 overlayImagePosition;
+
+    #region Color Load/Save
+    public void SaveOverlayColor(string hexColor)
+    {
+        overlayColorHex = hexColor;
+        PlayerPrefs.SetString("CurrentOverlayColor", hexColor);
+        PlayerPrefs.Save();
+        Debug.Log("Overlay Color Saved: " + hexColor);
+    }
+
+    public void SaveBackgroundColor(string hexColor)
+    {
+        backgroundColorHex = hexColor;
+        PlayerPrefs.SetString("CurrentBackgroundColor", hexColor);
+        PlayerPrefs.Save();
+        Debug.Log("Background Color Saved: " + hexColor);
+    }
+
+    public void SaveOverlayImage(int imageIndex)
+    {
+        overlayImageIndex = imageIndex;
+        PlayerPrefs.SetInt("OverlayImageIndex", imageIndex);
+        PlayerPrefs.Save();
+    }
+
+    // Charger les couleurs
+    public void LoadColors()
+    {
+        backgroundColorHex = PlayerPrefs.GetString("CurrentBackgroundColor", backgroundColorHex);
+        Debug.Log("Background Color Loaded: " + backgroundColorHex + " with Alpha: " + backgroundAlpha);
+    }
+
+    public void LoadOverlayColor()
+    {
+        overlayColorHex = PlayerPrefs.GetString("CurrentOverlayColor", overlayColorHex);
+        Debug.Log("Overlay Color Loaded: " + overlayColorHex);
+    }
+
+    public void LoadOverlayImageIndex()
+    {
+        overlayImageIndex = PlayerPrefs.GetInt("OverlayImageIndex", overlayImageIndex);
+    }
+    #endregion
+    #region Name Load/Save
+    public void SavePrefixName(int prefix)
+    {
+        prefixIndex = prefix;
+        PlayerPrefs.SetInt("CurrentPrefixName", prefix);
+        PlayerPrefs.Save();
+    }
+    public void SaveSuffixname(int suffix)
+    {
+        suffixIndex = suffix;
+        PlayerPrefs.SetInt("CurrentSuffixName", suffix);
+        PlayerPrefs.Save();
+    }
+
+    public bool LoadPrefixName()
+    {
+        if (PlayerPrefs.HasKey("CurrentPrefixName"))
+        {
+            prefixIndex = PlayerPrefs.GetInt("CurrentPrefixName", prefixIndex);
+            return true;
+        }
+        return false;
+    }
+    public bool LoadSuffixName()
+    {
+        if (PlayerPrefs.HasKey("CurrentSuffixName"))
+        {
+            suffixIndex = PlayerPrefs.GetInt("CurrentSuffixName", suffixIndex);
+            return true;
+        }
+
+        return false;
+    }
+
+    #endregion
+
     public Weapon GetWeapon(S_WeaponData weaponData)
     {
         foreach (Weapon weapon in Weapons)
@@ -88,8 +177,17 @@ public class InventorySaver // Inventory
 
     public void AddWeapon(S_WeaponData weaponData)
     {
+        foreach (Weapon w in Weapons)
+        {
+            if (w.GetWeaponData() == weaponData)
+            {
+                w._number++;
+                return;
+            }
+        }
+
         Weapon weapon = GetWeapon(weaponData);
-        if(weapon == null)
+        if (weapon == null)
         {
             weapon = new Weapon(weaponData);
             Weapons.Add(weapon);
@@ -105,8 +203,7 @@ public class InventorySaver // Inventory
             weapon._number--;
             if (weapon._number <= 0)
                 Weapons.Remove(weapon);
-        }
-        
+        } 
     }
 
     public Frame GetFrame(S_FrameData frameData)
@@ -123,6 +220,15 @@ public class InventorySaver // Inventory
 
     public void AddFrame(S_FrameData frameData)
     {
+        foreach(Frame f in Frames)
+        {
+            if (f.GetFrameData() == frameData)
+            {
+                f._number++;
+                return;
+            }
+        }
+
         Frame frame = GetFrame(frameData);
         if (frame == null)
         {
