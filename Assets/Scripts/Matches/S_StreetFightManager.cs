@@ -158,6 +158,9 @@ public class S_StreetFightManager : MonoBehaviour
         ClearDroppedWeapon();
         _timerUpdate = false;
 
+        _cameraView.AddObjectToView(_botPlayerTransformSpawn);
+        _cameraView.AddObjectToView(_botAITransformSpawn);
+
         StartCoroutine(CreateStreetFightBot(() =>
         {
             _cameraView.ClearObjectToView();
@@ -189,7 +192,7 @@ public class S_StreetFightManager : MonoBehaviour
     /// <param name="enabled">enabled value</param>
     private void SetEnableBots(bool enabled)
     {
-        _AIController.enabled = enabled;
+        _AIController.State = enabled ? S_AIController.AIState.Enable : S_AIController.AIState.Disable;
         _playerInput.enabled = enabled;
 
         _immobileAI.enabled = enabled;
@@ -369,7 +372,7 @@ public class S_StreetFightManager : MonoBehaviour
             _minutesTimer--;
             _secondsTimer += 59f;
 
-            if (_minutesTimer <= 0f)
+            if (_minutesTimer < 0f)
                 TimerEnd();
         }
 
