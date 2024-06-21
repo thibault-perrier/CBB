@@ -25,6 +25,8 @@ public class S_ClickablesManager : MonoBehaviour
     [SerializeField] private S_EditorController _editorController;
     private bool _navigatingGarage = false;
 
+    [SerializeField] private GameObject _panelCustomizeLogo;
+
 
     void Awake()
     {
@@ -52,6 +54,17 @@ public class S_ClickablesManager : MonoBehaviour
         navigateAction.performed += OnNavigate;
 
         inputActions.Enable();
+    }
+
+    public void EnablePanelLogo()
+    {
+        _panelCustomizeLogo.SetActive(true);
+    }
+
+    public void DisablePanelLogo()
+    {
+        _panelCustomizeLogo.SetActive(false);
+        S_ObjectClickable.Instance.StopAnimBoard();
     }
 
     public void DisableObjectTournament()

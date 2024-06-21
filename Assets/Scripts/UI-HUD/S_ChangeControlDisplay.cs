@@ -35,6 +35,7 @@ public class S_ChangeControlDisplay : MonoBehaviour
                     if (_gamepadControls != null)
                         _gamepadControls?.SetActive(true);
                     Cursor.visible = false;
+                    Cursor.lockState = CursorLockMode.Locked;
                 }
                 else if (_lastActiveDevice is Keyboard)
                 {
@@ -46,6 +47,7 @@ public class S_ChangeControlDisplay : MonoBehaviour
                 else if (_lastActiveDevice is Mouse)
                 {
                     Cursor.visible = true;
+                    Cursor.lockState = CursorLockMode.None;
                 }
             };
         }

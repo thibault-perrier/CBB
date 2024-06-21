@@ -15,8 +15,10 @@ public class S_CustomLogo : MonoBehaviour
     public GameObject logosScrollView;
     public GameObject logoCustomize;
 
-    private Color _defaultBackgroundColor = Color.white; // Couleur par défaut de fond
-    private Color _defaultOverlayColor = Color.white;    // Couleur par défaut d'incrustation
+    [SerializeField] private GameObject _nameButton;
+
+    private Color _defaultBackgroundColor = Color.white; // Couleur par dï¿½faut de fond
+    private Color _defaultOverlayColor = Color.white;    // Couleur par dï¿½faut d'incrustation
 
     private Color _currentBackgroundColor;
     private Color _currentOverlayColor;
@@ -36,11 +38,17 @@ public class S_CustomLogo : MonoBehaviour
         S_DataGame.Instance.LoadInventory();
         overlayImageDropdown.onValueChanged.AddListener(delegate { ChangeOverlayImage(); });
 
-        // Charger les données sauvegardées
+        // Charger les donnï¿½es sauvegardï¿½es
         LoadLogo();
         logosScrollView.SetActive(false);
 
         logoCustomize.SetActive(false);
+    }
+
+    void OnEnable()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(_nameButton);
     }
 
     private void OnDestroy()
@@ -120,7 +128,7 @@ public class S_CustomLogo : MonoBehaviour
         // Sauvegarder l'index de l'image d'incrustation
         S_DataGame.Instance.inventory.SaveOverlayImage(_currentOverlayImageIndex);
 
-        // Sauvegarder les données de jeu
+        // Sauvegarder les donnï¿½es de jeu
         S_DataGame.Instance.SaveInventory();
     }
 
@@ -138,7 +146,7 @@ public class S_CustomLogo : MonoBehaviour
                 Color backgroundColor;
                 if (ColorUtility.TryParseHtmlString("#" + backgroundColorHex, out backgroundColor))
                 {
-                    // Appliquer la couleur de fond chargée avec alpha
+                    // Appliquer la couleur de fond chargï¿½e avec alpha
                     backgroundImage.color = backgroundColor;
                     _currentBackgroundColor = backgroundImage.color;
                     Debug.Log("Background Color Applied: " + backgroundColorHex);
@@ -164,7 +172,7 @@ public class S_CustomLogo : MonoBehaviour
                 Debug.LogError("Failed to parse overlay color from hex string: " + overlayColorHex);
             }
 
-            // Charger l'image d'incrustation sélectionnée dans le dropdown
+            // Charger l'image d'incrustation sï¿½lectionnï¿½e dans le dropdown
             S_DataGame.Instance.inventory.LoadOverlayImageIndex();
             int overlayImageIndex = S_DataGame.Instance.inventory.overlayImageIndex;
             if (overlayImageIndex >= 0 && overlayImageIndex < overlayImages.Count)
@@ -186,15 +194,15 @@ public class S_CustomLogo : MonoBehaviour
 
     public void ResetLogo()
     {
-        // Réinitialiser les couleurs aux valeurs par défaut
+        // Rï¿½initialiser les couleurs aux valeurs par dï¿½faut
         _currentBackgroundColor = _defaultBackgroundColor;
         _currentOverlayColor = _defaultOverlayColor;
 
-        // Appliquer les couleurs par défaut
+        // Appliquer les couleurs par dï¿½faut
         backgroundImage.color = new Color(_defaultBackgroundColor.r, _defaultBackgroundColor.g, _defaultBackgroundColor.b, 1f);
         overlayImage.color = new Color(_defaultOverlayColor.r, _defaultOverlayColor.g, _defaultOverlayColor.b, 1f);
 
-        // Réinitialiser l'image d'incrustation à la première image ou à une valeur par défaut
+        // Rï¿½initialiser l'image d'incrustation ï¿½ la premiï¿½re image ou ï¿½ une valeur par dï¿½faut
         overlayImageDropdown.value = 0;
         ChangeOverlayImage();
     }

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Animations;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -21,11 +20,11 @@ public class S_EditorController : MonoBehaviour
 
     [SerializeField] private GameObject _presetHold;
 
-    [SerializeField] private List<GameObject> _weapons;     
+    [SerializeField] private List<GameObject> _weapons;
     [SerializeField] private List<S_WeaponData> _weaponsData;       //list of scriptable object player's weapons
     [SerializeField] private List<Weapon> _inventoryWeapons;
 
-    [SerializeField] private List<GameObject> _frame;       
+    [SerializeField] private List<GameObject> _frame;
     [SerializeField] private List<S_FrameData> _frameData;          //list of scriptable object player's frames
     [SerializeField] private List<Frame> _invetoryFrames;
 
@@ -51,6 +50,8 @@ public class S_EditorController : MonoBehaviour
 
     private MeshRenderer renderer = new MeshRenderer();
 
+    private bool _canRotate = false;
+    private float _rotateDirection;
 
     enum EditState
     {
@@ -93,7 +94,7 @@ public class S_EditorController : MonoBehaviour
         UpdatePiece();
         UpdatePresetRobotGroup();
 
-        if(S_DataGame.Instance.inventory.Robots.Count() > 0)
+        if (S_DataGame.Instance.inventory.Robots.Count() > 0)
         {
             UpdatePrefabRobot();
         }
@@ -105,9 +106,20 @@ public class S_EditorController : MonoBehaviour
     {
         foreach (S_FrameData data in _frameData)
         {
-            Frame frame2 = new Frame(data);
-            Debug.Log("frame name : " + frame2._name);
-            S_DataGame.Instance.inventory.Frames.Add(frame2);
+            bool haveFrame = false;
+            foreach (Frame frame in S_DataGame.Instance.inventory.Frames)
+            {
+                if (frame.GetFrameData() == data)
+                {
+                    frame._number++;
+                    haveFrame = true;
+                }
+            }
+            if (!haveFrame)
+            {
+                S_DataGame.Instance.inventory.Frames.Add(new Frame(data));
+            }
+
         }
         foreach (S_WeaponData data in _weaponsData)
         {
@@ -134,40 +146,17 @@ public class S_EditorController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.A))
-        //{
-        //    _selectedIndex -= 1;
-        //    Selector();
-        //}
-        //if (Input.GetKeyDown(KeyCode.D))
-        //{
-        //    _selectedIndex += 1;
-        //    Selector();
-        //}
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (_canRotate)
         {
-            Back();
-            Selector();
+            if (_rotateDirection > 0)
+            {
+                PresetRotation(1);
+            }
+            if (_rotateDirection < 0)
+            {
+                PresetRotation(-1);
+            }
         }
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    SelectItem();
-        //}
-        if (Input.GetKeyDown(KeyCode.Delete))
-        {
-            RemoveWeapon();
-        }
-
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            PresetRotation(1);
-        }
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            PresetRotation(-1);
-        }
-
-
     }
 
     #region Inputs
@@ -199,18 +188,26 @@ public class S_EditorController : MonoBehaviour
 
     public void OnRotate(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.performed)
         {
-            float direction = context.ReadValue<float>();
-            if (Input.GetKey(KeyCode.RightArrow))
-            {
-                PresetRotation(1);
-            }
-            if (Input.GetKey(KeyCode.LeftArrow))
-            {
-                PresetRotation(-1);
-            }
+            _rotateDirection = context.ReadValue<float>();
+            _canRotate = true;
         }
+        else if (context.canceled)
+        {
+            _canRotate = false;
+        }
+    }
+
+    public void OnRemoveWeapon(InputAction.CallbackContext context)
+    {
+        RemoveWeapon();
+    }
+
+    public void OnBackButton(InputAction.CallbackContext context)
+    {
+        Back();
+        Selector();
     }
 
     #endregion
@@ -306,6 +303,7 @@ public class S_EditorController : MonoBehaviour
                 GameObject newFrame = Instantiate(frame.Prefab);
 
                 newFrame.GetComponent<Rigidbody>().isKinematic = true;
+                newFrame.GetComponent<PlayerInput>().enabled = false;
 
                 RectTransform rectTransform = newFrame.AddComponent<RectTransform>();
 
@@ -362,23 +360,23 @@ public class S_EditorController : MonoBehaviour
                 Debug.Log(_presets[_selectedIndex].name);
                 SetHovered(_presets[_selectedIndex].gameObject);
                 break;
-             case EditState.PartChoice:
+            case EditState.PartChoice:
                 if (_selectedIndex < 0)
-                    _selectedIndex = _presetObjectPart.Count-1;
+                    _selectedIndex = _presetObjectPart.Count - 1;
                 _selectedIndex = _selectedIndex % _presetObjectPart.Count;
                 Debug.Log(_presetObjectPart[_selectedIndex].name);
                 SetHovered(_presetObjectPart[_selectedIndex].gameObject);
                 break;
             case EditState.FrameChoice:
                 if (_selectedIndex < 0)
-                    _selectedIndex = _frame.Count-1;
+                    _selectedIndex = _frame.Count - 1;
                 _selectedIndex = _selectedIndex % _frame.Count;
                 Debug.Log(_frame[_selectedIndex].name);
                 SetHovered(_frame[_selectedIndex].gameObject);
                 break;
             case EditState.WeaponChoice:
                 if (_selectedIndex < 0)
-                    _selectedIndex = _weapons.Count-1;
+                    _selectedIndex = _weapons.Count - 1;
                 _selectedIndex = _selectedIndex % _weapons.Count;
                 Debug.Log(_weapons[_selectedIndex].name);
                 SetHovered(_weapons[_selectedIndex].gameObject);
@@ -390,11 +388,11 @@ public class S_EditorController : MonoBehaviour
 
     private void SelectItem()
     {
-        
+
         switch (_editState)
         {
             case EditState.PresetChoice:
-                
+
                 if (_presets[_selectedIndex].GetComponent<S_FrameManager>() == null)
                 {
                     Robot robot = new Robot(GetUnuseFrame());
@@ -407,7 +405,7 @@ public class S_EditorController : MonoBehaviour
 
                 if (_presetObjectPart[_selectedIndex].GetComponent<S_FrameManager>() != null)
                 {
-                    if(_frame.Count() > 0)
+                    if (_frame.Count() > 0)
                         _editState = EditState.FrameChoice;
                 }
                 else
@@ -498,8 +496,8 @@ public class S_EditorController : MonoBehaviour
 
         foreach (Frame frame in S_DataGame.Instance.inventory.Frames)
         {
-            Debug.Log("frame name : "+frame._name +" || "+ frame._number + " - " + frame._useNumber);
-            Debug.Log("calcul: "+ (frame._number - frame._useNumber));
+            Debug.Log("frame name : " + frame._name + " || " + frame._number + " - " + frame._useNumber);
+            Debug.Log("calcul: " + (frame._number - frame._useNumber));
             if (frame._number - frame._useNumber >= 1)
             {
                 return frame;
@@ -533,13 +531,14 @@ public class S_EditorController : MonoBehaviour
         List<GameObject> weapons = new List<GameObject>();
 
         frame.GetComponent<Rigidbody>().isKinematic = true;
+        frame.GetComponent<PlayerInput>().enabled = false;
 
         if (robot._weapons == null || robot._weapons.Count() == 0)
             return frame;
 
         List<GameObject> hookPoits = frame.GetComponent<S_FrameManager>().WeaponHookPoints.ToList();
-        
-        for(int i=0; i < hookPoits.Count(); i++)
+
+        for (int i = 0; i < hookPoits.Count(); i++)
         {
             Weapon weapon = S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot].GetHookPointWeapon(i);
             if (weapon != null)
@@ -561,6 +560,7 @@ public class S_EditorController : MonoBehaviour
         GameObject frame = Instantiate(frameData.Prefab);
 
         frame.GetComponent<Rigidbody>().isKinematic = true;
+        frame.GetComponent<PlayerInput>().enabled = false;
 
         frame.transform.parent = _presetHold.transform;
         frame.transform.localPosition = Vector3.zero;
@@ -575,12 +575,12 @@ public class S_EditorController : MonoBehaviour
 
         _presetObjectPart.Clear();
 
-        
+
         for (int i = 0; i < _presetWeaponsHookPoints.Count(); i++)
         {
             Weapon weapon = S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot].GetHookPointWeapon(i);
             if (weapon != null)
-            {   
+            {
                 GameObject objWeapon = Instantiate(weapon.GetWeaponData().Prefab);
                 _presetObjectPart.Add(objWeapon);
                 objWeapon.transform.parent = _presetWeaponsHookPoints[i].transform;
@@ -602,7 +602,7 @@ public class S_EditorController : MonoBehaviour
 
     private void UpdatePresetRobotGroup()
     {
-        foreach(GameObject robot in _presets)
+        foreach (GameObject robot in _presets)
         {
             Destroy(robot);
         }
@@ -658,10 +658,10 @@ public class S_EditorController : MonoBehaviour
         _defaultMaterial = renderer.material;
         renderer.material = _selectMaterial;
     }
-    
+
     private void DisableActiveRenderer()
     {
-        if(renderer != null)
+        if (renderer != null)
             renderer.material = _defaultMaterial;
     }
 
@@ -670,7 +670,7 @@ public class S_EditorController : MonoBehaviour
 
 /*
 
-recûperer les preset et si le nombre de preset et inferieur a 5 ajouter un objet UI pour creer un nouveau preset
+recï¿½perer les preset et si le nombre de preset et inferieur a 5 ajouter un objet UI pour creer un nouveau preset
 (Supression preset ?)
 Selectionner preset => garder l'ID du preset en memoire
 si le preset = _newPresetObjectIcon creer le preset et lui mettre le premier chassis disponible dans la save
