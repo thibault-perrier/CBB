@@ -65,6 +65,10 @@ public class S_StreetFightManager : MonoBehaviour
     [SerializeField, Tooltip("Helth bar of the enemy")]
     private Image _healthBarEnemy;
 
+    [Space(10)]
+    [SerializeField, Tooltip("text mesh used for display the timer")]
+    private TMP_Text _timerStreetFight;
+
     [Header("Camera")]
     [SerializeField, Tooltip("camera for focus the view on two bots")]
     private S_CameraView _cameraView;
@@ -79,6 +83,17 @@ public class S_StreetFightManager : MonoBehaviour
     [SerializeField, Tooltip("invoke when charcater or AI die and when the player press any key")]
     private UnityEvent _onStreetFightEnd;
 
+    public bool InFight
+    {
+        get
+        {
+            if (!_playerFrame || !_enemyFrame)
+                return false;
+
+            return true;
+        }
+    }
+
     private S_AIController _AIController;
     private PlayerInput _playerInput;
     private S_ImmobileDefeat _immobilePlayer, _immobileAI;
@@ -91,6 +106,10 @@ public class S_StreetFightManager : MonoBehaviour
 
     private float _startFieldOfView;
     private bool _streetFightEnd = false;
+    private bool _timerUpdate = false;
+
+    private float _minutesTimer = 3f;
+    private float _secondsTimer;
 
     private FightState _fightState;
 
@@ -120,6 +139,7 @@ public class S_StreetFightManager : MonoBehaviour
         {
             DetectDefeatRadius();
             UpdateHealthBarUI();
+            UpdateTimeUI();
         }
     }
     private void OnDrawGizmosSelected()
@@ -136,6 +156,7 @@ public class S_StreetFightManager : MonoBehaviour
     public void StartStreetFight()
     {
         ClearDroppedWeapon();
+        _timerUpdate = false;
 
         StartCoroutine(CreateStreetFightBot(() =>
         {
@@ -155,6 +176,7 @@ public class S_StreetFightManager : MonoBehaviour
             {
                 _uiTimerBeforeFight.SetActive(false);
                 _uiParentInFight.SetActive(true);
+                _timerUpdate = true;
 
                 SetEnableBots(true);
             }));
@@ -316,7 +338,7 @@ public class S_StreetFightManager : MonoBehaviour
     /// </summary>
     private void UpdateHealthBarUI()
     {
-        if (!_playerFrame || !_enemyFrame)
+        if (!InFight)
             return;
 
         List<(Image, S_FrameManager)> healthBarTuple = new()
@@ -332,6 +354,39 @@ public class S_StreetFightManager : MonoBehaviour
 
             healthBar.fillAmount = frame.PercentLife;
         }
+    }
+    /// <summary>
+    /// update the timer ui
+    /// </summary>
+    private void UpdateTimeUI()
+    {
+        if (!_timerUpdate)
+            return;
+
+        _secondsTimer -= Time.deltaTime;
+        if (_secondsTimer <= 0f)
+        {
+            _minutesTimer--;
+            _secondsTimer += 59f;
+
+            if (_minutesTimer <= 0f)
+                TimerEnd();
+        }
+
+        _timerStreetFight.text = _minutesTimer.ToString("00") + " : " + _secondsTimer.ToString("00");
+    }
+    /// <summary>
+    /// lauch whne the minutes is lower or equal at 0
+    /// </summary>
+    private void TimerEnd()
+    {
+        float percentLifePlayer = _playerFrame.PercentLife;
+        float percentLifeEnemy = _enemyFrame.PercentLife;
+
+        if (percentLifePlayer > percentLifeEnemy)
+            BotPlayerVictorie();
+        else
+            BotAiVictorie();
     }
 
     /// <summary>
