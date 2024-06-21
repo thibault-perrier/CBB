@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
@@ -268,6 +269,7 @@ public class S_EditorController : MonoBehaviour
                 GameObject newFrame = Instantiate(frame.Prefab);
 
                 newFrame.GetComponent<Rigidbody>().isKinematic = true;
+                newFrame.GetComponent<PlayerInput>().enabled = false;
 
                 RectTransform rectTransform = newFrame.AddComponent<RectTransform>();
 
@@ -495,6 +497,7 @@ public class S_EditorController : MonoBehaviour
         List<GameObject> weapons = new List<GameObject>();
 
         frame.GetComponent<Rigidbody>().isKinematic = true;
+        frame.GetComponent<PlayerInput>().enabled = false;
 
         if (robot._weapons == null || robot._weapons.Count() == 0)
             return frame;
@@ -523,6 +526,7 @@ public class S_EditorController : MonoBehaviour
         GameObject frame = Instantiate(frameData.Prefab);
 
         frame.GetComponent<Rigidbody>().isKinematic = true;
+        frame.GetComponent<PlayerInput>().enabled = false;
 
         frame.transform.parent = _presetHold.transform;
         frame.transform.localPosition = Vector3.zero;
