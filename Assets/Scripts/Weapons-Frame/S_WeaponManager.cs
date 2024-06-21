@@ -96,6 +96,10 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     {
         get => _onWeaponDestroy;
     }
+    public UnityEvent AttackingStart
+    {
+        get => _attackingStart;
+    }
 
     public enum State
     {

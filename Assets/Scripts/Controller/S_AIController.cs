@@ -374,7 +374,7 @@ public class S_AIController : MonoBehaviour
     private void UpdateAIMovement()
     {
         TryFailedAttack();
-        TryToFindBestWeaponFromTarget(_target.transform);
+        // TryToFindBestWeaponFromTarget(_target.transform);
         TryToAttackWithAnyWeapon();
 
         // get movement probability
@@ -687,7 +687,7 @@ public class S_AIController : MonoBehaviour
         {
             _wheelsController.Direction = ReverseDir(2f);
             // if we are in front of the enemy go backward else fo toward
-            _wheelsController.Movement = dotBehindEnemy > 0f ? ReverseMov(-.5f) : ReverseMov(.5f);
+            _wheelsController.Movement = dotBehindEnemy > 0f ? ReverseMov(-1f) : ReverseMov(1f);
             return;
         }
 
@@ -743,7 +743,7 @@ public class S_AIController : MonoBehaviour
     /// <returns>return the lerp direction</returns>
     private float CalCulDirection(float angle, float scale)
     {
-        return ((Mathf.Abs(angle) / 180f) * scale);
+        return (Mathf.Abs(angle) / 180f) * scale;
     }
     /// <summary>
     /// reduce the movemen if he need to turn
@@ -1017,7 +1017,7 @@ public class S_AIController : MonoBehaviour
         // if the current weapon is currently attacking dont change current weapon
         if (_currentWeapon)
         {
-            if (_currentWeapon.Attacking && _currentWeapon.CanAttack)
+            if (_currentWeapon.Attacking || _currentWeapon.CanAttack || (_currentWeapon.CanTakeAnyDamage && _currentWeapon.Data.AttackOneTime))
                 return true;
         }
 
