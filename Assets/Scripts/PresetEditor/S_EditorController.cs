@@ -1,13 +1,9 @@
-using JetBrains.Annotations;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class S_EditorController : MonoBehaviour
 {
@@ -50,9 +46,6 @@ public class S_EditorController : MonoBehaviour
 
     [SerializeField] private EditState _editState = EditState.PresetChoice;
 
-    private static readonly int EmissionColorKey = Shader.PropertyToID("_EmissionColor");
-    private const string EmissionKey = "_EMISSION";
-
     [SerializeField] private Material _selectMaterial;
     private Material _defaultMaterial;
 
@@ -90,44 +83,13 @@ public class S_EditorController : MonoBehaviour
         Selector();
     }
 
-    private void Awake()
-    {
-
-        
-    }
 
     // Start is called before the first frame update
     void Start()
     {
-        //foreach (S_FrameData data in _frameData)
-        //{
-        //    Frame frame2 = new Frame(data);
-        //    Debug.Log("frame name : " + frame2._name);
-        //    S_DataGame.Instance.inventory.Frames.Add(frame2);
-        //}
-        //foreach (S_WeaponData data in _weaponsData)
-        //{
-        //    bool haveWeapon = false;
-        //    foreach (Weapon weapon in S_DataGame.Instance.inventory.Weapons)
-        //    {
-        //        if (weapon.GetWeaponData() == data)
-        //        {
-        //            weapon._number++;
-        //            haveWeapon = true;
-        //        }
-        //    }
-        //    if (!haveWeapon)
-        //    {
-        //        S_DataGame.Instance.inventory.Weapons.Add(new Weapon(data));
-        //    }
+        //GiveFrames();
 
-        //}
-
-        //Robot robot = new Robot(S_DataGame.Instance.inventory.Frames[0]);
-
-        //S_DataGame.Instance.inventory.Robots.Add(robot);
-
-        S_DataGame.Instance.LoadInventory();
+        //S_DataGame.Instance.LoadInventory();
         UpdatePiece();
         UpdatePresetRobotGroup();
 
@@ -139,28 +101,58 @@ public class S_EditorController : MonoBehaviour
         Selector();
     }
 
+    public void GiveFrames()
+    {
+        foreach (S_FrameData data in _frameData)
+        {
+            Frame frame2 = new Frame(data);
+            Debug.Log("frame name : " + frame2._name);
+            S_DataGame.Instance.inventory.Frames.Add(frame2);
+        }
+        foreach (S_WeaponData data in _weaponsData)
+        {
+            bool haveWeapon = false;
+            foreach (Weapon weapon in S_DataGame.Instance.inventory.Weapons)
+            {
+                if (weapon.GetWeaponData() == data)
+                {
+                    weapon._number++;
+                    haveWeapon = true;
+                }
+            }
+            if (!haveWeapon)
+            {
+                S_DataGame.Instance.inventory.Weapons.Add(new Weapon(data));
+            }
+
+        }
+
+        Robot robot = new Robot(S_DataGame.Instance.inventory.Frames[0]);
+        S_DataGame.Instance.inventory.Robots.Add(robot);
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            _selectedIndex -= 1;
-            Selector();
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            _selectedIndex += 1;
-            Selector();
-        }
+        //if (Input.GetKeyDown(KeyCode.A))
+        //{
+        //    _selectedIndex -= 1;
+        //    Selector();
+        //}
+        //if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //    _selectedIndex += 1;
+        //    Selector();
+        //}
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Back();
             Selector();
         }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SelectItem();
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    SelectItem();
+        //}
         if (Input.GetKeyDown(KeyCode.Delete))
         {
             RemoveWeapon();
@@ -177,6 +169,51 @@ public class S_EditorController : MonoBehaviour
 
 
     }
+
+    #region Inputs
+    public void OnNavigate(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            float direction = context.ReadValue<float>();
+            if (direction < 0)
+            {
+                _selectedIndex -= 1;
+                Selector();
+            }
+            else if (direction > 0)
+            {
+                _selectedIndex += 1;
+                Selector();
+            }
+        }
+    }
+
+    public void OnConfirm(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            SelectItem();
+        }
+    }
+
+    public void OnRotate(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            float direction = context.ReadValue<float>();
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                PresetRotation(1);
+            }
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                PresetRotation(-1);
+            }
+        }
+    }
+
+    #endregion
 
     private void PresetRotation(float move)
     {
@@ -269,7 +306,6 @@ public class S_EditorController : MonoBehaviour
                 GameObject newFrame = Instantiate(frame.Prefab);
 
                 newFrame.GetComponent<Rigidbody>().isKinematic = true;
-                newFrame.GetComponent<PlayerInput>().enabled = false;
 
                 RectTransform rectTransform = newFrame.AddComponent<RectTransform>();
 
@@ -497,7 +533,6 @@ public class S_EditorController : MonoBehaviour
         List<GameObject> weapons = new List<GameObject>();
 
         frame.GetComponent<Rigidbody>().isKinematic = true;
-        frame.GetComponent<PlayerInput>().enabled = false;
 
         if (robot._weapons == null || robot._weapons.Count() == 0)
             return frame;
@@ -526,7 +561,6 @@ public class S_EditorController : MonoBehaviour
         GameObject frame = Instantiate(frameData.Prefab);
 
         frame.GetComponent<Rigidbody>().isKinematic = true;
-        frame.GetComponent<PlayerInput>().enabled = false;
 
         frame.transform.parent = _presetHold.transform;
         frame.transform.localPosition = Vector3.zero;

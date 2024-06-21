@@ -19,9 +19,12 @@ public class S_ClickablesManager : MonoBehaviour
     private bool[] _clickableStates;
     private bool _useMouse = false;
     private bool _garageNavigable = false;
+    public bool _navigatingTournament = false;
     private InputAction mouseMoveAction;
     private InputAction navigateAction;
     [SerializeField] private S_EditorController _editorController;
+    private bool _navigatingGarage = false;
+
 
     void Awake()
     {
@@ -51,25 +54,6 @@ public class S_ClickablesManager : MonoBehaviour
         inputActions.Enable();
     }
 
-    public void ClickableObjectTournament()
-    {
-        destroyCup.SetActive(false);
-        //Debug.Log("ClickableObjectTournament() called.");
-        foreach (var clickableGroup in clikableObjetTournament)
-        {
-            if (clickableGroup != null)
-            {
-            //    Debug.Log("clickableGroup found: " + clickableGroup.name);
-                var clickableScript = clickableGroup.GetComponent<S_ObjectClickable>();
-                if (clickableScript != null)
-                {
-                    //Debug.Log("Clickable script found on: " + clickableGroup.name);
-                    clickableScript.enabled = true;
-                }
-            }
-        }
-    }
-
     public void DisableObjectTournament()
     {
         destroyCup.SetActive(true);
@@ -81,6 +65,22 @@ public class S_ClickablesManager : MonoBehaviour
                 if (clickableScript != null)
                 {
                     clickableScript.enabled = false;
+                }
+            }
+        }
+    }
+
+    public void ActiveObjectTournament()
+    {
+        destroyCup.SetActive(true);
+        foreach (var clickableGroup in clikableObjetTournament)
+        {
+            if (clickableGroup != null)
+            {
+                var clickableScript = clickableGroup.GetComponent<S_ObjectClickable>();
+                if (clickableScript != null)
+                {
+                    clickableScript.enabled = true;
                 }
             }
         }
@@ -162,12 +162,10 @@ public class S_ClickablesManager : MonoBehaviour
         }
     }
 
-
-
     void OnMouseMove(InputAction.CallbackContext context)
     {
         _useMouse = true;
-        ResetAllClickables();
+        //ResetAllClickables();
     }
 
     void Navigate(int direction)
@@ -177,8 +175,28 @@ public class S_ClickablesManager : MonoBehaviour
         do
         {
             _currentIndex += direction;
-            if (_currentIndex < 0) _currentIndex = _clickableStates.Length - 1;
-            else if (_currentIndex >= _clickableStates.Length) _currentIndex = 0;
+
+            if (_navigatingGarage)
+            {
+                if (_currentIndex < clickables.Length)
+                    _currentIndex = clickables.Length + clikableObjetGarage.Length - 1;
+                else if (_currentIndex >= clickables.Length + clikableObjetGarage.Length)
+                    _currentIndex = clickables.Length;
+            }
+            else if (_navigatingTournament)
+            {
+                if (_currentIndex < clickables.Length + clikableObjetGarage.Length)
+                    _currentIndex = clickables.Length + clikableObjetGarage.Length + clikableObjetTournament.Length - 1;
+                else if (_currentIndex >= clickables.Length + clikableObjetGarage.Length + clikableObjetTournament.Length)
+                    _currentIndex = clickables.Length + clikableObjetGarage.Length;
+            }
+            else
+            {
+                if (_currentIndex < 0)
+                    _currentIndex = _clickableStates.Length - 1;
+                else if (_currentIndex >= _clickableStates.Length)
+                    _currentIndex = 0;
+            }
 
             Debug.Log($"Navigating: _currentIndex={_currentIndex}, _clickableStates.Length={_clickableStates.Length}");
         }
@@ -186,6 +204,8 @@ public class S_ClickablesManager : MonoBehaviour
 
         SetFocus(GetCurrentClickable());
     }
+
+
 
     GameObject GetCurrentClickable()
     {
@@ -209,7 +229,6 @@ public class S_ClickablesManager : MonoBehaviour
             return null;
         }
     }
-
 
     void SetFocus(GameObject obj)
     {
@@ -333,24 +352,25 @@ public class S_ClickablesManager : MonoBehaviour
         }
     }
 
-    public void DisableGarageNavigation()
-    {
-        _garageNavigable = false;
-        for (int i = clickables.Length; i < clickables.Length + clikableObjetGarage.Length; i++)
-        {
-            _clickableStates[i] = false;
-        }
-    }
-
     public void EnableGarageNavigation()
     {
         _garageNavigable = true;
+        _navigatingGarage = true; // Set navigating garage mode
         for (int i = clickables.Length; i < clickables.Length + clikableObjetGarage.Length; i++)
         {
             _clickableStates[i] = true;
         }
     }
 
+    public void DisableGarageNavigation()
+    {
+        _garageNavigable = false;
+        _navigatingGarage = false; // Unset navigating garage mode
+        for (int i = clickables.Length; i < clickables.Length + clikableObjetGarage.Length; i++)
+        {
+            _clickableStates[i] = false;
+        }
+    }
 
     public void StopAnimShop()
     {
@@ -458,5 +478,58 @@ public class S_ClickablesManager : MonoBehaviour
     public void ActiveCircleFade()
     {
         CircleFade.SetActive(true);
+    }
+
+    public void EnableTournamentNavigation()
+    {
+        _garageNavigable = false;
+        _navigatingGarage = false;
+        _navigatingTournament = true; // Set navigating tournament mode
+        for (int i = clickables.Length + clikableObjetGarage.Length; i < _clickableStates.Length; i++)
+        {
+            _clickableStates[i] = true;
+        }
+    }
+
+    public void DisableTournamentNavigation()
+    {
+        _navigatingTournament = false; // Unset navigating tournament mode
+        for (int i = clickables.Length + clikableObjetGarage.Length; i < _clickableStates.Length; i++)
+        {
+            _clickableStates[i] = false;
+        }
+        _currentIndex = 0; // Reset index to start of clickables
+        _garageNavigable = true; // Enable navigation on clickables
+    }
+
+
+    public void NavigateToFirstTournamentObject()
+    {
+        if (clikableObjetTournament.Length > 0)
+        {
+            _currentIndex = clickables.Length + clikableObjetGarage.Length;
+            EnableTournamentNavigation();
+            SetFocus(clikableObjetTournament[0]);
+        }
+    }
+
+    public void LoadBronze()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    public void LoadSilver()
+    {
+        SceneManager.LoadScene(2);
+    }
+
+    public void LoadGold()
+    {
+        SceneManager.LoadScene(3);
+    }
+
+    public void LoadDiamond()
+    {
+        SceneManager.LoadScene(4);
     }
 }
