@@ -72,7 +72,7 @@ public class S_PauseController : MonoBehaviour
 
     private void SetWorldLocation(WorldLocation location)
     {
-        if (location.Equals(WorldLocation.Menu))
+        if (location.Equals(WorldLocation.Match))
         {
             _uiGiveUpButton.SetActive(true);
             _uiQuitButton.SetActive(false);
