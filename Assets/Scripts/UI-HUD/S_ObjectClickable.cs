@@ -41,6 +41,7 @@ public class S_ObjectClickable : MonoBehaviour
         if (!_interactionLocked)
         {
             _light.intensity = _originalIntensity * 2;
+            _light.renderMode = LightRenderMode.ForcePixel;
         }
     }
 
@@ -49,6 +50,7 @@ public class S_ObjectClickable : MonoBehaviour
         if (!_interactionLocked)
         {
             _light.intensity = _originalIntensity;
+            _light.renderMode = LightRenderMode.ForceVertex;
         }
     }
 
@@ -88,24 +90,24 @@ public class S_ObjectClickable : MonoBehaviour
                 _animatorCameraGarage.SetBool("Shelves", true);
                 break;
             case "Bronze":
+                _animatorCameraGarage.SetBool("FadeTournamentBronze" , true);
                 Debug.Log("bronze");
                 UnlockInteraction();
-                SceneManager.LoadScene("TestFightArena");
                 break;
             case "Silver":
                 Debug.Log("Silver");
                 UnlockInteraction();
-                SceneManager.LoadScene("TestFightArena");
+                _animatorCameraGarage.SetBool("FadeTournamentSilver", true);
                 break;
             case "Gold":
                 Debug.Log("Gold");
                 UnlockInteraction();
-                SceneManager.LoadScene("TestFightArena");
+                _animatorCameraGarage.SetBool("FadeTournamentGold", true);
                 break;
             case "Diamond":
                 Debug.Log("Diamond");
                 UnlockInteraction();
-                SceneManager.LoadScene("TestFightArena");
+                _animatorCameraGarage.SetBool("FadeTournamentDiamond", true);
                 break;
 
             default:

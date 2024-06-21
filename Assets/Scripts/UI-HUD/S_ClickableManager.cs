@@ -25,6 +25,7 @@ public class S_ClickablesManager : MonoBehaviour
     [SerializeField] private S_EditorController _editorController;
     private bool _navigatingGarage = false;
 
+
     void Awake()
     {
         if (Instance == null)
@@ -512,5 +513,23 @@ public class S_ClickablesManager : MonoBehaviour
         }
     }
 
+    public void LoadBronze()
+    {
+        SceneManager.LoadScene(1);
+    }
 
+    public void LoadSilver()
+    {
+        SceneManager.LoadScene(2);
+    }
+
+    public void LoadGold()
+    {
+        SceneManager.LoadScene(3);
+    }
+
+    public void LoadDiamond()
+    {
+        SceneManager.LoadScene(4);
+    }
 }
