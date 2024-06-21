@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(S_RobotSpawner))]
@@ -175,15 +176,23 @@ public class S_ArenaManager : MonoBehaviour
             {
                 newBot = robotSpawner.GenerateRobotAt(bot.Item2.robot, bot.Item1);
                 var frame = newBot.GetComponent<S_FrameManager>();
+                frame.SelectWeapons();
+
                 var ai = newBot.GetComponent<S_AIController>();
                 ai.enabled = false;
-                frame.SelectWeapons();
+
+                var playerInput = newBot.GetComponent<PlayerInput>();
+                playerInput.enabled = true;
             }
             else
             {
                 newBot = robotSpawner.GenerateRobotAt(bot.Item2.robot, bot.Item1);
                 var stats = newBot.GetComponent<S_AIStatsController>();
                 var aiController = newBot.GetComponent<S_AIController>();
+                var playerInput = newBot.GetComponent<PlayerInput>();
+                playerInput.enabled = false;
+                var ai = newBot.GetComponent<S_AIController>();
+                ai.enabled = true;
 
                 aiController.State = S_AIController.AIState.Disable;
                 stats.BotDifficulty = (S_AIStatsController.BotRank)bot.Item2.rank;
