@@ -79,8 +79,8 @@ public class S_CustomName : MonoBehaviour
     /// </summary>
     public void SaveName()
     {
-        S_DataGame.Instance.inventory.SavePrefixName(_prefixDropDown.value);
-        S_DataGame.Instance.inventory.SaveSuffixname(_suffixDropDown.value);
+        //S_DataGame.Instance.inventory.SavePrefixName(_prefixDropDown.value);
+        //S_DataGame.Instance.inventory.SaveSuffixname(_suffixDropDown.value);
     }
 
     public void LoadName()
@@ -92,9 +92,9 @@ public class S_CustomName : MonoBehaviour
         //    if (S_DataGame.Instance.inventory.LoadSuffixName())
         //        _suffixDropDown.value = S_DataGame.Instance.inventory.suffixIndex;
         //}
-        if (S_DataGame.Instance.inventory.LoadPrefixName())
-            _prefixDropDown.value = S_DataGame.Instance.inventory.prefixIndex;
-        if (S_DataGame.Instance.inventory.LoadSuffixName())
-            _suffixDropDown.value = S_DataGame.Instance.inventory.suffixIndex;
+        //if (S_DataGame.Instance.inventory.LoadPrefixName())
+        //    _prefixDropDown.value = S_DataGame.Instance.inventory.prefixIndex;
+        //if (S_DataGame.Instance.inventory.LoadSuffixName())
+        //    _suffixDropDown.value = S_DataGame.Instance.inventory.suffixIndex;
     }
 }
