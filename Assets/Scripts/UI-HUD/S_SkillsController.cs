@@ -68,6 +68,7 @@ public class S_SkillsController : MonoBehaviour
                 currentSkill.Weapon = _frameManger.Weapons[skill.index];
                 currentSkill.WeaponIcon.sprite = currentSkill.Weapon.Data.WeaponSrite;
                 currentSkill.Weapon.AttackingEnd.RemoveListener(actionCooldown[skill.index]);
+                currentSkill.Weapon.AttackingStart.RemoveListener(actionDestroy[skill.index]);
                 currentSkill.Weapon.WeaponDestroy.RemoveListener(actionDestroy[skill.index]);
             }
             else
@@ -111,6 +112,7 @@ public class S_SkillsController : MonoBehaviour
                 currentSkill.Weapon = frameManager.Weapons[skill.index];
                 currentSkill.WeaponIcon.sprite = currentSkill.Weapon.Data.WeaponSrite;
                 currentSkill.Weapon.AttackingEnd.AddListener(actionCooldown[skill.index]);
+                currentSkill.Weapon.AttackingStart.AddListener(actionDestroy[skill.index]);
                 currentSkill.Weapon.WeaponDestroy.AddListener(actionDestroy[skill.index]);
             }
             else
