@@ -1,5 +1,166 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3966088772987593683
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2401573781511603998}
+  - component: {fileID: 3499202984975441642}
+  - component: {fileID: 5040097354785105536}
+  - component: {fileID: 8992783603634638263}
+  m_Layer: 0
+  m_Name: HitRobotSFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2401573781511603998
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3966088772987593683}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: 0.00000008940696, w: 1}
+  m_LocalPosition: {x: -9.84, y: 0.93, z: -8.83}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5066241685785704291}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &3499202984975441642
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3966088772987593683}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 1
+  MaxDistance: 50
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &5040097354785105536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3966088772987593683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42c4aa7a3a1fede47a29fc056730bf6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioType: 1
+--- !u!114 &8992783603634638263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3966088772987593683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc95e2d9efd334e488108293239285b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _secondSFXSource: {fileID: 0}
+  _SFXType: 0
+  _SFXList:
+  - {fileID: 8300000, guid: 7b6f39488b0fe9d45b268743fa58ef8a, type: 3}
+  _scaleSfxVolume: 1
+  _isLooping: 0
 --- !u!1 &4888339025239788367
 GameObject:
   m_ObjectHideFlags: 0
@@ -14,6 +175,10 @@ GameObject:
   - component: {fileID: 3263431631757145413}
   - component: {fileID: 5717321651809916657}
   - component: {fileID: 4249060494225393518}
+  - component: {fileID: 4777539543095135646}
+  - component: {fileID: 4514502597587459538}
+  - component: {fileID: 486060734808445831}
+  - component: {fileID: 1726695379830499439}
   m_Layer: 0
   m_Name: PO_chassisCube
   m_TagString: Untagged
@@ -43,6 +208,8 @@ Transform:
   - {fileID: 2083867640904899208}
   - {fileID: 7660476797477047090}
   - {fileID: 6451212904666030495}
+  - {fileID: 1412305546672818419}
+  - {fileID: 2401573781511603998}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4728570109280104325
@@ -198,6 +365,14 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 36f01bb1-9989-4670-9cee-c571ab51b95e
     m_ActionName: Robot/Attack4[/Keyboard/numpad4]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f8901a70-dfdd-42fc-8072-b94658861b48
+    m_ActionName: UI/Pause[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 9629c832-d030-49b6-ad9b-1d9e919fdffd
+    m_ActionName: UI/Leave Rue[/Keyboard/escape]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Robot
@@ -246,6 +421,22 @@ MonoBehaviour:
   - {fileID: 3881358602648602208}
   - {fileID: 5421265822811789900}
   - {fileID: 4417717430607190529}
+  _vfxDestroyFrame: {fileID: 1564341819385604237, guid: bd810a395ac4d5a4ebb37ca1f796c13d, type: 3}
+  onFrameDie:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4834041697642185945}
+        m_TargetAssemblyTypeName: S_SFXPlayer, Assembly-CSharp
+        m_MethodName: PlayEffect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &5717321651809916657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,6 +476,424 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &4777539543095135646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4888339025239788367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b8b3c67f5481534eb45a7eaed89d124, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _aiState: 0
+  _enemyTag: 
+  _attackEnemyWeapon: 0
+  _attackWithBestWeapon: 0
+  _canFailedAnyAttack: 0
+  _dodgeTrap: 0
+  _canFleeEnemy: 0
+  _canIgnoreTrap: 0
+  _canFleeWithTrap: 0
+  _canMakeAccidentalMovement: 0
+  _canMakeAccidentalDirection: 0
+  _attackSuccesProbability: 100
+  _attackEnemyWeaponProbabiltiy: 0
+  _attackFailProbability: 0
+  _movementProbability: 100
+  _dodgeProbability: 100
+  _fleeProbability: 100
+  _accidentalMovementProbability: 0
+  _accidentalDirectionProbability: 0
+  _trapLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _fleeDirection: {fileID: 0}
+  _fleeCooldown: 0
+  _getEnemyInStart: 0
+  _failAttack: 0
+  _attackFailCooldown: 1
+  _attackFailDistance: 5
+  _enemy: {fileID: 0}
+  _target: {fileID: 0}
+  _currentWeapon: {fileID: 0}
+  _fleeMethode: 0
+--- !u!114 &4514502597587459538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4888339025239788367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 991be1179fab19e41989564e7c23b40f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _updateStatsOnStart: 1
+  _botRank: 2
+  _statsBotTutorialRank:
+    _attackEnemyWeapon: 0
+    _attackWithBestWeapon: 0
+    _canFailAnyAttack: 0
+    _dodgeTrap: 0
+    _canFleeEnemy: 0
+    _canIgnoreTrap: 0
+    _canFleeWithTrap: 0
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
+    _attackSuccesProbability: 0
+    _attackEnemyWeaponProbabiltiy: 0
+    _attackFailProbability: 0
+    _movementProbability: 60
+    _dodgeProbability: 0
+    _fleeProbability: 0
+    _accidentalMovementProbability: 10
+    _accidentalDirectionProbability: 10
+    _fleeCooldown: 0
+    _attackFailCooldown: 0
+    _attackFailDistance: 0
+    _attackSuccesProbabilityRandom: {x: 0, y: 0}
+    _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
+    _attackFailProbabilityRandom: {x: 0, y: 0}
+    _movementProbabilityRandom: {x: -10, y: 10}
+    _dodgeProbabilityRandom: {x: 0, y: 0}
+    _fleeProbabilityRandom: {x: 0, y: 0}
+    _accidentalMovementProbabilityRandom: {x: 0, y: 0}
+    _accidentalDirectionProbabilityRandom: {x: 0, y: 0}
+    _fleeCooldownRandom: {x: 0, y: 0}
+    _attackFailCooldownRandom: {x: 0, y: 0}
+  _statsBotBronzeRank:
+    _attackEnemyWeapon: 0
+    _attackWithBestWeapon: 1
+    _canFailAnyAttack: 1
+    _dodgeTrap: 0
+    _canFleeEnemy: 1
+    _canIgnoreTrap: 0
+    _canFleeWithTrap: 0
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
+    _attackSuccesProbability: 60
+    _attackEnemyWeaponProbabiltiy: 0
+    _attackFailProbability: 15
+    _movementProbability: 80
+    _dodgeProbability: 0
+    _fleeProbability: 40
+    _accidentalMovementProbability: 20
+    _accidentalDirectionProbability: 20
+    _fleeCooldown: 0.1
+    _attackFailCooldown: 0.7
+    _attackFailDistance: 3
+    _attackSuccesProbabilityRandom: {x: -10, y: 10}
+    _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
+    _attackFailProbabilityRandom: {x: -10, y: 5}
+    _movementProbabilityRandom: {x: -5, y: 5}
+    _dodgeProbabilityRandom: {x: 0, y: 10}
+    _fleeProbabilityRandom: {x: -10, y: 10}
+    _accidentalMovementProbabilityRandom: {x: -5, y: 5}
+    _accidentalDirectionProbabilityRandom: {x: -5, y: 5}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
+    _attackFailCooldownRandom: {x: 0, y: 0}
+  _statsBotSliverRank:
+    _attackEnemyWeapon: 0
+    _attackWithBestWeapon: 1
+    _canFailAnyAttack: 1
+    _dodgeTrap: 1
+    _canFleeEnemy: 1
+    _canIgnoreTrap: 0
+    _canFleeWithTrap: 0
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
+    _attackSuccesProbability: 70
+    _attackEnemyWeaponProbabiltiy: 0
+    _attackFailProbability: 15
+    _movementProbability: 85
+    _dodgeProbability: 80
+    _fleeProbability: 70
+    _accidentalMovementProbability: 15
+    _accidentalDirectionProbability: 15
+    _fleeCooldown: 0.1
+    _attackFailCooldown: 0.7
+    _attackFailDistance: 4.5
+    _attackSuccesProbabilityRandom: {x: -10, y: 10}
+    _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
+    _attackFailProbabilityRandom: {x: -5, y: 5}
+    _movementProbabilityRandom: {x: -7, y: 7}
+    _dodgeProbabilityRandom: {x: -10, y: 10}
+    _fleeProbabilityRandom: {x: -15, y: 15}
+    _accidentalMovementProbabilityRandom: {x: -4, y: 4}
+    _accidentalDirectionProbabilityRandom: {x: -4, y: 4}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
+    _attackFailCooldownRandom: {x: 0, y: 0}
+  _statsBotGoldRank:
+    _attackEnemyWeapon: 1
+    _attackWithBestWeapon: 1
+    _canFailAnyAttack: 1
+    _dodgeTrap: 1
+    _canFleeEnemy: 1
+    _canIgnoreTrap: 0
+    _canFleeWithTrap: 1
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
+    _attackSuccesProbability: 85
+    _attackEnemyWeaponProbabiltiy: 70
+    _attackFailProbability: 15
+    _movementProbability: 95
+    _dodgeProbability: 90
+    _fleeProbability: 85
+    _accidentalMovementProbability: 12
+    _accidentalDirectionProbability: 12
+    _fleeCooldown: 0.1
+    _attackFailCooldown: 0.7
+    _attackFailDistance: 3.5
+    _attackSuccesProbabilityRandom: {x: -10, y: 10}
+    _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
+    _attackFailProbabilityRandom: {x: -5, y: 5}
+    _movementProbabilityRandom: {x: -15, y: 15}
+    _dodgeProbabilityRandom: {x: -5, y: 5}
+    _fleeProbabilityRandom: {x: 0, y: 20}
+    _accidentalMovementProbabilityRandom: {x: -2, y: 2}
+    _accidentalDirectionProbabilityRandom: {x: -2, y: 2}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
+    _attackFailCooldownRandom: {x: 0, y: 0}
+  _statsBotDiamondRank:
+    _attackEnemyWeapon: 1
+    _attackWithBestWeapon: 1
+    _canFailAnyAttack: 1
+    _dodgeTrap: 1
+    _canFleeEnemy: 1
+    _canIgnoreTrap: 0
+    _canFleeWithTrap: 1
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
+    _attackSuccesProbability: 100
+    _attackEnemyWeaponProbabiltiy: 100
+    _attackFailProbability: 15
+    _movementProbability: 95
+    _dodgeProbability: 90
+    _fleeProbability: 85
+    _accidentalMovementProbability: 12
+    _accidentalDirectionProbability: 12
+    _fleeCooldown: 0.1
+    _attackFailCooldown: 0.7
+    _attackFailDistance: 3.5
+    _attackSuccesProbabilityRandom: {x: -10, y: 10}
+    _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
+    _attackFailProbabilityRandom: {x: -5, y: 5}
+    _movementProbabilityRandom: {x: -15, y: 15}
+    _dodgeProbabilityRandom: {x: -5, y: 5}
+    _fleeProbabilityRandom: {x: 0, y: 20}
+    _accidentalMovementProbabilityRandom: {x: -2, y: 2}
+    _accidentalDirectionProbabilityRandom: {x: -2, y: 2}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
+    _attackFailCooldownRandom: {x: 0, y: 0}
+--- !u!114 &486060734808445831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4888339025239788367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f05ae2ab5c3f60f4e84e2290b6c54df3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _immobileVelocity: 0.3
+  _immobileTimeRequirement: 5
+--- !u!114 &1726695379830499439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4888339025239788367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 081ca253a2c823944af18397f5138b8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _vfxHitRobot: {fileID: 260199309943010057, guid: 96381aa699ef23745b2b0cdd05407a1e, type: 3}
+  _velocityRequireForVfxHitRobot: 2
+  _onHitRobot:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8992783603634638263}
+        m_TargetAssemblyTypeName: S_SFXPlayer, Assembly-CSharp
+        m_MethodName: PlayEffect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!1 &8662477294185516025
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1412305546672818419}
+  - component: {fileID: 3829174438723727299}
+  - component: {fileID: 7225847491587107497}
+  - component: {fileID: 4834041697642185945}
+  m_Layer: 0
+  m_Name: DestroyFrameSFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1412305546672818419
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8662477294185516025}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: 0.00000008940696, w: 1}
+  m_LocalPosition: {x: -9.84, y: 0.93, z: -8.83}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5066241685785704291}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &3829174438723727299
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8662477294185516025}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 1
+  MaxDistance: 50
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &7225847491587107497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8662477294185516025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42c4aa7a3a1fede47a29fc056730bf6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioType: 1
+--- !u!114 &4834041697642185945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8662477294185516025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc95e2d9efd334e488108293239285b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _secondSFXSource: {fileID: 0}
+  _SFXType: 0
+  _SFXList:
+  - {fileID: 8300000, guid: 5c898289df578274da8d3152f6d4500e, type: 3}
+  - {fileID: 8300000, guid: ce213ab401e00434a87a7f2a6748476d, type: 3}
+  _scaleSfxVolume: 1
+  _isLooping: 0
 --- !u!1001 &453618791665265752
 PrefabInstance:
   m_ObjectHideFlags: 0

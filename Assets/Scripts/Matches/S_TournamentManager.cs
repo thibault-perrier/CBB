@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Systems;
 using UnityEngine;
+using static S_TournamentManager;
 
 public class S_TournamentManager : MonoBehaviour
 {
@@ -16,8 +18,36 @@ public class S_TournamentManager : MonoBehaviour
         public Color logo;
         public float rating;
         public bool hasLost;
-        //public Robot robot;
+        public Robot robot;
         public Rank rank;
+
+        public Participant(bool isPlayer, string name, Color logo, Robot robot, Rank rank)
+        {
+            this.isPlayer = isPlayer;
+            this.id = 0;
+            this.name = name;
+            this.logo = logo;
+            this.rating = 0;
+            this.hasLost = false;
+            this.robot = robot;
+            this.rank = rank;
+        }
+
+        public Participant(Rank rank)
+        {
+            this.isPlayer = false;
+            this.id = 0;
+            S_CustomName customName = new S_CustomName();
+            
+            this.name = customName.GetRandomName();
+
+            this.logo = Color.green;
+            this.rating = 0;
+            this.hasLost = false;
+            this.robot = S_DataRobotComponent.Instance.GetRandomRobot();
+            this.rank = rank;
+        }
+
     }
 
     public enum Rank
@@ -201,45 +231,15 @@ public class S_TournamentManager : MonoBehaviour
     /// <returns></returns>
     public int InitializeCurrentTournament(Tournament tournament)
     {
-        _currentTournament = tournament;
 
-        if (_currentTournament.rank == Rank.Bronze || _currentTournament.rank == Rank.Silver)
+        S_CustomName customName = new S_CustomName();
+        _participants = new List<Participant>();
+
+        _participants.Add( new Participant(true, customName.GetRandomName(), Color.red, S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot], tournament.rank));
+
+        for (int i = 0; i < tournament.participantNb - 2; i++)
         {
-            _participants = new List<Participant>(tournament.participantNb)
-        {
-             // TEST
-            _participant1,
-            _participant2,
-            _participant3,
-            _participant4,
-            _participant5,
-            _participant6,
-            _participant7,
-            _participant8,
-            _participant9,
-            _participant10,
-            _participant11,
-            _participant12,
-            _participant13,
-            _participant14,
-            _participant15,
-            _participant16,
-        };
-        }
-        else
-        {
-            _participants = new List<Participant>(tournament.participantNb)
-        {
-             // TEST
-            _participant1,
-            _participant2,
-            _participant3,
-            _participant4,
-            _participant5,
-            _participant6,
-            _participant7,
-            _participant8,
-        };
+            _participants.Add(new Participant(tournament.rank));
         }
 
 

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(S_RobotSpawner))]
 public class S_ArenaManager : MonoBehaviour
 {
     [Header("Bet display")]
@@ -156,6 +157,7 @@ public class S_ArenaManager : MonoBehaviour
     private void CreateBot()
     {
         ResetArenaBot();
+        S_RobotSpawner robotSpawner = GetComponent<S_RobotSpawner>();
 
         // set all pair with bot and bot info
         List<(Transform, S_TournamentManager.Participant)> botPair = new(2)
@@ -171,13 +173,15 @@ public class S_ArenaManager : MonoBehaviour
             // if one participant is the player
             if (bot.Item2.isPlayer)
             {
-                newBot = Instantiate(_botPlayerPrefab, bot.Item1.position, Quaternion.Euler(bot.Item1.eulerAngles));
+                newBot = robotSpawner.GenerateRobotAt(bot.Item2.robot, bot.Item1);
                 var frame = newBot.GetComponent<S_FrameManager>();
+                var ai = newBot.GetComponent<S_AIController>();
+                ai.enabled = false;
                 frame.SelectWeapons();
             }
             else
             {
-                newBot = Instantiate(_botEnemyPrefab, bot.Item1.position, Quaternion.Euler(bot.Item1.eulerAngles));
+                newBot = robotSpawner.GenerateRobotAt(bot.Item2.robot, bot.Item1);
                 var stats = newBot.GetComponent<S_AIStatsController>();
                 var aiController = newBot.GetComponent<S_AIController>();
 

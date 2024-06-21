@@ -1,4 +1,5 @@
 using System.Collections;
+using Systems;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -6,6 +7,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(S_RobotSpawner))]
 public class S_StreetFightManager : MonoBehaviour
 {
     public enum FightState
@@ -217,15 +219,21 @@ public class S_StreetFightManager : MonoBehaviour
     {
         Destroy(_AIBot);
         Destroy(_playerBot);
+        S_RobotSpawner robotSpawner = GetComponent<S_RobotSpawner>();
 
         yield return new WaitForSeconds(.1f);
 
-        _playerBot = Instantiate(_playerBotPrefab,   _botPlayerTransformSpawn.position,  Quaternion.Euler(_botPlayerTransformSpawn.eulerAngles));
-        _AIBot     = Instantiate(_AIBotPrefab,       _botAITransformSpawn.position,      Quaternion.Euler(_botAITransformSpawn.eulerAngles));
+
+        
+        _playerBot = robotSpawner.GenerateRobotAt(S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot], _botPlayerTransformSpawn);
+        var ai = _playerBot.GetComponent<S_AIController>();
+        ai.enabled = false;
+
+        _AIBot     = robotSpawner.GenerateRobotAt(S_DataRobotComponent.Instance.GetRandomRobot(), _botAITransformSpawn);
 
         _AIController = _AIBot.GetComponent<S_AIController>();
         _playerInput = _playerBot.GetComponent<PlayerInput>();
-        _AIBot.GetComponent<S_AIStatsController>().BotDifficulty = S_AIStatsController.BotRank.Diamond;
+        _AIBot.GetComponent<S_AIStatsController>().BotDifficulty = S_AIStatsController.BotRank.Randomly;
 
         _AIBot.tag = "BotA";
         _playerBot.tag = "BotB";
