@@ -18,6 +18,7 @@ public class GarageManager : MonoBehaviour
     {
         if (context.performed && gameObject.activeInHierarchy)
         {
+            S_ClickablesManager.Instance.ResetAllClickables();
             S_ObjectClickable.Instance._animatorCameraGarage.SetBool("Board", false);
             S_ClickablesManager.Instance.ReactivateAllClickables();
             S_ClickablesManager.Instance.CircleFade.SetActive(false);
@@ -28,6 +29,7 @@ public class GarageManager : MonoBehaviour
     {
         if (context.performed && gameObject.activeInHierarchy)
         {
+            S_ClickablesManager.Instance.ResetAllClickables();
             S_ObjectClickable.Instance._animatorCameraGarage.SetBool("Shelves", false);
             S_ClickablesManager.Instance.ReactivateAllClickables();
             S_ClickablesManager.Instance.CircleFade.SetActive(false);
@@ -38,6 +40,7 @@ public class GarageManager : MonoBehaviour
     {
         if (context.performed && gameObject.activeInHierarchy)
         {
+            S_ClickablesManager.Instance.ResetAllClickables();
             S_ObjectClickable.Instance._animatorCameraGarage.SetBool("WorkBench", false);
             S_ClickablesManager.Instance.ReactivateAllClickables();
             S_ClickablesManager.Instance.CircleFade.SetActive(false);

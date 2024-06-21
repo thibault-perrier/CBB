@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -30,22 +29,18 @@ public class S_ShopManager : MonoBehaviour
     public int _currentItemIndex = 0;
 
     public bool activeBackShop = false;
-    private bool _navigating = false;
+
 
     public static S_ShopManager Instance;
 
     private int[] _lastSelectedIndexes;
 
-    public delegate void OnChooseLogoComplete(int index, Sprite sprite);
-    public event OnChooseLogoComplete ChooseLogoComplete;
-
     [Serializable]
     public struct ElementInfo
     {
-        public int Price;
-        public int Hp;
-        public int Weight;
-        public Sprite Sprite;
+        public int _price;
+        public int _hp;
+        public int _weight;
     }
 
     [Serializable]
@@ -54,7 +49,7 @@ public class S_ShopManager : MonoBehaviour
         public ElementInfo[] frameElements;
     }
 
-    public List<FrameData> frameData = new List<FrameData>();
+    public FrameData[] frameData;
 
     void Awake()
     {
@@ -64,14 +59,6 @@ public class S_ShopManager : MonoBehaviour
 
     void Start()
     {
-        InitializeFrames();
-        UpdateFrameLabel();
-        UpdateShopText();
-    }
-
-    private void OnEnable()
-    {
-        _navigating = false;
         InitializeFrames();
         UpdateFrameLabel();
         UpdateShopText();
@@ -116,13 +103,11 @@ public class S_ShopManager : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Logo"))
         {
-            if (_statsText != null)
-                _statsText.SetActive(false);
+            _statsText.SetActive(false);
         }
         else
         {
-            if (_statsText != null)
-                _statsText.SetActive(true);
+            _statsText.SetActive(true);
         }
     }
 
@@ -148,15 +133,13 @@ public class S_ShopManager : MonoBehaviour
 
     public void UpdateShopText()
     {
-        if (_moneyText != null)
-            _moneyText.text = "Money: " + S_DataGame.Instance.inventory.CurrentMoney + " $";//TODO: GET MONEY FROM PLAYER_DATA--------------------------------------
-        if (_pageText != null)
-            _pageText.text = "Page: " + (_currentFrameIndex + 1).ToString();
-        if (_priceItem != null && _currentFrameIndex < frameData.Count && _currentItemIndex < frameData[_currentFrameIndex].frameElements.Length)
+        _moneyText.text = "Money: " + S_DataGame.Instance.inventory.CurrentMoney + " $";//TODO: GET MONEY FROM PLAYER_DATA--------------------------------------
+        _pageText.text = "Page: " + (_currentFrameIndex + 1).ToString();
+        if (_priceItem != null && _currentFrameIndex < frameData.Length && _currentItemIndex < frameData[_currentFrameIndex].frameElements.Length)
         {
             ElementInfo currentElement = frameData[_currentFrameIndex].frameElements[_currentItemIndex];
-            _priceItem.text = "Price: " + currentElement.Price.ToString();
-            _statItem.text = "HP: " + currentElement.Hp.ToString() + "\nWeight: " + currentElement.Weight.ToString();
+            _priceItem.text = "Price: " + currentElement._price.ToString();
+            _statItem.text = "HP: " + currentElement._hp.ToString() + "\nWeight: " + currentElement._weight.ToString();
             //TODO : ADD DAMAGE IF WEAPON -----------------------------------------------------------------------------------------------
         }
     }
@@ -218,28 +201,16 @@ public class S_ShopManager : MonoBehaviour
     public void PurchaseItem()
     {
         ElementInfo BuyElement = frameData[_currentFrameIndex].frameElements[_currentItemIndex];
-
-        if (BuyElement.Hp != 0 && gameObject.activeInHierarchy) //it mean we're in the shop
+      
+        if(S_DataGame.Instance.inventory.CurrentMoney >= BuyElement._price )
         {
-            if (S_DataGame.Instance.inventory.CurrentMoney >= BuyElement.Price)
-            {
-                if (BuyElement.Sprite != null)
-                {
-
-                }
-                S_DataGame.Instance.inventory.CurrentMoney = S_DataGame.Instance.inventory.CurrentMoney - BuyElement.Price;
-                UpdateShopText();
-
-                //TODO : Update Inventory Quantity -------------------------------------------------------------------------------------
-            }
-            else
-            {
-                Debug.Log("Need more Money");
-            }
+            S_DataGame.Instance.inventory.CurrentMoney = S_DataGame.Instance.inventory.CurrentMoney - BuyElement._price;
+            UpdateShopText();
+            //TODO : Update Inventory Quantity -------------------------------------------------------------------------------------
         }
         else
         {
-            ChooseLogoComplete?.Invoke(_currentItemIndex, BuyElement.Sprite);
+            Debug.Log("Need more Money");
         }
     }
 
@@ -260,38 +231,32 @@ public class S_ShopManager : MonoBehaviour
 
             if (_movementCoroutines[_currentFrameIndex] == null)
             {
-                if (!_navigating && horizontalInput > 0.5f && _currentItemIndex < _shopItems[_currentFrameIndex].Length - 1)
+                if (horizontalInput > 0.5f && _currentItemIndex < _shopItems[_currentFrameIndex].Length - 1)
                 {
                     _currentItemIndex++;
                     _lastSelectedIndexes[_currentFrameIndex] = _currentItemIndex;
                     _movementCoroutines[_currentFrameIndex] = StartCoroutine(MoveHorizontalFrameImages(_currentFrameIndex, _currentItemIndex));
-                    _navigating = true;
                 }
-                else if (!_navigating && horizontalInput < -0.5f && _currentItemIndex > 0)
+                else if (horizontalInput < -0.5f && _currentItemIndex > 0)
                 {
                     _currentItemIndex--;
                     _lastSelectedIndexes[_currentFrameIndex] = _currentItemIndex;
                     _movementCoroutines[_currentFrameIndex] = StartCoroutine(MoveHorizontalFrameImages(_currentFrameIndex, _currentItemIndex));
-                    _navigating = true;
                 }
             }
 
             if (_canMoveVertically)
             {
-                if (!_navigating && verticalInput > 0.5f && _currentFrameIndex < _frames.Length - 1)
+                if (verticalInput > 0.5f && _currentFrameIndex < _frames.Length - 1)
                 {
-                    _navigating = true;
                     StartCoroutine(MoveVerticalFrames(1));
                 }
-                else if (!_navigating && verticalInput < -0.5f && _currentFrameIndex > 0)
+                else if (verticalInput < -0.5f && _currentFrameIndex > 0)
                 {
-                    _navigating = true;
                     StartCoroutine(MoveVerticalFrames(-1));
                 }
             }
         }
-        if (context.canceled)
-            _navigating = false;
     }
 
     public void LeaveShop(InputAction.CallbackContext context)
