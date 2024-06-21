@@ -232,6 +232,10 @@ public class S_StreetFightManager : MonoBehaviour
     {
         _fightState = FightState.BotPlayerVictory;
         _cameraView.RemoveObjectToView(_AIBot.transform);
+
+        if (S_DataGame.Instance)
+            S_DataGame.Instance.inventory.CurrentMoney += 70;
+
         EndCurrentFight();
     }
     /// <summary>
@@ -274,7 +278,7 @@ public class S_StreetFightManager : MonoBehaviour
 
         _AIController = _AIBot.GetComponent<S_AIController>();
         _playerInput = _playerBot.GetComponent<PlayerInput>();
-        _AIBot.GetComponent<S_AIStatsController>().BotDifficulty = S_AIStatsController.BotRank.Diamond;
+        _AIBot.GetComponent<S_AIStatsController>().BotDifficulty = S_AIStatsController.BotRank.Gold;
 
         _AIBot.tag = "BotA";
         _playerBot.tag = "BotB";
