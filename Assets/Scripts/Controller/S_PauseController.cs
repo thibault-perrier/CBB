@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Purchasing;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -49,7 +47,6 @@ public class S_PauseController : MonoBehaviour
     }
     private void Start()
     {
-        DontDestroyOnLoad(gameObject);
         SetWorldLocation(_location);
     }
 
