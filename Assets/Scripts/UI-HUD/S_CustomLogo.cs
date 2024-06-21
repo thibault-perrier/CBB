@@ -222,4 +222,6 @@ public class S_CustomLogo : MonoBehaviour
     {
         _isChoosingLogo = isChoosingLogo;
     }
+
+    //TODO MAKE A RANDOM LOGO
 }

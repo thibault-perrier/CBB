@@ -173,7 +173,7 @@ public class S_EditorController : MonoBehaviour
     #region Inputs
     public void OnNavigate(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.started)
         {
             float direction = context.ReadValue<float>();
             if (direction < 0)
@@ -194,6 +194,22 @@ public class S_EditorController : MonoBehaviour
         if (context.started)
         {
             SelectItem();
+        }
+    }
+
+    public void OnRotate(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            float direction = context.ReadValue<float>();
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                PresetRotation(1);
+            }
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                PresetRotation(-1);
+            }
         }
     }
 
