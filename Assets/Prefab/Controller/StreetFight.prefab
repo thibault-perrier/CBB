@@ -100,7 +100,7 @@ Transform:
   m_GameObject: {fileID: 257444478254637308}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -12}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -296,8 +296,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de9baa328f7b7e441b92a3c6fce505e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _radiusDefeat: 40
-  _sceneToLoadInEndFight: MainMenu
+  _radiusDefeat: 15.8
+  _sceneToLoadInEndFight: New_Menu
   _startStreetFightInStart: 1
   _playerBotPrefab: {fileID: 2864770155178023637, guid: ae5607602c62e244e92a1767c72b8ea7, type: 3}
   _AIBotPrefab: {fileID: 6019708789991135223, guid: ed768662b6954004c98b1c6e4c9e99f6, type: 3}
@@ -317,7 +317,7 @@ MonoBehaviour:
   _skillsController: {fileID: 7868477304307727055}
   _healthBarPlayer: {fileID: 61137239197035057}
   _healthBarEnemy: {fileID: 4723995361802488330}
-  _timerStreetFight: {fileID: 0}
+  _timerStreetFight: {fileID: 5955797671276003620}
   _cameraView: {fileID: 2199261201448028537}
   _zoomEndAnimation: 10
   _zoomAnimationSpeed: 60
@@ -2002,7 +2002,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2705373740987377116
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2511,8 +2511,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7936086792890670142}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.23280439, y: -0.6790266, z: 0.23982593, w: 0.653612}
-  m_LocalPosition: {x: 19.7, y: 19, z: -2.6}
+  m_LocalRotation: {x: -0.108365014, y: -0.8901961, z: 0.28475437, w: -0.33870777}
+  m_LocalPosition: {x: -16.000107, y: 15.031738, z: 17.111378}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2921,7 +2921,7 @@ Transform:
   m_GameObject: {fileID: 8733466911899146552}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 12}
+  m_LocalPosition: {x: 0, y: 0, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3355,6 +3355,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2705373740987377116}
     m_Modifications:
+    - target: {fileID: -5636163266287314532, guid: 2b73928190da2eb40af9a9fdfd666960, type: 3}
+      propertyPath: skillUp.WeaponMask
+      value: 
+      objectReference: {fileID: 577157542073339011}
     - target: {fileID: 3922328585568981537, guid: 2b73928190da2eb40af9a9fdfd666960, type: 3}
       propertyPath: m_Name
       value: SkillsPlayer
@@ -3449,6 +3453,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6123207333756385757, guid: 2b73928190da2eb40af9a9fdfd666960, type: 3}
   m_PrefabInstance: {fileID: 6699703910114452307}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &577157542073339011 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6122741067500679120, guid: 2b73928190da2eb40af9a9fdfd666960, type: 3}
+  m_PrefabInstance: {fileID: 6699703910114452307}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7868477304307727055 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: -5636163266287314532, guid: 2b73928190da2eb40af9a9fdfd666960, type: 3}
