@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Animations;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -51,6 +50,8 @@ public class S_EditorController : MonoBehaviour
 
     private MeshRenderer renderer = new MeshRenderer();
 
+    private bool _canRotate = false;
+    private float _rotateDirection;
 
     enum EditState
     {
@@ -105,9 +106,20 @@ public class S_EditorController : MonoBehaviour
     {
         foreach (S_FrameData data in _frameData)
         {
-            Frame frame2 = new Frame(data);
-            Debug.Log("frame name : " + frame2._name);
-            S_DataGame.Instance.inventory.Frames.Add(frame2);
+            bool haveFrame = false;
+            foreach (Frame frame in S_DataGame.Instance.inventory.Frames)
+            {
+                if (frame.GetFrameData() == data)
+                {
+                    frame._number++;
+                    haveFrame = true;
+                }
+            }
+            if (!haveFrame)
+            {
+                S_DataGame.Instance.inventory.Frames.Add(new Frame(data));
+            }
+
         }
         foreach (S_WeaponData data in _weaponsData)
         {
@@ -134,46 +146,23 @@ public class S_EditorController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.A))
-        //{
-        //    _selectedIndex -= 1;
-        //    Selector();
-        //}
-        //if (Input.GetKeyDown(KeyCode.D))
-        //{
-        //    _selectedIndex += 1;
-        //    Selector();
-        //}
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (_canRotate)
         {
-            Back();
-            Selector();
+            if (_rotateDirection > 0)
+            {
+                PresetRotation(1);
+            }
+            if (_rotateDirection < 0)
+            {
+                PresetRotation(-1);
+            }
         }
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    SelectItem();
-        //}
-        if (Input.GetKeyDown(KeyCode.Delete))
-        {
-            RemoveWeapon();
-        }
-
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            PresetRotation(1);
-        }
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            PresetRotation(-1);
-        }
-
-
     }
 
     #region Inputs
     public void OnNavigate(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.started)
         {
             float direction = context.ReadValue<float>();
             if (direction < 0)
@@ -195,6 +184,30 @@ public class S_EditorController : MonoBehaviour
         {
             SelectItem();
         }
+    }
+
+    public void OnRotate(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            _rotateDirection = context.ReadValue<float>();
+            _canRotate = true;
+        }
+        else if (context.canceled)
+        {
+            _canRotate = false;
+        }
+    }
+
+    public void OnRemoveWeapon(InputAction.CallbackContext context)
+    {
+        RemoveWeapon();
+    }
+
+    public void OnBackButton(InputAction.CallbackContext context)
+    {
+        Back();
+        Selector();
     }
 
     #endregion
@@ -290,6 +303,7 @@ public class S_EditorController : MonoBehaviour
                 GameObject newFrame = Instantiate(frame.Prefab);
 
                 newFrame.GetComponent<Rigidbody>().isKinematic = true;
+                newFrame.GetComponent<PlayerInput>().enabled = false;
 
                 RectTransform rectTransform = newFrame.AddComponent<RectTransform>();
 
@@ -517,6 +531,7 @@ public class S_EditorController : MonoBehaviour
         List<GameObject> weapons = new List<GameObject>();
 
         frame.GetComponent<Rigidbody>().isKinematic = true;
+        frame.GetComponent<PlayerInput>().enabled = false;
 
         if (robot._weapons == null || robot._weapons.Count() == 0)
             return frame;
@@ -545,6 +560,7 @@ public class S_EditorController : MonoBehaviour
         GameObject frame = Instantiate(frameData.Prefab);
 
         frame.GetComponent<Rigidbody>().isKinematic = true;
+        frame.GetComponent<PlayerInput>().enabled = false;
 
         frame.transform.parent = _presetHold.transform;
         frame.transform.localPosition = Vector3.zero;
