@@ -157,4 +157,16 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
                 weaponManager.Repair();
         }
     }
+
+    public int GetRepairPrice()
+    {
+        int price = 0;
+        price +=  (int)(((_data.Cost * 0.8) / _data.MaxLife) * (_data.MaxLife - _life));
+        foreach (S_WeaponManager weaponManager in _weaponManagers)
+        {
+            if (weaponManager.CurrentState != S_WeaponManager.State.destroy)
+                price += weaponManager.GetRepairPrice();
+        }
+        return price;
+    }
 }
