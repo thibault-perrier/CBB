@@ -374,7 +374,7 @@ public class S_AIController : MonoBehaviour
     private void UpdateAIMovement()
     {
         TryFailedAttack();
-        // TryToFindBestWeaponFromTarget(_target.transform);
+        TryToFindBestWeaponFromTarget(_target.transform);
         TryToAttackWithAnyWeapon();
 
         // get movement probability
@@ -1017,7 +1017,7 @@ public class S_AIController : MonoBehaviour
         // if the current weapon is currently attacking dont change current weapon
         if (_currentWeapon)
         {
-            if (_currentWeapon.Attacking || _currentWeapon.CanAttack || (_currentWeapon.CanTakeAnyDamage && _currentWeapon.Data.AttackOneTime))
+            if (_currentWeapon.Attacking || (_currentWeapon.CanTakeAnyDamage && _currentWeapon.Data.AttackOneTime) && _currentWeapon.CurrentState.Equals(S_WeaponManager.State.ok))
                 return true;
         }
 
@@ -1063,9 +1063,11 @@ public class S_AIController : MonoBehaviour
             return;
 
         Vector3 dirToEnemy = target.position - _currentWeapon.transform.position;
-
-        if (dirToEnemy.magnitude > 5f)
+        float distanceToEnemy = Vector3.Distance(_enemy.transform.position, transform.position);
+            
+        if (distanceToEnemy > 6f)
         {
+            Debug.Log("try find other waepon");
             float dotWeaponForward = Vector3.Dot(GetForwardWeapon(_currentWeapon, transform), dirToEnemy.normalized);
             
             if (dotWeaponForward < 0f)
