@@ -2860,6 +2860,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2686631252594054399}
   - component: {fileID: 3408005342335054836}
+  - component: {fileID: 8631887325832951488}
   m_Layer: 0
   m_Name: TournamentCanvas
   m_TagString: Untagged
@@ -2882,6 +2883,7 @@ Transform:
   m_Children:
   - {fileID: 4474301176536310055}
   - {fileID: 3616080223513448884}
+  - {fileID: 1864461941907340960}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3408005342335054836
@@ -2904,6 +2906,20 @@ MonoBehaviour:
     participantNb: 8
     prize: 1200
     maxMatchNb: 4
+--- !u!114 &8631887325832951488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1918659507650753281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35ad15d04de479b4aa949bb24be50bb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefixDropDown: {fileID: 0}
+  _suffixDropDown: {fileID: 0}
 --- !u!1 &2003082711683491352
 GameObject:
   m_ObjectHideFlags: 0
@@ -15716,6 +15732,88 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &6119306539880936018
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1864461941907340960}
+  - component: {fileID: 2662488550727875917}
+  m_Layer: 0
+  m_Name: Datagame
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1864461941907340960
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6119306539880936018}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 53.36097, y: -16.594233, z: -91.568535}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2686631252594054399}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2662488550727875917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6119306539880936018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac60a9ca23266ea4d883ed3ca2c96bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tournamentManager: {fileID: 0}
+  OnSceneLoad: 0
+  inventory:
+    CurrentMoney: 0
+    Frames: []
+    Weapons: []
+    Robots: []
+    SelectedRobot: 0
+    backgroundColorHex: 
+    overlayColorHex: 
+    backgroundAlpha: 255
+    prefixIndex: 0
+    prefixString: 
+    suffixIndex: 0
+    suffixString: 
+    overlayImageIndex: 0
+    overlayImagePosition: {x: 0, y: 0}
+  tournament:
+    _isRunning: 0
+    _participants: []
+    _currentMatch: 0
+    _currentLevel: 0
+    _tournamentInfo:
+      rank: 0
+      cost: 0
+      participantNb: 0
+      prize: 0
+      maxMatchNb: 0
+    _roundWinners: []
+    _player:
+      isPlayer: 0
+      id: 0
+      name: 
+      logo: {r: 0, g: 0, b: 0, a: 0}
+      rating: 0
+      hasLost: 0
+      rank: 0
+    _playerLife: []
 --- !u!1 &6122866687535206826
 GameObject:
   m_ObjectHideFlags: 0

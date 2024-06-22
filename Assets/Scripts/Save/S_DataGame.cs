@@ -73,6 +73,134 @@ public class InventorySaver // Inventory
     public List<Robot> Robots = new List<Robot>();
     public int SelectedRobot;
 
+    public string backgroundColorHex;
+    public string overlayColorHex;
+    public float backgroundAlpha = 255;
+
+    public int prefixIndex;
+    public string prefixString;
+    public int suffixIndex;
+    public string suffixString;
+
+    public int overlayImageIndex;
+    public Vector2 overlayImagePosition;
+
+    #region Color Load/Save
+    public void SaveOverlayColor(string hexColor)
+    {
+        overlayColorHex = hexColor;
+        PlayerPrefs.SetString("CurrentOverlayColor", hexColor);
+        PlayerPrefs.Save();
+        Debug.Log("Overlay Color Saved: " + hexColor);
+    }
+
+    public void SaveBackgroundColor(string hexColor)
+    {
+        backgroundColorHex = hexColor;
+        PlayerPrefs.SetString("CurrentBackgroundColor", hexColor);
+        PlayerPrefs.Save();
+        Debug.Log("Background Color Saved: " + hexColor);
+    }
+
+    public void SaveOverlayImage(int imageIndex)
+    {
+        overlayImageIndex = imageIndex;
+        PlayerPrefs.SetInt("OverlayImageIndex", imageIndex);
+        PlayerPrefs.Save();
+    }
+
+    // Charger les couleurs
+    public void LoadColors()
+    {
+        backgroundColorHex = PlayerPrefs.GetString("CurrentBackgroundColor", backgroundColorHex);
+        Debug.Log("Background Color Loaded: " + backgroundColorHex + " with Alpha: " + backgroundAlpha);
+    }
+
+    public void LoadOverlayColor()
+    {
+        overlayColorHex = PlayerPrefs.GetString("CurrentOverlayColor", overlayColorHex);
+        Debug.Log("Overlay Color Loaded: " + overlayColorHex);
+    }
+
+    public void LoadOverlayImageIndex()
+    {
+        overlayImageIndex = PlayerPrefs.GetInt("OverlayImageIndex", overlayImageIndex);
+    }
+    #endregion
+    #region Name Load/Save
+    public void SavePrefixName(int prefix)
+    {
+        prefixIndex = prefix;
+        PlayerPrefs.SetInt("CurrentPrefixName", prefix);
+        PlayerPrefs.Save();
+    }
+    public void SaveSuffixname(int suffix)
+    {
+        suffixIndex = suffix;
+        PlayerPrefs.SetInt("CurrentSuffixName", suffix);
+        PlayerPrefs.Save();
+    }
+
+    public bool LoadPrefixName()
+    {
+        if (PlayerPrefs.HasKey("CurrentPrefixName"))
+        {
+            prefixIndex = PlayerPrefs.GetInt("CurrentPrefixName", prefixIndex);
+            return true;
+        }
+        return false;
+    }
+    public bool LoadSuffixName()
+    {
+        if (PlayerPrefs.HasKey("CurrentSuffixName"))
+        {
+            suffixIndex = PlayerPrefs.GetInt("CurrentSuffixName", suffixIndex);
+            return true;
+        }
+
+        return false;
+    }
+
+    public void SavePrefixString(string prefix)
+    {
+        prefixString = prefix;
+        PlayerPrefs.SetString("CurrentPrefixString", prefix);
+        PlayerPrefs.Save();
+    }
+    public void SaveSuffixString(string suffix)
+    {
+        suffixString = suffix;
+        PlayerPrefs.SetString("CurrentSuffixString", suffix);
+        PlayerPrefs.Save();
+    }
+
+    public bool LoadPrefixString()
+    {
+        if (PlayerPrefs.HasKey("CurrentPrefixString"))
+        {
+            prefixString = PlayerPrefs.GetString("CurrentPrefixString", prefixString);
+            return true;
+        }
+        return false;
+    }
+    public bool LoadSuffixString()
+    {
+        if (PlayerPrefs.HasKey("CurrentSuffixString"))
+        {
+            suffixString = PlayerPrefs.GetString("CurrentSuffixString", suffixString);
+            return true;
+        }
+
+        return false;
+    }
+
+    public string GetPlayerName()
+    {
+        return prefixString + " " + suffixString;
+    }
+
+    #endregion
+
     public Weapon GetWeapon(S_WeaponData weaponData)
     {
         foreach (Weapon weapon in Weapons)

@@ -58,82 +58,12 @@ public class S_TournamentManager : MonoBehaviour
     public bool IsRunning { get { return _isRunning; } set { _isRunning = value; } }
     public S_TournamentBracket Bracket { get => _tournamentBracket; }
 
-    //TEST PARTICIPANTS
-    private Participant _participant1; //lets pretend this is the player for testing
-    private Participant _participant2;
-    private Participant _participant3;
-    private Participant _participant4;
-    private Participant _participant5;
-    private Participant _participant6;
-    private Participant _participant7;
-    private Participant _participant8;
-    private Participant _participant9;
-    private Participant _participant10;
-    private Participant _participant11;
-    private Participant _participant12;
-    private Participant _participant13;
-    private Participant _participant14;
-    private Participant _participant15;
-    private Participant _participant16;
+    private S_CustomName _customName;
 
     private void Awake()
     {
+        _customName = GetComponent<S_CustomName>();
         _roundWinners = new List<Participant>();
-
-        //InitializeParticipationData();
-
-        _participant1.isPlayer = true;
-
-        _participant1.name = "PARTICIPANT NB 0";
-        _participant2.name = "PARTICIPANT NB 1";
-        _participant3.name = "PARTICIPANT NB 2";
-        _participant4.name = "PARTICIPANT NB 3";
-        _participant5.name = "PARTICIPANT NB 4";
-        _participant6.name = "PARTICIPANT NB 5";
-        _participant7.name = "PARTICIPANT NB 6";
-        _participant8.name = "PARTICIPANT NB 7";
-        _participant9.name = "PARTICIPANT NB 8";
-        _participant10.name = "PARTICIPANT NB 9";
-        _participant11.name = "PARTICIPANT NB 10";
-        _participant12.name = "PARTICIPANT NB 11";
-        _participant13.name = "PARTICIPANT NB 12";
-        _participant14.name = "PARTICIPANT NB 13";
-        _participant15.name = "PARTICIPANT NB 14";
-        _participant16.name = "PARTICIPANT NB 15";
-
-        _participant1.logo = Color.blue;
-        _participant2.logo = Color.red;
-        _participant3.logo = Color.yellow;
-        _participant4.logo = Color.green;
-        _participant5.logo = Color.white;
-        _participant6.logo = Color.cyan;
-        _participant7.logo = Color.black;
-        _participant8.logo = Color.magenta;
-        _participant9.logo = Color.blue;
-        _participant10.logo = Color.red;
-        _participant11.logo = Color.yellow;
-        _participant12.logo = Color.green;
-        _participant13.logo = Color.white;
-        _participant14.logo = Color.cyan;
-        _participant15.logo = Color.black;
-        _participant16.logo = Color.magenta;
-
-        _participant1.rank = _currentTournament.rank;
-        _participant2.rank = _currentTournament.rank;
-        _participant3.rank = _currentTournament.rank;
-        _participant4.rank = _currentTournament.rank;
-        _participant5.rank = _currentTournament.rank;
-        _participant6.rank = _currentTournament.rank;
-        _participant7.rank = _currentTournament.rank;
-        _participant8.rank = _currentTournament.rank;
-        _participant9.rank = _currentTournament.rank;
-        _participant10.rank = _currentTournament.rank;
-        _participant11.rank = _currentTournament.rank;
-        _participant12.rank = _currentTournament.rank;
-        _participant13.rank = _currentTournament.rank;
-        _participant14.rank = _currentTournament.rank;
-        _participant15.rank = _currentTournament.rank;
-        _participant16.rank = _currentTournament.rank;
 
         InitializeCurrentTournament(_currentTournament);
         Debug.Log("Initialazing a " + _currentTournament.rank.ToString() + " tournament");
@@ -142,6 +72,68 @@ public class S_TournamentManager : MonoBehaviour
 
         _currentTournament.maxMatchNb -= 1; //It's so we can use this as an index for arrays and lists
 
+    }
+
+    /// <summary>
+    /// Initialize participants for the upcoming tournament
+    /// </summary>
+    /// <param name="tournament"></param>
+    private void InitializeParticipants(Tournament tournament)
+    {
+        Participant player = new Participant();
+        player.name = S_DataGame.Instance.inventory.GetPlayerName();
+        player.logo = InitializePlayerLogo();
+        player.isPlayer = true;
+        _participants.Add(player);
+
+        for (int i = 1; i < tournament.participantNb; i++)
+        {
+            Participant participant = new Participant();
+            string name = _customName.GetRandomName();
+            participant.name = name;
+            participant.logo = InitializeParticipantLogo();
+            participant.rank = tournament.rank;
+            participant.isPlayer = false;
+
+            _participants.Add(participant);
+        }
+    }
+
+    /// <summary>
+    /// Gives a random color for the participant's logo
+    /// Also give a random picture with a random color again
+    /// </summary>
+    /// <returns></returns>
+    private Color InitializeParticipantLogo()
+    {
+        Color color = UnityEngine.Random.ColorHSV();
+
+        return color;
+    }
+
+    /// <summary>
+    /// Load the player's logo from the save Data and give it to the player participant variable
+    /// </summary>
+    /// <returns></returns>
+    private Color InitializePlayerLogo()
+    {
+        if (S_DataGame.Instance != null)
+        {
+            S_DataGame.Instance.inventory.LoadColors();
+            string backgroundColorHex = S_DataGame.Instance.inventory.backgroundColorHex;
+
+            if (!string.IsNullOrEmpty(backgroundColorHex))
+            {
+                Color backgroundColor;
+                if (ColorUtility.TryParseHtmlString("#" + backgroundColorHex, out backgroundColor))
+                {
+                    // Appliquer la couleur de fond chargée avec alpha
+                    return backgroundColor;
+                }
+            }
+        }
+
+        return Color.white; //failed to load color
     }
 
     public void AddParticipant(Participant participant)
@@ -203,47 +195,7 @@ public class S_TournamentManager : MonoBehaviour
     {
         _currentTournament = tournament;
 
-        if (_currentTournament.rank == Rank.Bronze || _currentTournament.rank == Rank.Silver)
-        {
-            _participants = new List<Participant>(tournament.participantNb)
-        {
-             // TEST
-            _participant1,
-            _participant2,
-            _participant3,
-            _participant4,
-            _participant5,
-            _participant6,
-            _participant7,
-            _participant8,
-            _participant9,
-            _participant10,
-            _participant11,
-            _participant12,
-            _participant13,
-            _participant14,
-            _participant15,
-            _participant16,
-        };
-        }
-        else
-        {
-            _participants = new List<Participant>(tournament.participantNb)
-        {
-             // TEST
-            _participant1,
-            _participant2,
-            _participant3,
-            _participant4,
-            _participant5,
-            _participant6,
-            _participant7,
-            _participant8,
-        };
-        }
-
-
-        //Add random participants in the list with random robots, their strength depend of the difficulty
+        InitializeParticipants(tournament);
 
         if (_participants.Count > 0)
         {
