@@ -136,11 +136,14 @@ public class S_TournamentManager : MonoBehaviour
         _participant16.rank = _currentTournament.rank;
 
         InitializeCurrentTournament(_currentTournament);
-        Debug.Log("Initialazing a " + _currentTournament.rank.ToString() + " tournament");
+
+        Debug.Log("maxMatch" + _currentTournament.maxMatchNb);
 
         _tournamentBracket.SetBracket(_currentTournament.maxMatchNb * 2);
+        //_tournamentBracket.SetBracket(_currentTournament.participantNb);
 
         _currentTournament.maxMatchNb -= 1; //It's so we can use this as an index for arrays and lists
+
 
     }
 

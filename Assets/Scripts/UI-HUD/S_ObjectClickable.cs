@@ -90,7 +90,7 @@ public class S_ObjectClickable : MonoBehaviour
                 _animatorCameraGarage.SetBool("Shelves", true);
                 break;
             case "Bronze":
-                _animatorCameraGarage.SetBool("FadeTournamentBronze" , true);
+                _animatorCameraGarage.SetBool("FadeTournamentBronze", true);
                 Debug.Log("bronze");
                 UnlockInteraction();
                 break;
@@ -204,6 +204,15 @@ public class S_ObjectClickable : MonoBehaviour
     public void BackGarageDoorEnable()
     {
         _animatorDoor.SetBool("BackDoor", true);
+    }
+
+    public void BackBoardEnable()
+    {
+        _animatorDoor.SetBool("Board", true);
+    }
+    public void BackBoardDisable()
+    {
+        _animatorDoor.SetBool("Board", false);
     }
 
     public void BackGarageDoorDisable()
