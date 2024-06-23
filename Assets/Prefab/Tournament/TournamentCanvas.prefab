@@ -2860,6 +2860,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2686631252594054399}
   - component: {fileID: 3408005342335054836}
+  - component: {fileID: 1522405830087093592}
   m_Layer: 0
   m_Name: TournamentCanvas
   m_TagString: Untagged
@@ -2897,13 +2898,57 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tournamentBracket: {fileID: 4546958904852823875}
-  _participants: []
+  _participantsLogos:
+  - {fileID: 21300000, guid: 449bdbdb042e16f4896fdb2ece7a19ed, type: 3}
+  - {fileID: 21300000, guid: ebd4c2e75bf79b0438fdddc45f6e3d74, type: 3}
+  - {fileID: 21300000, guid: aa07e8f2f64ddeb4482abe77219064d3, type: 3}
+  - {fileID: 21300000, guid: 36fbb8e73662cb34389d079958cb52e0, type: 3}
+  - {fileID: 21300000, guid: 952c94064720d8b4596ed0de690cd4a7, type: 3}
+  - {fileID: 21300000, guid: 493baef9b946058429e5856923c9a83d, type: 3}
+  - {fileID: 21300000, guid: 3fd0032188a1037469850e49641a76de, type: 3}
+  - {fileID: 21300000, guid: cb3ee4cde0bcb884496d2483464833bb, type: 3}
+  - {fileID: 21300000, guid: 09bb36bb5708d5a4399a0656d6b7057e, type: 3}
+  - {fileID: 21300000, guid: f4a27a28cc22fb5499428a5eaff388d3, type: 3}
+  - {fileID: 21300000, guid: de1e1db0d636c1c4e913ca96112a1388, type: 3}
+  - {fileID: 21300000, guid: df24e58b379339c419e454de1e028390, type: 3}
+  - {fileID: 21300000, guid: 87bab320a5fb1f145bd4e6d1bb4fcae5, type: 3}
+  - {fileID: 21300000, guid: a709d4458f80cdf48b7cf4ad43189466, type: 3}
+  - {fileID: 21300000, guid: b315ea6beec01e743abd4d80cd30021a, type: 3}
+  - {fileID: 21300000, guid: d31e823a4da0ffe48b0ca9cb1e1dbf1f, type: 3}
+  - {fileID: 21300000, guid: 0cb16dfcf46e3dd49b241c8cdaf8f537, type: 3}
+  - {fileID: 21300000, guid: ce37a8024ac0d1d4fb5b3262cb8e9c46, type: 3}
+  - {fileID: 21300000, guid: 0f63843361112044b94d417e83328198, type: 3}
+  - {fileID: 21300000, guid: c65b4a977f4a1c5419a4d4b27c4296d5, type: 3}
+  - {fileID: 21300000, guid: 9d1d2df4c5c27df439cfd820e7ceef4a, type: 3}
+  - {fileID: 21300000, guid: b3b3dc1051682a54ca0c9ca8624b4b27, type: 3}
+  - {fileID: 21300000, guid: af24ad4a3ac2f324fa5ea158c812bd50, type: 3}
+  - {fileID: 21300000, guid: 34f3c1710d052f24dbd145c2287676ad, type: 3}
+  - {fileID: 21300000, guid: b81cd94467b7ca04a9e97240b2b83752, type: 3}
+  - {fileID: 21300000, guid: 64264f58ebef71946b8172e717d71336, type: 3}
+  - {fileID: 21300000, guid: e07c88e6a1263474da2832142a2babf6, type: 3}
+  - {fileID: 21300000, guid: e8e03f0a6cba8a447812f5321ad6d826, type: 3}
+  - {fileID: 21300000, guid: 1eb8590c06a4f4c4582a6a28dfb70f3a, type: 3}
+  - {fileID: 21300000, guid: 605b5b518a490264faa3b8c8fe2729b6, type: 3}
   _currentTournament:
     rank: 3
     cost: 150
     participantNb: 8
     prize: 1200
     maxMatchNb: 4
+--- !u!114 &1522405830087093592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1918659507650753281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35ad15d04de479b4aa949bb24be50bb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefixDropDown: {fileID: 0}
+  _suffixDropDown: {fileID: 0}
 --- !u!1 &2003082711683491352
 GameObject:
   m_ObjectHideFlags: 0
@@ -21722,11 +21767,10 @@ MonoBehaviour:
   - {fileID: 3508263617668491959}
   - {fileID: 8282339702172891744}
   _currentBetTxt: {fileID: 4200338502570122735}
-  _playerMoney: {fileID: 8958642380718883122}
+  _playerMoneyTMP: {fileID: 0}
   _launchMatch: {fileID: 3680335757685969003}
   _betWinDisplay: {fileID: 7886532388385598541}
   Confirm: {fileID: -812182490249941441, guid: e212d955e191b7f48bc43e934b655f18, type: 3}
-  _testMoney: 200000
   NavigateReference: {fileID: -8014356366855078861, guid: e212d955e191b7f48bc43e934b655f18, type: 3}
 --- !u!1 &8736156921176727783
 GameObject:

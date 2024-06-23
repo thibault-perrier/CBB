@@ -126,9 +126,17 @@ public class S_ArenaManager : MonoBehaviour
             _participant1Health = currentUI.transform.Find("ChallengerLeft").transform.Find("Health").transform.Find("Forward").GetComponent<Image>();
             _participant2Health = currentUI.transform.Find("ChallengerRight").transform.Find("Health").transform.Find("Forward").GetComponent<Image>();
 
-            //TODO : change color for Logo
-            currentUI.transform.Find("ChallengerLeft").transform.Find("Logo").GetComponent<Image>().color = _p1.logo;
-            currentUI.transform.Find("ChallengerRight").transform.Find("Logo").GetComponent<Image>().color = _p2.logo;
+            Image p1Logo = currentUI.transform.Find("ChallengerLeft").transform.Find("Logo").GetComponent<Image>();
+            Image p2Logo = currentUI.transform.Find("ChallengerRight").transform.Find("Logo").GetComponent<Image>();
+
+            p1Logo.color = _p1.logo;
+            p1Logo.sprite = _p1.logoSprite;
+
+            p2Logo.color = _p2.logo;
+            p2Logo.sprite = _p2.logoSprite;
+
+            currentUI.transform.Find("ChallengerLeft").Find("Name").GetComponent<TextMeshProUGUI>().text = _p1.name;
+            currentUI.transform.Find("ChallengerRight").Find("Name").GetComponent<TextMeshProUGUI>().text = _p2.name;
         }
     }
     /// <summary>
@@ -383,8 +391,8 @@ public class S_ArenaManager : MonoBehaviour
 
         _participantsStats.SetActive(true);
 
-        SetStatsOnUi(p1.rating.ToString(), p1.name, p1.logo, _p1Stats);
-        SetStatsOnUi(p2.rating.ToString(), p2.name, p2.logo, _p2Stats);
+        SetStatsOnUi(p1, _p1Stats);
+        SetStatsOnUi(p2, _p2Stats);
     }
     private void InitializeBetButtons()
     {
@@ -422,7 +430,7 @@ public class S_ArenaManager : MonoBehaviour
     /// <param name="name"></param>
     /// <param name="logo"></param>
     /// <param name="pStatGameObject"></param>
-    public void SetStatsOnUi(string rating,  string name, Color logo , GameObject pStatGameObject)
+    public void SetStatsOnUi(S_TournamentManager.Participant p, GameObject pStatGameObject)
     {
         _betSystem.ActivateButtons();
 
@@ -431,9 +439,10 @@ public class S_ArenaManager : MonoBehaviour
 
         Image logoImage = pStatGameObject.transform.GetChild(1).GetChild(0).GetComponent<Image>();
 
-        ratingTxt.text = rating;
-        nameTxt.text = name;
-        logoImage.color = logo;
+        ratingTxt.text = p.rating.ToString();
+        nameTxt.text = p.name;
+        logoImage.color = p.logo;
+        logoImage.sprite = p.logoSprite;
     }
 
     public void CloseStats()
