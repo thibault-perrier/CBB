@@ -47,6 +47,7 @@ public class S_PauseController : MonoBehaviour
 
     private InputAction _pauseAction;
     private GameObject _currentSelectedGameObject;
+    private bool _pauseIsActive = false;
 
     public WorldLocation Location
     {
@@ -77,9 +78,13 @@ public class S_PauseController : MonoBehaviour
 
     public void ActivePauseMenu(InputAction.CallbackContext ctx)
     {
+        if (_pauseIsActive)
+            return;
+
         _currentSelectedGameObject = _eventSystem.currentSelectedGameObject;
         _eventSystem.SetSelectedGameObject(_resumeButton);
 
+        _pauseIsActive = true;
         _uiPausePanel.SetActive(true);
         Time.timeScale = 0f;
     }
@@ -89,6 +94,7 @@ public class S_PauseController : MonoBehaviour
         if (_currentSelectedGameObject)
             _eventSystem.SetSelectedGameObject(_currentSelectedGameObject);
 
+        _pauseIsActive = false;
         _uiPausePanel.SetActive(false);
         Time.timeScale = 1f;
     }
