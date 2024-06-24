@@ -30,7 +30,9 @@ public class S_CameraView : MonoBehaviour
     [SerializeField] private Transform _arenaAnchor;
 
     private float _smoothTime = 2f;
-    private Camera _camComponent;
+
+    private float _minFov = 25f;
+    private float _maxFov = 80f;
     private Animator _animator;
 
     private bool _isTournamentView = false;
@@ -55,7 +57,6 @@ public class S_CameraView : MonoBehaviour
 
     private void Awake()
     {
-        _camComponent = GetComponent<Camera>();
         _viewType = ViewType.Arena;
 
         if (_camArena != null)
@@ -108,13 +109,29 @@ public class S_CameraView : MonoBehaviour
     {
         if (_objects.Count > 0)
         {
+            Camera cam = _currentCam.GetComponent<Camera>();
             Vector3 centerPoint = GetCenterPoint();
             Quaternion prevRot = _camArena.transform.rotation;
 
             Vector3 lookDirection = (centerPoint - _camArena.transform.position).normalized;
 
             _camArena.transform.rotation = Quaternion.Slerp(prevRot, Quaternion.LookRotation(lookDirection), Time.deltaTime * 5f);
+
+            float newFov = ComputeNewFOV();
+            newFov = Mathf.Clamp(newFov, _minFov, _maxFov);
+
+            cam.fieldOfView = newFov;
+
+            //float newZoom = Mathf.Lerp(_maxZoom, _minZoom, GetGreatestDistance() / _zoomLimit);
+            //cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, newZoom, Time.deltaTime);
         }
+    }
+
+    private float ComputeNewFOV()
+    {
+        Vector3 camToObj1 = _currentCam.transform.position - _objects[0].position;
+        Vector3 camToObj2 = _currentCam.transform.position - _objects[1].position;
+        return Vector3.Angle(camToObj1, camToObj2);
     }
 
     /// <summary>
@@ -168,7 +185,7 @@ public class S_CameraView : MonoBehaviour
             bounds.Encapsulate(_objects[i].position);
         }
 
-        return bounds.size.y + bounds.size.x;
+        return Mathf.Max(bounds.size.x, bounds.size.y);
     }
 
     /// <summary>
@@ -380,6 +397,8 @@ public class S_CameraView : MonoBehaviour
     {
         _animator = _currentCam.GetComponent<Animator>();
 
+        yield return new WaitForSeconds(0.3f);
+
         if (_animator != null)
         {
             _animator.SetTrigger("Start");
@@ -391,6 +410,7 @@ public class S_CameraView : MonoBehaviour
         _isTournamentView = true;
         _camArena.transform.position = _lastParticipantInView - new Vector3(0f, 0f, 50f);
         _camArena.transform.rotation = Quaternion.identity;
+        _currentCam.GetComponent<Camera>().fieldOfView = 60f;
 
         yield return new WaitForSeconds(1f); //give time for the camera to rotate
         ReturnToToTournamentComplete?.Invoke();
