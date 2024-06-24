@@ -23,7 +23,8 @@ public class S_FileHandler: MonoBehaviour
     {
         string filePath = Application.persistentDataPath + "/InventoryData.json";
         string inventoryData = System.IO.File.ReadAllText(filePath);
-        S_DataGame.Instance.inventory = JsonUtility.FromJson<InventorySaver>(inventoryData);
+        InventorySaver inventorySaver = JsonUtility.FromJson<InventorySaver>(inventoryData);
+        S_DataGame.Instance.inventory = inventorySaver;
         Debug.Log("Changement effectué");
         Debug.Log(S_DataGame.Instance.inventory.CurrentMoney);
         Debug.Log(filePath);
