@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 
@@ -45,6 +46,11 @@ public class S_ChangeControlDisplay : MonoBehaviour
                 }
                 else if (_lastActiveDevice is Mouse)
                 {
+                    if (_keyboardControls != null)
+                        _keyboardControls?.SetActive(true);
+                    if (_gamepadControls != null)
+                        _gamepadControls?.SetActive(false);
+
                     Cursor.visible = true;
                 }
             };

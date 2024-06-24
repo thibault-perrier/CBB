@@ -1,5 +1,7 @@
 
+using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -20,13 +22,32 @@ public class S_PauseController : MonoBehaviour
     [SerializeField]
     private GameObject _uiPausePanel;
 
-    [Header("Button")]
+    [Header("Button Location")]
     [SerializeField]
     private GameObject _uiGiveUpButton;
     [SerializeField]
     private GameObject _uiQuitButton;
     [SerializeField]
     private WorldLocation _location;
+
+    [Header("Button focus")]
+    [SerializeField]
+    private GameObject _resumeButton;
+    [SerializeField]
+    private GameObject _backButtonRebindKeyboard;
+    [SerializeField]
+    private GameObject _backButtonRebindController;
+
+    [Header("Input")]
+    [SerializeField]
+    private InputActionReference _pauseActionReference;
+
+    [Header("Event system")]
+    [SerializeField]
+    private EventSystem _eventSystem;
+
+    private InputAction _pauseAction;
+    private GameObject _currentSelectedGameObject;
 
     public WorldLocation Location
     {
@@ -44,20 +65,31 @@ public class S_PauseController : MonoBehaviour
             return;
 
         Instance = this;
+
+        _pauseAction = _pauseActionReference.action;
+        _pauseAction.Enable();
+
+        _pauseAction.performed += ActivePauseMenu;
     }
     private void Start()
     {
         SetWorldLocation(_location);
     }
 
-    public void ActivePauseMenu(InputAction.CallbackContext context)
+    public void ActivePauseMenu(InputAction.CallbackContext ctx)
     {
+        _currentSelectedGameObject = _eventSystem.currentSelectedGameObject;
+        _eventSystem.SetSelectedGameObject(_resumeButton);
+
         _uiPausePanel.SetActive(true);
         Time.timeScale = 0f;
     }
 
     public void ResumeButtonPress()
     {
+        if (_currentSelectedGameObject)
+            _eventSystem.SetSelectedGameObject(_currentSelectedGameObject);
+
         _uiPausePanel.SetActive(false);
         Time.timeScale = 1f;
     }
@@ -68,6 +100,17 @@ public class S_PauseController : MonoBehaviour
     public void QuitButtonPress()
     {
         Application.Quit();
+    }
+    public void BindBackButtons()
+    {
+        if (_backButtonRebindController.activeInHierarchy)
+            _eventSystem.SetSelectedGameObject(_backButtonRebindController);
+        else
+            _eventSystem.SetSelectedGameObject(_backButtonRebindKeyboard);
+    }
+    public void SelectedButton(GameObject button)
+    {
+        _eventSystem.SetSelectedGameObject(button);
     }
 
     private void SetWorldLocation(WorldLocation location)
