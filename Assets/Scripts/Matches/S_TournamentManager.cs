@@ -22,33 +22,6 @@ public class S_TournamentManager : MonoBehaviour
         public Robot robot;
         public Rank rank;
 
-        public Participant(bool isPlayer, string name, Color logo, Robot robot, Rank rank)
-        {
-            this.isPlayer = isPlayer;
-            this.id = 0;
-            this.name = name;
-            this.logo = logo;
-            this.rating = 0;
-            this.hasLost = false;
-            this.robot = robot;
-            this.rank = rank;
-        }
-
-        public Participant(Rank rank)
-        {
-            this.isPlayer = false;
-            this.id = 0;
-            S_CustomName customName = new S_CustomName();
-            
-            this.name = customName.GetRandomName();
-
-            this.logo = Color.green;
-            this.rating = 0;
-            this.hasLost = false;
-            this.robot = S_DataRobotComponent.Instance.GetRandomRobot();
-            this.rank = rank;
-        }
-
     }
 
     public enum Rank
@@ -115,6 +88,7 @@ public class S_TournamentManager : MonoBehaviour
         player.logo = InitializePlayerLogo();
         player.logoSprite = _participantsLogos[S_DataGame.Instance.inventory.overlayImageIndex];
         player.isPlayer = true;
+        player.robot = S_DataGame.Instance.inventory.GetSelectRobot();
         _participants.Add(player);
 
         for (int i = 1; i < tournament.participantNb; i++)
@@ -126,6 +100,7 @@ public class S_TournamentManager : MonoBehaviour
             participant.logo = ChooseRandomColor();
             participant.rank = tournament.rank;
             participant.isPlayer = false;
+            participant.robot = S_DataRobotComponent.Instance.GetRandomRobot();
 
             _participants.Add(participant);
         }

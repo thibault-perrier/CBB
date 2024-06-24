@@ -35,11 +35,7 @@ public class S_DataGame : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
 
-
-    private void Start()
-    {
         if (OnSceneLoad == Load.Inventory || OnSceneLoad == Load.InventoryAndTournament)
         {
             LoadInventory();
@@ -186,6 +182,11 @@ public class InventorySaver // Inventory
     }
 
     #endregion
+
+    public Robot GetSelectRobot()
+    {
+        return Robots[SelectedRobot];
+    }
 
     public Weapon GetWeapon(S_WeaponData weaponData)
     {

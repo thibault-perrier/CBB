@@ -281,7 +281,7 @@ public class S_StreetFightManager : MonoBehaviour
         var ai = _playerBot.GetComponent<S_AIController>();
         ai.enabled = false;
 
-        _AIBot     = robotSpawner.GenerateRobotAt(S_DataRobotComponent.Instance.GetRandomRobot(), _botAITransformSpawn);
+        _AIBot     = robotSpawner.GenerateRobotAt(Systems.S_DataRobotComponent.Instance.GetRandomRobot(), _botAITransformSpawn);
 
         _AIController = _AIBot.GetComponent<S_AIController>();
         _playerInput = _playerBot.GetComponent<PlayerInput>();
