@@ -8,7 +8,6 @@ using static Robot;
 public class S_DataGame : MonoBehaviour
 {
     public static S_DataGame Instance;
-    [SerializeField] public S_TournamentManager _tournamentManager;
 
     [Serializable]
     public enum Load
@@ -26,7 +25,15 @@ public class S_DataGame : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
         if (OnSceneLoad == Load.Inventory || OnSceneLoad == Load.InventoryAndTournament)
         {
@@ -174,6 +181,11 @@ public class InventorySaver // Inventory
     }
 
     #endregion
+
+    public Robot GetSelectRobot()
+    {
+        return Robots[SelectedRobot];
+    }
 
     public Weapon GetWeapon(S_WeaponData weaponData)
     {
@@ -449,24 +461,8 @@ public class TournamentSaver // Tournament
     public int _currentLevel;
     public S_TournamentManager.Tournament _tournamentInfo;
     public List<S_TournamentManager.Participant> _roundWinners;
-    public Dictionary<S_TournamentManager.Participant ,Robot> _participantsRobot;
     public S_TournamentManager.Participant _player;
     public List<float> _playerLife;
-
-    public void InitRobot()
-    {
-        foreach(S_TournamentManager.Participant participant in _participants)
-        {
-            if (participant.isPlayer)
-            {
-                _participantsRobot.Add(participant, S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot]);
-            }
-            else
-            {
-                _participantsRobot.Add(participant, S_DataRobotComponent.Instance.GetRandomRobot());
-            }
-        }
-    }
 
     public void SavePlayerLife(S_FrameManager frameManager)
     {

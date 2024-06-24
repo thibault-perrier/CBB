@@ -394,4 +394,12 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
 
         return _state != State.destroy;
     }
+
+    public int GetRepairPrice()
+    {
+        int price = 0;
+        price += (int)(((_data.Cost * 0.8) / _data.MaxLife) * (_data.MaxLife - _life));
+        return price;
+    }
+
 }

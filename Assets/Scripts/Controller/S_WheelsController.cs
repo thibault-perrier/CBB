@@ -72,7 +72,7 @@ public class S_WheelsController : MonoBehaviour
 
         // limit max torque
         motorTorque = Mathf.Clamp(motorTorque, -_maxMotorTorque, _maxMotorTorque);
-
+        Debug.Log(_move);
         foreach (WheelCollider wheel in _wheels)
         {
             if(Mathf.Abs(_move) >= 0.1f)
