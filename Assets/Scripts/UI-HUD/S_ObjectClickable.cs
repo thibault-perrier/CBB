@@ -90,24 +90,38 @@ public class S_ObjectClickable : MonoBehaviour
                 _animatorCameraGarage.SetBool("Shelves", true);
                 break;
             case "Bronze":
-                _animatorCameraGarage.SetBool("FadeTournamentBronze", true);
-                Debug.Log("bronze");
-                UnlockInteraction();
+                if (S_DataGame.Instance.inventory.GetSelectRobot() != null)
+                {
+                    _animatorCameraGarage.SetBool("FadeTournamentBronze", true);
+                    Debug.Log("bronze");
+                    UnlockInteraction();
+                }
                 break;
             case "Silver":
-                Debug.Log("Silver");
-                UnlockInteraction();
-                _animatorCameraGarage.SetBool("FadeTournamentSilver", true);
+                if (S_DataGame.Instance.inventory.GetSelectRobot() != null)
+                {
+
+                    Debug.Log("Silver");
+                    UnlockInteraction();
+                    _animatorCameraGarage.SetBool("FadeTournamentSilver", true);
+                }
                 break;
             case "Gold":
-                Debug.Log("Gold");
-                UnlockInteraction();
-                _animatorCameraGarage.SetBool("FadeTournamentGold", true);
+                if (S_DataGame.Instance.inventory.GetSelectRobot() != null)
+                {
+
+                    Debug.Log("Gold");
+                    UnlockInteraction();
+                    _animatorCameraGarage.SetBool("FadeTournamentGold", true);
+                }
                 break;
             case "Diamond":
-                Debug.Log("Diamond");
-                UnlockInteraction();
-                _animatorCameraGarage.SetBool("FadeTournamentDiamond", true);
+                if (S_DataGame.Instance.inventory.GetSelectRobot() != null)
+                {
+                    Debug.Log("Diamond");
+                    UnlockInteraction();
+                    _animatorCameraGarage.SetBool("FadeTournamentDiamond", true);
+                }
                 break;
 
             default:
