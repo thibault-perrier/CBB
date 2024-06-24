@@ -111,14 +111,14 @@ public class S_CustomLogo : MonoBehaviour
     {
         // Sauvegarder la couleur de fond
         string hexColor = ColorUtility.ToHtmlStringRGBA(_currentBackgroundColor);
-        //S_DataGame.Instance.inventory.SaveBackgroundColor(hexColor);
+        S_DataGame.Instance.inventory.SaveBackgroundColor(hexColor);
 
         // Sauvegarder la couleur d'incrustation
         string overlayHexColor = ColorUtility.ToHtmlStringRGBA(_currentOverlayColor);
-        //S_DataGame.Instance.inventory.SaveOverlayColor(overlayHexColor);
+        S_DataGame.Instance.inventory.SaveOverlayColor(overlayHexColor);
 
         // Sauvegarder l'index de l'image d'incrustation
-        //S_DataGame.Instance.inventory.SaveOverlayImage(_currentOverlayImageIndex);
+        S_DataGame.Instance.inventory.SaveOverlayImage(_currentOverlayImageIndex);
 
         // Sauvegarder les données de jeu
         S_DataGame.Instance.SaveInventory();
@@ -127,61 +127,61 @@ public class S_CustomLogo : MonoBehaviour
     void LoadLogo()
     {
         // Charger les couleurs depuis S_DataGame
-        //if (S_DataGame.Instance != null)
-        //{
-        //    S_DataGame.Instance.inventory.LoadColors();
-        //    string backgroundColorHex = S_DataGame.Instance.inventory.backgroundColorHex;
-        //    float backgroundAlpha = S_DataGame.Instance.inventory.backgroundAlpha;
+        if (S_DataGame.Instance != null)
+        {
+            S_DataGame.Instance.inventory.LoadColors();
+            string backgroundColorHex = S_DataGame.Instance.inventory.backgroundColorHex;
+            float backgroundAlpha = S_DataGame.Instance.inventory.backgroundAlpha;
 
-        //    if (!string.IsNullOrEmpty(backgroundColorHex))
-        //    {
-        //        Color backgroundColor;
-        //        if (ColorUtility.TryParseHtmlString("#" + backgroundColorHex, out backgroundColor))
-        //        {
-        //            // Appliquer la couleur de fond chargée avec alpha
-        //            backgroundImage.color = backgroundColor;
-        //            _currentBackgroundColor = backgroundImage.color;
-        //            Debug.Log("Background Color Applied: " + backgroundColorHex);
-        //        }
-        //        else
-        //        {
-        //            Debug.LogError("Failed to parse background color from hex string: " + backgroundColorHex);
-        //        }
-        //    }
+            if (!string.IsNullOrEmpty(backgroundColorHex))
+            {
+                Color backgroundColor;
+                if (ColorUtility.TryParseHtmlString("#" + backgroundColorHex, out backgroundColor))
+                {
+                    // Appliquer la couleur de fond chargée avec alpha
+                    backgroundImage.color = backgroundColor;
+                    _currentBackgroundColor = backgroundImage.color;
+                    Debug.Log("Background Color Applied: " + backgroundColorHex);
+                }
+                else
+                {
+                    Debug.LogError("Failed to parse background color from hex string: " + backgroundColorHex);
+                }
+            }
 
-        //    // Charger la couleur d'incrustation
-        //    S_DataGame.Instance.inventory.LoadOverlayColor();
-        //    string overlayColorHex = S_DataGame.Instance.inventory.overlayColorHex;
-        //    Color overlayColor;
-        //    if (ColorUtility.TryParseHtmlString("#" + overlayColorHex, out overlayColor))
-        //    {
-        //        overlayImage.color = overlayColor;
-        //        _currentOverlayColor = overlayColor;
-        //        Debug.Log("Overlay Color Applied: " + overlayColorHex);
-        //    }
-        //    else
-        //    {
-        //        Debug.LogError("Failed to parse overlay color from hex string: " + overlayColorHex);
-        //    }
+            // Charger la couleur d'incrustation
+            S_DataGame.Instance.inventory.LoadOverlayColor();
+            string overlayColorHex = S_DataGame.Instance.inventory.overlayColorHex;
+            Color overlayColor;
+            if (ColorUtility.TryParseHtmlString("#" + overlayColorHex, out overlayColor))
+            {
+                overlayImage.color = overlayColor;
+                _currentOverlayColor = overlayColor;
+                Debug.Log("Overlay Color Applied: " + overlayColorHex);
+            }
+            else
+            {
+                Debug.LogError("Failed to parse overlay color from hex string: " + overlayColorHex);
+            }
 
-        //    // Charger l'image d'incrustation sélectionnée dans le dropdown
-        //    S_DataGame.Instance.inventory.LoadOverlayImageIndex();
-        //    int overlayImageIndex = S_DataGame.Instance.inventory.overlayImageIndex;
-        //    if (overlayImageIndex >= 0 && overlayImageIndex < overlayImages.Count)
-        //    {
-        //        overlayImage.sprite = overlayImages[overlayImageIndex];
-        //        _currentOverlayImageIndex = overlayImageIndex;
-        //        Debug.Log("Overlay Image Applied: Index " + overlayImageIndex);
-        //    }
-        //    else
-        //    {
-        //        Debug.LogError("Failed to load overlay image index: " + overlayImageIndex);
-        //    }
-        //}
-        //else
-        //{
-        //    Debug.LogError("S_DataGame Instance is null.");
-        //}
+            // Charger l'image d'incrustation sélectionnée dans le dropdown
+            S_DataGame.Instance.inventory.LoadOverlayImageIndex();
+            int overlayImageIndex = S_DataGame.Instance.inventory.overlayImageIndex;
+            if (overlayImageIndex >= 0 && overlayImageIndex < overlayImages.Count)
+            {
+                overlayImage.sprite = overlayImages[overlayImageIndex];
+                _currentOverlayImageIndex = overlayImageIndex;
+                Debug.Log("Overlay Image Applied: Index " + overlayImageIndex);
+            }
+            else
+            {
+                Debug.LogError("Failed to load overlay image index: " + overlayImageIndex);
+            }
+        }
+        else
+        {
+            Debug.LogError("S_DataGame Instance is null.");
+        }
     }
 
     public void ResetLogo()

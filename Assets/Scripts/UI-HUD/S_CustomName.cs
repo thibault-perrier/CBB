@@ -79,22 +79,22 @@ public class S_CustomName : MonoBehaviour
     /// </summary>
     public void SaveName()
     {
-        //S_DataGame.Instance.inventory.SavePrefixName(_prefixDropDown.value);
-        //S_DataGame.Instance.inventory.SaveSuffixname(_suffixDropDown.value);
+        S_DataGame.Instance.inventory.SavePrefixName(_prefixDropDown.value);
+        S_DataGame.Instance.inventory.SaveSuffixname(_suffixDropDown.value);
     }
 
     public void LoadName()
     {
-        //if (S_DataGame.Instance.inventory.LoadSuffixName() && S_DataGame.Instance.inventory.LoadSuffixName())
-        //{
-        //    if (S_DataGame.Instance.inventory.LoadPrefixName())
-        //        _prefixDropDown.value = S_DataGame.Instance.inventory.prefixIndex;
-        //    if (S_DataGame.Instance.inventory.LoadSuffixName())
-        //        _suffixDropDown.value = S_DataGame.Instance.inventory.suffixIndex;
-        //}
-        //if (S_DataGame.Instance.inventory.LoadPrefixName())
-        //    _prefixDropDown.value = S_DataGame.Instance.inventory.prefixIndex;
-        //if (S_DataGame.Instance.inventory.LoadSuffixName())
-        //    _suffixDropDown.value = S_DataGame.Instance.inventory.suffixIndex;
+        if (s_datagame.instance.inventory.loadsuffixname() && s_datagame.instance.inventory.loadsuffixname())
+        {
+            if (s_datagame.instance.inventory.loadprefixname())
+                _prefixdropdown.value = s_datagame.instance.inventory.prefixindex;
+            if (s_datagame.instance.inventory.loadsuffixname())
+                _suffixdropdown.value = s_datagame.instance.inventory.suffixindex;
+        }
+        if (s_datagame.instance.inventory.loadprefixname())
+            _prefixdropdown.value = s_datagame.instance.inventory.prefixindex;
+        if (s_datagame.instance.inventory.loadsuffixname())
+            _suffixdropdown.value = S_DataGame.Instance.inventory.suffixIndex;
     }
 }
