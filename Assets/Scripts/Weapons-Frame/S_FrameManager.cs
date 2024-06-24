@@ -82,6 +82,8 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
     /// </summary>
     public void SelectWeapons()
     {
+        _weaponManagers.Clear();
+
         foreach (GameObject gameObject in _weaponHookPoints)
         {
             S_WeaponManager weaponManager = gameObject.GetComponentInChildren<S_WeaponManager>(true);

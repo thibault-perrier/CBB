@@ -114,4 +114,14 @@ public class S_PlayerController : MonoBehaviour
             _frameManager.Weapons[2].LaunchAttack();
         }
     }
+    public void OnAttack4(InputAction.CallbackContext context)
+    {
+        if (_frameManager.Weapons.Count < 4)
+            return;
+
+        if (context.performed && _frameManager.Weapons[3] != null)
+        {
+            _frameManager.Weapons[3].LaunchAttack();
+        }
+    }
 }

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -27,8 +26,60 @@ public class S_SkillsController : MonoBehaviour
     [SerializeField]
     private S_Skill skillRight;
 
+    private S_FrameManager _frameManger;
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+        DisableAllListener();
+    }
+
+    private void DisableAllListener()
+    {
+        List<S_Skill> skills = new()
+        {
+            skillLeft,
+            skillUp,
+            skillRight,
+            skillDown,
+        };
+        List<UnityAction> actionCooldown = new()
+        {
+            ListenerCooldownMashLeft,
+            ListenerCooldownMashUp,
+            ListenerCooldownMashRight,
+            ListenerCooldownMashDown,
+        };
+        List<UnityAction> actionDestroy = new()
+        {
+            ListenerDestroyMashLeft,
+            ListenerDestroyMashUp,
+            ListenerDestroyMashRight,
+            ListenerDestroyMashDown
+        };
+
+        foreach (var skill in skills.Select((value, index) => new { index, value }))
+        {
+            var currentSkill = skill.value;
+
+            if (skill.index <= _frameManger.Weapons.Count - 1)
+            {
+                currentSkill.Weapon = _frameManger.Weapons[skill.index];
+                currentSkill.WeaponIcon.sprite = currentSkill.Weapon.Data.WeaponSrite;
+                currentSkill.Weapon.AttackingEnd.RemoveListener(actionCooldown[skill.index]);
+                currentSkill.Weapon.AttackingStart.RemoveListener(actionDestroy[skill.index]);
+                currentSkill.Weapon.WeaponDestroy.RemoveListener(actionDestroy[skill.index]);
+            }
+            else
+            {
+                currentSkill.WeaponIcon.gameObject.SetActive(false);
+            }
+        }
+    }
     public void InitializeSkills(S_FrameManager frameManager)
     {
+        _frameManger = frameManager;
+
         List<S_Skill> skills = new() 
         { 
             skillLeft, 
@@ -60,7 +111,12 @@ public class S_SkillsController : MonoBehaviour
                 currentSkill.Weapon = frameManager.Weapons[skill.index];
                 currentSkill.WeaponIcon.sprite = currentSkill.Weapon.Data.WeaponSrite;
                 currentSkill.Weapon.AttackingEnd.AddListener(actionCooldown[skill.index]);
+                currentSkill.Weapon.AttackingStart.AddListener(actionDestroy[skill.index]);
                 currentSkill.Weapon.WeaponDestroy.AddListener(actionDestroy[skill.index]);
+            }
+            else
+            {
+                currentSkill.WeaponIcon.gameObject.SetActive(false);
             }
         }
     }
