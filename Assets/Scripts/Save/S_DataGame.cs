@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Systems;
 using UnityEngine;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
+using static Robot;
 
 public class S_DataGame : MonoBehaviour
 {
@@ -27,7 +27,6 @@ public class S_DataGame : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        
     }
 
     private void Start()
@@ -36,7 +35,7 @@ public class S_DataGame : MonoBehaviour
         {
             LoadInventory();
         }
-        else if (OnSceneLoad == Load.Tournament || OnSceneLoad == Load.InventoryAndTournament)
+        if (OnSceneLoad == Load.Tournament || OnSceneLoad == Load.InventoryAndTournament)
         {
             LoadTournament();
         }
@@ -72,6 +71,94 @@ public class InventorySaver // Inventory
     public List<Robot> Robots = new List<Robot>();
     public int SelectedRobot;
 
+    public string backgroundColorHex;
+    public string overlayColorHex;
+    public float backgroundAlpha = 255;
+
+    public int prefixIndex;
+    public int suffixIndex;
+
+    public int overlayImageIndex;
+    public Vector2 overlayImagePosition;
+
+    #region Color Load/Save
+    public void SaveOverlayColor(string hexColor)
+    {
+        overlayColorHex = hexColor;
+        PlayerPrefs.SetString("CurrentOverlayColor", hexColor);
+        PlayerPrefs.Save();
+        Debug.Log("Overlay Color Saved: " + hexColor);
+    }
+
+    public void SaveBackgroundColor(string hexColor)
+    {
+        backgroundColorHex = hexColor;
+        PlayerPrefs.SetString("CurrentBackgroundColor", hexColor);
+        PlayerPrefs.Save();
+        Debug.Log("Background Color Saved: " + hexColor);
+    }
+
+    public void SaveOverlayImage(int imageIndex)
+    {
+        overlayImageIndex = imageIndex;
+        PlayerPrefs.SetInt("OverlayImageIndex", imageIndex);
+        PlayerPrefs.Save();
+    }
+
+    // Charger les couleurs
+    public void LoadColors()
+    {
+        backgroundColorHex = PlayerPrefs.GetString("CurrentBackgroundColor", backgroundColorHex);
+        Debug.Log("Background Color Loaded: " + backgroundColorHex + " with Alpha: " + backgroundAlpha);
+    }
+
+    public void LoadOverlayColor()
+    {
+        overlayColorHex = PlayerPrefs.GetString("CurrentOverlayColor", overlayColorHex);
+        Debug.Log("Overlay Color Loaded: " + overlayColorHex);
+    }
+
+    public void LoadOverlayImageIndex()
+    {
+        overlayImageIndex = PlayerPrefs.GetInt("OverlayImageIndex", overlayImageIndex);
+    }
+    #endregion
+    #region Name Load/Save
+    public void SavePrefixName(int prefix)
+    {
+        prefixIndex = prefix;
+        PlayerPrefs.SetInt("CurrentPrefixName", prefix);
+        PlayerPrefs.Save();
+    }
+    public void SaveSuffixname(int suffix)
+    {
+        suffixIndex = suffix;
+        PlayerPrefs.SetInt("CurrentSuffixName", suffix);
+        PlayerPrefs.Save();
+    }
+
+    public bool LoadPrefixName()
+    {
+        if (PlayerPrefs.HasKey("CurrentPrefixName"))
+        {
+            prefixIndex = PlayerPrefs.GetInt("CurrentPrefixName", prefixIndex);
+            return true;
+        }
+        return false;
+    }
+    public bool LoadSuffixName()
+    {
+        if (PlayerPrefs.HasKey("CurrentSuffixName"))
+        {
+            suffixIndex = PlayerPrefs.GetInt("CurrentSuffixName", suffixIndex);
+            return true;
+        }
+
+        return false;
+    }
+
+    #endregion
+
     public Weapon GetWeapon(S_WeaponData weaponData)
     {
         foreach (Weapon weapon in Weapons)
@@ -87,8 +174,17 @@ public class InventorySaver // Inventory
 
     public void AddWeapon(S_WeaponData weaponData)
     {
+        foreach (Weapon w in Weapons)
+        {
+            if (w.GetWeaponData() == weaponData)
+            {
+                w._number++;
+                return;
+            }
+        }
+
         Weapon weapon = GetWeapon(weaponData);
-        if(weapon == null)
+        if (weapon == null)
         {
             weapon = new Weapon(weaponData);
             Weapons.Add(weapon);
@@ -104,8 +200,7 @@ public class InventorySaver // Inventory
             weapon._number--;
             if (weapon._number <= 0)
                 Weapons.Remove(weapon);
-        }
-        
+        } 
     }
 
     public Frame GetFrame(S_FrameData frameData)
@@ -122,6 +217,15 @@ public class InventorySaver // Inventory
 
     public void AddFrame(S_FrameData frameData)
     {
+        foreach(Frame f in Frames)
+        {
+            if (f.GetFrameData() == frameData)
+            {
+                f._number++;
+                return;
+            }
+        }
+
         Frame frame = GetFrame(frameData);
         if (frame == null)
         {
@@ -145,6 +249,7 @@ public class InventorySaver // Inventory
     public void RemoveRobot(int index)
     {
         Robots.RemoveAt(index);
+        SelectedRobot = 0;
     }
 
     public void UpdateUseItem()
@@ -154,17 +259,25 @@ public class InventorySaver // Inventory
         {
             weapon._useNumber = 0;
         }
+        foreach (Frame frame in Frames)
+        {
+            frame._useNumber = 0;
+        }
 
         foreach (Robot robot in Robots)
         {
-            robot._frame._useNumber++;
-            foreach(Weapon rbWeapon in robot._weapons)
+            foreach (Frame frame in Frames)
             {
-                if(rbWeapon != null)
+                if (frame._id == robot._frame._id)
+                    frame._useNumber++;
+            }
+            if(robot._weapons != null)
+            {
+                foreach (HookPoint hookPoint in robot._weapons)
                 {
-                    foreach(Weapon weapon in Weapons)
+                    foreach (Weapon weapon in Weapons)
                     {
-                        if(weapon._id == rbWeapon._id)
+                        if (weapon._id == hookPoint._weapon._id)
                         {
                             weapon._useNumber++;
                         }
@@ -224,25 +337,90 @@ public class Frame
 public class Robot
 {
     public Frame _frame;
-    public List<Weapon> _weapons = new List<Weapon>();
+
+    public List<HookPoint> _weapons = new List<HookPoint>();
 
     public Robot(Frame frame)
     {
         _frame = frame;
-        for(int i = 0; i < frame.GetFrameData().GetNbWeaponMax(); i++)
-        {
-            _weapons.Add(null);
-        }
     }
 
     public void UpdateWeaponMaxList()
     {
-        List<Weapon> updateWeapons = new List<Weapon>();
-        for (int i = 0; i < _frame.GetFrameData().GetNbWeaponMax(); i++)
+        //int max = _frame.GetFrameData().GetNbWeaponMax();
+        //List<HookPoint> updateWeapons = new List<HookPoint>();
+
+        //for (int i = 0; i < max; i++)
+        //{
+        //    foreach (HookPoint weapon in _weapons)
+        //    {
+        //        if (weapon._hookPointIndex == i)
+        //        {
+        //            updateWeapons.Add(weapon);
+        //        }
+        //    }
+        //}
+        //_weapons = updateWeapons.ToList();
+
+        _weapons.Clear();
+    }
+
+    public void AddWeapon(Weapon weapon, int index)
+    {
+        int replaceIndex = -1;
+
+        for (int i = 0; i < _weapons.Count(); i++)
         {
-            updateWeapons.Add(_weapons[i]);
+            if (_weapons[i]._hookPointIndex == index)
+            {
+                replaceIndex = i;
+            }
+        }
+
+        if(replaceIndex >= 0)
+        {
+            this.RemoveWeapon(replaceIndex);
+        }
+
+        _weapons.Add(new HookPoint(index, weapon));
+    }
+
+    public void RemoveWeapon(int hookPointIndex)
+    {
+        List<HookPoint> updateWeapons = new List<HookPoint>();
+        foreach (HookPoint hookPoint in _weapons)
+        {
+            if (hookPoint._hookPointIndex != hookPointIndex)
+            {
+                updateWeapons.Add(hookPoint);
+            }
         }
         _weapons = updateWeapons.ToList();
+    }
+
+    public Weapon GetHookPointWeapon(int hookPointIndex)
+    {
+        foreach (HookPoint hookPoint in _weapons)
+        {
+            if (hookPoint._hookPointIndex == hookPointIndex)
+            {
+                return hookPoint._weapon;
+            }
+        }
+        return null;
+    }
+
+    [System.Serializable]
+    public struct HookPoint
+    {
+        public int _hookPointIndex;
+        public Weapon _weapon;
+
+        public HookPoint(int index, Weapon weapon)
+        {
+            _hookPointIndex = index;
+            _weapon = weapon;
+        }
     }
 }
 
@@ -255,5 +433,54 @@ public class TournamentSaver // Tournament
     public int _currentLevel;
     public S_TournamentManager.Tournament _tournamentInfo;
     public List<S_TournamentManager.Participant> _roundWinners;
+    public Dictionary<S_TournamentManager.Participant ,Robot> _participantsRobot;
+    public S_TournamentManager.Participant _player;
+    public List<float> _playerLife;
+
+    public void InitRobot()
+    {
+        foreach(S_TournamentManager.Participant participant in _participants)
+        {
+            if (participant.isPlayer)
+            {
+                _participantsRobot.Add(participant, S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot]);
+            }
+            else
+            {
+                _participantsRobot.Add(participant, S_DataRobotComponent.Instance.GetRandomRobot());
+            }
+        }
+    }
+
+    public void SavePlayerLife(S_FrameManager frameManager)
+    {
+        _playerLife.Add(frameManager._life);
+        foreach(GameObject hookPoint in frameManager.WeaponHookPoints)
+        {
+            S_WeaponManager weaponManager = hookPoint.GetComponentInChildren<S_WeaponManager>();
+            if (weaponManager != null)
+            {
+                _playerLife.Add(weaponManager._life);
+            }
+            else
+            {
+                _playerLife.Add(0);
+            }
+        }
+    }
+
+    public void SetPlayerLife(S_FrameManager frameManager)
+    {
+        frameManager._life = _playerLife[0];
+        for(int i=0; i < frameManager.WeaponHookPoints.Count();i++)
+        {
+            GameObject hookPoint = frameManager.WeaponHookPoints[i];
+            S_WeaponManager weaponManager = hookPoint.GetComponentInChildren<S_WeaponManager>();
+            if (weaponManager != null)
+            {
+                weaponManager._life = _playerLife[i + 1];
+            }
+        }
+    }
 }
 
