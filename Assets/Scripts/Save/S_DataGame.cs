@@ -27,10 +27,7 @@ public class S_DataGame : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-    }
 
-    private void Start()
-    {
         if (OnSceneLoad == Load.Inventory || OnSceneLoad == Load.InventoryAndTournament)
         {
             LoadInventory();
@@ -76,7 +73,9 @@ public class InventorySaver // Inventory
     public float backgroundAlpha = 255;
 
     public int prefixIndex;
+    public string prefixString;
     public int suffixIndex;
+    public string suffixString;
 
     public int overlayImageIndex;
     public Vector2 overlayImagePosition;
@@ -155,6 +154,23 @@ public class InventorySaver // Inventory
         }
 
         return false;
+    }
+
+    public void SavePrefixString(string prefix)
+    {
+        prefixString = prefix;
+        PlayerPrefs.SetString("CurrentPrefixString", prefix);
+        PlayerPrefs.Save();
+    }
+    public void SaveSuffixString(string suffix)
+    {
+        suffixString = suffix;
+        PlayerPrefs.SetString("CurrentSuffixString", suffix);
+        PlayerPrefs.Save();
+    }
+    public string GetPlayerName()
+    {
+        return prefixString.Trim() + " " + suffixString.Trim();
     }
 
     #endregion

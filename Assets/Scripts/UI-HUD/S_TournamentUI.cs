@@ -159,6 +159,7 @@ public class S_TournamentBracket : MonoBehaviour
 
                     logo.position = point.position;
                     logo.GetComponent<Image>().color = participants[i].logo;
+                    logo.GetComponent<Image>().sprite = participants[i].logoSprite;
 
                     if (_cameraView != null)
                     {
