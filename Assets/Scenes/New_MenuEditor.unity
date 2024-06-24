@@ -1903,10 +1903,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac60a9ca23266ea4d883ed3ca2c96bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tournamentManager: {fileID: 0}
   OnSceneLoad: 1
   inventory:
-    CurrentMoney: 0
+    CurrentMoney: 100
     Frames: []
     Weapons:
     - _id: 0
@@ -1944,6 +1943,13 @@ MonoBehaviour:
       logo: {r: 0, g: 0, b: 0, a: 0}
       rating: 0
       hasLost: 0
+      robot:
+        _frame:
+          _id: 0
+          _name: 
+          _number: 0
+          _useNumber: 0
+        _weapons: []
       rank: 0
     _playerLife: []
 --- !u!4 &368020107
