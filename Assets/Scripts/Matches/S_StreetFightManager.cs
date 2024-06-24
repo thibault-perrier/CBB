@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -107,7 +108,6 @@ public class S_StreetFightManager : MonoBehaviour
     private S_FrameManager _enemyFrame;
 
     private float _startFieldOfView;
-    private bool _streetFightEnd = false;
     private bool _timerUpdate = false;
 
     private float _minutesTimer = 3f;
@@ -130,19 +130,9 @@ public class S_StreetFightManager : MonoBehaviour
     }
     private void Update()
     {
-        if (_streetFightEnd)
-        {
-            if (Input.anyKeyDown)
-            {
-                EndStreetFight();
-            }
-        }
-        else
-        {
-            DetectDefeatRadius();
-            UpdateHealthBarUI();
-            UpdateTimeUI();
-        }
+        DetectDefeatRadius();
+        UpdateHealthBarUI();
+        UpdateTimeUI();
     }
     private void OnDrawGizmosSelected()
     {
@@ -157,9 +147,14 @@ public class S_StreetFightManager : MonoBehaviour
     [ContextMenu("Start fight")]
     public void StartStreetFight()
     {
+        _minutesTimer = 3f;
+        _secondsTimer = 0f;
+        _skillsController.ResetSkills();
+
         ClearDroppedWeapon();
         _timerUpdate = false;
 
+        _cameraView.ClearObjectToView();
         _cameraView.AddObjectToView(_botPlayerTransformSpawn);
         _cameraView.AddObjectToView(_botAITransformSpawn);
 
@@ -187,6 +182,17 @@ public class S_StreetFightManager : MonoBehaviour
             }));
         }));
     }
+    /// <summary>
+    /// disable all canvas and switch camera
+    /// </summary>
+    public void EndStreetFight()
+    {
+        SceneManager.LoadScene(_sceneToLoadInEndFight, LoadSceneMode.Single);
+        _cameraView.gameObject.SetActive(false);
+        _uiEndFightWinner.SetActive(false);
+        _onStreetFightEnd?.Invoke();
+    }
+
 
     /// <summary>
     /// set the enabled of controller component for player and ai
@@ -263,12 +269,12 @@ public class S_StreetFightManager : MonoBehaviour
     {
         SetEnableBots(false);
         _uiParentInFight.SetActive(false);
+        _timerUpdate = false;
 
         StartCoroutine(AnimationZoom(() =>
         {
             _uiEndFightWinner.SetActive(true);
             DisplayEndFightText();
-            _streetFightEnd = true;
         }));
     }
     /// <summary>
@@ -328,18 +334,6 @@ public class S_StreetFightManager : MonoBehaviour
             default:
                 break;
         }
-    }
-    /// <summary>
-    /// disable all canvas and switch camera
-    /// </summary>
-    private void EndStreetFight()
-    {
-        _streetFightEnd = false;
-
-        SceneManager.LoadScene(_sceneToLoadInEndFight, LoadSceneMode.Single);
-        _cameraView.gameObject.SetActive(false);
-        _uiEndFightWinner.SetActive(false);
-        _onStreetFightEnd?.Invoke();
     }
     /// <summary>
     /// look the distance and if one is not in the radius he lose
