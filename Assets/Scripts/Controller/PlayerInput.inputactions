@@ -506,6 +506,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "RemoveWeaponEditor",
+                    "type": "Button",
+                    "id": "a6fa9cd1-c046-4184-a46f-986bf215a130",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -780,6 +789,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
+                    "action": "Buy",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7f570745-5a9f-4260-816a-d224143e0d82",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
                     "action": "Buy",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1157,6 +1177,39 @@
                     "action": "NavigateEditor",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "5d072a95-fd1a-4375-9c7b-1e0dc6a1f0d2",
+                    "path": "<Keyboard>/delete",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "RemoveWeaponEditor",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "433b3c64-58ad-42fb-aeb7-635f88a4eba4",
+                    "path": "<Keyboard>/backspace",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "RemoveWeaponEditor",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c547b90b-90a4-4a8f-a92b-8075446a5f66",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "RemoveWeaponEditor",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

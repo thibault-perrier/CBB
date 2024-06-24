@@ -10,13 +10,20 @@ public class S_CustomName : MonoBehaviour
     private List<string> _prefixes = new List<string>();
     private List<string> _suffixes = new List<string>();
 
-    private void Start()
+    private void Awake()
     {
         InitializeNameLists();
-        InitializeDropDown(_prefixDropDown, _prefixes);
-        InitializeDropDown(_suffixDropDown, _suffixes);
+    }
 
-        LoadName();
+    private void Start()
+    {
+        if (_prefixDropDown != null && _suffixDropDown != null)
+        {
+            InitializeDropDown(_prefixDropDown, _prefixes);
+            InitializeDropDown(_suffixDropDown, _suffixes);
+
+            LoadName();
+        }
     }
 
     /// <summary>
@@ -50,8 +57,8 @@ public class S_CustomName : MonoBehaviour
     /// </summary>
     public string GetRandomName()
     {
-        string prefix = _prefixes[Random.Range(0, _prefixes.Count + 1)].ToUpper();
-        string suffix = _prefixes[Random.Range(0, _prefixes.Count + 1)].ToUpper();
+        string prefix = _prefixes[Random.Range(0, _prefixes.Count)].Trim();
+        string suffix = _suffixes[Random.Range(0, _prefixes.Count)].Trim();
 
         Debug.Log("You name is : " + prefix + " " + suffix);
 
@@ -81,20 +88,15 @@ public class S_CustomName : MonoBehaviour
     {
         S_DataGame.Instance.inventory.SavePrefixName(_prefixDropDown.value);
         S_DataGame.Instance.inventory.SaveSuffixname(_suffixDropDown.value);
+        S_DataGame.Instance.inventory.SavePrefixString(_prefixDropDown.options[_prefixDropDown.value].text);
+        S_DataGame.Instance.inventory.SaveSuffixString(_suffixDropDown.options[_suffixDropDown.value].text);
     }
 
     public void LoadName()
     {
-        if (s_datagame.instance.inventory.loadsuffixname() && s_datagame.instance.inventory.loadsuffixname())
-        {
-            if (s_datagame.instance.inventory.loadprefixname())
-                _prefixdropdown.value = s_datagame.instance.inventory.prefixindex;
-            if (s_datagame.instance.inventory.loadsuffixname())
-                _suffixdropdown.value = s_datagame.instance.inventory.suffixindex;
-        }
-        if (s_datagame.instance.inventory.loadprefixname())
-            _prefixdropdown.value = s_datagame.instance.inventory.prefixindex;
-        if (s_datagame.instance.inventory.loadsuffixname())
-            _suffixdropdown.value = S_DataGame.Instance.inventory.suffixIndex;
+        if (S_DataGame.Instance.inventory.LoadPrefixName())
+            _prefixDropDown.value = S_DataGame.Instance.inventory.prefixIndex;
+        if (S_DataGame.Instance.inventory.LoadSuffixName())
+            _suffixDropDown.value = S_DataGame.Instance.inventory.suffixIndex;
     }
 }

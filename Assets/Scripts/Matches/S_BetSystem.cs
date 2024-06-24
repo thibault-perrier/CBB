@@ -11,7 +11,7 @@ public class S_BetSystem : MonoBehaviour
 
     [SerializeField] private Button[] _betScreenButtons;
     [SerializeField] private TextMeshProUGUI _currentBetTxt;
-    [SerializeField] private TextMeshProUGUI _playerMoney;
+    [SerializeField] private TextMeshProUGUI _playerMoneyTMP;
 
     [SerializeField] private GameObject _launchMatch;
     [SerializeField] private GameObject _betWinDisplay;
@@ -30,7 +30,7 @@ public class S_BetSystem : MonoBehaviour
 
     public InputActionReference Confirm;
 
-    public int _testMoney = 1000; //TODO : get the player's money in the inventory instead
+    private int _playerMoney;
     private int _maxMoney = 999999999;
 
     private bool _hasBet = false;
@@ -64,12 +64,16 @@ public class S_BetSystem : MonoBehaviour
         gameObject.SetActive(false);
         _betWinDisplay.SetActive(false);
         _currentBetTxt.transform.parent.gameObject.SetActive(false);
+
+        _playerMoney = S_DataGame.Instance.inventory.CurrentMoney;
+        S_DataGame.Instance.SaveInventory();
+
+        _playerMoneyTMP.text = "$ " + _playerMoney;
     }
 
     private void OnEnable()
     {
         _betInputTxt.text = "";
-        _playerMoney.text = "$ " + _testMoney;
 
         _eventSystem.SetSelectedGameObject(null);
         _eventSystem.SetSelectedGameObject(_betInputTxt.gameObject);
@@ -150,9 +154,9 @@ public class S_BetSystem : MonoBehaviour
         int betInput;
         int.TryParse(_betInputTxt.text, out betInput);
 
-        if (betInput > _testMoney)
+        if (betInput > _playerMoney)
         {
-            _betInputTxt.text = _testMoney.ToString();
+            _betInputTxt.text = _playerMoney.ToString();
         }
     }
 
@@ -187,11 +191,14 @@ public class S_BetSystem : MonoBehaviour
                 _currentBetTxt.transform.parent.gameObject.SetActive(true);
                 _currentBetTxt.text = "$ " + _betAmount;
 
-                int newMoney = _testMoney - _betAmount;
+                int newMoney = _playerMoney - _betAmount;
 
-                _testMoney = newMoney < 0 ? 0 : newMoney;
+                _playerMoney = newMoney < 0 ? 0 : newMoney;
 
-                _playerMoney.text = "$ " + _testMoney;
+                S_DataGame.Instance.inventory.CurrentMoney = _playerMoney;
+                S_DataGame.Instance.SaveInventory();
+
+                _playerMoneyTMP.text = "$ " + _playerMoney;
                 _eventSystem.SetSelectedGameObject(null);
                 _eventSystem.SetSelectedGameObject(_launchMatch);
 
@@ -249,10 +256,13 @@ public class S_BetSystem : MonoBehaviour
             {
                 Debug.Log("YOU WON THE BET !");
                 int amountWon = _betAmount * 2; //Change this when we have the definitive calcul of the rating
-                int newMoney = _testMoney + amountWon;
+                int newMoney = _playerMoney + amountWon;
 
-                _testMoney = newMoney > _maxMoney ? _maxMoney : newMoney; //Mathf.RoundToInt(_currentBetRating)
-                _playerMoney.text = "$ " + _testMoney;
+                _playerMoney = newMoney > _maxMoney ? _maxMoney : newMoney; //Mathf.RoundToInt(_currentBetRating)
+                S_DataGame.Instance.inventory.CurrentMoney = _playerMoney;
+                S_DataGame.Instance.SaveInventory();
+
+                _playerMoneyTMP.text = "$ " + _playerMoney;
                 _betWinDisplay.SetActive(true);
                 _betWinDisplay.GetComponentInChildren<TextMeshProUGUI>().text = "BET : YOU WON $ " + amountWon + " !";
 
@@ -276,7 +286,7 @@ public class S_BetSystem : MonoBehaviour
     /// </summary>
     public void DeactivateButtons()
     {
-        foreach(Button button in _betScreenButtons)
+        foreach (Button button in _betScreenButtons)
         {
             button.interactable = false;
         }

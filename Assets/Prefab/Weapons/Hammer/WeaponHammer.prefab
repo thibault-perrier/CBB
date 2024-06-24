@@ -86,8 +86,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.14, y: 0.3, z: 0.9219121}
-  m_Center: {x: 0, y: 0, z: -0.22095603}
+  m_Size: {x: 0.14, y: 0.3, z: 0.43908286}
+  m_Center: {x: 0, y: 0, z: 0.020458579}
 --- !u!1 &8231846445364934375
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,8 +243,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc95e2d9efd334e488108293239285b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _secondSFXSource: {fileID: 0}
+  _SFXType: 0
   _SFXList:
   - {fileID: 8300000, guid: 7b6f39488b0fe9d45b268743fa58ef8a, type: 3}
+  _scaleSfxVolume: 1
+  _isLooping: 0
 --- !u!1 &8252973391757151232
 GameObject:
   m_ObjectHideFlags: 0
@@ -400,6 +404,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc95e2d9efd334e488108293239285b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _secondSFXSource: {fileID: 0}
+  _SFXType: 0
   _SFXList:
   - {fileID: 8300000, guid: 73d6f7310435ad04a90ff994694e342f, type: 3}
   - {fileID: 8300000, guid: 9fd1c62ac44df9f4f8b306687b98a15d, type: 3}
@@ -408,6 +414,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: fcb63dd6d74658b49ade8505d5b4e7d0, type: 3}
   - {fileID: 8300000, guid: fd4242b8169294e4791c0829f064d281, type: 3}
   - {fileID: 8300000, guid: 65d74a0f9463aa9499c5096c7adb2a43, type: 3}
+  _scaleSfxVolume: 1
+  _isLooping: 0
 --- !u!1 &8413263619878395255
 GameObject:
   m_ObjectHideFlags: 0
@@ -462,6 +470,7 @@ MonoBehaviour:
   _canAttack: 1
   _alwayActive: 0
   _attacking: 0
+  _isTrap: 0
   _data: {fileID: 11400000, guid: aa13275c9c430b34e8df066935ac7276, type: 2}
   _state: 0
   _lifeBrakePoint: 15
@@ -505,10 +514,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _onBeginTuchTarget:
+  _onBeginTouchTarget:
     m_PersistentCalls:
       m_Calls: []
-  _onEndTuchTarget:
+  _onEndTouchTarget:
     m_PersistentCalls:
       m_Calls: []
 --- !u!95 &9078970882318680198

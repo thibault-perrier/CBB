@@ -324,7 +324,6 @@ public class S_CameraView : MonoBehaviour
     /// <summary>
     /// Animate a fade in, put the camera at the arena and show the participants informations
     /// </summary>
-    /// <returns></returns>
     public IEnumerator ZoomFadeIn()
     {
         _animator = _currentCam.GetComponent<Animator>();
@@ -354,7 +353,6 @@ public class S_CameraView : MonoBehaviour
     /// <summary>
     /// Make the screen go black with a fade and get back to the main menu.
     /// </summary>
-    /// <returns></returns>
     public IEnumerator FadeIn()
     {
         _animator = _currentCam.GetComponent<Animator>();
@@ -368,10 +366,10 @@ public class S_CameraView : MonoBehaviour
 
         yield return new WaitForSeconds(_animator.GetCurrentAnimatorClipInfo(0).Length);
 
-        //SceneManager.LoadScene("MainMenu");
+        Debug.Log("Tttagrossemerelapute");
+        SceneManager.LoadScene("BuildMainMenu");
 
         _showMovement = null;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     /// <summary>

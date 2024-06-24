@@ -7,6 +7,7 @@ using static S_TournamentManager;
 public class S_TournamentManager : MonoBehaviour
 {
     [SerializeField] S_TournamentBracket _tournamentBracket;
+    [SerializeField] List<Sprite> _participantsLogos;
 
     [Serializable]
     public struct Participant
@@ -14,7 +15,7 @@ public class S_TournamentManager : MonoBehaviour
         public bool isPlayer;
         public int id;
         public string name;
-        //public Sprite logo;
+        public Sprite logoSprite;
         public Color logo;
         public float rating;
         public bool hasLost;
@@ -69,7 +70,7 @@ public class S_TournamentManager : MonoBehaviour
         public int maxMatchNb;
     }
 
-    [SerializeField] private List<Participant> _participants;
+    private List<Participant> _participants = new List<Participant>();
     private List<Participant> _roundWinners;
     private List<Participant> _roundLosers = new List<Participant>();
 
@@ -87,91 +88,81 @@ public class S_TournamentManager : MonoBehaviour
     private bool _isRunning = false;
     public bool IsRunning { get { return _isRunning; } set { _isRunning = value; } }
     public S_TournamentBracket Bracket { get => _tournamentBracket; }
-
-    //TEST PARTICIPANTS
-    private Participant _participant1; //lets pretend this is the player for testing
-    private Participant _participant2;
-    private Participant _participant3;
-    private Participant _participant4;
-    private Participant _participant5;
-    private Participant _participant6;
-    private Participant _participant7;
-    private Participant _participant8;
-    private Participant _participant9;
-    private Participant _participant10;
-    private Participant _participant11;
-    private Participant _participant12;
-    private Participant _participant13;
-    private Participant _participant14;
-    private Participant _participant15;
-    private Participant _participant16;
+    private S_CustomName _customName;
 
     private void Awake()
     {
+        _customName = GetComponent<S_CustomName>();
         _roundWinners = new List<Participant>();
 
-        //InitializeParticipationData();
-
-        _participant1.isPlayer = true;
-
-        _participant1.name = "PARTICIPANT NB 0";
-        _participant2.name = "PARTICIPANT NB 1";
-        _participant3.name = "PARTICIPANT NB 2";
-        _participant4.name = "PARTICIPANT NB 3";
-        _participant5.name = "PARTICIPANT NB 4";
-        _participant6.name = "PARTICIPANT NB 5";
-        _participant7.name = "PARTICIPANT NB 6";
-        _participant8.name = "PARTICIPANT NB 7";
-        _participant9.name = "PARTICIPANT NB 8";
-        _participant10.name = "PARTICIPANT NB 9";
-        _participant11.name = "PARTICIPANT NB 10";
-        _participant12.name = "PARTICIPANT NB 11";
-        _participant13.name = "PARTICIPANT NB 12";
-        _participant14.name = "PARTICIPANT NB 13";
-        _participant15.name = "PARTICIPANT NB 14";
-        _participant16.name = "PARTICIPANT NB 15";
-
-        _participant1.logo = Color.blue;
-        _participant2.logo = Color.red;
-        _participant3.logo = Color.yellow;
-        _participant4.logo = Color.green;
-        _participant5.logo = Color.white;
-        _participant6.logo = Color.cyan;
-        _participant7.logo = Color.black;
-        _participant8.logo = Color.magenta;
-        _participant9.logo = Color.blue;
-        _participant10.logo = Color.red;
-        _participant11.logo = Color.yellow;
-        _participant12.logo = Color.green;
-        _participant13.logo = Color.white;
-        _participant14.logo = Color.cyan;
-        _participant15.logo = Color.black;
-        _participant16.logo = Color.magenta;
-
-        _participant1.rank = _currentTournament.rank;
-        _participant2.rank = _currentTournament.rank;
-        _participant3.rank = _currentTournament.rank;
-        _participant4.rank = _currentTournament.rank;
-        _participant5.rank = _currentTournament.rank;
-        _participant6.rank = _currentTournament.rank;
-        _participant7.rank = _currentTournament.rank;
-        _participant8.rank = _currentTournament.rank;
-        _participant9.rank = _currentTournament.rank;
-        _participant10.rank = _currentTournament.rank;
-        _participant11.rank = _currentTournament.rank;
-        _participant12.rank = _currentTournament.rank;
-        _participant13.rank = _currentTournament.rank;
-        _participant14.rank = _currentTournament.rank;
-        _participant15.rank = _currentTournament.rank;
-        _participant16.rank = _currentTournament.rank;
-
         InitializeCurrentTournament(_currentTournament);
-        Debug.Log("Initialazing a " + _currentTournament.rank.ToString() + " tournament");
+
+        Debug.Log("maxMatch" + _currentTournament.maxMatchNb);
 
         _tournamentBracket.SetBracket(_currentTournament.maxMatchNb * 2);
 
         _currentTournament.maxMatchNb -= 1; //It's so we can use this as an index for arrays and lists
+    }
 
+    /// <summary>
+    /// Initialize participants for the upcoming tournament
+    /// </summary>
+    /// <param name="tournament"></param>
+    private void InitializeParticipants(Tournament tournament)
+    {
+        Participant player = new Participant();
+        player.name = S_DataGame.Instance.inventory.GetPlayerName();
+        player.logo = InitializePlayerLogo();
+        player.logoSprite = _participantsLogos[S_DataGame.Instance.inventory.overlayImageIndex];
+        player.isPlayer = true;
+        _participants.Add(player);
+
+        for (int i = 1; i < tournament.participantNb; i++)
+        {
+            Participant participant = new Participant();
+            string name = _customName.GetRandomName();
+            participant.name = name;
+            participant.logoSprite = _participantsLogos[UnityEngine.Random.Range(0, _participantsLogos.Count)];
+            participant.logo = ChooseRandomColor();
+            participant.rank = tournament.rank;
+            participant.isPlayer = false;
+
+            _participants.Add(participant);
+        }
+    }
+
+    /// <summary>
+    /// Load the player's logo from the save Data and give it to the player participant variable
+    /// </summary>
+    /// <returns></returns>
+    private Color InitializePlayerLogo()
+    {
+        if (S_DataGame.Instance != null)
+        {
+            S_DataGame.Instance.inventory.LoadOverlayColor();
+            string overlayColorHex = S_DataGame.Instance.inventory.overlayColorHex;
+            Color overlayColor;
+
+            if (ColorUtility.TryParseHtmlString("#" + overlayColorHex, out overlayColor))
+            {
+                return overlayColor;
+            }
+        }
+
+        return Color.white; //failed to load color
+    }
+
+    /// <summary>
+    /// Return a random color, but not too saturated or dark
+    /// </summary>
+    /// <returns></returns>
+    private Color ChooseRandomColor()
+    {
+        Color.RGBToHSV(UnityEngine.Random.ColorHSV(), out float hue, out float saturation, out float value);
+        saturation = Mathf.Clamp(saturation, 0.4f, 0.8f);
+        value = Mathf.Clamp(value, 0.8f, 0.9f);
+
+        return Color.HSVToRGB(hue, saturation, value);
     }
 
     public void AddParticipant(Participant participant)
@@ -190,40 +181,6 @@ public class S_TournamentManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Initialize the data for each rank
-    /// </summary>
-    private void InitializeParticipationData()
-    {
-        _bronze = SetRankData(_bronze, Rank.Bronze, 25, 16, 400, 8 - 1);
-        _silver = SetRankData(_silver, Rank.Silver, 50, 16, 800, 8 - 1);
-        _gold = SetRankData(_gold, Rank.Gold, 150, 8, 1200, 4 - 1);
-        _diamond = SetRankData(_diamond, Rank.Diamond, 250, 8, 2000, 4 - 1);
-
-        _plastic = SetRankData(_plastic, Rank.Plastic, 0, 4, 1, 2 - 1); //FOR TESTING PURPOSE ONLY
-    }
-
-    /// <summary>
-    /// Set the data for a rank, wich rank, cost, the number of participant, the prize at the end, the number of match there will be
-    /// </summary>
-    /// <param name="tournament"></param>
-    /// <param name="rank"></param>
-    /// <param name="cost"></param>
-    /// <param name="participantNb"></param>
-    /// <param name="prize"></param>
-    /// <param name="matchNb"></param>
-    /// <returns></returns>
-    private Tournament SetRankData(Tournament tournament, Rank rank, int cost, int participantNb, int prize, int matchNb)
-    {
-        tournament.rank = rank;
-        tournament.cost = cost;
-        tournament.participantNb = participantNb;
-        tournament.prize = prize;
-        tournament.maxMatchNb = matchNb;
-
-        return tournament;
-    }
-
-    /// <summary>
     /// Initialize the number of participant and the rank of the tournament
     /// and make the player pay
     /// </summary>
@@ -232,18 +189,7 @@ public class S_TournamentManager : MonoBehaviour
     public int InitializeCurrentTournament(Tournament tournament)
     {
 
-        S_CustomName customName = new S_CustomName();
-        _participants = new List<Participant>();
-
-        _participants.Add( new Participant(true, customName.GetRandomName(), Color.red, S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot], tournament.rank));
-
-        for (int i = 0; i < tournament.participantNb - 2; i++)
-        {
-            _participants.Add(new Participant(tournament.rank));
-        }
-
-
-        //Add random participants in the list with random robots, their strength depend of the difficulty
+        InitializeParticipants(tournament);
 
         if (_participants.Count > 0)
         {

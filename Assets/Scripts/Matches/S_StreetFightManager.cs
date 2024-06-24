@@ -1,5 +1,5 @@
 using System.Collections;
-using Systems;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -51,8 +51,24 @@ public class S_StreetFightManager : MonoBehaviour
     private Sprite[] _numberForTimer;
 
     [Space(10)]
-    [SerializeField, Tooltip("for display the winner of the fight")]
-    private TextMeshProUGUI _endFightText;
+    [SerializeField, Tooltip("the parent of display the winner of the fight")]
+    private GameObject _endFightTextDefeat;
+    [SerializeField, Tooltip("the parent of display the loser of the fight")]
+    private GameObject _endFightTextVictory;
+
+    [Space(10)]
+    [SerializeField, Tooltip("the parent of the ui when we fight")]
+    private GameObject _uiParentInFight;
+    [SerializeField, Tooltip("the skill controller for bind the flower")]
+    private S_SkillsController _skillsController;
+    [SerializeField, Tooltip("Helth bar of the player")]
+    private Image _healthBarPlayer;
+    [SerializeField, Tooltip("Helth bar of the enemy")]
+    private Image _healthBarEnemy;
+
+    [Space(10)]
+    [SerializeField, Tooltip("text mesh used for display the timer")]
+    private TMP_Text _timerStreetFight;
 
     [Header("Camera")]
     [SerializeField, Tooltip("camera for focus the view on two bots")]
@@ -68,6 +84,17 @@ public class S_StreetFightManager : MonoBehaviour
     [SerializeField, Tooltip("invoke when charcater or AI die and when the player press any key")]
     private UnityEvent _onStreetFightEnd;
 
+    public bool InFight
+    {
+        get
+        {
+            if (!_playerFrame || !_enemyFrame)
+                return false;
+
+            return true;
+        }
+    }
+
     private S_AIController _AIController;
     private PlayerInput _playerInput;
     private S_ImmobileDefeat _immobilePlayer, _immobileAI;
@@ -75,8 +102,15 @@ public class S_StreetFightManager : MonoBehaviour
     private GameObject _playerBot;
     private GameObject _AIBot;
 
+    private S_FrameManager _playerFrame;
+    private S_FrameManager _enemyFrame;
+
     private float _startFieldOfView;
     private bool _streetFightEnd = false;
+    private bool _timerUpdate = false;
+
+    private float _minutesTimer = 3f;
+    private float _secondsTimer;
 
     private FightState _fightState;
 
@@ -85,6 +119,7 @@ public class S_StreetFightManager : MonoBehaviour
         _cameraView.gameObject.SetActive(false);
         _uiTimerBeforeFight.SetActive(false);
         _uiEndFightWinner.SetActive(false);
+        _uiParentInFight.SetActive(false);
 
         var camera = _cameraView.gameObject.GetComponentInChildren<Camera>();
         _startFieldOfView = camera.fieldOfView;
@@ -104,6 +139,8 @@ public class S_StreetFightManager : MonoBehaviour
         else
         {
             DetectDefeatRadius();
+            UpdateHealthBarUI();
+            UpdateTimeUI();
         }
     }
     private void OnDrawGizmosSelected()
@@ -120,6 +157,11 @@ public class S_StreetFightManager : MonoBehaviour
     public void StartStreetFight()
     {
         ClearDroppedWeapon();
+        _timerUpdate = false;
+
+        _cameraView.AddObjectToView(_botPlayerTransformSpawn);
+        _cameraView.AddObjectToView(_botAITransformSpawn);
+
         StartCoroutine(CreateStreetFightBot(() =>
         {
             _cameraView.ClearObjectToView();
@@ -137,6 +179,9 @@ public class S_StreetFightManager : MonoBehaviour
             StartCoroutine(TimerBeforeStart(() =>
             {
                 _uiTimerBeforeFight.SetActive(false);
+                _uiParentInFight.SetActive(true);
+                _timerUpdate = true;
+
                 SetEnableBots(true);
             }));
         }));
@@ -148,7 +193,7 @@ public class S_StreetFightManager : MonoBehaviour
     /// <param name="enabled">enabled value</param>
     private void SetEnableBots(bool enabled)
     {
-        _AIController.enabled = enabled;
+        _AIController.State = enabled ? S_AIController.AIState.Enable : S_AIController.AIState.Disable;
         _playerInput.enabled = enabled;
 
         _immobileAI.enabled = enabled;
@@ -159,17 +204,18 @@ public class S_StreetFightManager : MonoBehaviour
     /// </summary>
     private void BindDeadEventForBots()
     {
-        var frameAI     = _AIBot.GetComponent<S_FrameManager>();
-        var framePlayer = _playerBot.GetComponent<S_FrameManager>();
+        _enemyFrame  = _AIBot.GetComponent<S_FrameManager>();
+        _playerFrame = _playerBot.GetComponent<S_FrameManager>();
+        _playerFrame.SelectWeapons();
 
-        frameAI.OnDie       += (_) => BotPlayerVictorie();
-        framePlayer.OnDie   += (_) => BotAiVictorie();
+        _enemyFrame.OnDie  += (_) => BotPlayerVictorie();
+        _playerFrame.OnDie += (_) => BotAiVictorie();
 
         _immobileAI     = _AIBot.GetComponent<S_ImmobileDefeat>();
         _immobilePlayer = _playerBot.GetComponent<S_ImmobileDefeat>();
 
-        _immobileAI.IsImmobile       += () => BotPlayerVictorie();
-        _immobilePlayer.IsImmobile   += () => BotAiVictorie();
+        _immobileAI.IsImmobile     += () => BotPlayerVictorie();
+        _immobilePlayer.IsImmobile += () => BotAiVictorie();
     }
     /// <summary>
     /// make a victory for AI
@@ -187,6 +233,10 @@ public class S_StreetFightManager : MonoBehaviour
     {
         _fightState = FightState.BotPlayerVictory;
         _cameraView.RemoveObjectToView(_AIBot.transform);
+
+        if (S_DataGame.Instance)
+            S_DataGame.Instance.inventory.CurrentMoney += 70;
+
         EndCurrentFight();
     }
     /// <summary>
@@ -195,6 +245,8 @@ public class S_StreetFightManager : MonoBehaviour
     private void EndCurrentFight()
     {
         SetEnableBots(false);
+        _uiParentInFight.SetActive(false);
+
         StartCoroutine(AnimationZoom(() =>
         {
             _uiEndFightWinner.SetActive(true);
@@ -242,6 +294,8 @@ public class S_StreetFightManager : MonoBehaviour
         BindDeadEventForBots();
         SetEnableBots(false);
 
+        _skillsController.InitializeSkills(_playerFrame);
+
         endCreationOfBots?.Invoke();
     }
     /// <summary>
@@ -249,13 +303,16 @@ public class S_StreetFightManager : MonoBehaviour
     /// </summary>
     private void DisplayEndFightText()
     {
+        _endFightTextDefeat.SetActive(false);
+        _endFightTextVictory.SetActive(false);
+
         switch (_fightState)
         {
             case FightState.BotAIVictory:
-                _endFightText.text = "YOU LOSE";
+                _endFightTextDefeat.SetActive(true);
                 break;
             case FightState.BotPlayerVictory:
-                _endFightText.text = "VICTORY";
+                _endFightTextVictory.SetActive(true);
                 break;
             default:
                 break;
@@ -288,6 +345,61 @@ public class S_StreetFightManager : MonoBehaviour
             BotPlayerVictorie();
 
         if (distanceDefeatPlayer > _radiusDefeat)
+            BotAiVictorie();
+    }
+    /// <summary>
+    /// update the health bar of bots
+    /// </summary>
+    private void UpdateHealthBarUI()
+    {
+        if (!InFight)
+            return;
+
+        List<(Image, S_FrameManager)> healthBarTuple = new()
+        {
+            (_healthBarEnemy, _enemyFrame),
+            (_healthBarPlayer, _playerFrame)
+        };
+
+        foreach (var hp in healthBarTuple)
+        {
+            Image healthBar = hp.Item1;
+            S_FrameManager frame = hp.Item2;
+
+            healthBar.fillAmount = frame.PercentLife;
+        }
+    }
+    /// <summary>
+    /// update the timer ui
+    /// </summary>
+    private void UpdateTimeUI()
+    {
+        if (!_timerUpdate)
+            return;
+
+        _secondsTimer -= Time.deltaTime;
+        if (_secondsTimer <= 0f)
+        {
+            _minutesTimer--;
+            _secondsTimer += 59f;
+
+            if (_minutesTimer < 0f)
+                TimerEnd();
+        }
+
+        _timerStreetFight.text = _minutesTimer.ToString("00") + " : " + _secondsTimer.ToString("00");
+    }
+    /// <summary>
+    /// lauch whne the minutes is lower or equal at 0
+    /// </summary>
+    private void TimerEnd()
+    {
+        float percentLifePlayer = _playerFrame.PercentLife;
+        float percentLifeEnemy = _enemyFrame.PercentLife;
+
+        if (percentLifePlayer > percentLifeEnemy)
+            BotPlayerVictorie();
+        else
             BotAiVictorie();
     }
 

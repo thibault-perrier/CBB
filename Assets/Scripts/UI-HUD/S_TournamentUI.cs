@@ -95,8 +95,8 @@ public class S_TournamentBracket : MonoBehaviour
     /// </summary>
     private void OnShowOffComplete()
     {
-        _movingLogoCoroutine = StartCoroutine(MoveTowardNewRound(_currentUsedBracket.transform, 
-            _logos[_currentMatch].gameObject, 
+        _movingLogoCoroutine = StartCoroutine(MoveTowardNewRound(_currentUsedBracket.transform,
+            _logos[_currentMatch].gameObject,
             _logos[_currentMatch + 1].gameObject, _currentLevel, _currentMatch));
     }
 
@@ -159,6 +159,7 @@ public class S_TournamentBracket : MonoBehaviour
 
                     logo.position = point.position;
                     logo.GetComponent<Image>().color = participants[i].logo;
+                    logo.GetComponent<Image>().sprite = participants[i].logoSprite;
 
                     if (_cameraView != null)
                     {
@@ -364,8 +365,8 @@ public class S_TournamentBracket : MonoBehaviour
 
         while (Vector3.SqrMagnitude(p1.transform.position - waypoints.GetChild(0).position) > 0.1f)
         {
-             p1.transform.position = Vector3.MoveTowards(p1.transform.position, waypoints.GetChild(0).position, Time.deltaTime * _logoSpeed);
-             p2.transform.position = Vector3.MoveTowards(p2.transform.position, waypoints.GetChild(1).position, Time.deltaTime * _logoSpeed);
+            p1.transform.position = Vector3.MoveTowards(p1.transform.position, waypoints.GetChild(0).position, Time.deltaTime * _logoSpeed);
+            p2.transform.position = Vector3.MoveTowards(p2.transform.position, waypoints.GetChild(1).position, Time.deltaTime * _logoSpeed);
 
             yield return null;
         }
@@ -524,7 +525,8 @@ public class S_TournamentBracket : MonoBehaviour
         _tournamentPrizeDisplay.GetComponentInChildren<TextMeshProUGUI>().text = "TOURNAMENT : YOU WON $ " + _tournamentManager.GetTournamentPrize() + " !";
         _sparksEffect.SetActive(true);
 
-        //THE MONEY += THE PRIZE
+        S_DataGame.Instance.inventory.CurrentMoney += _tournamentManager.GetTournamentPrize();
+        S_DataGame.Instance.SaveInventory();
     }
 
     /// <summary>
@@ -537,13 +539,18 @@ public class S_TournamentBracket : MonoBehaviour
         _sixteenParticipantsBracket.SetActive(false);
         switch (bracketNb)
         {
-            case 8: _currentUsedBracket = _eightParticipantsBracket;
+            case 8:
+                _currentUsedBracket = _eightParticipantsBracket;
                 _eightParticipantsBracket.SetActive(true);
+                Debug.Log("SUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUii8");
                 break;
-            case 16: _currentUsedBracket = _sixteenParticipantsBracket;
+            case 16:
+                _currentUsedBracket = _sixteenParticipantsBracket;
                 _sixteenParticipantsBracket.SetActive(true);
+                Debug.Log("SUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUii16");
                 break;
-            default: Debug.LogError("Please write '8' or '16' to use valid brackets !");
+            default:
+                Debug.LogError("Please write '8' or '16' to use valid brackets !");
                 break;
         }
     }
