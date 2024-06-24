@@ -108,7 +108,8 @@ public class S_AIController : MonoBehaviour
     private Vector3 _fleeDestination;
     private WaitForSeconds _attackFailedCoroutine = new(1f);
     private WaitForSeconds _fleeFailureCooldownCoroutine = new(.5f);
-    [SerializeField] private float _scaleMovement;
+    private float _scaleMovement;
+    private float _startMassRigidbody;
 
     #region Property
     /// <summary>
@@ -327,6 +328,7 @@ public class S_AIController : MonoBehaviour
         _wheelsController = GetComponent<S_WheelsController>();
         _frameManager = GetComponent<S_FrameManager>();
         _frameManager.SelectWeapons();
+        _startMassRigidbody = _wheelsController.RigidBody.mass;
 
         _fleeFailureCooldownCoroutine = new(_fleeCooldown);
 
@@ -710,6 +712,17 @@ public class S_AIController : MonoBehaviour
                 // turn left
                 turnAmount = dotWeaponBody > 0f ? CalCulDirection(angleToDir, -1f) : CalCulDirection(angleToDir, 1f);
             }
+        }
+
+        if (Mathf.Abs(turnAmount) > .5f)
+        {
+            Rigidbody rb = _wheelsController.RigidBody;
+            rb.mass = _startMassRigidbody * 2.5f;
+        }
+        else
+        {
+            Rigidbody rb = _wheelsController.RigidBody;
+            rb.mass = _startMassRigidbody;
         }
 
         // set controller direction and movement
@@ -1118,7 +1131,7 @@ public class S_AIController : MonoBehaviour
             GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
     }
     /// <summary>
-    /// if the target is closed the current weapon
+    /// detect if he can make an attack with the current weapon
     /// </summary>
     /// <returns>return if he attack with current we hit something</returns>
     private bool CurrentWeaponCanAttack()
@@ -1145,6 +1158,34 @@ public class S_AIController : MonoBehaviour
         return _currentWeapon.CanTakeAnyDamage;
     }
     /// <summary>
+    /// if he can attack with the weapon
+    /// </summary>
+    /// <param name="weapon">the weapon to detect</param>
+    /// <returns>return True if he can take any damage on a target</returns>
+    private bool WeaponCanAttack(S_WeaponManager weapon)
+    {
+        if (!weapon)
+            return false;
+
+        // if he is attacking and he cant take any damage with current weapon
+        if (weapon.Attacking && !weapon.CanTakeAnyDamage)
+            return false;
+
+        if (!weapon.CanRecieveDamage())
+            return false;
+
+        // if he is attacking
+        if (weapon.Attacking)
+            return true;
+
+        // if he can attack and he has not target
+        if (!weapon.CanAttack || !_target)
+            return false;
+
+        // return True if if can make any damage with current weapon
+        return weapon.CanTakeAnyDamage;
+    }
+    /// <summary>
     /// try to attack with any weapon when it in movement
     /// </summary>
     private void TryToAttackWithAnyWeapon()
@@ -1159,8 +1200,11 @@ public class S_AIController : MonoBehaviour
                 if (attackRnd > _attackSuccesProbability)
                     return;
 
-                _currentWeapon = weapon;
-                AttackWithCurrrentWeapon();
+                if (WeaponCanAttack(weapon))
+                {
+                    _currentWeapon = weapon;
+                    AttackWithCurrrentWeapon();
+                }
             }
         }
     }
