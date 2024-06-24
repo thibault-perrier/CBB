@@ -383,8 +383,7 @@ public class S_CameraView : MonoBehaviour
 
         yield return new WaitForSeconds(_animator.GetCurrentAnimatorClipInfo(0).Length);
 
-        Debug.Log("Tttagrossemerelapute");
-        SceneManager.LoadScene("BuildMainMenu");
+        SceneManager.LoadScene(0);
 
         _showMovement = null;
     }

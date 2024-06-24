@@ -1,4 +1,3 @@
-using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -547,7 +546,7 @@ public class S_ClickablesManager : MonoBehaviour
 
     public void LoadStreetFight()
     {
-        SceneManager.LoadScene(6);
+        SceneManager.LoadScene(5);
     }
 
 }
