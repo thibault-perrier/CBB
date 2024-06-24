@@ -189,7 +189,6 @@ public class S_StreetFightManager : MonoBehaviour
         SceneManager.LoadScene(_sceneToLoadInEndFight, LoadSceneMode.Single);
         _cameraView.gameObject.SetActive(false);
         _uiEndFightWinner.SetActive(false);
-        _onStreetFightEnd?.Invoke();
     }
 
 
@@ -273,6 +272,7 @@ public class S_StreetFightManager : MonoBehaviour
         StartCoroutine(AnimationZoom(() =>
         {
             _uiEndFightWinner.SetActive(true);
+            _onStreetFightEnd?.Invoke();
             DisplayEndFightText();
         }));
     }
@@ -377,6 +377,7 @@ public class S_StreetFightManager : MonoBehaviour
             S_FrameManager frame = hp.Item2;
 
             healthBar.fillAmount = frame.PercentLife;
+            healthBar.color = Color.HSVToRGB(Mathf.Lerp(0f, 120f, frame.PercentLife) / 360f, 1f, 1f);
         }
     }
     /// <summary>
