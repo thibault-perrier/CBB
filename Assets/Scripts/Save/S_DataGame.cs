@@ -8,7 +8,6 @@ using static Robot;
 public class S_DataGame : MonoBehaviour
 {
     public static S_DataGame Instance;
-    [SerializeField] public S_TournamentManager _tournamentManager;
 
     [Serializable]
     public enum Load
