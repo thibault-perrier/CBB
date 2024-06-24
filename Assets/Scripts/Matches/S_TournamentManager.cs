@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Systems;
 using UnityEngine;
-using static S_TournamentManager;
 
 public class S_TournamentManager : MonoBehaviour
 {
