@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(S_RobotSpawner))]
 public class S_ArenaManager : MonoBehaviour
 {
     [Header("Bet display")]
@@ -126,9 +128,17 @@ public class S_ArenaManager : MonoBehaviour
             _participant1Health = currentUI.transform.Find("ChallengerLeft").transform.Find("Health").transform.Find("Forward").GetComponent<Image>();
             _participant2Health = currentUI.transform.Find("ChallengerRight").transform.Find("Health").transform.Find("Forward").GetComponent<Image>();
 
-            //TODO : change color for Logo
-            currentUI.transform.Find("ChallengerLeft").transform.Find("Logo").GetComponent<Image>().color = _p1.logo;
-            currentUI.transform.Find("ChallengerRight").transform.Find("Logo").GetComponent<Image>().color = _p2.logo;
+            Image p1Logo = currentUI.transform.Find("ChallengerLeft").transform.Find("Logo").GetComponent<Image>();
+            Image p2Logo = currentUI.transform.Find("ChallengerRight").transform.Find("Logo").GetComponent<Image>();
+
+            p1Logo.color = _p1.logo;
+            p1Logo.sprite = _p1.logoSprite;
+
+            p2Logo.color = _p2.logo;
+            p2Logo.sprite = _p2.logoSprite;
+
+            currentUI.transform.Find("ChallengerLeft").Find("Name").GetComponent<TextMeshProUGUI>().text = _p1.name;
+            currentUI.transform.Find("ChallengerRight").Find("Name").GetComponent<TextMeshProUGUI>().text = _p2.name;
         }
     }
     /// <summary>
@@ -156,6 +166,7 @@ public class S_ArenaManager : MonoBehaviour
     private void CreateBot()
     {
         ResetArenaBot();
+        S_RobotSpawner robotSpawner = GetComponent<S_RobotSpawner>();
 
         // set all pair with bot and bot info
         List<(Transform, S_TournamentManager.Participant)> botPair = new(2)
@@ -171,15 +182,27 @@ public class S_ArenaManager : MonoBehaviour
             // if one participant is the player
             if (bot.Item2.isPlayer)
             {
-                newBot = Instantiate(_botPlayerPrefab, bot.Item1.position, Quaternion.Euler(bot.Item1.eulerAngles));
+                newBot = robotSpawner.GenerateRobotAt(bot.Item2.robot, bot.Item1);
                 var frame = newBot.GetComponent<S_FrameManager>();
                 frame.SelectWeapons();
+
+                var ai = newBot.GetComponent<S_AIController>();
+                ai.enabled = false;
+
+                var playerInput = newBot.GetComponent<PlayerInput>();
+                playerInput.enabled = true;
             }
             else
             {
-                newBot = Instantiate(_botEnemyPrefab, bot.Item1.position, Quaternion.Euler(bot.Item1.eulerAngles));
+                newBot = robotSpawner.GenerateRobotAt(bot.Item2.robot, bot.Item1);
+                var frame = newBot.GetComponent<S_FrameManager>();
+                frame.SelectWeapons();
                 var stats = newBot.GetComponent<S_AIStatsController>();
                 var aiController = newBot.GetComponent<S_AIController>();
+                var playerInput = newBot.GetComponent<PlayerInput>();
+                playerInput.enabled = false;
+                var ai = newBot.GetComponent<S_AIController>();
+                ai.enabled = true;
 
                 aiController.State = S_AIController.AIState.Disable;
                 stats.BotDifficulty = (S_AIStatsController.BotRank)bot.Item2.rank;
@@ -383,8 +406,8 @@ public class S_ArenaManager : MonoBehaviour
 
         _participantsStats.SetActive(true);
 
-        SetStatsOnUi(p1.rating.ToString(), p1.name, p1.logo, _p1Stats);
-        SetStatsOnUi(p2.rating.ToString(), p2.name, p2.logo, _p2Stats);
+        SetStatsOnUi(p1, _p1Stats);
+        SetStatsOnUi(p2, _p2Stats);
     }
     private void InitializeBetButtons()
     {
@@ -422,7 +445,7 @@ public class S_ArenaManager : MonoBehaviour
     /// <param name="name"></param>
     /// <param name="logo"></param>
     /// <param name="pStatGameObject"></param>
-    public void SetStatsOnUi(string rating,  string name, Color logo , GameObject pStatGameObject)
+    public void SetStatsOnUi(S_TournamentManager.Participant p, GameObject pStatGameObject)
     {
         _betSystem.ActivateButtons();
 
@@ -431,9 +454,10 @@ public class S_ArenaManager : MonoBehaviour
 
         Image logoImage = pStatGameObject.transform.GetChild(1).GetChild(0).GetComponent<Image>();
 
-        ratingTxt.text = rating;
-        nameTxt.text = name;
-        logoImage.color = logo;
+        ratingTxt.text = p.rating.ToString();
+        nameTxt.text = p.name;
+        logoImage.color = p.logo;
+        logoImage.sprite = p.logoSprite;
     }
 
     public void CloseStats()

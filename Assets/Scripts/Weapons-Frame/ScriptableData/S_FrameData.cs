@@ -6,10 +6,16 @@ using System.Collections.Generic;
 public class S_FrameData : ScriptableObject
 {
     [SerializeField] private GameObject _prefab;
+    [SerializeField] private Sprite _frameSprite;
     [SerializeField] private int _maxLife;
     [SerializeField] private int _cost;
     [SerializeField] private float _mass;
-    
+
+    public Sprite FrameSrite
+    {
+        get => _frameSprite;
+    }
+
     public GameObject Prefab
     {
         get { return _prefab; }

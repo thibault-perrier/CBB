@@ -35,7 +35,7 @@ public class S_RobotSpawner : MonoBehaviour
 
         for (int i = 0; i < hookPoits.Count(); i++)
         {
-            Weapon weapon = S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot].GetHookPointWeapon(i);
+            Weapon weapon = robot.GetHookPointWeapon(i);
             if (weapon != null)
             {
                 GameObject objWeapon = Instantiate(weapon.GetWeaponData().Prefab);
