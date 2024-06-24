@@ -917,7 +917,7 @@ public class S_AIController : MonoBehaviour
     private Vector3 GetForwardWeapon(S_WeaponManager weapon, Transform bot)
     {
         // get the dot product of the weapon and the current bot
-        Vector3 dirSelfWeapon = (GetHitZone(weapon) - bot.position).normalized;
+        Vector3 dirSelfWeapon = (GetHitZone(weapon) - weapon.transform.position).normalized;
         float dot = Vector3.Dot(bot.forward, dirSelfWeapon);
 
         return dot >= 0f ? bot.forward : -bot.forward;
@@ -1113,7 +1113,9 @@ public class S_AIController : MonoBehaviour
             return;
 
         _currentWeapon.LaunchAttack();
-        GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
+
+        if (!_currentWeapon.CanTakeAnyDamage)
+            GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
     }
     /// <summary>
     /// if the target is closed the current weapon
@@ -1157,8 +1159,8 @@ public class S_AIController : MonoBehaviour
                 if (attackRnd > _attackSuccesProbability)
                     return;
 
-                weapon.LaunchAttack();
-                GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
+                _currentWeapon = weapon;
+                AttackWithCurrrentWeapon();
             }
         }
     }
