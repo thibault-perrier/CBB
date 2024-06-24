@@ -48,6 +48,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     private GameObject _vfxSmoke;
     private bool _tuchDamageable = false;
     private bool _touchEvent = true;
+    private bool _canLaunchVfx = true;
 
     public S_WeaponData Data
     {
@@ -106,6 +107,23 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     public UnityEvent AttackingStart
     {
         get => _attackingStart;
+    }
+
+    private float CooldownVfx
+    {
+        get
+        {
+            GameObject vfx = _data.VfxHitContact;
+            if (!vfx)
+                return 0f;
+
+            ParticleSystem particule = vfx.GetComponent<ParticleSystem>();
+
+            if (!particule)
+                return 0f;
+
+            return particule.duration / 5f;
+        }
     }
 
     public enum State
@@ -197,7 +215,18 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
                 _tuchDamageable = true;
                 _touchEvent = true;
             }));
-            InstanceVFX(hitObject[0]);
+
+            if (_canLaunchVfx)
+            {
+                InstanceVFX(hitObject[0]);
+                _canLaunchVfx = false;
+
+                StartCoroutine(Delay(CooldownVfx, () =>
+                {
+                    _canLaunchVfx = true;
+                }));
+            }
+
             return;
         }
     }
