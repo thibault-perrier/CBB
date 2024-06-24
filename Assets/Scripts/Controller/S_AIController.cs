@@ -108,8 +108,7 @@ public class S_AIController : MonoBehaviour
     private Vector3 _fleeDestination;
     private WaitForSeconds _attackFailedCoroutine = new(1f);
     private WaitForSeconds _fleeFailureCooldownCoroutine = new(.5f);
-    private float _scaleMovement;
-    private float _scaleDirection;
+    [SerializeField] private float _scaleMovement;
 
     #region Property
     /// <summary>
@@ -342,9 +341,6 @@ public class S_AIController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        // reset the movement state
-        //_wheelsController.Movement = 0f;
-
         // verif if he is enable for work
         if (_aiState.Equals(AIState.Disable))
             return;
@@ -374,7 +370,6 @@ public class S_AIController : MonoBehaviour
     private void UpdateAIMovement()
     {
         TryFailedAttack();
-        TryToFindBestWeaponFromTarget(_target.transform);
         TryToAttackWithAnyWeapon();
 
         // get movement probability
@@ -609,11 +604,11 @@ public class S_AIController : MonoBehaviour
         }
 
         // get him self best weapon
-        bool succes = GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
+        //bool succes = GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
 
         // if he get any weapon move to target with your current weapon
-        if (succes)
-            MoveToPoint(_target.transform.position, _currentWeapon);
+        // if (succes)
+        MoveToPoint(_target.transform.position, _currentWeapon);
     }
     /// <summary>
     /// set wheel velocity from the target

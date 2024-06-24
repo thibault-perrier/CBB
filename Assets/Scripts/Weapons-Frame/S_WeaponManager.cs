@@ -69,6 +69,13 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
                 .Where(x => GetIDamageable(x, out _))
                 .ToArray();
 
+            if (damagable.Length > 0)
+            {
+                damagable
+                    .Where(x => CanRecieveDamage(x))
+                    .ToList();
+            }
+
             return damagable.Length > 0;
         }
     }
@@ -393,5 +400,15 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
             return false;
 
         return _state != State.destroy;
+    }
+    public bool CanRecieveDamage(GameObject hit)
+    {
+        if (!hit)
+            return false;
+
+        if (GetIDamageable(hit, out var component))
+            return component.CanRecieveDamage();
+
+        return false;
     }
 }
