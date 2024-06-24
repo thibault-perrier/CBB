@@ -48,6 +48,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     private GameObject _vfxSmoke;
     private bool _tuchDamageable = false;
     private bool _touchEvent = true;
+    private bool _canLaunchVfx = true;
 
     public S_WeaponData Data
     {
@@ -68,6 +69,13 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
                 .Select(x => x.transform.gameObject)
                 .Where(x => GetIDamageable(x, out _))
                 .ToArray();
+
+            if (damagable.Length > 0)
+            {
+                damagable
+                    .Where(x => CanRecieveDamage(x))
+                    .ToList();
+            }
 
             return damagable.Length > 0;
         }
@@ -99,6 +107,26 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     public UnityEvent AttackingStart
     {
         get => _attackingStart;
+    }
+    public UnityEvent WeaponUnuseable
+    {
+        get => _onWeaponUnuseable;
+    }
+    private float CooldownVfx
+    {
+        get
+        {
+            GameObject vfx = _data.VfxHitContact;
+            if (!vfx)
+                return 0f;
+
+            ParticleSystem particule = vfx.GetComponent<ParticleSystem>();
+
+            if (!particule)
+                return 0f;
+
+            return particule.duration / 5f;
+        }
     }
 
     public enum State
@@ -190,7 +218,18 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
                 _tuchDamageable = true;
                 _touchEvent = true;
             }));
-            InstanceVFX(hitObject[0]);
+
+            if (_canLaunchVfx)
+            {
+                InstanceVFX(hitObject[0]);
+                _canLaunchVfx = false;
+
+                StartCoroutine(Delay(CooldownVfx, () =>
+                {
+                    _canLaunchVfx = true;
+                }));
+            }
+
             return;
         }
     }
@@ -293,7 +332,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         if (_life <= _brakePoint && _state == State.ok)
         {
             _state = State.broken;
-            _vfxSmoke = Instantiate(_data.VfxLowUp, transform.position, Quaternion.identity, transform);
+            _vfxSmoke = Instantiate(_data.VfxLowUp, transform.position, Quaternion.identity, transform.parent);
             _animator.SetBool("_playAttack", false);
             _onWeaponUnuseable?.Invoke();
         }
@@ -351,7 +390,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         if (_alwayActive)
             return;
 
-        if (_canAttack)
+        if (_canAttack && _state == State.ok)
         {
             _animator.SetBool("_playAttack", true);
             AttackON();
@@ -392,7 +431,20 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         if (_isTrap)
             return false;
 
-        return _state != State.destroy;
+        if (_state == State.destroy)
+            return false;
+
+        return true;
+    }
+    public bool CanRecieveDamage(GameObject hit)
+    {
+        if (!hit)
+            return false;
+
+        if (GetIDamageable(hit, out var component))
+            return component.CanRecieveDamage();
+
+        return false;
     }
 
     public int GetRepairPrice()

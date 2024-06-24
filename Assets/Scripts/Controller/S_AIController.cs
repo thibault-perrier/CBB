@@ -109,7 +109,7 @@ public class S_AIController : MonoBehaviour
     private WaitForSeconds _attackFailedCoroutine = new(1f);
     private WaitForSeconds _fleeFailureCooldownCoroutine = new(.5f);
     private float _scaleMovement;
-    private float _scaleDirection;
+    private float _startMassRigidbody;
 
     #region Property
     /// <summary>
@@ -328,6 +328,7 @@ public class S_AIController : MonoBehaviour
         _wheelsController = GetComponent<S_WheelsController>();
         _frameManager = GetComponent<S_FrameManager>();
         _frameManager.SelectWeapons();
+        _startMassRigidbody = _wheelsController.RigidBody.mass;
 
         _fleeFailureCooldownCoroutine = new(_fleeCooldown);
 
@@ -342,9 +343,6 @@ public class S_AIController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        // reset the movement state
-        //_wheelsController.Movement = 0f;
-
         // verif if he is enable for work
         if (_aiState.Equals(AIState.Disable))
             return;
@@ -374,7 +372,6 @@ public class S_AIController : MonoBehaviour
     private void UpdateAIMovement()
     {
         TryFailedAttack();
-        TryToFindBestWeaponFromTarget(_target.transform);
         TryToAttackWithAnyWeapon();
 
         // get movement probability
@@ -609,11 +606,11 @@ public class S_AIController : MonoBehaviour
         }
 
         // get him self best weapon
-        bool succes = GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
+        //bool succes = GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
 
         // if he get any weapon move to target with your current weapon
-        if (succes)
-            MoveToPoint(_target.transform.position, _currentWeapon);
+        // if (succes)
+        MoveToPoint(_target.transform.position, _currentWeapon);
     }
     /// <summary>
     /// set wheel velocity from the target
@@ -715,6 +712,17 @@ public class S_AIController : MonoBehaviour
                 // turn left
                 turnAmount = dotWeaponBody > 0f ? CalCulDirection(angleToDir, -1f) : CalCulDirection(angleToDir, 1f);
             }
+        }
+
+        if (Mathf.Abs(turnAmount) > .5f)
+        {
+            Rigidbody rb = _wheelsController.RigidBody;
+            rb.mass = _startMassRigidbody * 2.5f;
+        }
+        else
+        {
+            Rigidbody rb = _wheelsController.RigidBody;
+            rb.mass = _startMassRigidbody;
         }
 
         // set controller direction and movement
@@ -922,7 +930,7 @@ public class S_AIController : MonoBehaviour
     private Vector3 GetForwardWeapon(S_WeaponManager weapon, Transform bot)
     {
         // get the dot product of the weapon and the current bot
-        Vector3 dirSelfWeapon = (GetHitZone(weapon) - bot.position).normalized;
+        Vector3 dirSelfWeapon = (GetHitZone(weapon) - weapon.transform.position).normalized;
         float dot = Vector3.Dot(bot.forward, dirSelfWeapon);
 
         return dot >= 0f ? bot.forward : -bot.forward;
@@ -1118,10 +1126,12 @@ public class S_AIController : MonoBehaviour
             return;
 
         _currentWeapon.LaunchAttack();
-        GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
+
+        if (!_currentWeapon.CanTakeAnyDamage)
+            GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
     }
     /// <summary>
-    /// if the target is closed the current weapon
+    /// detect if he can make an attack with the current weapon
     /// </summary>
     /// <returns>return if he attack with current we hit something</returns>
     private bool CurrentWeaponCanAttack()
@@ -1148,6 +1158,34 @@ public class S_AIController : MonoBehaviour
         return _currentWeapon.CanTakeAnyDamage;
     }
     /// <summary>
+    /// if he can attack with the weapon
+    /// </summary>
+    /// <param name="weapon">the weapon to detect</param>
+    /// <returns>return True if he can take any damage on a target</returns>
+    private bool WeaponCanAttack(S_WeaponManager weapon)
+    {
+        if (!weapon)
+            return false;
+
+        // if he is attacking and he cant take any damage with current weapon
+        if (weapon.Attacking && !weapon.CanTakeAnyDamage)
+            return false;
+
+        if (!weapon.CanRecieveDamage())
+            return false;
+
+        // if he is attacking
+        if (weapon.Attacking)
+            return true;
+
+        // if he can attack and he has not target
+        if (!weapon.CanAttack || !_target)
+            return false;
+
+        // return True if if can make any damage with current weapon
+        return weapon.CanTakeAnyDamage;
+    }
+    /// <summary>
     /// try to attack with any weapon when it in movement
     /// </summary>
     private void TryToAttackWithAnyWeapon()
@@ -1162,8 +1200,11 @@ public class S_AIController : MonoBehaviour
                 if (attackRnd > _attackSuccesProbability)
                     return;
 
-                weapon.LaunchAttack();
-                GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
+                if (WeaponCanAttack(weapon))
+                {
+                    _currentWeapon = weapon;
+                    AttackWithCurrrentWeapon();
+                }
             }
         }
     }
