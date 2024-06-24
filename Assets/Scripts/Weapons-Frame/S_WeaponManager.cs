@@ -108,7 +108,10 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
     {
         get => _attackingStart;
     }
-
+    public UnityEvent WeaponUnuseable
+    {
+        get => _onWeaponUnuseable;
+    }
     private float CooldownVfx
     {
         get
@@ -329,7 +332,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         if (_life <= _brakePoint && _state == State.ok)
         {
             _state = State.broken;
-            _vfxSmoke = Instantiate(_data.VfxLowUp, transform.position, Quaternion.identity, transform);
+            _vfxSmoke = Instantiate(_data.VfxLowUp, transform.position, Quaternion.identity, transform.parent);
             _animator.SetBool("_playAttack", false);
             _onWeaponUnuseable?.Invoke();
         }
@@ -387,7 +390,7 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         if (_alwayActive)
             return;
 
-        if (_canAttack)
+        if (_canAttack && _state == State.ok)
         {
             _animator.SetBool("_playAttack", true);
             AttackON();
@@ -428,7 +431,10 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         if (_isTrap)
             return false;
 
-        return _state != State.destroy;
+        if (_state == State.destroy)
+            return false;
+
+        return true;
     }
     public bool CanRecieveDamage(GameObject hit)
     {
