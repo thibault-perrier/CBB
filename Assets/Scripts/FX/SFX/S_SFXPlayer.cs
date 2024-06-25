@@ -22,11 +22,19 @@ public class S_SFXPlayer : MonoBehaviour
 
     public bool _isLooping = false;
     private bool _isFirstSourcePlaying = false;
-
+    [SerializeField] private bool _playOnStart;
 
     void Awake()
     {
         _firstSFXSource = GetComponent<AudioSource>();
+    }
+
+    private void Start()
+    {
+        if (_playOnStart)
+        {
+            PlayEffect();
+        }
     }
 
     /// <summary> 

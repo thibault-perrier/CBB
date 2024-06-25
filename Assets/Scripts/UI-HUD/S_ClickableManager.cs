@@ -5,8 +5,6 @@ using System.Collections;
 public class S_ClickablesManager : MonoBehaviour
 {
     public static S_ClickablesManager Instance;
-    public Transform Helicopter;
-    public Transform PoliceCar;
     public GameObject CircleFade;
     public GameObject destroyCup;
     public GameObject[] clikableObjetGarage;
@@ -28,15 +26,6 @@ public class S_ClickablesManager : MonoBehaviour
 
     [SerializeField] private S_EditorController _editorController;
     [SerializeField] private GameObject _panelCustomizeLogo;
-
-    private AudioClip helicopterSound;
-    public AudioSource _helicopterAudioSource;
-
-    public AudioClip PoliceCarSound;
-    private AudioSource _policeCarAudioSource;
-
-    public Light leftLight;
-    public Light rightLight;
 
     void Awake()
     {
@@ -64,10 +53,6 @@ public class S_ClickablesManager : MonoBehaviour
         navigateAction.performed += OnNavigate;
 
         inputActions.Enable();
-        _helicopterAudioSource = gameObject.AddComponent<AudioSource>();
-        _helicopterAudioSource.clip = helicopterSound;
-        _policeCarAudioSource = gameObject.AddComponent<AudioSource>();
-        _policeCarAudioSource.clip = PoliceCarSound;
     }
 
     public void EnablePanelLogo()
@@ -117,8 +102,6 @@ public class S_ClickablesManager : MonoBehaviour
     {
         if (clickables.Length > 0)
         {
-            StartCoroutine(MovePoliceWithRandomDelay());
-            StartCoroutine(MoveHelicopterWithRandomDelay());
             SetFocus(clickables[_currentIndex]);
             DisableGarageNavigation();
             DisableObjectTournament();
@@ -560,107 +543,5 @@ public class S_ClickablesManager : MonoBehaviour
     public void LoadDiamond()
     {
         SceneManager.LoadScene(4);
-    }
-    private IEnumerator MoveHelicopterWithRandomDelay()
-    {
-        float minDelay = 10f;
-        float maxDelay = 20f;
-        float switchMinDelay = 10f;
-        float switchMaxDelay = 25f;
-        float speed = 50f;
-        while (true)
-        {
-            float delay = Random.Range(minDelay, maxDelay);
-            yield return new WaitForSeconds(delay);
-
-            _helicopterAudioSource.PlayOneShot(helicopterSound);
-
-            Vector3 direction = Vector3.back;
-            float timeElapsed = 0f;
-            float switchTime = 17f;
-
-            while (timeElapsed < switchTime)
-            {
-                timeElapsed += Time.deltaTime;
-                Helicopter.transform.Translate(direction * speed * Time.deltaTime);
-                yield return null;
-            }
-
-            float switchDelay = Random.Range(switchMinDelay, switchMaxDelay);
-            yield return new WaitForSeconds(switchDelay);
-
-
-            timeElapsed = 0f;
-
-            _helicopterAudioSource.PlayOneShot(helicopterSound);
-
-            while (timeElapsed <= switchTime)
-            {
-                timeElapsed += Time.deltaTime;
-                Helicopter.transform.Translate(-direction * speed * Time.deltaTime);
-                yield return null;
-            }
-        }
-    }
-
-
-    private IEnumerator MovePoliceWithRandomDelay()
-    {
-        float minDelay = 40f;
-        float maxDelay = 60f;
-        float switchMinDelay = 30f;
-        float switchMaxDelay = 50f;
-        float speed = 50f;
-
-        while (true)
-        {
-            float delay = Random.Range(minDelay, maxDelay);
-            yield return new WaitForSeconds(delay);
-            StartCoroutine(FlashPoliceLights());
-            _policeCarAudioSource.PlayOneShot(PoliceCarSound);
-
-            Vector3 direction = Vector3.back;
-            float timeElapsed = 0f;
-            float switchTime = 17f;
-
-            while (timeElapsed < switchTime)
-            {
-                timeElapsed += Time.deltaTime;
-                PoliceCar.transform.Translate(-direction * speed * Time.deltaTime);
-                yield return null;
-            }
-            leftLight.enabled = false;
-            rightLight.enabled = false;
-            float switchDelay = Random.Range(switchMinDelay, switchMaxDelay);
-            yield return new WaitForSeconds(switchDelay);
-
-
-            timeElapsed = 0f;
-            _policeCarAudioSource.PlayOneShot(PoliceCarSound);
-            StartCoroutine(FlashPoliceLights());
-            while (timeElapsed <= switchTime)
-            {
-                timeElapsed += Time.deltaTime;
-                PoliceCar.transform.Translate(direction * speed * Time.deltaTime);
-                yield return null;
-            }
-        }
-    }
-    
-
-    private IEnumerator FlashPoliceLights()
-    {
-        float flashInterval = 0.5f; 
-
-        while (true)
-        {
-            leftLight.enabled = true;
-            rightLight.enabled = false;
-            yield return new WaitForSeconds(flashInterval);
-
-            leftLight.enabled = false;
-            rightLight.enabled = true;
-            yield return new WaitForSeconds(flashInterval);
-        }
     }
 }
