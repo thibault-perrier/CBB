@@ -155,8 +155,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc95e2d9efd334e488108293239285b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _secondSFXSource: {fileID: 0}
+  _SFXType: 0
   _SFXList:
   - {fileID: 8300000, guid: 7b6f39488b0fe9d45b268743fa58ef8a, type: 3}
+  _scaleSfxVolume: 1
+  _isLooping: 0
 --- !u!1 &1113248628976807175
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,8 +316,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc95e2d9efd334e488108293239285b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _secondSFXSource: {fileID: 0}
+  _SFXType: 0
   _SFXList:
   - {fileID: 8300000, guid: 89d32fd24b08ced46b1fd2c9c5fc01ad, type: 3}
+  _scaleSfxVolume: 1
+  _isLooping: 0
 --- !u!1 &1637001209306066373
 GameObject:
   m_ObjectHideFlags: 0
@@ -346,7 +354,6 @@ Transform:
   - {fileID: 7618719975522978823}
   - {fileID: 8449099591201939585}
   - {fileID: 768861486342975230}
-  - {fileID: 1510334213518722444}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2638169984176109227
@@ -375,11 +382,11 @@ Transform:
   m_GameObject: {fileID: 2638169984176109227}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.389}
+  m_LocalPosition: {x: 0, y: 0, z: 1.3889999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7132131891238517361}
+  m_Father: {fileID: 7618719975522978823}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &5906055703847742885
 BoxCollider:
@@ -431,11 +438,12 @@ Transform:
   m_GameObject: {fileID: 8413263619878395255}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7178133844472563099}
+  - {fileID: 1510334213518722444}
   m_Father: {fileID: 7132131891238517361}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2880334675205368236
@@ -456,6 +464,7 @@ MonoBehaviour:
   _canAttack: 1
   _alwayActive: 0
   _attacking: 0
+  _isTrap: 0
   _data: {fileID: 11400000, guid: ddaf08ca516c126428c1ca4af2b6feb7, type: 2}
   _state: 0
   _lifeBrakePoint: 15
@@ -499,10 +508,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _onBeginTuchTarget:
+  _onBeginTouchTarget:
     m_PersistentCalls:
       m_Calls: []
-  _onEndTuchTarget:
+  _onEndTouchTarget:
     m_PersistentCalls:
       m_Calls: []
 --- !u!95 &9078970882318680198

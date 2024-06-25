@@ -31,8 +31,10 @@ public class S_CrowdMovement : MonoBehaviour
     void Start()
     {
         _endPos = _transform.position;
+
         _timerBeforeMove = _maxTimerBeforeMove;
         _minTimerBeforeMoveThreshold = Mathf.Abs(_maxTimerBeforeMove - _minTimerBeforeMove);
+
         _minHeight = transform.position.y;
         _maxHeight = transform.position.y + _maxJumpHeight;
     }
@@ -54,7 +56,6 @@ public class S_CrowdMovement : MonoBehaviour
 
     IEnumerator MakeCrowdMovement()
     {
-        Debug.Log("CROWD IS MOVING");
         _endPos.y = Random.Range(_minHeight, _maxHeight);
 
         while (Vector3.Distance(_transform.position, _endPos) >= 0.1f)

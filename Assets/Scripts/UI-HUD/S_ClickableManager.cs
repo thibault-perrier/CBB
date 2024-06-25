@@ -1,3 +1,4 @@
+using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -103,6 +104,7 @@ public class S_ClickablesManager : MonoBehaviour
     {
         if (clickables.Length > 0)
         {
+            ResetAllClickables();
             SetFocus(clickables[_currentIndex]);
             DisableGarageNavigation();
             DisableObjectTournament();
@@ -157,6 +159,7 @@ public class S_ClickablesManager : MonoBehaviour
 
     void OnNavigate(InputAction.CallbackContext context)
     {
+        Debug.Log(_garageNavigable);
         _useMouse = false;
         if (Time.time >= _nextNavigationTime)
         {
@@ -211,7 +214,7 @@ public class S_ClickablesManager : MonoBehaviour
                     _currentIndex = 0;
             }
 
-            Debug.Log($"Navigating: _currentIndex={_currentIndex}, _clickableStates.Length={_clickableStates.Length}");
+            //Debug.Log($"Navigating: _currentIndex={_currentIndex}, _clickableStates.Length={_clickableStates.Length}");
         }
         while (!_clickableStates[_currentIndex]);
 
@@ -222,7 +225,7 @@ public class S_ClickablesManager : MonoBehaviour
 
     GameObject GetCurrentClickable()
     {
-        Debug.Log($"GetCurrentClickable: _currentIndex={_currentIndex}, clickables.Length={clickables.Length}, clikableObjetGarage.Length={clikableObjetGarage.Length}, clikableObjetTournament.Length={clikableObjetTournament.Length}");
+        //Debug.Log($"GetCurrentClickable: _currentIndex={_currentIndex}, clickables.Length={clickables.Length}, clikableObjetGarage.Length={clikableObjetGarage.Length}, clikableObjetTournament.Length={clikableObjetTournament.Length}");
 
         if (_currentIndex < clickables.Length)
         {
@@ -334,16 +337,13 @@ public class S_ClickablesManager : MonoBehaviour
 
     public void ClikableObjectGarage()
     {
-        //Debug.Log("ClikableObjectGarage() called.");
         foreach (var clickableGroup in clikableObjetGarage)
         {
             if (clickableGroup != null)
             {
-                //Debug.Log("clickableGroup found: " + clickableGroup.name);
                 var clickableScript = clickableGroup.GetComponent<S_ObjectClickable>();
                 if (clickableScript != null)
                 {
-                    //Debug.Log("Clickable script found on: " + clickableGroup.name);
                     clickableScript.enabled = true;
                 }
             }
@@ -512,7 +512,6 @@ public class S_ClickablesManager : MonoBehaviour
             _clickableStates[i] = false;
         }
         _currentIndex = 0; // Reset index to start of clickables
-        _garageNavigable = true; // Enable navigation on clickables
     }
 
 
@@ -545,4 +544,10 @@ public class S_ClickablesManager : MonoBehaviour
     {
         SceneManager.LoadScene(4);
     }
+
+    public void LoadStreetFight()
+    {
+        SceneManager.LoadScene(6);
+    }
+
 }

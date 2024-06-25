@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class S_CrowdCheering : MonoBehaviour
 {
-
-
     [SerializeField] private List<AudioSource> _crowdAudioSources;
     [SerializeField] private List<AudioClip> _crowdSounds;
 
