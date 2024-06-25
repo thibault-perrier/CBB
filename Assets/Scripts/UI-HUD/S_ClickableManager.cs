@@ -27,6 +27,9 @@ public class S_ClickablesManager : MonoBehaviour
 
     [SerializeField] private GameObject _panelCustomizeLogo;
 
+    public GameObject _editorCanvasHelper;
+    public GameObject _menuCanvasHelper;
+
 
     void Awake()
     {
@@ -485,6 +488,12 @@ public class S_ClickablesManager : MonoBehaviour
     public void SetPresetChoice()
     {
         _editorController.SetPresetChoice();
+    }
+
+    public void UpdateEditor()
+    {
+        _editorController.UpdatePresetRobotGroup();
+        _editorController.UpdatePiece();
     }
 
     public void ActiveCircleFade()
