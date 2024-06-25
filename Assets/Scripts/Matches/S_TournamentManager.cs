@@ -226,11 +226,11 @@ public class S_TournamentManager : MonoBehaviour
     /// <summary>
     /// Simulate a match and take in account the strength of the participant's robot and rating
     /// </summary>
-    public void SimulateMatch()
+    public void SimulateMatch(float victoryPercent)
     {
         if (IsEven())
         {
-            bool participant1Wins = UnityEngine.Random.Range(0f, 1f) >= 0.5f; //replace with cote calculation
+            bool participant1Wins = UnityEngine.Random.Range(0f, 1f) >= victoryPercent; //replace with cote calculation
 
             if (participant1Wins)
             {
