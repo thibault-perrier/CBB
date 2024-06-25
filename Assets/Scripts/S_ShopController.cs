@@ -202,7 +202,7 @@ public class S_ShopController : MonoBehaviour
 
     public void DisplaySolde()
     {
-        _Solde.text = "Solde : " + S_DataGame.Instance.inventory.CurrentMoney.ToString();
+        _Solde.text = "Money : " + S_DataGame.Instance.inventory.CurrentMoney.ToString();
     }
 
     public void BuyObject()

@@ -80,17 +80,17 @@ public class InventorySaver // Inventory
     public List<Robot> Robots = new List<Robot>();
     public int SelectedRobot;
 
-    public string backgroundColorHex;
-    public string overlayColorHex;
+    public string backgroundColorHex = "1";
+    public string overlayColorHex = "1";
     public float backgroundAlpha = 255;
 
-    public int prefixIndex;
+    public int prefixIndex = 0;
     public string prefixString;
     public int suffixIndex;
     public string suffixString;
 
-    public int overlayImageIndex;
-    public Vector2 overlayImagePosition;
+    public int overlayImageIndex = 1;
+    public Vector2 overlayImagePosition = new Vector2(0,0);
 
     #region Color Load/Save
     public void SaveOverlayColor(string hexColor)
