@@ -25,12 +25,6 @@ public class S_StreetFightManager : MonoBehaviour
     private bool _startStreetFightInStart = true;
 
     [Header("paricipants")]
-    [SerializeField, Tooltip("the current player bot prefab")]
-    private GameObject _playerBotPrefab;
-    [SerializeField, Tooltip("the current AI bot prefab")]
-    private GameObject _AIBotPrefab;
-
-    [Space(10)]
     [SerializeField, Tooltip("where the player spawn in the start of fight")]
     private Transform _botPlayerTransformSpawn;
     [SerializeField, Tooltip("where the AI spawn in the start of fight")]

@@ -67,15 +67,8 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
             var collide = Physics.OverlapBox(worldCenter, worldHalfExtents).Where(x => x.gameObject != this.gameObject).ToList();
             var damagable = collide
                 .Select(x => x.transform.gameObject)
-                .Where(x => GetIDamageable(x, out _))
+                .Where(x => CanRecieveDamage(x))
                 .ToArray();
-
-            if (damagable.Length > 0)
-            {
-                damagable
-                    .Where(x => CanRecieveDamage(x))
-                    .ToList();
-            }
 
             return damagable.Length > 0;
         }

@@ -323,7 +323,7 @@ public class S_AIController : MonoBehaviour
     }
     #endregion
 
-    private void Awake()
+    private void Start()
     {
         _wheelsController = GetComponent<S_WheelsController>();
         _frameManager = GetComponent<S_FrameManager>();
