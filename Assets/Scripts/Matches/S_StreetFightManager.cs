@@ -63,6 +63,20 @@ public class S_StreetFightManager : MonoBehaviour
     private Image _healthBarEnemy;
 
     [Space(10)]
+    [SerializeField, Tooltip("the image of the enemy logo")]
+    private Image _logoEnemy;
+    [SerializeField, Tooltip("the image of the player logo")]
+    private Image _logoPlayer;
+    [SerializeField, Tooltip("all sprite for all logo")]
+    private Sprite[] _allSpriteLogo;
+
+    [Space(10)]
+    [SerializeField, Tooltip("the name display bottom the health of the player")]
+    private TMP_Text _playerNameText;
+    [SerializeField, Tooltip("the name display bottom the health of the enemy")]
+    private TMP_Text _enemyNameText;
+
+    [Space(10)]
     [SerializeField, Tooltip("text mesh used for display the timer")]
     private TMP_Text _timerStreetFight;
 
@@ -107,6 +121,9 @@ public class S_StreetFightManager : MonoBehaviour
     private float _minutesTimer = 3f;
     private float _secondsTimer;
 
+    private List<string> _suffixes = new();
+    private List<string> _prefixes = new();
+
     private FightState _fightState;
 
     private void Start()
@@ -116,6 +133,7 @@ public class S_StreetFightManager : MonoBehaviour
         _uiEndFightWinner.SetActive(false);
         _uiParentInFight.SetActive(false);
 
+        InitializeNameLists();
         var camera = _cameraView.gameObject.GetComponentInChildren<Camera>();
         _startFieldOfView = camera.fieldOfView;
 
@@ -146,6 +164,8 @@ public class S_StreetFightManager : MonoBehaviour
         _skillsController.ResetSkills();
 
         ClearDroppedWeapon();
+        UpdateLogos();
+        UpdateName();
         _timerUpdate = false;
 
         _cameraView.ClearObjectToView();
@@ -185,7 +205,6 @@ public class S_StreetFightManager : MonoBehaviour
         _cameraView.gameObject.SetActive(false);
         _uiEndFightWinner.SetActive(false);
     }
-
 
     /// <summary>
     /// set the enabled of controller component for player and ai
@@ -423,7 +442,59 @@ public class S_StreetFightManager : MonoBehaviour
             _endFightConditionText.text = "the enemy won with more life".ToUpper();
         }
     }
+    /// <summary>
+    /// generate a random color
+    /// </summary>
+    /// <returns>return the color generate</returns>
+    private Color ChooseRandomColor()
+    {
+        Color.RGBToHSV(UnityEngine.Random.ColorHSV(), out float hue, out float saturation, out float value);
+        saturation = Mathf.Clamp(saturation, 0.4f, 0.8f);
+        value = Mathf.Clamp(value, 0.8f, 0.9f);
 
+        return Color.HSVToRGB(hue, saturation, value);
+    }
+    /// <summary>
+    /// initialize logo color and sprite of the player and enemy
+    /// </summary>
+    private void UpdateLogos()
+    {
+        // select the logo enemy with random
+        _logoEnemy.sprite = _allSpriteLogo[Random.Range(0, _allSpriteLogo.Length)];
+        _logoEnemy.color = ChooseRandomColor();
+
+        // select the logo player with save
+        _logoPlayer.color = InitializePlayerLogo();
+        _logoPlayer.sprite = _allSpriteLogo[S_DataGame.Instance.inventory.overlayImageIndex];
+    }
+    /// <summary>
+    /// Initialize the name of the player and enemy
+    /// </summary>
+    private void UpdateName()
+    {
+        _playerNameText.text = S_DataGame.Instance.inventory.GetPlayerName().ToUpper();
+        _enemyNameText.text = GetRandomName().ToUpper();
+    }
+    /// <summary>
+    /// Load the player's logo from the save Data and give it to the player participant variable
+    /// </summary>
+    /// <returns></returns>
+    private Color InitializePlayerLogo()
+    {
+        if (S_DataGame.Instance != null)
+        {
+            S_DataGame.Instance.inventory.LoadOverlayColor();
+            string overlayColorHex = S_DataGame.Instance.inventory.overlayColorHex;
+            Color overlayColor;
+
+            if (ColorUtility.TryParseHtmlString("#" + overlayColorHex, out overlayColor))
+            {
+                return overlayColor;
+            }
+        }
+
+        return Color.white; //failed to load color
+    }
     /// <summary>
     /// create a timer with each sprite in the array for the timer
     /// </summary>
@@ -461,5 +532,40 @@ public class S_StreetFightManager : MonoBehaviour
         }
 
         endZoomAnimation?.Invoke();
+    }
+    /// <summary>
+    /// Put in two list every names present in a text document
+    /// </summary>
+    private void InitializeNameLists()
+    {
+        string prefixeContent = "";
+        string suffixeContent = "";
+        string prefixeFilePath = "NamesData/Prefixes";
+        string suffixeFilePath = "NamesData/Suffixes";
+
+        try
+        {
+            prefixeContent = Resources.Load<TextAsset>(prefixeFilePath).text.ToUpper();
+            suffixeContent = Resources.Load<TextAsset>(suffixeFilePath).text.ToUpper();
+        }
+        catch (System.Exception)
+        {
+            Debug.LogError("Text file not found)");
+        }
+
+        string[] prefixeArray = prefixeContent.Split('\n');
+        string[] suffixeArray = suffixeContent.Split('\n');
+        _prefixes.AddRange(prefixeArray);
+        _suffixes.AddRange(suffixeArray);
+    }
+    /// <summary>
+    /// Return a random name as a string
+    /// </summary>
+    private string GetRandomName()
+    {
+        string prefix = _prefixes[Random.Range(0, _prefixes.Count)].Trim();
+        string suffix = _suffixes[Random.Range(0, _prefixes.Count)].Trim();
+
+        return prefix + " " + suffix;
     }
 }
