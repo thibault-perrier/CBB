@@ -208,6 +208,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
             public Sprite seven;
             public Sprite eight;
             public Sprite nine;
+            public Sprite escape;
 
             public Sprite GetSprite(string controlPath)
             {
@@ -266,10 +267,10 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                     //case "numpad8": return eight;
                     //case "numpad9": return nine;
                     //case "space": return space;
-                    //case "leftButton": return leftMouseButton;
-                    //case "rightButton": return rightMouseButton;
+                    case "leftButton": return leftMouseButton;
+                    case "rightButton": return rightMouseButton;
                     //case "middleButton": return middleMouseButton;
-                    //case "backspace": return backspace;
+                    case "backspace": return backspace;
                     //case "capsLock": return capsLock;
                     //case "enter": return enter;
                     //case "numpadEnter": return enterRight;
@@ -283,6 +284,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                     case "upArrow": return up;
                     case "leftArrow": return left;
                     case "rightArrow": return right;
+                    case "escape": return escape;
                 }
                 return null;
             }

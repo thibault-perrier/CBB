@@ -27,6 +27,9 @@ public class S_ClickablesManager : MonoBehaviour
 
     [SerializeField] private GameObject _panelCustomizeLogo;
 
+    public GameObject _editorCanvasHelper;
+    public GameObject _menuCanvasHelper;
+
 
     void Awake()
     {

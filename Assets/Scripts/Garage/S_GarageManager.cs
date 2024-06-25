@@ -3,6 +3,8 @@ using UnityEngine.InputSystem;
 
 public class GarageManager : MonoBehaviour
 {
+    [SerializeField] private GameObject _canvasMenuHelper;
+    [SerializeField] private GameObject _canvasEditorHelper;
     public void LeaveGarage(InputAction.CallbackContext context)
     {
         if (context.performed && gameObject.activeInHierarchy && S_ClickablesManager.Instance.activeBackGarage == true )
@@ -44,6 +46,8 @@ public class GarageManager : MonoBehaviour
             S_ObjectClickable.Instance._animatorCameraGarage.SetBool("WorkBench", false);
             S_ClickablesManager.Instance.ReactivateAllClickables();
             S_ClickablesManager.Instance.CircleFade.SetActive(false);
+            _canvasMenuHelper.SetActive(true);
+            _canvasEditorHelper.SetActive(false);
         }
     }
 

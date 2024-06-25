@@ -85,6 +85,8 @@ public class S_ObjectClickable : MonoBehaviour
                 break;
             case "WorkBench":
                 _animatorCameraGarage.SetBool("WorkBench", true);
+                S_ClickablesManager.Instance._editorCanvasHelper.SetActive(true);
+                S_ClickablesManager.Instance._menuCanvasHelper.SetActive(false);
                 break;
             case "Shelves":
                 _animatorCameraGarage.SetBool("Shelves", true);
