@@ -23,7 +23,7 @@ public class S_DataGame : MonoBehaviour
     public InventorySaver inventory = new InventorySaver();
     public TournamentSaver tournament = new TournamentSaver();
 
-    private void Start()
+    private void Awake()
     {
         if (Instance == null)
         {
@@ -38,8 +38,6 @@ public class S_DataGame : MonoBehaviour
 
     private void Start()
     {
-
-
         if (OnSceneLoad == Load.Inventory || OnSceneLoad == Load.InventoryAndTournament)
         {
             LoadInventory();
@@ -481,6 +479,25 @@ public class Robot
             }
         }
         return null;
+    }
+
+    /// <summary>
+    /// Call this when skipping match before instianciating bots
+    /// </summary>
+    /// <returns></returns>
+    public float PowerCalculation()
+    {
+        float totalDamage = 0;
+        float life = _frame.GetFrameData().MaxLife;
+        foreach (HookPoint hook in _weapons)
+        {
+            totalDamage += hook._weapon.GetWeaponData().Damage;
+            life += hook._weapon.GetWeaponData().MaxLife;
+        }
+
+        float botPower = (life + _frame.GetFrameData().Mass + totalDamage + (_weapons.Count * 10)) / 4;
+
+        return botPower;
     }
 
     [System.Serializable]

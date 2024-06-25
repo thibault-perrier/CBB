@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using static Robot;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class S_FrameManager : MonoBehaviour, I_Damageable
 {
@@ -160,19 +162,21 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
         }
     }
 
-
     public float PowerCalculation()
     {
         float totalDamage = 0;
-        foreach (S_WeaponManager weapon in _weaponManagers)
+        float life = _life;
+        foreach (S_WeaponManager hook in _weaponManagers)
         {
-            totalDamage += weapon.Data.Damage;
+            totalDamage += hook.Data.Damage;
+            life += hook._life;
         }
 
-        float botPower = (_life + _rb.mass + totalDamage + (_weaponManagers.Count * 10)) / 4;
+        float botPower = (life + _rb.mass + totalDamage + (_weaponManagers.Count * 10)) / 4;
 
         return botPower;
     }
+
     public int GetRepairPrice()
     {
         int price = 0;

@@ -267,7 +267,7 @@ public class S_BetSystem : MonoBehaviour
 
                 _playerMoneyTMP.text = "$ " + _playerMoney;
                 _betWinDisplay.SetActive(true);
-                _betWinDisplay.GetComponentInChildren<TextMeshProUGUI>().text = "BET : YOU WON $ " + amountWon + " !";
+                _betWinDisplay.GetComponentInChildren<TextMeshProUGUI>().text = "BET : YOU WON $ " + Mathf.RoundToInt(amountWon) + " !";
 
                 _betAmount = 0;
             }

@@ -469,7 +469,7 @@ public class S_ArenaManager : MonoBehaviour
             p.rating = RatingCalculate(_bot2, _bot1);
         }
 
-        ratingTxt.text = p.rating.ToString();
+        ratingTxt.text = p.rating.ToString("0.00");
         nameTxt.text = p.name;
         logoImage.color = p.logo;
         logoImage.sprite = p.logoSprite;
@@ -564,6 +564,21 @@ public class S_ArenaManager : MonoBehaviour
         {
             float bot1Power = botFrame1.PowerCalculation();
             float bot2Power = botFrame2.PowerCalculation();
+
+            float percentVictory = bot1Power / (bot1Power + bot2Power);
+
+            return percentVictory;
+        }
+
+        return 0;
+    }
+
+    public float FirstParticipantVictoryPercent(Robot bot1, Robot bot2)
+    {
+        if (bot1 != null && bot2 != null)
+        {
+            float bot1Power = bot1.PowerCalculation();
+            float bot2Power = bot2.PowerCalculation();
 
             float percentVictory = bot1Power / (bot1Power + bot2Power);
 
