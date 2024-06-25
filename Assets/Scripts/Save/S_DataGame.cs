@@ -336,7 +336,19 @@ public class InventorySaver // Inventory
 
     public void BuyFrame(S_FrameData frameData)
     {
-
+        if (CurrentMoney - frameData.Cost >= 0)
+        {
+            CurrentMoney -= frameData.Cost;
+            Frame frame = GetFrame(frameData);
+            if (frame != null)
+            {
+                frame._number++;
+            }
+            else
+            {
+                AddFrame(frameData);
+            }
+        }
     }
 }
 

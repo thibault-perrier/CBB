@@ -17,6 +17,7 @@ public class S_ShopController : MonoBehaviour
     public GameObject _selectPoint;
 
     [SerializeField] private Text _Category;
+    [SerializeField] private Text _Solde;
     [SerializeField] private Text _Name;
     [SerializeField] private Text _Cost;
     [SerializeField] private Text _Life;
@@ -67,6 +68,10 @@ public class S_ShopController : MonoBehaviour
         {
             ChangeImage(-1);
         }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            BuyObject();
+        }   
         Debug.Log("ligne : " + _currentRow + "  colonne : " + _currentIndex);
 
         MoveRowContainer();
@@ -171,6 +176,11 @@ public class S_ShopController : MonoBehaviour
                 break;
             default: break;
         }
+    }
+
+    public void DisplaySolde()
+    {
+        _Solde.text = "Solde : " + S_DataGame.Instance.inventory.CurrentMoney.ToString();
     }
 
     public void BuyObject()
