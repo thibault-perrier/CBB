@@ -123,6 +123,9 @@ public class S_AIController : MonoBehaviour
             _aiState = value;
             if (_aiState == AIState.Disable)
             {
+                if (!_wheelsController)
+                    _wheelsController = GetComponent<S_WheelsController>();
+
                 _wheelsController.Movement = 0f;
                 _wheelsController.Direction = 0f;
             }
@@ -144,6 +147,9 @@ public class S_AIController : MonoBehaviour
         get => _enemyTag;
         set
         {
+            _frameManager = GetComponent<S_FrameManager>();
+            _frameManager.SelectWeapons();
+
             _enemyTag = value;
             _enemy = GameObject.FindGameObjectWithTag(value);
             _target = _enemy;
@@ -323,7 +329,7 @@ public class S_AIController : MonoBehaviour
     }
     #endregion
 
-    private void Awake()
+    private void Start()
     {
         _wheelsController = GetComponent<S_WheelsController>();
         _frameManager = GetComponent<S_FrameManager>();

@@ -481,6 +481,25 @@ public class Robot
         return null;
     }
 
+    /// <summary>
+    /// Call this when skipping match before instianciating bots
+    /// </summary>
+    /// <returns></returns>
+    public float PowerCalculation()
+    {
+        float totalDamage = 0;
+        float life = _frame.GetFrameData().MaxLife;
+        foreach (HookPoint hook in _weapons)
+        {
+            totalDamage += hook._weapon.GetWeaponData().Damage;
+            life += hook._weapon.GetWeaponData().MaxLife;
+        }
+
+        float botPower = (life + _frame.GetFrameData().Mass + totalDamage + (_weapons.Count * 10)) / 4;
+
+        return botPower;
+    }
+
     [System.Serializable]
     public struct HookPoint
     {

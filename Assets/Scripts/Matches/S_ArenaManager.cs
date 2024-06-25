@@ -33,6 +33,8 @@ public class S_ArenaManager : MonoBehaviour
     [SerializeField] private Transform _botPosition1, _botPosition2;
 
     private GameObject _bot1, _bot2;
+    private GameObject _botBetChosen;
+    private GameObject _botBetAdversary;
     private S_BetSystem _betSystem;
     private float _minutesTimer, _secondsTimer;
     private bool _timerRunning = false;
@@ -331,7 +333,11 @@ public class S_ArenaManager : MonoBehaviour
     public void OnSimulateMatch()
     {
         CancelMatch();
-        _tournamentManager.SimulateMatch();
+
+        if (_betSystem.GetHasBet()) ;
+            _betSystem.SetCurrentBetRating(RatingCalculate(_botBetChosen, _botBetAdversary));
+
+        _tournamentManager.SimulateMatch(FirstParticipantVictoryPercent(_bot1, _bot2));
         _cameraView.StartReturnToTournament();
         DisableBot();
     }
@@ -454,7 +460,16 @@ public class S_ArenaManager : MonoBehaviour
 
         Image logoImage = pStatGameObject.transform.GetChild(1).GetChild(0).GetComponent<Image>();
 
-        ratingTxt.text = p.rating.ToString();
+        if (p.id == _p1.id)
+        {
+            p.rating = RatingCalculate(_bot1, _bot2);
+        }
+        else
+        {
+            p.rating = RatingCalculate(_bot2, _bot1);
+        }
+
+        ratingTxt.text = p.rating.ToString("0.00");
         nameTxt.text = p.name;
         logoImage.color = p.logo;
         logoImage.sprite = p.logoSprite;
@@ -488,11 +503,88 @@ public class S_ArenaManager : MonoBehaviour
     /// </summary>
     public void BetForParticipantOne()
     {
-        _betSystem.SetChosenParticipant(_p1);
+        float rating = RatingCalculate(_bot1, _bot2);
+        _betSystem.SetChosenParticipant(_p1, rating);
+
+        _botBetChosen = _bot1;
+        _botBetAdversary = _bot2;
     }
 
     public void BetForParticipantTwo()
     {
-        _betSystem.SetChosenParticipant(_p2);
+        float rating = RatingCalculate(_bot1, _bot2);
+        _betSystem.SetChosenParticipant(_p2, rating);
+
+        _botBetChosen = _bot2;
+        _botBetAdversary = _bot1;
+    }
+
+    public GameObject GetBot1()
+    {
+        return _bot1;
+    }
+    public GameObject GetBot2()
+    {
+        return _bot1;
+    }
+
+    /// <summary>
+    /// Calculate the rating for a particular bot (1st GO)
+    /// It's based on it's frame weapon and health
+    /// </summary>
+    /// <param name="bot1"></param>
+    /// <param name="bot2"></param>
+    /// <returns></returns>
+    public float RatingCalculate(GameObject bot1, GameObject bot2)
+    {
+        S_FrameManager botFrame1 = bot1.GetComponent<S_FrameManager>();
+        S_FrameManager botFrame2 = bot2.GetComponent<S_FrameManager>();
+
+        if (botFrame1 != null && botFrame2 != null)
+        {
+            float bot1Power = botFrame1.PowerCalculation();
+            float bot2Power = botFrame2.PowerCalculation();
+
+            float percentVictory = bot1Power / (bot1Power + bot2Power);
+
+            float rating = 1 / percentVictory;
+
+            return rating;
+        }
+
+        return 0;
+    }
+
+    public float FirstParticipantVictoryPercent(GameObject bot1, GameObject bot2)
+    {
+        S_FrameManager botFrame1 = bot1.GetComponent<S_FrameManager>();
+        S_FrameManager botFrame2 = bot2.GetComponent<S_FrameManager>();
+
+        if (botFrame1 != null && botFrame2 != null)
+        {
+            float bot1Power = botFrame1.PowerCalculation();
+            float bot2Power = botFrame2.PowerCalculation();
+
+            float percentVictory = bot1Power / (bot1Power + bot2Power);
+
+            return percentVictory;
+        }
+
+        return 0;
+    }
+
+    public float FirstParticipantVictoryPercent(Robot bot1, Robot bot2)
+    {
+        if (bot1 != null && bot2 != null)
+        {
+            float bot1Power = bot1.PowerCalculation();
+            float bot2Power = bot2.PowerCalculation();
+
+            float percentVictory = bot1Power / (bot1Power + bot2Power);
+
+            return percentVictory;
+        }
+
+        return 0;
     }
 }
