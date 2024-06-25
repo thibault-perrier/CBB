@@ -135,7 +135,7 @@ public class S_EditorController : MonoBehaviour
     #region Inputs
     public void OnNavigate(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && gameObject.activeInHierarchy)
         {
             float direction = context.ReadValue<float>();
             if (direction < 0)
@@ -153,7 +153,7 @@ public class S_EditorController : MonoBehaviour
 
     public void OnConfirm(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && gameObject.activeInHierarchy)
         {
             SelectItem();
         }
@@ -161,7 +161,7 @@ public class S_EditorController : MonoBehaviour
 
     public void OnRotate(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && gameObject.activeInHierarchy)
         {
             _rotateDirection = context.ReadValue<float>();
             _canRotate = true;
@@ -174,13 +174,17 @@ public class S_EditorController : MonoBehaviour
 
     public void OnRemoveWeapon(InputAction.CallbackContext context)
     {
-        RemoveWeapon();
+        if (gameObject.activeInHierarchy)
+            RemoveWeapon();
     }
 
     public void OnBackButton(InputAction.CallbackContext context)
     {
-        Back();
-        Selector();
+        if (gameObject.activeInHierarchy)
+        {
+            Back();
+            Selector();
+        }
     }
 
     #endregion
@@ -543,6 +547,9 @@ public class S_EditorController : MonoBehaviour
 
     public void UpdatePrefabRobot()
     {
+        if (S_DataGame.Instance.inventory.Robots.Count == 0)
+            return;
+
         S_FrameData frameData = S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot]._frame.GetFrameData();
         List<S_WeaponData> weaponsData = new List<S_WeaponData>();
 
