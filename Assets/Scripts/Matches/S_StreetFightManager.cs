@@ -290,15 +290,18 @@ public class S_StreetFightManager : MonoBehaviour
         Destroy(_playerBot);
         S_RobotSpawner robotSpawner = GetComponent<S_RobotSpawner>();
 
-        yield return new WaitForSeconds(.1f);
-
-
-        
         _playerBot = robotSpawner.GenerateRobotAt(S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot], _botPlayerTransformSpawn);
+        _AIBot = robotSpawner.GenerateRobotAt(Systems.S_DataRobotComponent.Instance.GetRandomRobot(), _botAITransformSpawn);
+        
+        yield return new WaitForSeconds(.1f);
+        
         var ai = _playerBot.GetComponent<S_AIController>();
         ai.enabled = false;
+        _playerBot.GetComponent<S_FrameManager>().SelectWeapons();
 
-        _AIBot     = robotSpawner.GenerateRobotAt(Systems.S_DataRobotComponent.Instance.GetRandomRobot(), _botAITransformSpawn);
+        var input = _AIBot.GetComponent<PlayerInput>();
+        input.enabled = false;
+        _AIBot.GetComponent<S_FrameManager>().SelectWeapons();
 
         _AIController = _AIBot.GetComponent<S_AIController>();
         _playerInput = _playerBot.GetComponent<PlayerInput>();
