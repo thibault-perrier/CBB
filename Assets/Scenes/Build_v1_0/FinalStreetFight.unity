@@ -336,7 +336,6 @@ GameObject:
   m_Component:
   - component: {fileID: 780793232}
   - component: {fileID: 780793231}
-  - component: {fileID: 780793233}
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -421,75 +420,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &780793233
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 780793230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac60a9ca23266ea4d883ed3ca2c96bcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnSceneLoad: 0
-  inventory:
-    CurrentMoney: 0
-    Frames: []
-    Weapons: []
-    Robots:
-    - _frame:
-        _id: 0
-        _name: 
-        _number: 0
-        _useNumber: 0
-      _weapons:
-      - _hookPointIndex: 0
-        _weapon:
-          _id: 0
-          _name: 
-          _number: 0
-          _useNumber: 0
-    SelectedRobot: 0
-    backgroundColorHex: 
-    overlayColorHex: 
-    backgroundAlpha: 255
-    prefixIndex: 0
-    prefixString: 
-    suffixIndex: 0
-    suffixString: 
-    overlayImageIndex: 0
-    overlayImagePosition: {x: 0, y: 0}
-  tournament:
-    _isRunning: 0
-    _participants: []
-    _currentMatch: 0
-    _currentLevel: 0
-    _tournamentInfo:
-      rank: 0
-      cost: 0
-      participantNb: 0
-      prize: 0
-      maxMatchNb: 0
-    _roundWinners: []
-    _player:
-      isPlayer: 0
-      id: 0
-      name: 
-      logoSprite: {fileID: 0}
-      logo: {r: 0, g: 0, b: 0, a: 0}
-      rating: 0
-      hasLost: 0
-      robot:
-        _frame:
-          _id: 0
-          _name: 
-          _number: 0
-          _useNumber: 0
-        _weapons: []
-      rank: 0
-    _playerLife: []
 --- !u!1 &1051160095 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8164078558771037576, guid: dab29389ddebf6d4db270706ff73c45e, type: 3}
