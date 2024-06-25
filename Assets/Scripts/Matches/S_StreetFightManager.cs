@@ -206,24 +206,92 @@ public class S_StreetFightManager : MonoBehaviour
         _uiEndFightWinner.SetActive(false);
     }
 
-    /// <summary>
-    /// set the enabled of controller component for player and ai
-    /// </summary>
-    /// <param name="enabled">enabled value</param>
-    private void SetEnableBots(bool enabled)
-    {
-        _AIController.State = enabled ? S_AIController.AIState.Enable : S_AIController.AIState.Disable;
-        _playerInput.enabled = enabled;
 
-        _immobileAI.enabled = enabled;
-        _immobilePlayer.enabled = enabled;
+    /// <summary>
+    /// destroy the last bot and create new bot
+    /// </summary>
+    private IEnumerator CreateStreetFightBot(System.Action endCreationOfBots)
+    {
+        Destroy(_AIBot);
+        Destroy(_playerBot);
+        S_RobotSpawner robotSpawner = GetComponent<S_RobotSpawner>();
+
+        _playerBot = robotSpawner.GenerateRobotAt(S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot], _botPlayerTransformSpawn);
+        _AIBot = robotSpawner.GenerateRobotAt(Systems.S_DataRobotComponent.Instance.GetRandomRobot(), _botAITransformSpawn);
+
+        yield return new WaitForSeconds(.1f);
+
+        var ai = _playerBot.GetComponent<S_AIController>();
+        ai.enabled = false;
+        _playerBot.GetComponent<S_FrameManager>().SelectWeapons();
+
+        var input = _AIBot.GetComponent<PlayerInput>();
+        input.enabled = false;
+        _AIBot.GetComponent<S_FrameManager>().SelectWeapons();
+
+        _AIController = _AIBot.GetComponent<S_AIController>();
+        _playerInput = _playerBot.GetComponent<PlayerInput>();
+        _AIBot.GetComponent<S_AIStatsController>().BotDifficulty = S_AIStatsController.BotRank.Randomly;
+
+        _AIBot.tag = "BotA";
+        _playerBot.tag = "BotB";
+        _AIBot.GetComponent<S_AIController>().EnemyTag = "BotB";
+
+        BindDeadEventForBots();
+        SetEnableBots(false);
+
+        _skillsController.InitializeSkills(_playerFrame);
+
+        endCreationOfBots?.Invoke();
     }
+    /// <summary>
+    /// make a for with all number of timer with cooldown if 1 seconds
+    /// </summary>
+    /// <param name="endTimer">action launch at the end of timer</param>
+    /// <returns></returns>
+    private IEnumerator TimerBeforeStart(System.Action endTimer)
+    {
+        foreach (var number in _numberForTimer)
+        {
+            _timerBeforeStart.sprite = number;
+            yield return new WaitForSeconds(1f);
+        }
+
+        _timerBeforeStart.gameObject.SetActive(false);
+        _fightParentText.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        _fightParentText.SetActive(false);
+
+        endTimer?.Invoke();
+    }
+    /// <summary>
+    /// update field of view
+    /// </summary>
+    /// <param name="endZoomAnimation">launch when the field of view is equal at 5</param>
+    private IEnumerator AnimationZoom(System.Action endZoomAnimation = null)
+    {
+        var camera = _cameraView.gameObject.GetComponentInChildren<Camera>();
+
+        while (camera.fieldOfView > _zoomEndAnimation)
+        {
+            float speedScale = Mathf.InverseLerp(_zoomEndAnimation, _startFieldOfView, camera.fieldOfView);
+            speedScale = Mathf.Max(speedScale, .5f);
+
+            camera.fieldOfView -= Time.deltaTime * _zoomAnimationSpeed * speedScale;
+            yield return null;
+        }
+
+        endZoomAnimation?.Invoke();
+    }
+    /// <summary>
+    /// Put in two list every names present in a text document
+    /// </summary>
     /// <summary>
     /// set the action for dead bot when thier life is lower 0 or if it immobile and not straight
     /// </summary>
     private void BindDeadEventForBots()
     {
-        _enemyFrame  = _AIBot.GetComponent<S_FrameManager>();
+        _enemyFrame = _AIBot.GetComponent<S_FrameManager>();
         _playerFrame = _playerBot.GetComponent<S_FrameManager>();
         _playerFrame.SelectWeapons();
 
@@ -238,7 +306,7 @@ public class S_StreetFightManager : MonoBehaviour
             _endFightConditionText.text = "the player is destroyed".ToUpper();
         };
 
-        _immobileAI     = _AIBot.GetComponent<S_ImmobileDefeat>();
+        _immobileAI = _AIBot.GetComponent<S_ImmobileDefeat>();
         _immobilePlayer = _playerBot.GetComponent<S_ImmobileDefeat>();
 
         _immobileAI.IsImmobile += () =>
@@ -252,6 +320,20 @@ public class S_StreetFightManager : MonoBehaviour
             _endFightConditionText.text = "the player was immobile for 5 seconds".ToUpper();
         };
     }
+    /// <summary>
+    /// set the enabled of controller component for player and ai
+    /// </summary>
+    /// <param name="enabled">enabled value</param>
+    private void SetEnableBots(bool enabled)
+    {
+        _AIController.State = enabled ? S_AIController.AIState.Enable : S_AIController.AIState.Disable;
+        _playerInput.enabled = enabled;
+
+        _immobileAI.enabled = enabled;
+        _immobilePlayer.enabled = enabled;
+    }
+
+
     /// <summary>
     /// make a victory for AI
     /// </summary>
@@ -274,6 +356,31 @@ public class S_StreetFightManager : MonoBehaviour
 
         EndCurrentFight();
     }
+    /// <summary>
+    /// look the distance and if one is not in the radius he lose
+    /// </summary>
+    private void DetectDefeatRadius()
+    {
+        if (_playerBot == null || _AIBot == null)
+            return;
+
+        float distanceDefeatPlayer = Vector3.Distance(transform.position, _playerBot.transform.position);
+        float distanceDefeatEnemy = Vector3.Distance(transform.position, _AIBot.transform.position);
+
+        if (distanceDefeatEnemy > _radiusDefeat)
+        {
+            _endFightConditionText.text = "the enemy is out of the circle".ToUpper();
+            BotPlayerVictory();
+        }
+
+        if (distanceDefeatPlayer > _radiusDefeat)
+        {
+            _endFightConditionText.text = "the player is out of the circle".ToUpper();
+            BotAiVictory();
+        }
+    }
+
+
     /// <summary>
     /// disable all bot in the street and zoom on sur winner
     /// </summary>
@@ -300,43 +407,8 @@ public class S_StreetFightManager : MonoBehaviour
         foreach (var weapon in droppedWeapons)
             Destroy(weapon);
     }
-    /// <summary>
-    /// destroy the last bot and create new bot
-    /// </summary>
-    private IEnumerator CreateStreetFightBot(System.Action endCreationOfBots)
-    {
-        Destroy(_AIBot);
-        Destroy(_playerBot);
-        S_RobotSpawner robotSpawner = GetComponent<S_RobotSpawner>();
 
-        _playerBot = robotSpawner.GenerateRobotAt(S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot], _botPlayerTransformSpawn);
-        _AIBot = robotSpawner.GenerateRobotAt(Systems.S_DataRobotComponent.Instance.GetRandomRobot(), _botAITransformSpawn);
-        
-        yield return new WaitForSeconds(.1f);
-        
-        var ai = _playerBot.GetComponent<S_AIController>();
-        ai.enabled = false;
-        _playerBot.GetComponent<S_FrameManager>().SelectWeapons();
 
-        var input = _AIBot.GetComponent<PlayerInput>();
-        input.enabled = false;
-        _AIBot.GetComponent<S_FrameManager>().SelectWeapons();
-
-        _AIController = _AIBot.GetComponent<S_AIController>();
-        _playerInput = _playerBot.GetComponent<PlayerInput>();
-        _AIBot.GetComponent<S_AIStatsController>().BotDifficulty = S_AIStatsController.BotRank.Randomly;
-
-        _AIBot.tag = "BotA";
-        _playerBot.tag = "BotB";
-        _AIBot.GetComponent<S_AIController>().EnemyTag = "BotB";
-
-        BindDeadEventForBots();
-        SetEnableBots(false);
-
-        _skillsController.InitializeSkills(_playerFrame);
-
-        endCreationOfBots?.Invoke();
-    }
     /// <summary>
     /// Select the text for display in the end text
     /// </summary>
@@ -355,29 +427,6 @@ public class S_StreetFightManager : MonoBehaviour
                 break;
             default:
                 break;
-        }
-    }
-    /// <summary>
-    /// look the distance and if one is not in the radius he lose
-    /// </summary>
-    private void DetectDefeatRadius()
-    {
-        if (_playerBot == null || _AIBot == null)
-            return;
-
-        float distanceDefeatPlayer = Vector3.Distance(transform.position, _playerBot.transform.position);
-        float distanceDefeatEnemy = Vector3.Distance(transform.position, _AIBot.transform.position);
-
-        if (distanceDefeatEnemy > _radiusDefeat)
-        {
-            _endFightConditionText.text = "the enemy is out of the circle".ToUpper();
-            BotPlayerVictory();
-        }
-
-        if (distanceDefeatPlayer > _radiusDefeat)
-        {
-            _endFightConditionText.text = "the player is out of the circle".ToUpper();
-            BotAiVictory();
         }
     }
     /// <summary>
@@ -442,6 +491,8 @@ public class S_StreetFightManager : MonoBehaviour
             _endFightConditionText.text = "the enemy won with more life".ToUpper();
         }
     }
+
+
     /// <summary>
     /// generate a random color
     /// </summary>
@@ -499,43 +550,6 @@ public class S_StreetFightManager : MonoBehaviour
     /// create a timer with each sprite in the array for the timer
     /// </summary>
     /// <param name="endTimer">launch at the end of the array</param>
-    private IEnumerator TimerBeforeStart(System.Action endTimer)
-    {
-        foreach (var number in _numberForTimer)
-        {
-            _timerBeforeStart.sprite = number;
-            yield return new WaitForSeconds(1f);
-        }
-
-        _timerBeforeStart.gameObject.SetActive(false);
-        _fightParentText.SetActive(true);
-        yield return new WaitForSeconds(1f);
-        _fightParentText.SetActive(false);
-
-        endTimer?.Invoke();
-    }
-    /// <summary>
-    /// update field of view
-    /// </summary>
-    /// <param name="endZoomAnimation">launch when the field of view is equal at 5</param>
-    private IEnumerator AnimationZoom(System.Action endZoomAnimation = null)
-    {
-        var camera = _cameraView.gameObject.GetComponentInChildren<Camera>();
-
-        while (camera.fieldOfView > _zoomEndAnimation)
-        {
-            float speedScale = Mathf.InverseLerp(_zoomEndAnimation, _startFieldOfView, camera.fieldOfView);
-            speedScale = Mathf.Max(speedScale, .5f);
-
-            camera.fieldOfView -= Time.deltaTime * _zoomAnimationSpeed * speedScale;
-            yield return null;
-        }
-
-        endZoomAnimation?.Invoke();
-    }
-    /// <summary>
-    /// Put in two list every names present in a text document
-    /// </summary>
     private void InitializeNameLists()
     {
         string prefixeContent = "";
