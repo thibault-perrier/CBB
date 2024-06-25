@@ -937,7 +937,7 @@ public class S_AIController : MonoBehaviour
     {
         // get the dot product of the weapon and the current bot
         Vector3 dirSelfWeapon = (GetHitZone(weapon) - weapon.transform.position).normalized;
-        float dot = Vector3.Dot(bot.forward, dirSelfWeapon);
+        float dot = Mathf.Round(Vector3.Dot(bot.forward.normalized, dirSelfWeapon) * 100f) / 100f;
 
         return dot >= 0f ? bot.forward : -bot.forward;
     }
