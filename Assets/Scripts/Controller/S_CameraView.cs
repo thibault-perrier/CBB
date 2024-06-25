@@ -117,21 +117,29 @@ public class S_CameraView : MonoBehaviour
 
             _camArena.transform.rotation = Quaternion.Slerp(prevRot, Quaternion.LookRotation(lookDirection), Time.deltaTime * 5f);
 
-            float newFov = ComputeNewFOV();
-            newFov = Mathf.Clamp(newFov, _minFov, _maxFov);
+            float newFov = 0f;
+            bool succesCalculFov = ComputeNewFOV(ref newFov);
 
-            cam.fieldOfView = newFov;
+            if (succesCalculFov)
+            {
+                newFov = Mathf.Clamp(newFov, _minFov, _maxFov);
+                cam.fieldOfView = newFov;
+            }
 
             //float newZoom = Mathf.Lerp(_maxZoom, _minZoom, GetGreatestDistance() / _zoomLimit);
             //cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, newZoom, Time.deltaTime);
         }
     }
 
-    private float ComputeNewFOV()
+    private bool ComputeNewFOV(ref float newAngle)
     {
+        if (_objects.Count < 2)
+            return false;
+
         Vector3 camToObj1 = _currentCam.transform.position - _objects[0].position;
         Vector3 camToObj2 = _currentCam.transform.position - _objects[1].position;
-        return Vector3.Angle(camToObj1, camToObj2);
+        newAngle = Vector3.Angle(camToObj1, camToObj2);
+        return true;
     }
 
     /// <summary>

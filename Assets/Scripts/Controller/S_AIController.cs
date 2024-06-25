@@ -1103,8 +1103,7 @@ public class S_AIController : MonoBehaviour
         StartCoroutine(AttackFailedCooldownCoroutine());
 
         // if he is not enough close to the enemy
-        Vector3 hitZonePosition = _currentWeapon.HitZone.transform.TransformPoint(_currentWeapon.HitZone.center);
-        float distanceToEnemy = Vector3.Distance(hitZonePosition, _target.transform.position);
+        float distanceToEnemy = Vector3.Distance(transform.position, _enemy.transform.position);
         if (distanceToEnemy > _attackFailDistance)
             return;
 

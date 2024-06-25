@@ -161,6 +161,37 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7b6f39488b0fe9d45b268743fa58ef8a, type: 3}
   _scaleSfxVolume: 1
   _isLooping: 0
+--- !u!1 &973207464954765406
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 580420364485590918}
+  m_Layer: 0
+  m_Name: FleeDirection
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &580420364485590918
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 973207464954765406}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 392724533051973100}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2864770155178023637
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,6 +238,7 @@ Transform:
   - {fileID: 3274707121333666529}
   - {fileID: 7973881097541530768}
   - {fileID: 2625005325264632576}
+  - {fileID: 580420364485590918}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!114 &7306284191210347721
@@ -611,7 +643,7 @@ MonoBehaviour:
   _trapLayer:
     serializedVersion: 2
     m_Bits: 0
-  _fleeDirection: {fileID: 0}
+  _fleeDirection: {fileID: 580420364485590918}
   _fleeCooldown: 0
   _getEnemyInStart: 0
   _failAttack: 0
