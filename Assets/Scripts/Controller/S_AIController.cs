@@ -123,6 +123,9 @@ public class S_AIController : MonoBehaviour
             _aiState = value;
             if (_aiState == AIState.Disable)
             {
+                if (!_wheelsController)
+                    _wheelsController = GetComponent<S_WheelsController>();
+
                 _wheelsController.Movement = 0f;
                 _wheelsController.Direction = 0f;
             }
@@ -144,6 +147,9 @@ public class S_AIController : MonoBehaviour
         get => _enemyTag;
         set
         {
+            _frameManager = GetComponent<S_FrameManager>();
+            _frameManager.SelectWeapons();
+
             _enemyTag = value;
             _enemy = GameObject.FindGameObjectWithTag(value);
             _target = _enemy;
@@ -931,7 +937,7 @@ public class S_AIController : MonoBehaviour
     {
         // get the dot product of the weapon and the current bot
         Vector3 dirSelfWeapon = (GetHitZone(weapon) - weapon.transform.position).normalized;
-        float dot = Vector3.Dot(bot.forward, dirSelfWeapon);
+        float dot = Mathf.Round(Vector3.Dot(bot.forward.normalized, dirSelfWeapon) * 100f) / 100f;
 
         return dot >= 0f ? bot.forward : -bot.forward;
     }
