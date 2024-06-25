@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using Systems;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_ShopController : MonoBehaviour
 {
+    public static Canvas Shop;
+
     public List<Image> _row1Images;
     public List<Image> _row2Images;
 
@@ -29,6 +32,7 @@ public class S_ShopController : MonoBehaviour
     void Start()
     {
         GenerateImages();
+        DisplaySolde();
     }
 
     void GenerateImages()
@@ -68,7 +72,7 @@ public class S_ShopController : MonoBehaviour
         {
             ChangeImage(-1);
         }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             BuyObject();
         }   
@@ -86,6 +90,11 @@ public class S_ShopController : MonoBehaviour
         if (_currentRow > 1) _currentRow = 0;
         
         EnsureIndexInBounds();
+    }
+
+    public void ChangeRow()
+    {
+        ChangeRow(1);
     }
 
     void ChangeImage(int direction)
@@ -197,7 +206,25 @@ public class S_ShopController : MonoBehaviour
                 break;
             default: break;
         }
+        S_DataGame.Instance.SaveInventory();
+        DisplaySolde();
     }
 
+    public void LeaveShop(InputAction.CallbackContext context)
+    {
+        if (context.performed && gameObject.activeInHierarchy)
+        {
+            LeaveShop();
+        }
+    }
+
+    public void LeaveShop()
+    {
+        S_ClickablesManager.Instance.mainMenu.SetActive(true);
+        S_ClickablesManager.Instance.shopMenu.SetActive(false);
+        S_DataGame.Instance.SaveInventory();
+        S_ObjectClickable.Instance.LaunchAnimBackToMenuFromShop();
+        S_ClickablesManager.Instance.ResetAllClickables();
+    }
 
 }
