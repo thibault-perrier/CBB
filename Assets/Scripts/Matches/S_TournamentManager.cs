@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Systems;
 using UnityEngine;
 
 public class S_TournamentManager : MonoBehaviour
@@ -17,8 +18,9 @@ public class S_TournamentManager : MonoBehaviour
         public Color logo;
         public float rating;
         public bool hasLost;
-        //public Robot robot;
+        public Robot robot;
         public Rank rank;
+
     }
 
     public enum Rank
@@ -85,6 +87,7 @@ public class S_TournamentManager : MonoBehaviour
         player.logo = InitializePlayerLogo();
         player.logoSprite = _participantsLogos[S_DataGame.Instance.inventory.overlayImageIndex];
         player.isPlayer = true;
+        player.robot = S_DataGame.Instance.inventory.GetSelectRobot();
         _participants.Add(player);
 
         for (int i = 1; i < tournament.participantNb; i++)
@@ -96,6 +99,7 @@ public class S_TournamentManager : MonoBehaviour
             participant.logo = ChooseRandomColor();
             participant.rank = tournament.rank;
             participant.isPlayer = false;
+            participant.robot = S_DataRobotComponent.Instance.GetRandomRobot();
 
             _participants.Add(participant);
         }
@@ -158,7 +162,6 @@ public class S_TournamentManager : MonoBehaviour
     /// <returns></returns>
     public int InitializeCurrentTournament(Tournament tournament)
     {
-        _currentTournament = tournament;
 
         InitializeParticipants(tournament);
 

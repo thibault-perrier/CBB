@@ -52,7 +52,7 @@ public class S_WheelsController : MonoBehaviour
         _wheelRadius = _wheels[0].radius;
         _playerInput = new PlayerInput();
     }
-    
+
     private void FixedUpdate()
     {
         DirectionUpdate();
@@ -72,10 +72,9 @@ public class S_WheelsController : MonoBehaviour
 
         // limit max torque
         motorTorque = Mathf.Clamp(motorTorque, -_maxMotorTorque, _maxMotorTorque);
-
         foreach (WheelCollider wheel in _wheels)
         {
-            if(Mathf.Abs(_move) >= 0.1f)
+            if (Mathf.Abs(_move) >= 0.1f)
             {
                 wheel.brakeTorque = 0;
                 wheel.motorTorque = motorTorque * _move;
@@ -93,7 +92,7 @@ public class S_WheelsController : MonoBehaviour
     /// </summary>
     private void DirectionUpdate()
     {
-        foreach(WheelCollider wheel in _directionWheelsCollider)
+        foreach (WheelCollider wheel in _directionWheelsCollider)
         {
             wheel.steerAngle = _maxAngle * _direction;
         }

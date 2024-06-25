@@ -160,10 +160,11 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
         }
     }
 
+
     public float PowerCalculation()
     {
         float totalDamage = 0;
-        foreach (S_WeaponManager weapon in  _weaponManagers)
+        foreach (S_WeaponManager weapon in _weaponManagers)
         {
             totalDamage += weapon.Data.Damage;
         }
@@ -171,5 +172,17 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
         float botPower = (_life + _rb.mass + totalDamage + (_weaponManagers.Count * 10)) / 4;
 
         return botPower;
+    }
+    public int GetRepairPrice()
+    {
+        int price = 0;
+        price +=  (int)(((_data.Cost * 0.8) / _data.MaxLife) * (_data.MaxLife - _life));
+        foreach (S_WeaponManager weaponManager in _weaponManagers)
+        {
+            if (weaponManager.CurrentState != S_WeaponManager.State.destroy)
+                price += weaponManager.GetRepairPrice();
+        }
+        return price;
+
     }
 }

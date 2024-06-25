@@ -22,12 +22,30 @@ public class S_FileHandler: MonoBehaviour
     public void LoadInventory()
     {
         string filePath = Application.persistentDataPath + "/InventoryData.json";
-        string inventoryData = System.IO.File.ReadAllText(filePath);
-        InventorySaver inventorySaver = JsonUtility.FromJson<InventorySaver>(inventoryData);
-        S_DataGame.Instance.inventory = inventorySaver;
-        Debug.Log("Changement effectué");
-        Debug.Log(S_DataGame.Instance.inventory.CurrentMoney);
-        Debug.Log(filePath);
+
+        if (System.IO.File.Exists(filePath))
+        {
+            string inventoryData = System.IO.File.ReadAllText(filePath);
+            InventorySaver inventorySaver = JsonUtility.FromJson<InventorySaver>(inventoryData);
+            S_DataGame.Instance.inventory = inventorySaver;
+            Debug.Log("Changement effectué");
+            Debug.Log(S_DataGame.Instance.inventory.CurrentMoney);
+            Debug.Log(filePath);
+        }
+        else
+        {
+            Debug.LogWarning("Le fichier d'inventaire n'a pas été trouvé, création d'un inventaire par défaut.");
+
+            S_DataGame.Instance.inventory = CreateDefaultInventory();
+        }
+    }
+
+    private InventorySaver CreateDefaultInventory()
+    {
+        InventorySaver defaultInventory = new InventorySaver();
+        
+        defaultInventory.CurrentMoney = 1000; 
+        return defaultInventory;
     }
 
     public void SaveTournament()

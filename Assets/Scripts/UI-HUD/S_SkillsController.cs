@@ -68,7 +68,7 @@ public class S_SkillsController : MonoBehaviour
                 currentSkill.WeaponIcon.sprite = currentSkill.Weapon.Data.WeaponSrite;
                 currentSkill.Weapon.AttackingEnd.RemoveListener(actionCooldown[skill.index]);
                 currentSkill.Weapon.AttackingStart.RemoveListener(actionDestroy[skill.index]);
-                currentSkill.Weapon.WeaponDestroy.RemoveListener(actionDestroy[skill.index]);
+                currentSkill.Weapon.WeaponUnuseable.RemoveListener(actionDestroy[skill.index]);
             }
             else
             {
@@ -112,12 +112,27 @@ public class S_SkillsController : MonoBehaviour
                 currentSkill.WeaponIcon.sprite = currentSkill.Weapon.Data.WeaponSrite;
                 currentSkill.Weapon.AttackingEnd.AddListener(actionCooldown[skill.index]);
                 currentSkill.Weapon.AttackingStart.AddListener(actionDestroy[skill.index]);
-                currentSkill.Weapon.WeaponDestroy.AddListener(actionDestroy[skill.index]);
+                currentSkill.Weapon.WeaponUnuseable.AddListener(actionDestroy[skill.index]);
             }
             else
             {
                 currentSkill.WeaponIcon.gameObject.SetActive(false);
             }
+        }
+    }
+    public void ResetSkills()
+    {
+        List<S_Skill> skills = new()
+        {
+            skillLeft,
+            skillUp,
+            skillRight,
+            skillDown,
+        };
+
+        foreach (var skill in skills)
+        {
+            skill.WeaponMask.fillAmount = 0f;
         }
     }
 

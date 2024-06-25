@@ -90,7 +90,7 @@ public class S_EditorController : MonoBehaviour
     {
         //GiveFrames();
 
-        //S_DataGame.Instance.LoadInventory();
+        S_DataGame.Instance.LoadInventory();
         UpdatePiece();
         UpdatePresetRobotGroup();
 
@@ -106,39 +106,12 @@ public class S_EditorController : MonoBehaviour
     {
         foreach (S_FrameData data in _frameData)
         {
-            bool haveFrame = false;
-            foreach (Frame frame in S_DataGame.Instance.inventory.Frames)
-            {
-                if (frame.GetFrameData() == data)
-                {
-                    frame._number++;
-                    haveFrame = true;
-                }
-            }
-            if (!haveFrame)
-            {
-                S_DataGame.Instance.inventory.Frames.Add(new Frame(data));
-            }
-
+            S_DataGame.Instance.inventory.AddFrame(data);
         }
         foreach (S_WeaponData data in _weaponsData)
         {
-            bool haveWeapon = false;
-            foreach (Weapon weapon in S_DataGame.Instance.inventory.Weapons)
-            {
-                if (weapon.GetWeaponData() == data)
-                {
-                    weapon._number++;
-                    haveWeapon = true;
-                }
-            }
-            if (!haveWeapon)
-            {
-                S_DataGame.Instance.inventory.Weapons.Add(new Weapon(data));
-            }
-
+            S_DataGame.Instance.inventory.AddWeapon(data);
         }
-
         Robot robot = new Robot(S_DataGame.Instance.inventory.Frames[0]);
         S_DataGame.Instance.inventory.Robots.Add(robot);
     }

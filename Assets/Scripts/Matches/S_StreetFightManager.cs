@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(S_RobotSpawner))]
 public class S_StreetFightManager : MonoBehaviour
 {
     public enum FightState
@@ -54,6 +55,8 @@ public class S_StreetFightManager : MonoBehaviour
     private GameObject _endFightTextDefeat;
     [SerializeField, Tooltip("the parent of display the loser of the fight")]
     private GameObject _endFightTextVictory;
+    [SerializeField, Tooltip("End fight who describe how the fight is end")]
+    private TMP_Text _endFightConditionText;
 
     [Space(10)]
     [SerializeField, Tooltip("the parent of the ui when we fight")]
@@ -105,7 +108,6 @@ public class S_StreetFightManager : MonoBehaviour
     private S_FrameManager _enemyFrame;
 
     private float _startFieldOfView;
-    private bool _streetFightEnd = false;
     private bool _timerUpdate = false;
 
     private float _minutesTimer = 3f;
@@ -128,19 +130,9 @@ public class S_StreetFightManager : MonoBehaviour
     }
     private void Update()
     {
-        if (_streetFightEnd)
-        {
-            if (Input.anyKeyDown)
-            {
-                EndStreetFight();
-            }
-        }
-        else
-        {
-            DetectDefeatRadius();
-            UpdateHealthBarUI();
-            UpdateTimeUI();
-        }
+        DetectDefeatRadius();
+        UpdateHealthBarUI();
+        UpdateTimeUI();
     }
     private void OnDrawGizmosSelected()
     {
@@ -155,9 +147,14 @@ public class S_StreetFightManager : MonoBehaviour
     [ContextMenu("Start fight")]
     public void StartStreetFight()
     {
+        _minutesTimer = 3f;
+        _secondsTimer = 0f;
+        _skillsController.ResetSkills();
+
         ClearDroppedWeapon();
         _timerUpdate = false;
 
+        _cameraView.ClearObjectToView();
         _cameraView.AddObjectToView(_botPlayerTransformSpawn);
         _cameraView.AddObjectToView(_botAITransformSpawn);
 
@@ -185,6 +182,16 @@ public class S_StreetFightManager : MonoBehaviour
             }));
         }));
     }
+    /// <summary>
+    /// disable all canvas and switch camera
+    /// </summary>
+    public void EndStreetFight()
+    {
+        SceneManager.LoadScene(_sceneToLoadInEndFight, LoadSceneMode.Single);
+        _cameraView.gameObject.SetActive(false);
+        _uiEndFightWinner.SetActive(false);
+    }
+
 
     /// <summary>
     /// set the enabled of controller component for player and ai
@@ -207,19 +214,35 @@ public class S_StreetFightManager : MonoBehaviour
         _playerFrame = _playerBot.GetComponent<S_FrameManager>();
         _playerFrame.SelectWeapons();
 
-        _enemyFrame.OnDie  += (_) => BotPlayerVictorie();
-        _playerFrame.OnDie += (_) => BotAiVictorie();
+        _enemyFrame.OnDie += (_) =>
+        {
+            BotPlayerVictory();
+            _endFightConditionText.text = "the enemy is destroyed".ToUpper();
+        };
+        _playerFrame.OnDie += (_) =>
+        {
+            BotAiVictory();
+            _endFightConditionText.text = "the player is destroyed".ToUpper();
+        };
 
         _immobileAI     = _AIBot.GetComponent<S_ImmobileDefeat>();
         _immobilePlayer = _playerBot.GetComponent<S_ImmobileDefeat>();
 
-        _immobileAI.IsImmobile     += () => BotPlayerVictorie();
-        _immobilePlayer.IsImmobile += () => BotAiVictorie();
+        _immobileAI.IsImmobile += () =>
+        {
+            BotPlayerVictory();
+            _endFightConditionText.text = "the enemy was immobile for 5 seconds".ToUpper();
+        };
+        _immobilePlayer.IsImmobile += () =>
+        {
+            BotAiVictory();
+            _endFightConditionText.text = "the player was immobile for 5 seconds".ToUpper();
+        };
     }
     /// <summary>
     /// make a victory for AI
     /// </summary>
-    private void BotAiVictorie()
+    private void BotAiVictory()
     {
         _fightState = FightState.BotAIVictory;
         _cameraView.RemoveObjectToView(_playerBot.transform);
@@ -228,7 +251,7 @@ public class S_StreetFightManager : MonoBehaviour
     /// <summary>
     /// make a victory for player
     /// </summary>
-    private void BotPlayerVictorie()
+    private void BotPlayerVictory()
     {
         _fightState = FightState.BotPlayerVictory;
         _cameraView.RemoveObjectToView(_AIBot.transform);
@@ -245,12 +268,13 @@ public class S_StreetFightManager : MonoBehaviour
     {
         SetEnableBots(false);
         _uiParentInFight.SetActive(false);
+        _timerUpdate = false;
 
         StartCoroutine(AnimationZoom(() =>
         {
             _uiEndFightWinner.SetActive(true);
+            _onStreetFightEnd?.Invoke();
             DisplayEndFightText();
-            _streetFightEnd = true;
         }));
     }
     /// <summary>
@@ -270,15 +294,21 @@ public class S_StreetFightManager : MonoBehaviour
     {
         Destroy(_AIBot);
         Destroy(_playerBot);
+        S_RobotSpawner robotSpawner = GetComponent<S_RobotSpawner>();
 
         yield return new WaitForSeconds(.1f);
 
-        _playerBot = Instantiate(_playerBotPrefab,   _botPlayerTransformSpawn.position,  Quaternion.Euler(_botPlayerTransformSpawn.eulerAngles));
-        _AIBot     = Instantiate(_AIBotPrefab,       _botAITransformSpawn.position,      Quaternion.Euler(_botAITransformSpawn.eulerAngles));
+
+        
+        _playerBot = robotSpawner.GenerateRobotAt(S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot], _botPlayerTransformSpawn);
+        var ai = _playerBot.GetComponent<S_AIController>();
+        ai.enabled = false;
+
+        _AIBot     = robotSpawner.GenerateRobotAt(Systems.S_DataRobotComponent.Instance.GetRandomRobot(), _botAITransformSpawn);
 
         _AIController = _AIBot.GetComponent<S_AIController>();
         _playerInput = _playerBot.GetComponent<PlayerInput>();
-        _AIBot.GetComponent<S_AIStatsController>().BotDifficulty = S_AIStatsController.BotRank.Gold;
+        _AIBot.GetComponent<S_AIStatsController>().BotDifficulty = S_AIStatsController.BotRank.Randomly;
 
         _AIBot.tag = "BotA";
         _playerBot.tag = "BotB";
@@ -312,18 +342,6 @@ public class S_StreetFightManager : MonoBehaviour
         }
     }
     /// <summary>
-    /// disable all canvas and switch camera
-    /// </summary>
-    private void EndStreetFight()
-    {
-        _streetFightEnd = false;
-
-        SceneManager.LoadScene(_sceneToLoadInEndFight, LoadSceneMode.Single);
-        _cameraView.gameObject.SetActive(false);
-        _uiEndFightWinner.SetActive(false);
-        _onStreetFightEnd?.Invoke();
-    }
-    /// <summary>
     /// look the distance and if one is not in the radius he lose
     /// </summary>
     private void DetectDefeatRadius()
@@ -335,10 +353,16 @@ public class S_StreetFightManager : MonoBehaviour
         float distanceDefeatEnemy = Vector3.Distance(transform.position, _AIBot.transform.position);
 
         if (distanceDefeatEnemy > _radiusDefeat)
-            BotPlayerVictorie();
+        {
+            _endFightConditionText.text = "the enemy is out of the circle".ToUpper();
+            BotPlayerVictory();
+        }
 
         if (distanceDefeatPlayer > _radiusDefeat)
-            BotAiVictorie();
+        {
+            _endFightConditionText.text = "the player is out of the circle".ToUpper();
+            BotAiVictory();
+        }
     }
     /// <summary>
     /// update the health bar of bots
@@ -360,6 +384,7 @@ public class S_StreetFightManager : MonoBehaviour
             S_FrameManager frame = hp.Item2;
 
             healthBar.fillAmount = frame.PercentLife;
+            healthBar.color = Color.HSVToRGB(Mathf.Lerp(0f, 120f, frame.PercentLife) / 360f, 1f, 1f);
         }
     }
     /// <summary>
@@ -391,9 +416,15 @@ public class S_StreetFightManager : MonoBehaviour
         float percentLifeEnemy = _enemyFrame.PercentLife;
 
         if (percentLifePlayer > percentLifeEnemy)
-            BotPlayerVictorie();
+        {
+            BotPlayerVictory();
+            _endFightConditionText.text = "the player to win with more life".ToUpper();
+        }
         else
-            BotAiVictorie();
+        {
+            BotAiVictory();
+            _endFightConditionText.text = "the enemy won with more life".ToUpper();
+        }
     }
 
     /// <summary>
