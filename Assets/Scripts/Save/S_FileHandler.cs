@@ -1,13 +1,18 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class S_FileHandler: MonoBehaviour
 {
     public static S_FileHandler Instance;
+    private List<string> _prefixes = new List<string>();
+    private List<string> _suffixes = new List<string>();
 
     private void Awake()
     {
         if (Instance == null)
             Instance = this;
+
+        InitializeNameLists();
     }
 
     public void SaveInventory()
@@ -45,13 +50,35 @@ public class S_FileHandler: MonoBehaviour
         InventorySaver defaultInventory = new InventorySaver();
         
         defaultInventory.CurrentMoney = 1000;
-        defaultInventory.prefixIndex = 0;
-        defaultInventory.suffixIndex = 0;
-        defaultInventory.LoadPrefixName();
-        defaultInventory.LoadSuffixName();
-        
+        defaultInventory.prefixString = _prefixes[0];
+        defaultInventory.suffixString = _suffixes[0];
+        defaultInventory.overlayImageIndex = 0;
+
         return defaultInventory;
     }
+    private void InitializeNameLists()
+    {
+        string prefixeContent = "";
+        string suffixeContent = "";
+        string prefixeFilePath = "NamesData/Prefixes";
+        string suffixeFilePath = "NamesData/Suffixes";
+
+        try
+        {
+            prefixeContent = Resources.Load<TextAsset>(prefixeFilePath).text.ToUpper();
+            suffixeContent = Resources.Load<TextAsset>(suffixeFilePath).text.ToUpper();
+        }
+        catch (System.Exception)
+        {
+            Debug.LogError("Text file not found)");
+        }
+
+        string[] prefixeArray = prefixeContent.Split('\n');
+        string[] suffixeArray = suffixeContent.Split('\n');
+        _prefixes.AddRange(prefixeArray);
+        _suffixes.AddRange(suffixeArray);
+    }
+
 
     public void SaveTournament()
     {
