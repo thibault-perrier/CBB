@@ -207,7 +207,6 @@ Transform:
   - {fileID: 3274707121333666529}
   - {fileID: 7973881097541530768}
   - {fileID: 2625005325264632576}
-  - {fileID: 2206144044954667272}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!114 &7306284191210347721
@@ -634,8 +633,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991be1179fab19e41989564e7c23b40f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _updateStatsOnStart: 0
-  _botRank: 1
+  _updateStatsOnStart: 1
+  _botRank: 2
   _statsBotTutorialRank:
     _attackEnemyWeapon: 0
     _attackWithBestWeapon: 0
@@ -644,23 +643,23 @@ MonoBehaviour:
     _canFleeEnemy: 0
     _canIgnoreTrap: 0
     _canFleeWithTrap: 0
-    _canMakeAccidentalMovement: 0
-    _canMakeAccidentalDirection: 0
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
     _attackSuccesProbability: 0
     _attackEnemyWeaponProbabiltiy: 0
     _attackFailProbability: 0
-    _movementProbability: 0
+    _movementProbability: 60
     _dodgeProbability: 0
     _fleeProbability: 0
-    _accidentalMovementProbability: 0
-    _accidentalDirectionProbability: 0
+    _accidentalMovementProbability: 10
+    _accidentalDirectionProbability: 10
     _fleeCooldown: 0
     _attackFailCooldown: 0
     _attackFailDistance: 0
     _attackSuccesProbabilityRandom: {x: 0, y: 0}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
     _attackFailProbabilityRandom: {x: 0, y: 0}
-    _movementProbabilityRandom: {x: 0, y: 0}
+    _movementProbabilityRandom: {x: -10, y: 10}
     _dodgeProbabilityRandom: {x: 0, y: 0}
     _fleeProbabilityRandom: {x: 0, y: 0}
     _accidentalMovementProbabilityRandom: {x: 0, y: 0}
@@ -669,127 +668,127 @@ MonoBehaviour:
     _attackFailCooldownRandom: {x: 0, y: 0}
   _statsBotBronzeRank:
     _attackEnemyWeapon: 0
-    _attackWithBestWeapon: 0
-    _canFailAnyAttack: 0
+    _attackWithBestWeapon: 1
+    _canFailAnyAttack: 1
     _dodgeTrap: 0
-    _canFleeEnemy: 0
+    _canFleeEnemy: 1
     _canIgnoreTrap: 0
     _canFleeWithTrap: 0
-    _canMakeAccidentalMovement: 0
-    _canMakeAccidentalDirection: 0
-    _attackSuccesProbability: 0
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
+    _attackSuccesProbability: 60
     _attackEnemyWeaponProbabiltiy: 0
-    _attackFailProbability: 0
-    _movementProbability: 0
+    _attackFailProbability: 15
+    _movementProbability: 80
     _dodgeProbability: 0
-    _fleeProbability: 0
-    _accidentalMovementProbability: 0
-    _accidentalDirectionProbability: 0
-    _fleeCooldown: 0
-    _attackFailCooldown: 0
-    _attackFailDistance: 0
-    _attackSuccesProbabilityRandom: {x: 0, y: 0}
+    _fleeProbability: 40
+    _accidentalMovementProbability: 20
+    _accidentalDirectionProbability: 20
+    _fleeCooldown: 0.1
+    _attackFailCooldown: 0.7
+    _attackFailDistance: 3
+    _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
-    _attackFailProbabilityRandom: {x: 0, y: 0}
-    _movementProbabilityRandom: {x: 0, y: 0}
-    _dodgeProbabilityRandom: {x: 0, y: 0}
-    _fleeProbabilityRandom: {x: 0, y: 0}
-    _accidentalMovementProbabilityRandom: {x: 0, y: 0}
-    _accidentalDirectionProbabilityRandom: {x: 0, y: 0}
-    _fleeCooldownRandom: {x: 0, y: 0}
+    _attackFailProbabilityRandom: {x: -10, y: 5}
+    _movementProbabilityRandom: {x: -5, y: 5}
+    _dodgeProbabilityRandom: {x: 0, y: 10}
+    _fleeProbabilityRandom: {x: -10, y: 10}
+    _accidentalMovementProbabilityRandom: {x: -5, y: 5}
+    _accidentalDirectionProbabilityRandom: {x: -5, y: 5}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
     _attackFailCooldownRandom: {x: 0, y: 0}
   _statsBotSliverRank:
     _attackEnemyWeapon: 0
-    _attackWithBestWeapon: 0
-    _canFailAnyAttack: 0
-    _dodgeTrap: 0
-    _canFleeEnemy: 0
+    _attackWithBestWeapon: 1
+    _canFailAnyAttack: 1
+    _dodgeTrap: 1
+    _canFleeEnemy: 1
     _canIgnoreTrap: 0
     _canFleeWithTrap: 0
-    _canMakeAccidentalMovement: 0
-    _canMakeAccidentalDirection: 0
-    _attackSuccesProbability: 0
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
+    _attackSuccesProbability: 70
     _attackEnemyWeaponProbabiltiy: 0
-    _attackFailProbability: 0
-    _movementProbability: 0
-    _dodgeProbability: 0
-    _fleeProbability: 0
-    _accidentalMovementProbability: 0
-    _accidentalDirectionProbability: 0
-    _fleeCooldown: 0
-    _attackFailCooldown: 0
-    _attackFailDistance: 0
-    _attackSuccesProbabilityRandom: {x: 0, y: 0}
-    _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
-    _attackFailProbabilityRandom: {x: 0, y: 0}
-    _movementProbabilityRandom: {x: 0, y: 0}
-    _dodgeProbabilityRandom: {x: 0, y: 0}
-    _fleeProbabilityRandom: {x: 0, y: 0}
-    _accidentalMovementProbabilityRandom: {x: 0, y: 0}
-    _accidentalDirectionProbabilityRandom: {x: 0, y: 0}
-    _fleeCooldownRandom: {x: 0, y: 0}
+    _attackFailProbability: 15
+    _movementProbability: 85
+    _dodgeProbability: 80
+    _fleeProbability: 70
+    _accidentalMovementProbability: 15
+    _accidentalDirectionProbability: 15
+    _fleeCooldown: 0.1
+    _attackFailCooldown: 0.7
+    _attackFailDistance: 4.5
+    _attackSuccesProbabilityRandom: {x: -10, y: 10}
+    _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
+    _attackFailProbabilityRandom: {x: -5, y: 5}
+    _movementProbabilityRandom: {x: -7, y: 7}
+    _dodgeProbabilityRandom: {x: -10, y: 10}
+    _fleeProbabilityRandom: {x: -15, y: 15}
+    _accidentalMovementProbabilityRandom: {x: -4, y: 4}
+    _accidentalDirectionProbabilityRandom: {x: -4, y: 4}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
     _attackFailCooldownRandom: {x: 0, y: 0}
   _statsBotGoldRank:
-    _attackEnemyWeapon: 0
-    _attackWithBestWeapon: 0
-    _canFailAnyAttack: 0
-    _dodgeTrap: 0
-    _canFleeEnemy: 0
+    _attackEnemyWeapon: 1
+    _attackWithBestWeapon: 1
+    _canFailAnyAttack: 1
+    _dodgeTrap: 1
+    _canFleeEnemy: 1
     _canIgnoreTrap: 0
-    _canFleeWithTrap: 0
-    _canMakeAccidentalMovement: 0
-    _canMakeAccidentalDirection: 0
-    _attackSuccesProbability: 0
-    _attackEnemyWeaponProbabiltiy: 0
-    _attackFailProbability: 0
-    _movementProbability: 0
-    _dodgeProbability: 0
-    _fleeProbability: 0
-    _accidentalMovementProbability: 0
-    _accidentalDirectionProbability: 0
-    _fleeCooldown: 0
-    _attackFailCooldown: 0
-    _attackFailDistance: 0
-    _attackSuccesProbabilityRandom: {x: 0, y: 0}
-    _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
-    _attackFailProbabilityRandom: {x: 0, y: 0}
-    _movementProbabilityRandom: {x: 0, y: 0}
-    _dodgeProbabilityRandom: {x: 0, y: 0}
-    _fleeProbabilityRandom: {x: 0, y: 0}
-    _accidentalMovementProbabilityRandom: {x: 0, y: 0}
-    _accidentalDirectionProbabilityRandom: {x: 0, y: 0}
-    _fleeCooldownRandom: {x: 0, y: 0}
+    _canFleeWithTrap: 1
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
+    _attackSuccesProbability: 85
+    _attackEnemyWeaponProbabiltiy: 70
+    _attackFailProbability: 15
+    _movementProbability: 95
+    _dodgeProbability: 90
+    _fleeProbability: 85
+    _accidentalMovementProbability: 12
+    _accidentalDirectionProbability: 12
+    _fleeCooldown: 0.1
+    _attackFailCooldown: 0.7
+    _attackFailDistance: 3.5
+    _attackSuccesProbabilityRandom: {x: -10, y: 10}
+    _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
+    _attackFailProbabilityRandom: {x: -5, y: 5}
+    _movementProbabilityRandom: {x: -15, y: 15}
+    _dodgeProbabilityRandom: {x: -5, y: 5}
+    _fleeProbabilityRandom: {x: 0, y: 20}
+    _accidentalMovementProbabilityRandom: {x: -2, y: 2}
+    _accidentalDirectionProbabilityRandom: {x: -2, y: 2}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
     _attackFailCooldownRandom: {x: 0, y: 0}
   _statsBotDiamondRank:
-    _attackEnemyWeapon: 0
-    _attackWithBestWeapon: 0
-    _canFailAnyAttack: 0
-    _dodgeTrap: 0
-    _canFleeEnemy: 0
+    _attackEnemyWeapon: 1
+    _attackWithBestWeapon: 1
+    _canFailAnyAttack: 1
+    _dodgeTrap: 1
+    _canFleeEnemy: 1
     _canIgnoreTrap: 0
-    _canFleeWithTrap: 0
-    _canMakeAccidentalMovement: 0
-    _canMakeAccidentalDirection: 0
-    _attackSuccesProbability: 0
-    _attackEnemyWeaponProbabiltiy: 0
-    _attackFailProbability: 0
-    _movementProbability: 0
-    _dodgeProbability: 0
-    _fleeProbability: 0
-    _accidentalMovementProbability: 0
-    _accidentalDirectionProbability: 0
-    _fleeCooldown: 0
-    _attackFailCooldown: 0
-    _attackFailDistance: 0
-    _attackSuccesProbabilityRandom: {x: 0, y: 0}
-    _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
-    _attackFailProbabilityRandom: {x: 0, y: 0}
-    _movementProbabilityRandom: {x: 0, y: 0}
-    _dodgeProbabilityRandom: {x: 0, y: 0}
-    _fleeProbabilityRandom: {x: 0, y: 0}
-    _accidentalMovementProbabilityRandom: {x: 0, y: 0}
-    _accidentalDirectionProbabilityRandom: {x: 0, y: 0}
-    _fleeCooldownRandom: {x: 0, y: 0}
+    _canFleeWithTrap: 1
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
+    _attackSuccesProbability: 100
+    _attackEnemyWeaponProbabiltiy: 100
+    _attackFailProbability: 15
+    _movementProbability: 95
+    _dodgeProbability: 90
+    _fleeProbability: 85
+    _accidentalMovementProbability: 12
+    _accidentalDirectionProbability: 12
+    _fleeCooldown: 0.1
+    _attackFailCooldown: 0.7
+    _attackFailDistance: 3.5
+    _attackSuccesProbabilityRandom: {x: -10, y: 10}
+    _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
+    _attackFailProbabilityRandom: {x: -5, y: 5}
+    _movementProbabilityRandom: {x: -15, y: 15}
+    _dodgeProbabilityRandom: {x: -5, y: 5}
+    _fleeProbabilityRandom: {x: 0, y: 20}
+    _accidentalMovementProbabilityRandom: {x: -2, y: 2}
+    _accidentalDirectionProbabilityRandom: {x: -2, y: 2}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
     _attackFailCooldownRandom: {x: 0, y: 0}
 --- !u!1 &5352773464794185022
 GameObject:
@@ -819,7 +818,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2206144044954667272}
   m_Father: {fileID: 392724533051973100}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7168296589145179050
@@ -994,7 +994,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.1
+      value: 1.069
       objectReference: {fileID: 0}
     - target: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1002,7 +1002,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.75
+      value: -1.2446785
       objectReference: {fileID: 0}
     - target: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1101,7 +1101,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.1
+      value: 1.0739999
       objectReference: {fileID: 0}
     - target: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1109,7 +1109,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.75
+      value: 1.25
       objectReference: {fileID: 0}
     - target: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1234,23 +1234,31 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 392724533051973100}
+    m_TransformParent: {fileID: 2625005325264632576}
     m_Modifications:
     - target: {fileID: 1613872967422231356, guid: 516010e7159adc34d99d565af43e4724, type: 3}
       propertyPath: m_Name
       value: PO_hookpoint
       objectReference: {fileID: 0}
     - target: {fileID: 3430557335538953504, guid: 516010e7159adc34d99d565af43e4724, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3430557335538953504, guid: 516010e7159adc34d99d565af43e4724, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3430557335538953504, guid: 516010e7159adc34d99d565af43e4724, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.00000011920929
       objectReference: {fileID: 0}
     - target: {fileID: 3430557335538953504, guid: 516010e7159adc34d99d565af43e4724, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.25
+      value: 0.24999994
       objectReference: {fileID: 0}
     - target: {fileID: 3430557335538953504, guid: 516010e7159adc34d99d565af43e4724, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1
+      value: -0.00000011920929
       objectReference: {fileID: 0}
     - target: {fileID: 3430557335538953504, guid: 516010e7159adc34d99d565af43e4724, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1305,7 +1313,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.1
+      value: -1.0620004
       objectReference: {fileID: 0}
     - target: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1313,7 +1321,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.75
+      value: 1.25
       objectReference: {fileID: 0}
     - target: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1412,7 +1420,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.1
+      value: -1.0759996
       objectReference: {fileID: 0}
     - target: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1420,7 +1428,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.75
+      value: -1.2446785
       objectReference: {fileID: 0}
     - target: {fileID: 2365197837970685297, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1523,7 +1531,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d313a7d9fa46d8948a3fb81356474e29, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.215
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d313a7d9fa46d8948a3fb81356474e29, type: 3}
       propertyPath: m_LocalPosition.z
