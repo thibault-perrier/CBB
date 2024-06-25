@@ -636,8 +636,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991be1179fab19e41989564e7c23b40f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _updateStatsOnStart: 0
-  _botRank: 1
+  _updateStatsOnStart: 1
+  _botRank: 2
   _statsBotTutorialRank:
     _attackEnemyWeapon: 0
     _attackWithBestWeapon: 0
@@ -646,23 +646,23 @@ MonoBehaviour:
     _canFleeEnemy: 0
     _canIgnoreTrap: 0
     _canFleeWithTrap: 0
-    _canMakeAccidentalMovement: 0
-    _canMakeAccidentalDirection: 0
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
     _attackSuccesProbability: 0
     _attackEnemyWeaponProbabiltiy: 0
     _attackFailProbability: 0
-    _movementProbability: 0
+    _movementProbability: 60
     _dodgeProbability: 0
     _fleeProbability: 0
-    _accidentalMovementProbability: 0
-    _accidentalDirectionProbability: 0
+    _accidentalMovementProbability: 10
+    _accidentalDirectionProbability: 10
     _fleeCooldown: 0
     _attackFailCooldown: 0
     _attackFailDistance: 0
     _attackSuccesProbabilityRandom: {x: 0, y: 0}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
     _attackFailProbabilityRandom: {x: 0, y: 0}
-    _movementProbabilityRandom: {x: 0, y: 0}
+    _movementProbabilityRandom: {x: -10, y: 10}
     _dodgeProbabilityRandom: {x: 0, y: 0}
     _fleeProbabilityRandom: {x: 0, y: 0}
     _accidentalMovementProbabilityRandom: {x: 0, y: 0}
@@ -671,127 +671,127 @@ MonoBehaviour:
     _attackFailCooldownRandom: {x: 0, y: 0}
   _statsBotBronzeRank:
     _attackEnemyWeapon: 0
-    _attackWithBestWeapon: 0
-    _canFailAnyAttack: 0
+    _attackWithBestWeapon: 1
+    _canFailAnyAttack: 1
     _dodgeTrap: 0
-    _canFleeEnemy: 0
+    _canFleeEnemy: 1
     _canIgnoreTrap: 0
     _canFleeWithTrap: 0
-    _canMakeAccidentalMovement: 0
-    _canMakeAccidentalDirection: 0
-    _attackSuccesProbability: 0
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
+    _attackSuccesProbability: 60
     _attackEnemyWeaponProbabiltiy: 0
-    _attackFailProbability: 0
-    _movementProbability: 0
+    _attackFailProbability: 15
+    _movementProbability: 80
     _dodgeProbability: 0
-    _fleeProbability: 0
-    _accidentalMovementProbability: 0
-    _accidentalDirectionProbability: 0
-    _fleeCooldown: 0
-    _attackFailCooldown: 0
-    _attackFailDistance: 0
-    _attackSuccesProbabilityRandom: {x: 0, y: 0}
+    _fleeProbability: 40
+    _accidentalMovementProbability: 20
+    _accidentalDirectionProbability: 20
+    _fleeCooldown: 0.1
+    _attackFailCooldown: 0.7
+    _attackFailDistance: 3
+    _attackSuccesProbabilityRandom: {x: -10, y: 10}
     _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
-    _attackFailProbabilityRandom: {x: 0, y: 0}
-    _movementProbabilityRandom: {x: 0, y: 0}
-    _dodgeProbabilityRandom: {x: 0, y: 0}
-    _fleeProbabilityRandom: {x: 0, y: 0}
-    _accidentalMovementProbabilityRandom: {x: 0, y: 0}
-    _accidentalDirectionProbabilityRandom: {x: 0, y: 0}
-    _fleeCooldownRandom: {x: 0, y: 0}
+    _attackFailProbabilityRandom: {x: -10, y: 5}
+    _movementProbabilityRandom: {x: -5, y: 5}
+    _dodgeProbabilityRandom: {x: 0, y: 10}
+    _fleeProbabilityRandom: {x: -10, y: 10}
+    _accidentalMovementProbabilityRandom: {x: -5, y: 5}
+    _accidentalDirectionProbabilityRandom: {x: -5, y: 5}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
     _attackFailCooldownRandom: {x: 0, y: 0}
   _statsBotSliverRank:
     _attackEnemyWeapon: 0
-    _attackWithBestWeapon: 0
-    _canFailAnyAttack: 0
-    _dodgeTrap: 0
-    _canFleeEnemy: 0
+    _attackWithBestWeapon: 1
+    _canFailAnyAttack: 1
+    _dodgeTrap: 1
+    _canFleeEnemy: 1
     _canIgnoreTrap: 0
     _canFleeWithTrap: 0
-    _canMakeAccidentalMovement: 0
-    _canMakeAccidentalDirection: 0
-    _attackSuccesProbability: 0
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
+    _attackSuccesProbability: 70
     _attackEnemyWeaponProbabiltiy: 0
-    _attackFailProbability: 0
-    _movementProbability: 0
-    _dodgeProbability: 0
-    _fleeProbability: 0
-    _accidentalMovementProbability: 0
-    _accidentalDirectionProbability: 0
-    _fleeCooldown: 0
-    _attackFailCooldown: 0
-    _attackFailDistance: 0
-    _attackSuccesProbabilityRandom: {x: 0, y: 0}
-    _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
-    _attackFailProbabilityRandom: {x: 0, y: 0}
-    _movementProbabilityRandom: {x: 0, y: 0}
-    _dodgeProbabilityRandom: {x: 0, y: 0}
-    _fleeProbabilityRandom: {x: 0, y: 0}
-    _accidentalMovementProbabilityRandom: {x: 0, y: 0}
-    _accidentalDirectionProbabilityRandom: {x: 0, y: 0}
-    _fleeCooldownRandom: {x: 0, y: 0}
+    _attackFailProbability: 15
+    _movementProbability: 85
+    _dodgeProbability: 80
+    _fleeProbability: 70
+    _accidentalMovementProbability: 15
+    _accidentalDirectionProbability: 15
+    _fleeCooldown: 0.1
+    _attackFailCooldown: 0.7
+    _attackFailDistance: 4.5
+    _attackSuccesProbabilityRandom: {x: -10, y: 10}
+    _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
+    _attackFailProbabilityRandom: {x: -5, y: 5}
+    _movementProbabilityRandom: {x: -7, y: 7}
+    _dodgeProbabilityRandom: {x: -10, y: 10}
+    _fleeProbabilityRandom: {x: -15, y: 15}
+    _accidentalMovementProbabilityRandom: {x: -4, y: 4}
+    _accidentalDirectionProbabilityRandom: {x: -4, y: 4}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
     _attackFailCooldownRandom: {x: 0, y: 0}
   _statsBotGoldRank:
-    _attackEnemyWeapon: 0
-    _attackWithBestWeapon: 0
-    _canFailAnyAttack: 0
-    _dodgeTrap: 0
-    _canFleeEnemy: 0
+    _attackEnemyWeapon: 1
+    _attackWithBestWeapon: 1
+    _canFailAnyAttack: 1
+    _dodgeTrap: 1
+    _canFleeEnemy: 1
     _canIgnoreTrap: 0
-    _canFleeWithTrap: 0
-    _canMakeAccidentalMovement: 0
-    _canMakeAccidentalDirection: 0
-    _attackSuccesProbability: 0
-    _attackEnemyWeaponProbabiltiy: 0
-    _attackFailProbability: 0
-    _movementProbability: 0
-    _dodgeProbability: 0
-    _fleeProbability: 0
-    _accidentalMovementProbability: 0
-    _accidentalDirectionProbability: 0
-    _fleeCooldown: 0
-    _attackFailCooldown: 0
-    _attackFailDistance: 0
-    _attackSuccesProbabilityRandom: {x: 0, y: 0}
-    _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
-    _attackFailProbabilityRandom: {x: 0, y: 0}
-    _movementProbabilityRandom: {x: 0, y: 0}
-    _dodgeProbabilityRandom: {x: 0, y: 0}
-    _fleeProbabilityRandom: {x: 0, y: 0}
-    _accidentalMovementProbabilityRandom: {x: 0, y: 0}
-    _accidentalDirectionProbabilityRandom: {x: 0, y: 0}
-    _fleeCooldownRandom: {x: 0, y: 0}
+    _canFleeWithTrap: 1
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
+    _attackSuccesProbability: 85
+    _attackEnemyWeaponProbabiltiy: 70
+    _attackFailProbability: 15
+    _movementProbability: 95
+    _dodgeProbability: 90
+    _fleeProbability: 85
+    _accidentalMovementProbability: 12
+    _accidentalDirectionProbability: 12
+    _fleeCooldown: 0.1
+    _attackFailCooldown: 0.7
+    _attackFailDistance: 3.5
+    _attackSuccesProbabilityRandom: {x: -10, y: 10}
+    _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
+    _attackFailProbabilityRandom: {x: -5, y: 5}
+    _movementProbabilityRandom: {x: -15, y: 15}
+    _dodgeProbabilityRandom: {x: -5, y: 5}
+    _fleeProbabilityRandom: {x: 0, y: 20}
+    _accidentalMovementProbabilityRandom: {x: -2, y: 2}
+    _accidentalDirectionProbabilityRandom: {x: -2, y: 2}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
     _attackFailCooldownRandom: {x: 0, y: 0}
   _statsBotDiamondRank:
-    _attackEnemyWeapon: 0
-    _attackWithBestWeapon: 0
-    _canFailAnyAttack: 0
-    _dodgeTrap: 0
-    _canFleeEnemy: 0
+    _attackEnemyWeapon: 1
+    _attackWithBestWeapon: 1
+    _canFailAnyAttack: 1
+    _dodgeTrap: 1
+    _canFleeEnemy: 1
     _canIgnoreTrap: 0
-    _canFleeWithTrap: 0
-    _canMakeAccidentalMovement: 0
-    _canMakeAccidentalDirection: 0
-    _attackSuccesProbability: 0
-    _attackEnemyWeaponProbabiltiy: 0
-    _attackFailProbability: 0
-    _movementProbability: 0
-    _dodgeProbability: 0
-    _fleeProbability: 0
-    _accidentalMovementProbability: 0
-    _accidentalDirectionProbability: 0
-    _fleeCooldown: 0
-    _attackFailCooldown: 0
-    _attackFailDistance: 0
-    _attackSuccesProbabilityRandom: {x: 0, y: 0}
-    _attackEnemyWeaponProbabilityRandom: {x: 0, y: 0}
-    _attackFailProbabilityRandom: {x: 0, y: 0}
-    _movementProbabilityRandom: {x: 0, y: 0}
-    _dodgeProbabilityRandom: {x: 0, y: 0}
-    _fleeProbabilityRandom: {x: 0, y: 0}
-    _accidentalMovementProbabilityRandom: {x: 0, y: 0}
-    _accidentalDirectionProbabilityRandom: {x: 0, y: 0}
-    _fleeCooldownRandom: {x: 0, y: 0}
+    _canFleeWithTrap: 1
+    _canMakeAccidentalMovement: 1
+    _canMakeAccidentalDirection: 1
+    _attackSuccesProbability: 100
+    _attackEnemyWeaponProbabiltiy: 100
+    _attackFailProbability: 15
+    _movementProbability: 95
+    _dodgeProbability: 90
+    _fleeProbability: 85
+    _accidentalMovementProbability: 12
+    _accidentalDirectionProbability: 12
+    _fleeCooldown: 0.1
+    _attackFailCooldown: 0.7
+    _attackFailDistance: 3.5
+    _attackSuccesProbabilityRandom: {x: -10, y: 10}
+    _attackEnemyWeaponProbabilityRandom: {x: -20, y: 20}
+    _attackFailProbabilityRandom: {x: -5, y: 5}
+    _movementProbabilityRandom: {x: -15, y: 15}
+    _dodgeProbabilityRandom: {x: -5, y: 5}
+    _fleeProbabilityRandom: {x: 0, y: 20}
+    _accidentalMovementProbabilityRandom: {x: -2, y: 2}
+    _accidentalDirectionProbabilityRandom: {x: -2, y: 2}
+    _fleeCooldownRandom: {x: -0.01, y: 0.01}
     _attackFailCooldownRandom: {x: 0, y: 0}
 --- !u!1 &5352773464794185022
 GameObject:
