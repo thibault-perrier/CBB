@@ -44,7 +44,12 @@ public class S_FileHandler: MonoBehaviour
     {
         InventorySaver defaultInventory = new InventorySaver();
         
-        defaultInventory.CurrentMoney = 1000; 
+        defaultInventory.CurrentMoney = 1000;
+        defaultInventory.prefixIndex = 0;
+        defaultInventory.suffixIndex = 0;
+        defaultInventory.LoadPrefixName();
+        defaultInventory.LoadSuffixName();
+        
         return defaultInventory;
     }
 
