@@ -29,7 +29,7 @@ public class S_ClickablesManager : MonoBehaviour
 
     public GameObject _editorCanvasHelper;
     public GameObject _menuCanvasHelper;
-    
+
     void Awake()
     {
         if (Instance == null)
@@ -438,15 +438,16 @@ public class S_ClickablesManager : MonoBehaviour
         activeBackGarage = false;
     }
 
-    public void ActiveBoolBackShop()
-    {
-        S_ShopManager.Instance.activeBackShop = true;
-    }
+    // public void ActiveBoolBackShop()
+    // {
+    //     S_ShopManager.Instance.activeBackShop = true;
+    // }
 
-    public void FalseBoolBackShop()
-    {
-        S_ShopManager.Instance.activeBackShop = false;
-    }
+    // public void FalseBoolBackShop()
+    // {
+    //     S_ShopManager.Instance.activeBackShop = false;
+    // }
+
     public void StopBoolGoToGarage()
     {
         S_ObjectClickable.Instance.StopGarageAnim();
@@ -546,5 +547,11 @@ public class S_ClickablesManager : MonoBehaviour
     public void LoadDiamond()
     {
         SceneManager.LoadScene(4);
+    }
+
+    public void LoadStreetFight()
+    {
+        SceneManager.LoadScene(5);
+
     }
 }
