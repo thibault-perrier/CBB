@@ -23,7 +23,7 @@ public class S_DataGame : MonoBehaviour
     public InventorySaver inventory = new InventorySaver();
     public TournamentSaver tournament = new TournamentSaver();
 
-    private void Awake()
+    private void Start()
     {
         if (Instance == null)
         {
@@ -69,6 +69,8 @@ public class S_DataGame : MonoBehaviour
     {
         S_FileHandler.Instance.LoadTournament();
     }
+
+    
 }
 
 [System.Serializable]
@@ -320,6 +322,40 @@ public class InventorySaver // Inventory
                         }
                     }
                 }
+            }
+        }
+    }
+
+    public void BuyWeapon(S_WeaponData weaponData)
+    {
+        if(CurrentMoney - weaponData.Cost >= 0)
+        {
+            CurrentMoney -= weaponData.Cost;
+            Weapon weapon = GetWeapon(weaponData);
+            if (weapon != null)
+            {
+                weapon._number++;
+            }
+            else
+            {
+                AddWeapon(weaponData);
+            }
+        }
+    }
+
+    public void BuyFrame(S_FrameData frameData)
+    {
+        if (CurrentMoney - frameData.Cost >= 0)
+        {
+            CurrentMoney -= frameData.Cost;
+            Frame frame = GetFrame(frameData);
+            if (frame != null)
+            {
+                frame._number++;
+            }
+            else
+            {
+                AddFrame(frameData);
             }
         }
     }

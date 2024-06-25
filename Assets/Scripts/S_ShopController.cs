@@ -16,6 +16,13 @@ public class S_ShopController : MonoBehaviour
 
     public GameObject _selectPoint;
 
+    [SerializeField] private Text _Category;
+    [SerializeField] private Text _Solde;
+    [SerializeField] private Text _Name;
+    [SerializeField] private Text _Cost;
+    [SerializeField] private Text _Life;
+    [SerializeField] private Text _Damage;
+
     private int _currentRow = 0;
     private int _currentIndex = 0;
 
@@ -61,10 +68,15 @@ public class S_ShopController : MonoBehaviour
         {
             ChangeImage(-1);
         }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            BuyObject();
+        }   
         Debug.Log("ligne : " + _currentRow + "  colonne : " + _currentIndex);
 
         MoveRowContainer();
         MoveRowToImage();
+        DisplayInfoObject();
     }
 
     void ChangeRow(int direction)
@@ -138,4 +150,54 @@ public class S_ShopController : MonoBehaviour
             default: return null;
         }
     }
+
+    public void DisplayInfoObject()
+    {
+        string name = "";
+        switch (_currentRow)
+        {
+            case 0:
+                S_WeaponData weaponData = S_DataRobotComponent.Instance._weaponDatas[_currentIndex];
+                _Category.text = "Weapons";
+                name = weaponData.name.Split("_")[1].Split("Data")[0];
+                _Name.text = name;
+                _Cost.text =    "Cost : " + weaponData.Cost.ToString();
+                _Life.text =    "Life : " + weaponData.MaxLife.ToString();
+                _Damage.text =  "Attk : " + weaponData.Damage.ToString();
+                break;
+            case 1:
+                S_FrameData frameData = S_DataRobotComponent.Instance._frameDatas[_currentIndex];
+                _Category.text = "Frames";
+                name = frameData.name.Split("_")[1].Split("Data")[0];
+                _Name.text = name;
+                _Cost.text = "Cost : " + frameData.Cost.ToString();
+                _Life.text = "Life : " + frameData.MaxLife.ToString();
+                _Damage.text = "";
+                break;
+            default: break;
+        }
+    }
+
+    public void DisplaySolde()
+    {
+        _Solde.text = "Solde : " + S_DataGame.Instance.inventory.CurrentMoney.ToString();
+    }
+
+    public void BuyObject()
+    {
+        switch (_currentRow)
+        {
+            case 0:
+                S_WeaponData weaponData = S_DataRobotComponent.Instance._weaponDatas[_currentIndex];
+                S_DataGame.Instance.inventory.BuyWeapon(weaponData);
+                break;
+            case 1:
+                S_FrameData frameData = S_DataRobotComponent.Instance._frameDatas[_currentIndex];
+                S_DataGame.Instance.inventory.BuyFrame(frameData);
+                break;
+            default: break;
+        }
+    }
+
+
 }
