@@ -563,7 +563,10 @@ public class S_TournamentBracket : MonoBehaviour
 
     public void OnSkipMatch()
     {
-        _tournamentManager.SimulateMatch();
+        GameObject bot1 = _arenaManager.GetBot1();
+        GameObject bot2 = _arenaManager.GetBot2();
+        float victoryPercent = _arenaManager.FirstParticipantVictoryPercent(bot1, bot2);
+        _tournamentManager.SimulateMatch(victoryPercent);
         OnReturnToTournament();
     }
 

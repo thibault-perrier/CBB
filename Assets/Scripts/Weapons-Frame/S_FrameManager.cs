@@ -159,4 +159,17 @@ public class S_FrameManager : MonoBehaviour, I_Damageable
                 weaponManager.Repair();
         }
     }
+
+    public float PowerCalculation()
+    {
+        float totalDamage = 0;
+        foreach (S_WeaponManager weapon in  _weaponManagers)
+        {
+            totalDamage += weapon.Data.Damage;
+        }
+
+        float botPower = (_life + _rb.mass + totalDamage + (_weaponManagers.Count * 10)) / 4;
+
+        return botPower;
+    }
 }

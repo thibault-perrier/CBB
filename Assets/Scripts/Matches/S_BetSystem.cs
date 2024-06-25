@@ -15,7 +15,6 @@ public class S_BetSystem : MonoBehaviour
 
     [SerializeField] private GameObject _launchMatch;
     [SerializeField] private GameObject _betWinDisplay;
-    private TextMeshProUGUI _launchMatchTxt;
 
     private int _betAmount = 0;
     private float _currentBetRating = 0;
@@ -40,10 +39,12 @@ public class S_BetSystem : MonoBehaviour
     private InputAction _confirmAction;
     private InputAction _cancelAction;
 
+    [SerializeField] private Image _betParticipantLogo; //logo that display the participant the player bet
+
     private void Awake()
     {
         _eventSystem = EventSystem.current;
-        _launchMatchTxt = _launchMatch.GetComponentInChildren<TextMeshProUGUI>();
+        _betParticipantLogo.gameObject.SetActive(false);
 
         _betInputTxt.onValidateInput += ValidateChar;
         _navigate = NavigateReference.action;
@@ -202,8 +203,10 @@ public class S_BetSystem : MonoBehaviour
                 _eventSystem.SetSelectedGameObject(null);
                 _eventSystem.SetSelectedGameObject(_launchMatch);
 
-
                 _hasBet = _betAmount == 0 ? false : true;
+                _betParticipantLogo.gameObject.SetActive(true);
+                _betParticipantLogo.sprite = _currentParticipantChosen.logoSprite;
+                _betParticipantLogo.color = _currentParticipantChosen.logo;
             }
             else
             {
@@ -255,10 +258,10 @@ public class S_BetSystem : MonoBehaviour
             if (!HasLostBet())
             {
                 Debug.Log("YOU WON THE BET !");
-                int amountWon = _betAmount * 2; //Change this when we have the definitive calcul of the rating
-                int newMoney = _playerMoney + amountWon;
+                float amountWon = _betAmount * _currentBetRating;
+                int newMoney = _playerMoney + Mathf.RoundToInt(amountWon);
 
-                _playerMoney = newMoney > _maxMoney ? _maxMoney : newMoney; //Mathf.RoundToInt(_currentBetRating)
+                _playerMoney = newMoney > _maxMoney ? _maxMoney : newMoney;
                 S_DataGame.Instance.inventory.CurrentMoney = _playerMoney;
                 S_DataGame.Instance.SaveInventory();
 
@@ -303,10 +306,10 @@ public class S_BetSystem : MonoBehaviour
         }
     }
 
-    public void SetChosenParticipant(S_TournamentManager.Participant participant)
+    public void SetChosenParticipant(S_TournamentManager.Participant participant, float rating)
     {
         _currentParticipantChosen = participant;
-        _currentBetRating = participant.rating;
+        _currentBetRating = rating;
     }
 
     public S_TournamentManager.Participant GetChosenParticipant()
@@ -354,5 +357,15 @@ public class S_BetSystem : MonoBehaviour
     public void SetHasBet(bool hasBet)
     {
         _hasBet = hasBet;
+    }
+
+    public bool GetHasBet()
+    {
+        return _hasBet;
+    }
+
+    public void SetCurrentBetRating(float currentBetRating)
+    {
+        _currentBetRating = currentBetRating;
     }
 }
