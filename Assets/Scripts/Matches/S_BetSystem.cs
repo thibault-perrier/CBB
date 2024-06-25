@@ -39,6 +39,9 @@ public class S_BetSystem : MonoBehaviour
     private InputAction _confirmAction;
     private InputAction _cancelAction;
 
+    public Color WinColor;
+    public Color LoseColor;
+
     [SerializeField] private Image _betParticipantLogo; //logo that display the participant the player bet
 
     private void Awake()
@@ -267,7 +270,16 @@ public class S_BetSystem : MonoBehaviour
 
                 _playerMoneyTMP.text = "$ " + _playerMoney;
                 _betWinDisplay.SetActive(true);
+                _betWinDisplay.GetComponent<Image>().color = WinColor;
                 _betWinDisplay.GetComponentInChildren<TextMeshProUGUI>().text = "BET : YOU WON $ " + Mathf.RoundToInt(amountWon) + " !";
+
+                _betAmount = 0;
+            }
+            else
+            {
+                _betWinDisplay.SetActive(true);
+                _betWinDisplay.GetComponent<Image>().color = LoseColor;
+                _betWinDisplay.GetComponentInChildren<TextMeshProUGUI>().text = "BET : YOU LOST $ " + Mathf.RoundToInt(_betAmount) + " !";
 
                 _betAmount = 0;
             }
