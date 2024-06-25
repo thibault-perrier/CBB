@@ -487,6 +487,12 @@ public class S_ClickablesManager : MonoBehaviour
         _editorController.SetPresetChoice();
     }
 
+    public void UpdateEditor()
+    {
+        _editorController.UpdatePresetRobotGroup();
+        _editorController.UpdatePiece();
+    }
+
     public void ActiveCircleFade()
     {
         CircleFade.SetActive(true);

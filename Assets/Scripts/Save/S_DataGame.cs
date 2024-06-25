@@ -23,7 +23,7 @@ public class S_DataGame : MonoBehaviour
     public InventorySaver inventory = new InventorySaver();
     public TournamentSaver tournament = new TournamentSaver();
 
-    private void Start()
+    private void Awake()
     {
         if (Instance == null)
         {
@@ -38,8 +38,6 @@ public class S_DataGame : MonoBehaviour
 
     private void Start()
     {
-
-
         if (OnSceneLoad == Load.Inventory || OnSceneLoad == Load.InventoryAndTournament)
         {
             LoadInventory();

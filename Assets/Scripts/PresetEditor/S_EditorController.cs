@@ -212,7 +212,7 @@ public class S_EditorController : MonoBehaviour
         }
     }
 
-    private void UpdatePiece()
+    public void UpdatePiece()
     {
         S_DataGame.Instance.inventory.UpdateUseItem();
         foreach (GameObject gameObject in _weapons)
@@ -327,6 +327,8 @@ public class S_EditorController : MonoBehaviour
         switch (_editState)
         {
             case EditState.PresetChoice:
+                if (_presets.Count == 0)
+                    break;
                 if (_selectedIndex < 0)
                     _selectedIndex = _presets.Count - 1;
                 _selectedIndex = _selectedIndex % _presets.Count;
@@ -334,6 +336,8 @@ public class S_EditorController : MonoBehaviour
                 SetHovered(_presets[_selectedIndex].gameObject);
                 break;
             case EditState.PartChoice:
+                if (_presetObjectPart.Count == 0)
+                    break;
                 if (_selectedIndex < 0)
                     _selectedIndex = _presetObjectPart.Count - 1;
                 _selectedIndex = _selectedIndex % _presetObjectPart.Count;
@@ -341,6 +345,12 @@ public class S_EditorController : MonoBehaviour
                 SetHovered(_presetObjectPart[_selectedIndex].gameObject);
                 break;
             case EditState.FrameChoice:
+                if (_frame.Count == 0)
+                {
+                    _editState = EditState.PartChoice;
+                    break;
+                }
+                    
                 if (_selectedIndex < 0)
                     _selectedIndex = _frame.Count - 1;
                 _selectedIndex = _selectedIndex % _frame.Count;
@@ -348,6 +358,12 @@ public class S_EditorController : MonoBehaviour
                 SetHovered(_frame[_selectedIndex].gameObject);
                 break;
             case EditState.WeaponChoice:
+                if (_weapons.Count == 0)
+                {
+                    _editState = EditState.PartChoice;
+                    break;
+                }
+
                 if (_selectedIndex < 0)
                     _selectedIndex = _weapons.Count - 1;
                 _selectedIndex = _selectedIndex % _weapons.Count;
@@ -573,7 +589,7 @@ public class S_EditorController : MonoBehaviour
         UpdatePresetRobotGroup();
     }
 
-    private void UpdatePresetRobotGroup()
+    public void UpdatePresetRobotGroup()
     {
         foreach (GameObject robot in _presets)
         {
