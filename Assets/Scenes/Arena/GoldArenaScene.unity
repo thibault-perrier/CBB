@@ -793,6 +793,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3094163773887864513, guid: 68a3ac3098a36d64f9278d55379957aa, type: 3}
+      propertyPath: _sceneToLoadForGiveUp
+      value: MainMenuV1_0
+      objectReference: {fileID: 0}
     - target: {fileID: 3408005342335054836, guid: 68a3ac3098a36d64f9278d55379957aa, type: 3}
       propertyPath: _currentTournament.cost
       value: 150
@@ -1748,7 +1752,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac60a9ca23266ea4d883ed3ca2c96bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tournamentManager: {fileID: 869028428}
   OnSceneLoad: 3
   inventory:
     CurrentMoney: 0
@@ -1760,7 +1763,9 @@ MonoBehaviour:
     overlayColorHex: 
     backgroundAlpha: 255
     prefixIndex: 0
+    prefixString: 
     suffixIndex: 0
+    suffixString: 
     overlayImageIndex: 0
     overlayImagePosition: {x: 0, y: 0}
   tournament:
@@ -1779,9 +1784,17 @@ MonoBehaviour:
       isPlayer: 0
       id: 0
       name: 
+      logoSprite: {fileID: 0}
       logo: {r: 0, g: 0, b: 0, a: 0}
       rating: 0
       hasLost: 0
+      robot:
+        _frame:
+          _id: 0
+          _name: 
+          _number: 0
+          _useNumber: 0
+        _weapons: []
       rank: 0
     _playerLife: []
 --- !u!4 &1679983991
@@ -1912,11 +1925,11 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 150
+  far clip plane: 1000
   field of view: 60
   orthographic: 0
   orthographic size: 20
-  m_Depth: 100
+  m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -1924,8 +1937,8 @@ Camera:
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
-  m_HDR: 0
-  m_AllowMSAA: 0
+  m_HDR: 1
+  m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1

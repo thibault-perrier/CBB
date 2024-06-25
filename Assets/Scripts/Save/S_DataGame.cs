@@ -23,7 +23,7 @@ public class S_DataGame : MonoBehaviour
     public InventorySaver inventory = new InventorySaver();
     public TournamentSaver tournament = new TournamentSaver();
 
-    private void Awake()
+    private void Start()
     {
         if (Instance == null)
         {
@@ -34,6 +34,11 @@ public class S_DataGame : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Start()
+    {
+
 
         if (OnSceneLoad == Load.Inventory || OnSceneLoad == Load.InventoryAndTournament)
         {
@@ -64,6 +69,8 @@ public class S_DataGame : MonoBehaviour
     {
         S_FileHandler.Instance.LoadTournament();
     }
+
+    
 }
 
 [System.Serializable]
@@ -184,6 +191,10 @@ public class InventorySaver // Inventory
 
     public Robot GetSelectRobot()
     {
+        if (Robots.Count() == 0)
+        {
+            return null;
+        }
         return Robots[SelectedRobot];
     }
 
@@ -228,7 +239,7 @@ public class InventorySaver // Inventory
             weapon._number--;
             if (weapon._number <= 0)
                 Weapons.Remove(weapon);
-        } 
+        }
     }
 
     public Frame GetFrame(S_FrameData frameData)
@@ -245,7 +256,7 @@ public class InventorySaver // Inventory
 
     public void AddFrame(S_FrameData frameData)
     {
-        foreach(Frame f in Frames)
+        foreach (Frame f in Frames)
         {
             if (f.GetFrameData() == frameData)
             {
@@ -299,7 +310,7 @@ public class InventorySaver // Inventory
                 if (frame._id == robot._frame._id)
                     frame._useNumber++;
             }
-            if(robot._weapons != null)
+            if (robot._weapons != null)
             {
                 foreach (HookPoint hookPoint in robot._weapons)
                 {
@@ -311,6 +322,40 @@ public class InventorySaver // Inventory
                         }
                     }
                 }
+            }
+        }
+    }
+
+    public void BuyWeapon(S_WeaponData weaponData)
+    {
+        if(CurrentMoney - weaponData.Cost >= 0)
+        {
+            CurrentMoney -= weaponData.Cost;
+            Weapon weapon = GetWeapon(weaponData);
+            if (weapon != null)
+            {
+                weapon._number++;
+            }
+            else
+            {
+                AddWeapon(weaponData);
+            }
+        }
+    }
+
+    public void BuyFrame(S_FrameData frameData)
+    {
+        if (CurrentMoney - frameData.Cost >= 0)
+        {
+            CurrentMoney -= frameData.Cost;
+            Frame frame = GetFrame(frameData);
+            if (frame != null)
+            {
+                frame._number++;
+            }
+            else
+            {
+                AddFrame(frameData);
             }
         }
     }
@@ -405,7 +450,7 @@ public class Robot
             }
         }
 
-        if(replaceIndex >= 0)
+        if (replaceIndex >= 0)
         {
             this.RemoveWeapon(replaceIndex);
         }
@@ -467,7 +512,7 @@ public class TournamentSaver // Tournament
     public void SavePlayerLife(S_FrameManager frameManager)
     {
         _playerLife.Add(frameManager._life);
-        foreach(GameObject hookPoint in frameManager.WeaponHookPoints)
+        foreach (GameObject hookPoint in frameManager.WeaponHookPoints)
         {
             S_WeaponManager weaponManager = hookPoint.GetComponentInChildren<S_WeaponManager>();
             if (weaponManager != null)
@@ -484,7 +529,7 @@ public class TournamentSaver // Tournament
     public void SetPlayerLife(S_FrameManager frameManager)
     {
         frameManager._life = _playerLife[0];
-        for(int i=0; i < frameManager.WeaponHookPoints.Count();i++)
+        for (int i = 0; i < frameManager.WeaponHookPoints.Count(); i++)
         {
             GameObject hookPoint = frameManager.WeaponHookPoints[i];
             S_WeaponManager weaponManager = hookPoint.GetComponentInChildren<S_WeaponManager>();
