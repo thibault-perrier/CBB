@@ -5,8 +5,8 @@ using UnityEngine.InputSystem.LowLevel;
 
 public class S_ChangeControlDisplay : MonoBehaviour
 {
-    [SerializeField] private GameObject _keyboardControls;
-    [SerializeField] private GameObject _gamepadControls;
+    [SerializeField] private GameObject _gamepadHelper;
+    [SerializeField] private GameObject _keyboardHelper;
 
     private InputDevice _lastActiveDevice;
 
@@ -31,27 +31,23 @@ public class S_ChangeControlDisplay : MonoBehaviour
 
                 if (_lastActiveDevice is Gamepad)
                 {
-                    if (_keyboardControls != null)
-                        _keyboardControls?.SetActive(false);
-                    if (_gamepadControls != null)
-                        _gamepadControls?.SetActive(true);
+                    if (_gamepadHelper && _keyboardHelper)
+                    {
+                        _gamepadHelper.SetActive(true);
+                        _keyboardHelper.SetActive(false);
+                    }
                     Cursor.visible = false;
-                    Cursor.lockState = CursorLockMode.Locked;
+                    // Cursor.lockState = CursorLockMode.Locked;
+                    Mouse.current.WarpCursorPosition(Vector2.one);
                 }
-                else if (_lastActiveDevice is Keyboard)
-                {
-                    if (_keyboardControls != null)
-                        _keyboardControls?.SetActive(true);
-                    if (_gamepadControls != null)
-                        _gamepadControls?.SetActive(false);
-                }
+
                 else if (_lastActiveDevice is Mouse)
                 {
-                    if (_keyboardControls != null)
-                        _keyboardControls?.SetActive(true);
-                    if (_gamepadControls != null)
-                        _gamepadControls?.SetActive(false);
-
+                    if (_gamepadHelper && _keyboardHelper)
+                    {
+                        _keyboardHelper.SetActive(true);
+                        _gamepadHelper.SetActive(false);
+                    }
                     Cursor.visible = true;
                     Cursor.lockState = CursorLockMode.None;
                 }
