@@ -110,6 +110,7 @@ public class S_AIController : MonoBehaviour
     private WaitForSeconds _fleeFailureCooldownCoroutine = new(.5f);
     private float _scaleMovement;
     private float _startMassRigidbody;
+    private float _rangeDodgeTrap = 7f;
 
     #region Property
     /// <summary>
@@ -377,7 +378,7 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     private void UpdateAIMovement()
     {
-        TryFailedAttack();
+        TryFailedAnyAttack();
         TryToAttackWithAnyWeapon();
 
         // get movement probability
@@ -849,17 +850,17 @@ public class S_AIController : MonoBehaviour
             var direction = new Vector3(xDirection, 0f, scaleDirection);
 
             // make a raycast and add the turn amount
-            bool hit = Physics.Raycast(transform.position, transform.TransformDirection(direction), 5f, _trapLayer);
+            bool hit = Physics.Raycast(transform.position, transform.TransformDirection(direction), _rangeDodgeTrap, _trapLayer);
             if (hit)
             {
                 // add the turn amount by the raycast angle
                 turnAmount += ((angle - 50f) > 0f ? -1f : 1f) * scaleDirection;
                 tuchOneTime = true;
-                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 5f, Color.green, 0f);
+                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * _rangeDodgeTrap, Color.green, 0f);
             }
             else
             {
-                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 5f, Color.red, 0f);
+                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * _rangeDodgeTrap, Color.red, 0f);
             }
         }
 
@@ -1094,7 +1095,6 @@ public class S_AIController : MonoBehaviour
     /// <summary>
     /// try to failed any attack with probability
     /// </summary>
-    /// <returns>return <b>True</b> if he make an attack</returns>
     private void TryFailedAttack()
     {
         if (_failAttack)
@@ -1119,6 +1119,40 @@ public class S_AIController : MonoBehaviour
                 AttackWithCurrrentWeapon();
             }
         }
+    }
+    /// <summary>
+    /// try to failed an attack with all weapon with probability
+    /// </summary>
+    private void TryFailedAnyAttack()
+    {
+        if (_failAttack)
+            return;
+
+        StartCoroutine(AttackFailedCooldownCoroutine());
+
+        // if he is not enough close to the enemy
+        float distanceToEnemy = Vector3.Distance(transform.position, _enemy.transform.position);
+        if (distanceToEnemy > _attackFailDistance)
+            return;
+
+        if (!_canFailedAnyAttack)
+            return;
+
+        foreach (var weapon in _frameManager.Weapons)
+        {
+            if (!WeaponCanAttack(weapon))
+            {
+                // get random for the attack failed
+                float failedAttackRnd = Random.Range(0, 101);
+                if (_attackFailProbability > failedAttackRnd)
+                {
+                    _currentWeapon = weapon;
+                    AttackWithCurrrentWeapon();
+                }
+            }
+        }
+
+        GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
     }
     /// <summary>
     /// use the current weapon for make an attack
@@ -1209,6 +1243,7 @@ public class S_AIController : MonoBehaviour
                 {
                     _currentWeapon = weapon;
                     AttackWithCurrrentWeapon();
+                    return;
                 }
             }
         }
