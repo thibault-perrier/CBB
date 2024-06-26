@@ -96,7 +96,6 @@ public class S_EditorController : MonoBehaviour
         if (editorActionMap != null)
         {
             editorActionMap.Enable();
-            Debug.Log("Editor action map enabled.");
         }
     }
 
@@ -105,7 +104,6 @@ public class S_EditorController : MonoBehaviour
         if (editorActionMap != null)
         {
             editorActionMap.Disable();
-            Debug.Log("Editor action map disabled.");
         }
     }
 
@@ -323,7 +321,6 @@ public class S_EditorController : MonoBehaviour
                 count++;
                 if (count < _nbFrame)
                 {
-                    Debug.Log(_nbFrame);
                     newFrame.transform.parent = _frameGroup1.transform;
                 }
                 else
@@ -370,7 +367,6 @@ public class S_EditorController : MonoBehaviour
                 if (_selectedIndex < 0)
                     _selectedIndex = _presets.Count - 1;
                 _selectedIndex = _selectedIndex % _presets.Count;
-                Debug.Log(_presets[_selectedIndex].name);
                 SetHovered(_presets[_selectedIndex].gameObject);
                 break;
             case EditState.PartChoice:
@@ -379,7 +375,6 @@ public class S_EditorController : MonoBehaviour
                 if (_selectedIndex < 0)
                     _selectedIndex = _presetObjectPart.Count - 1;
                 _selectedIndex = _selectedIndex % _presetObjectPart.Count;
-                Debug.Log(_presetObjectPart[_selectedIndex].name);
                 SetHovered(_presetObjectPart[_selectedIndex].gameObject);
                 break;
             case EditState.FrameChoice:
@@ -388,11 +383,10 @@ public class S_EditorController : MonoBehaviour
                     _editState = EditState.PartChoice;
                     break;
                 }
-                    
+
                 if (_selectedIndex < 0)
                     _selectedIndex = _frame.Count - 1;
                 _selectedIndex = _selectedIndex % _frame.Count;
-                Debug.Log(_frame[_selectedIndex].name);
                 SetHovered(_frame[_selectedIndex].gameObject);
                 break;
             case EditState.WeaponChoice:
@@ -405,7 +399,6 @@ public class S_EditorController : MonoBehaviour
                 if (_selectedIndex < 0)
                     _selectedIndex = _weapons.Count - 1;
                 _selectedIndex = _selectedIndex % _weapons.Count;
-                Debug.Log(_weapons[_selectedIndex].name);
                 SetHovered(_weapons[_selectedIndex].gameObject);
                 break;
             default:
@@ -522,8 +515,6 @@ public class S_EditorController : MonoBehaviour
 
         foreach (Frame frame in S_DataGame.Instance.inventory.Frames)
         {
-            Debug.Log("frame name : " + frame._name + " || " + frame._number + " - " + frame._useNumber);
-            Debug.Log("calcul: " + (frame._number - frame._useNumber));
             if (frame._number - frame._useNumber >= 1)
             {
                 return frame;

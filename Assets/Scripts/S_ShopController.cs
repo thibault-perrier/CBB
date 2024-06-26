@@ -7,14 +7,17 @@ using UnityEngine.UI;
 
 public class S_ShopController : MonoBehaviour
 {
+    public InputActionAsset inputActions;
+    private InputActionMap shopActionMap;
+
     public static Canvas Shop;
 
     public List<Image> _row1Images;
     public List<Image> _row2Images;
 
-    public GameObject _rowContainer;  
-    public GameObject _row1;          
-    public GameObject _row2;          
+    public GameObject _rowContainer;
+    public GameObject _row1;
+    public GameObject _row2;
 
     public GameObject _imagePrefab;
 
@@ -27,6 +30,9 @@ public class S_ShopController : MonoBehaviour
     [SerializeField] private Text _Life;
     [SerializeField] private Text _Damage;
 
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _cashRegisterSound;
+
     private int _currentRow = 0;
     private int _currentIndex = 0;
 
@@ -35,10 +41,19 @@ public class S_ShopController : MonoBehaviour
     private void Awake()
     {
         _buttons = gameObject.GetComponentsInChildren<Button>();
+
+        shopActionMap = inputActions.FindActionMap("Shop");
+
+        if (shopActionMap == null)
+        {
+            Debug.LogError("L'Action Map 'Shop' n'a pas été trouvée dans l'Input Action Asset.");
+        }
+        this.gameObject.SetActive(false);
     }
 
     void Start()
     {
+
         foreach (Button button in _buttons)
         {
             button.onClick.AddListener(DeactivateButton);
@@ -46,6 +61,26 @@ public class S_ShopController : MonoBehaviour
 
         GenerateImages();
         DisplaySolde();
+    }
+
+    void OnEnable()
+    {
+        DisplaySolde();
+
+        S_DataGame.Instance.LoadInventory();
+        if (shopActionMap != null)
+        {
+            shopActionMap.Enable();
+
+        }
+    }
+
+    void OnDisable()
+    {
+        if (shopActionMap != null)
+        {
+            shopActionMap.Disable();
+        }
     }
 
     private void DeactivateButton()
@@ -73,7 +108,7 @@ public class S_ShopController : MonoBehaviour
     }
 
     void Update()
-    {  
+    {
         //Debug.Log("ligne : " + _currentRow + "  colonne : " + _currentIndex);
 
         MoveRowContainer();
@@ -106,14 +141,14 @@ public class S_ShopController : MonoBehaviour
         _currentRow += direction;
         if (_currentRow < 0) _currentRow = 1;
         if (_currentRow > 1) _currentRow = 0;
-        
+
         EnsureIndexInBounds();
     }
 
     void ChangeImage(int direction)
     {
         _currentIndex += direction;
-        
+
         EnsureIndexInBounds();
     }
 
@@ -155,7 +190,7 @@ public class S_ShopController : MonoBehaviour
         Vector3 selectPointWorldPos = _selectPoint.transform.position;
 
         Vector3 selectedImageWorldPos = currentRowImages[_currentIndex].transform.position;
-        
+
         float distance = selectPointWorldPos.x - selectedImageWorldPos.x;
 
         RectTransform currentRowRectTransform = GetRowRectTransform(_currentRow);
@@ -183,9 +218,9 @@ public class S_ShopController : MonoBehaviour
                 _Category.text = "Weapons";
                 name = weaponData.name.Split("_")[1].Split("Data")[0];
                 _Name.text = name;
-                _Cost.text =    "Cost : " + weaponData.Cost.ToString();
-                _Life.text =    "Life : " + weaponData.MaxLife.ToString();
-                _Damage.text =  "Attk : " + weaponData.Damage.ToString();
+                _Cost.text = "Cost : " + weaponData.Cost.ToString();
+                _Life.text = "Life : " + weaponData.MaxLife.ToString();
+                _Damage.text = "Attk : " + weaponData.Damage.ToString();
                 break;
             case 1:
                 S_FrameData frameData = S_DataRobotComponent.Instance._frameDatas[_currentIndex];
@@ -221,6 +256,8 @@ public class S_ShopController : MonoBehaviour
         }
         S_DataGame.Instance.SaveInventory();
         DisplaySolde();
+
+        _audioSource.PlayOneShot(_cashRegisterSound);
     }
 
     public void LeaveShop(InputAction.CallbackContext context)
