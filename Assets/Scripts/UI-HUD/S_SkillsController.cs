@@ -26,7 +26,8 @@ public class S_SkillsController : MonoBehaviour
     [SerializeField]
     private S_Skill skillRight;
 
-    private S_FrameManager _frameManger;
+    private S_FrameManager _frameManager;
+    private bool _isBind = false;
 
     private void OnDisable()
     {
@@ -36,6 +37,9 @@ public class S_SkillsController : MonoBehaviour
 
     private void DisableAllListener()
     {
+        if (!_isBind)
+            return;
+
         List<S_Skill> skills = new()
         {
             skillLeft,
@@ -62,10 +66,11 @@ public class S_SkillsController : MonoBehaviour
         {
             var currentSkill = skill.value;
 
-            if (skill.index <= _frameManger.Weapons.Count - 1)
+            if (skill.index <= _frameManager.Weapons.Count - 1)
             {
-                currentSkill.Weapon = _frameManger.Weapons[skill.index];
+                currentSkill.Weapon = _frameManager.Weapons[skill.index];
                 currentSkill.WeaponIcon.sprite = currentSkill.Weapon.Data.WeaponSrite;
+
                 currentSkill.Weapon.AttackingEnd.RemoveListener(actionCooldown[skill.index]);
                 currentSkill.Weapon.AttackingStart.RemoveListener(actionDestroy[skill.index]);
                 currentSkill.Weapon.WeaponUnuseable.RemoveListener(actionDestroy[skill.index]);
@@ -75,10 +80,15 @@ public class S_SkillsController : MonoBehaviour
                 currentSkill.WeaponIcon.gameObject.SetActive(false);
             }
         }
+
+        _isBind = false;
     }
     public void InitializeSkills(S_FrameManager frameManager)
     {
-        _frameManger = frameManager;
+        if (_isBind)
+            return;
+
+        _frameManager = frameManager;
 
         List<S_Skill> skills = new() 
         { 
@@ -119,6 +129,7 @@ public class S_SkillsController : MonoBehaviour
                 currentSkill.WeaponIcon.gameObject.SetActive(false);
             }
         }
+        _isBind = true;
     }
     public void ResetSkills()
     {
@@ -193,5 +204,21 @@ public class S_SkillsController : MonoBehaviour
         weaponMask.fillAmount = 1f;
 
         yield return null;
+    }
+
+    private bool IsEventAlreadyRegistered(UnityEvent unityEvent, MonoBehaviour target, string method)
+    {
+        int eventCount = unityEvent.GetPersistentEventCount();
+
+        for (int i = 0; i < eventCount; i++)
+        {
+            if (unityEvent.GetPersistentTarget(i) == target &&
+                unityEvent.GetPersistentMethodName(i) == method)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
