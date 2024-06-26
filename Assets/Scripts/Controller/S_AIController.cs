@@ -720,7 +720,7 @@ public class S_AIController : MonoBehaviour
             }
         }
 
-        if (Mathf.Abs(turnAmount) > .5f)
+        if (Mathf.Abs(turnAmount) > 1f)
         {
             Rigidbody rb = _wheelsController.RigidBody;
             rb.mass = _startMassRigidbody * 2.5f;
@@ -757,7 +757,7 @@ public class S_AIController : MonoBehaviour
     /// <returns>return the lerp direction</returns>
     private float CalCulDirection(float angle, float scale)
     {
-        return (Mathf.Abs(angle) / 180f) * scale;
+        return (Mathf.Abs(angle) / 90f) * scale;
     }
     /// <summary>
     /// reduce the movemen if he need to turn
@@ -849,17 +849,17 @@ public class S_AIController : MonoBehaviour
             var direction = new Vector3(xDirection, 0f, scaleDirection);
 
             // make a raycast and add the turn amount
-            bool hit = Physics.Raycast(transform.position, transform.TransformDirection(direction), 10f, _trapLayer);
+            bool hit = Physics.Raycast(transform.position, transform.TransformDirection(direction), 5f, _trapLayer);
             if (hit)
             {
                 // add the turn amount by the raycast angle
-                turnAmount += ((angle - 50f) > 0f ? -.1f : .1f) * scaleDirection;
+                turnAmount += ((angle - 50f) > 0f ? -1f : 1f) * scaleDirection;
                 tuchOneTime = true;
-                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 10f, Color.green, 0f);
+                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 5f, Color.green, 0f);
             }
             else
             {
-                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 10f, Color.red, 0f);
+                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 5f, Color.red, 0f);
             }
         }
 
