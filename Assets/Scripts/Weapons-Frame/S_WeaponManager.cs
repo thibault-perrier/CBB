@@ -444,5 +444,4 @@ public class S_WeaponManager : MonoBehaviour, I_Damageable
         price += (int)(((_data.Cost * 0.8) / _data.MaxLife) * (_data.MaxLife - _life));
         return price;
     }
-
 }
