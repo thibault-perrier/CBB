@@ -345,7 +345,7 @@ public class S_AIController : MonoBehaviour
             GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
         }
 
-        _traps = FindGameObjectsInLayer(6);
+        _traps = FindGameObjectsInLayer((int)Mathf.Log(_trapLayer.value, 2));
     }
     private void FixedUpdate()
     {

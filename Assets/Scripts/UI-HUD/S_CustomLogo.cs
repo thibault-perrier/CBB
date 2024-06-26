@@ -74,7 +74,7 @@ public class S_CustomLogo : MonoBehaviour
                 button.SetActive(true);
             }
 
-            StartCoroutine(SetButtonAsSelected(buttons[2])); //change logo button
+            StartCoroutine(SetButtonAsSelected(buttons[1])); //change logo button
 
             logosScrollView.SetActive(false);
             _isChoosingLogo = false;
@@ -223,6 +223,11 @@ public class S_CustomLogo : MonoBehaviour
     private IEnumerator SetButtonAsSelected(GameObject button)
     {
         yield return new WaitForSeconds(0.1f);
+        EventSystem.current.SetSelectedGameObject(button);
+    }
+
+    public void SetSelected(GameObject button)
+    {
         EventSystem.current.SetSelectedGameObject(button);
     }
 
