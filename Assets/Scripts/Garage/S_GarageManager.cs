@@ -7,7 +7,7 @@ public class GarageManager : MonoBehaviour
     [SerializeField] private GameObject _canvasEditorHelper;
     public void LeaveGarage(InputAction.CallbackContext context)
     {
-        if (context.performed && gameObject.activeInHierarchy && S_ClickablesManager.Instance.activeBackGarage == true )
+        if (context.performed && gameObject.activeInHierarchy && S_ClickablesManager.Instance.activeBackGarage == true)
         {
             S_ObjectClickable.Instance._animatorCameraGarage.SetBool("IdleInGarage", false);
             S_ObjectClickable.Instance.LaunchAnimBackToMenuFromGarage();
@@ -16,14 +16,19 @@ public class GarageManager : MonoBehaviour
         }
     }
 
+    public void OnQuitLeaveBoard()
+    {
+        S_ClickablesManager.Instance.ResetAllClickables();
+        S_ObjectClickable.Instance._animatorCameraGarage.SetBool("Board", false);
+        S_ClickablesManager.Instance.ReactivateAllClickables();
+        S_ClickablesManager.Instance.CircleFade.SetActive(false);
+    }
+
     public void LeaveBoard(InputAction.CallbackContext context)
     {
         if (context.performed && gameObject.activeInHierarchy)
         {
-            S_ClickablesManager.Instance.ResetAllClickables();
-            S_ObjectClickable.Instance._animatorCameraGarage.SetBool("Board", false);
-            S_ClickablesManager.Instance.ReactivateAllClickables();
-            S_ClickablesManager.Instance.CircleFade.SetActive(false);
+            OnQuitLeaveBoard();
         }
     }
 
