@@ -78,6 +78,12 @@ public class S_PauseController : MonoBehaviour
 
     public void ActivePauseMenu(InputAction.CallbackContext ctx)
     {
+        if (_uiPausePanel.activeSelf)
+        {
+            ResumeButtonPress();
+            return;
+        }
+
         if (_pauseIsActive)
             return;
 
