@@ -4,6 +4,7 @@ using UnityEngine;
 public class S_WeaponData : ScriptableObject
 {
     [SerializeField] private GameObject _prefab;
+    [SerializeField] private GameObject _model;
     [SerializeField] private Sprite _weaponSprite;
 
     [Header("SFX")]
@@ -29,6 +30,11 @@ public class S_WeaponData : ScriptableObject
     public GameObject Prefab
     {
         get { return _prefab; }
+    }
+
+    public GameObject Model
+    {
+        get { return _model; }
     }
     public Sprite WeaponSrite
     {
