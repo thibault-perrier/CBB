@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class S_EditorController : MonoBehaviour
 {
+    public InputActionAsset inputActions;
+    private InputActionMap editorActionMap;
+
     [SerializeField] private GameObject _newPresetObjectIcon;
     [SerializeField] private GameObject _numberPanel;
 
@@ -80,8 +83,30 @@ public class S_EditorController : MonoBehaviour
     public void SetPresetChoice()
     {
         _editState = EditState.PresetChoice;
+        _selectedIndex = S_DataGame.Instance.inventory.SelectedRobot;
         DisableActiveRenderer();
         Selector();
+    }
+
+    void OnEnable()
+    {
+        S_DataGame.Instance.LoadInventory();
+        UpdatePiece();
+        UpdatePresetRobotGroup();
+        if (editorActionMap != null)
+        {
+            editorActionMap.Enable();
+            Debug.Log("Editor action map enabled.");
+        }
+    }
+
+    void OnDisable()
+    {
+        if (editorActionMap != null)
+        {
+            editorActionMap.Disable();
+            Debug.Log("Editor action map disabled.");
+        }
     }
 
 
@@ -100,6 +125,15 @@ public class S_EditorController : MonoBehaviour
         }
 
         Selector();
+
+        editorActionMap = inputActions.FindActionMap("Editor");
+
+        if (editorActionMap == null)
+        {
+            Debug.LogError("L'Action Map 'Editor' n'a pas été trouvée dans l'Input Action Asset.");
+        }
+
+        this.enabled = false;
     }
 
     public void GiveFrames()
@@ -455,7 +489,6 @@ public class S_EditorController : MonoBehaviour
             default:
                 break;
         }
-        _selectedIndex = 0;
         UpdatePiece();
         UpdatePrefabRobot();
         Selector();
@@ -533,7 +566,7 @@ public class S_EditorController : MonoBehaviour
 
         for (int i = 0; i < hookPoits.Count(); i++)
         {
-            Weapon weapon = S_DataGame.Instance.inventory.Robots[S_DataGame.Instance.inventory.SelectedRobot].GetHookPointWeapon(i);
+            Weapon weapon = robot.GetHookPointWeapon(i);
             if (weapon != null)
             {
                 GameObject objWeapon = Instantiate(weapon.GetWeaponData().Prefab);
@@ -628,7 +661,7 @@ public class S_EditorController : MonoBehaviour
             add.transform.localRotation = Quaternion.identity;
             _presets.Add(add);
         }
-
+        _selectedIndex = S_DataGame.Instance.inventory.SelectedRobot;
         S_DataGame.Instance.SaveInventory();
     }
 

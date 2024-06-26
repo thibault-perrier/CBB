@@ -20,6 +20,7 @@ public class S_FrameData : ScriptableObject
     {
         get { return _prefab; }
     }
+
     public int MaxLife
     {
         get { return _maxLife; }

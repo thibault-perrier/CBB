@@ -547,4 +547,14 @@ public class S_ClickablesManager : MonoBehaviour
     {
         SceneManager.LoadScene(4);
     }
+
+    public void SetActiveEditor()
+    {
+        _editorController.enabled = true;
+    }
+
+    public void SetUnactiveEditor()
+    {
+        _editorController.enabled = false;
+    }
 }
