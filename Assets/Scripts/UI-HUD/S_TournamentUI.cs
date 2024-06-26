@@ -522,6 +522,7 @@ public class S_TournamentBracket : MonoBehaviour
 
         _playerWin.SetActive(true);
         _tournamentPrizeDisplay.SetActive(true);
+        _tournamentPrizeDisplay.GetComponent<Image>().color = new Color(0.1098039f, 1, 0);
         _tournamentPrizeDisplay.GetComponentInChildren<TextMeshProUGUI>().text = "TOURNAMENT : YOU WON $ " + _tournamentManager.GetTournamentPrize() + " !";
         _sparksEffect.SetActive(true);
 
