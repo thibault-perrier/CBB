@@ -426,7 +426,8 @@ public class Robot
         {
             if (_weapons[i]._hookPointIndex == index)
             {
-                replaceIndex = i;
+                replaceIndex = _weapons[i]._hookPointIndex;
+                break;
             }
         }
 
