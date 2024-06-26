@@ -29,14 +29,14 @@ namespace CartoonFX
 		const float GLOBAL_CAMERA_SHAKE_MULTIPLIER = 1.0f;
 
 #if UNITY_EDITOR
-		[InitializeOnLoadMethod]
-		static void InitGlobalOptions()
-		{
-			AnimatedLight.editorPreview = EditorPrefs.GetBool("CFXR Light EditorPreview", true);
-	#if !DISABLE_CAMERA_SHAKE
-			CameraShake.editorPreview = EditorPrefs.GetBool("CFXR CameraShake EditorPreview", true);
-	#endif
-		}
+		//[InitializeOnLoadMethod]
+	//	static void InitGlobalOptions()
+	//	{
+	//		AnimatedLight.editorPreview = EditorPrefs.GetBool("CFXR Light EditorPreview", true);
+	//#if !DISABLE_CAMERA_SHAKE
+	//		CameraShake.editorPreview = EditorPrefs.GetBool("CFXR CameraShake EditorPreview", true);
+	//#endif
+	//	}
 #endif
 
 		public enum ClearBehavior
@@ -84,12 +84,12 @@ namespace CartoonFX
 
 			public void animate(float time)
 			{
-#if UNITY_EDITOR
-				if (!editorPreview && !EditorApplication.isPlaying)
-				{
-					return;
-				}
-#endif
+//#if UNITY_EDITOR
+//				if (!editorPreview && !EditorApplication.isPlaying)
+//				{
+//					return;
+//				}
+//#endif
 
 				if (light != null)
 				{
