@@ -102,6 +102,7 @@ public class S_PauseController : MonoBehaviour
     public void GiveUpButtonPress()
     {
         SceneManager.LoadScene(_sceneToLoadForGiveUp, LoadSceneMode.Single);
+        Time.timeScale = 1f;
     }
     public void QuitButtonPress()
     {
