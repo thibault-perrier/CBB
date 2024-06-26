@@ -537,6 +537,8 @@ public class S_ArenaManager : MonoBehaviour
     /// <returns></returns>
     public float RatingCalculate(GameObject bot1, GameObject bot2)
     {
+        if (bot1 == null || bot2 == null) return 0f;
+
         S_FrameManager botFrame1 = bot1.GetComponent<S_FrameManager>();
         S_FrameManager botFrame2 = bot2.GetComponent<S_FrameManager>();
 
