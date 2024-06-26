@@ -743,6 +743,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1a0746f8ed5d6341bd3eaf6d0342cfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gamepadHelper: {fileID: 0}
+  _keyboardHelper: {fileID: 0}
 --- !u!1 &944312816283253336
 GameObject:
   m_ObjectHideFlags: 0
@@ -8428,7 +8430,7 @@ PrefabInstance:
     - target: {fileID: 6138012854982471620, guid: 726c8ab59777f494996d97f1a40deee2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
-      objectReference: {fileID: 6194601357950075099, guid: 6f9f17cafef1a77488a5f1acb76e9510, type: 3}
+      objectReference: {fileID: 8289501393523047550}
     - target: {fileID: 6138012854982471620, guid: 726c8ab59777f494996d97f1a40deee2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -8451,7 +8453,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6138012854982471620, guid: 726c8ab59777f494996d97f1a40deee2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
-      value: SetSelectedGameObject
+      value: SelectedButton
       objectReference: {fileID: 0}
     - target: {fileID: 6138012854982471620, guid: 726c8ab59777f494996d97f1a40deee2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -8463,7 +8465,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6138012854982471620, guid: 726c8ab59777f494996d97f1a40deee2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
-      value: UnityEngine.EventSystems.EventSystem, UnityEngine.UI
+      value: S_PauseController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 6138012854982471620, guid: 726c8ab59777f494996d97f1a40deee2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
@@ -8781,7 +8783,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1315695497420700349, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_text
-      value: A
+      value: BAS
       objectReference: {fileID: 0}
     - target: {fileID: 1350696681222332646, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_Action
@@ -8834,7 +8836,7 @@ PrefabInstance:
     - target: {fileID: 1757723874218428248, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 978847219925754912}
+      objectReference: {fileID: 1588840253430183757}
     - target: {fileID: 1757723874218428248, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_Colors.m_HighlightedColor.b
       value: 0
@@ -9605,7 +9607,7 @@ PrefabInstance:
       objectReference: {fileID: 5083618764543248367, guid: e212d955e191b7f48bc43e934b655f18, type: 3}
     - target: {fileID: 6495530349497645749, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_BindingId
-      value: 6501f5ad-8521-4930-b050-eed5a15df6c4
+      value: 70105c2e-d95a-4bac-b871-e278a502bc55
       objectReference: {fileID: 0}
     - target: {fileID: 6525185640479322263, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
       propertyPath: m_Navigation.m_Mode
@@ -10226,6 +10228,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1588840253430183757 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1123919192437874432, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
+  m_PrefabInstance: {fileID: 1843176514062706765}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1903288015624486008 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 287545499047875637, guid: dfbec0bea5c086346bed5cc0b148e646, type: 3}
@@ -10596,7 +10609,7 @@ PrefabInstance:
     - target: {fileID: 6138012854982471620, guid: 726c8ab59777f494996d97f1a40deee2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
-      objectReference: {fileID: 6194601357950075099, guid: 6f9f17cafef1a77488a5f1acb76e9510, type: 3}
+      objectReference: {fileID: 8289501393523047550}
     - target: {fileID: 6138012854982471620, guid: 726c8ab59777f494996d97f1a40deee2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -10619,7 +10632,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6138012854982471620, guid: 726c8ab59777f494996d97f1a40deee2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
-      value: SetSelectedGameObject
+      value: SelectedButton
       objectReference: {fileID: 0}
     - target: {fileID: 6138012854982471620, guid: 726c8ab59777f494996d97f1a40deee2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -10631,7 +10644,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6138012854982471620, guid: 726c8ab59777f494996d97f1a40deee2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
-      value: UnityEngine.EventSystems.EventSystem, UnityEngine.UI
+      value: S_PauseController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 6138012854982471620, guid: 726c8ab59777f494996d97f1a40deee2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument

@@ -352,7 +352,10 @@ public class S_StreetFightManager : MonoBehaviour
         _cameraView.RemoveObjectToView(_AIBot.transform);
 
         if (S_DataGame.Instance)
+        {
             S_DataGame.Instance.inventory.CurrentMoney += 70;
+            S_DataGame.Instance.SaveInventory();
+        }
 
         EndCurrentFight();
     }

@@ -9699,8 +9699,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1a0746f8ed5d6341bd3eaf6d0342cfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _keyboardControls: {fileID: 0}
-  _gamepadControls: {fileID: 0}
+  _gamepadHelper: {fileID: 0}
+  _keyboardHelper: {fileID: 0}
 --- !u!1 &5335586540418199477
 GameObject:
   m_ObjectHideFlags: 0
@@ -29737,6 +29737,10 @@ PrefabInstance:
     - target: {fileID: 1935803414838769273, guid: b1f71cca627620f40966a1ff862f3e1a, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -812.23047
+      objectReference: {fileID: 0}
+    - target: {fileID: 2557163411997657090, guid: b1f71cca627620f40966a1ff862f3e1a, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 2951527748824662320, guid: b1f71cca627620f40966a1ff862f3e1a, type: 3}
       propertyPath: m_Pivot.x
