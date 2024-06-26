@@ -378,7 +378,7 @@ public class S_AIController : MonoBehaviour
     /// </summary>
     private void UpdateAIMovement()
     {
-        TryFailedAttack();
+        TryFailedAnyAttack();
         TryToAttackWithAnyWeapon();
 
         // get movement probability
@@ -1095,7 +1095,6 @@ public class S_AIController : MonoBehaviour
     /// <summary>
     /// try to failed any attack with probability
     /// </summary>
-    /// <returns>return <b>True</b> if he make an attack</returns>
     private void TryFailedAttack()
     {
         if (_failAttack)
@@ -1120,6 +1119,40 @@ public class S_AIController : MonoBehaviour
                 AttackWithCurrrentWeapon();
             }
         }
+    }
+    /// <summary>
+    /// try to failed an attack with all weapon with probability
+    /// </summary>
+    private void TryFailedAnyAttack()
+    {
+        if (_failAttack)
+            return;
+
+        StartCoroutine(AttackFailedCooldownCoroutine());
+
+        // if he is not enough close to the enemy
+        float distanceToEnemy = Vector3.Distance(transform.position, _enemy.transform.position);
+        if (distanceToEnemy > _attackFailDistance)
+            return;
+
+        if (!_canFailedAnyAttack)
+            return;
+
+        foreach (var weapon in _frameManager.Weapons)
+        {
+            if (!WeaponCanAttack(weapon))
+            {
+                // get random for the attack failed
+                float failedAttackRnd = Random.Range(0, 101);
+                if (_attackFailProbability > failedAttackRnd)
+                {
+                    _currentWeapon = weapon;
+                    AttackWithCurrrentWeapon();
+                }
+            }
+        }
+
+        GetBestWeaponFromTarget(_target.transform, ref _currentWeapon);
     }
     /// <summary>
     /// use the current weapon for make an attack
@@ -1210,6 +1243,7 @@ public class S_AIController : MonoBehaviour
                 {
                     _currentWeapon = weapon;
                     AttackWithCurrrentWeapon();
+                    return;
                 }
             }
         }
