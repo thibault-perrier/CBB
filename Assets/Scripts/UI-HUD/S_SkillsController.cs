@@ -90,19 +90,19 @@ public class S_SkillsController : MonoBehaviour
 
         _frameManager = frameManager;
 
-        List<S_Skill> skills = new() 
-        { 
-            skillLeft, 
-            skillUp, 
+        List<S_Skill> skills = new()
+        {
+            skillLeft,
+            skillUp,
             skillRight,
-            skillDown, 
+            skillDown,
         };
-        List<UnityAction> actionCooldown = new() 
-        { 
-            ListenerCooldownMashLeft, 
+        List<UnityAction> actionCooldown = new()
+        {
+            ListenerCooldownMashLeft,
             ListenerCooldownMashUp,
             ListenerCooldownMashRight,
-            ListenerCooldownMashDown, 
+            ListenerCooldownMashDown,
         };
         List<UnityAction> actionDestroy = new()
         {
