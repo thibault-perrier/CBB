@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -41,10 +40,6 @@ public class S_PauseController : MonoBehaviour
     [SerializeField]
     private InputActionReference _pauseActionReference;
 
-    [Header("Event system")]
-    [SerializeField]
-    private EventSystem _eventSystem;
-
     private InputAction _pauseAction;
     private GameObject _currentSelectedGameObject;
     private bool _pauseIsActive = false;
@@ -81,8 +76,8 @@ public class S_PauseController : MonoBehaviour
         if (_pauseIsActive)
             return;
 
-        _currentSelectedGameObject = _eventSystem.currentSelectedGameObject;
-        _eventSystem.SetSelectedGameObject(_resumeButton);
+        _currentSelectedGameObject = EventSystem.current.currentSelectedGameObject;
+        EventSystem.current.SetSelectedGameObject(_resumeButton);
 
         _pauseIsActive = true;
         _uiPausePanel.SetActive(true);
@@ -92,7 +87,7 @@ public class S_PauseController : MonoBehaviour
     public void ResumeButtonPress()
     {
         if (_currentSelectedGameObject)
-            _eventSystem.SetSelectedGameObject(_currentSelectedGameObject);
+            EventSystem.current.SetSelectedGameObject(_currentSelectedGameObject);
 
         _pauseIsActive = false;
         _uiPausePanel.SetActive(false);
@@ -109,13 +104,13 @@ public class S_PauseController : MonoBehaviour
     public void BindBackButtons()
     {
         if (_backButtonRebindController.activeInHierarchy)
-            _eventSystem.SetSelectedGameObject(_backButtonRebindController);
+            EventSystem.current.SetSelectedGameObject(_backButtonRebindController);
         else
-            _eventSystem.SetSelectedGameObject(_backButtonRebindKeyboard);
+            EventSystem.current.SetSelectedGameObject(_backButtonRebindKeyboard);
     }
     public void SelectedButton(GameObject button)
     {
-        _eventSystem.SetSelectedGameObject(button);
+        EventSystem.current.SetSelectedGameObject(button);
     }
 
     private void SetWorldLocation(WorldLocation location)
