@@ -23,6 +23,9 @@ public class S_ObjectClickable : MonoBehaviour
 
     public void OnMouseOver()
     {
+        if (Time.timeScale.Equals(0f))
+            return;
+
         OnFocus();
     }
 
@@ -33,6 +36,9 @@ public class S_ObjectClickable : MonoBehaviour
 
     public void OnMouseDown()
     {
+        if (Time.timeScale.Equals(0f))
+            return;
+
         OnActivated();
     }
 
