@@ -71,18 +71,7 @@
             ],
             "bindings": [
                 {
-                    "name": "",
-                    "id": "09c2ae18-3421-4899-942b-9981b8402836",
-                    "path": "<Gamepad>/leftStick/y",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "1D Axis",
+                    "name": "KeyboardAxis",
                     "id": "3028019c-3a0d-4b3b-b07a-c4fad08c875d",
                     "path": "1DAxis",
                     "interactions": "",
@@ -115,15 +104,37 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "",
-                    "id": "44e229f6-c858-463e-a2cf-f42615002665",
-                    "path": "<Gamepad>/rightStick/x",
+                    "name": "GamepadAxis",
+                    "id": "5b9cdc25-26a4-4f18-8d51-e5ef1c43d85b",
+                    "path": "1DAxis",
                     "interactions": "",
-                    "processors": "Invert",
-                    "groups": "Gamepad",
-                    "action": "Rotate",
-                    "isComposite": false,
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "cefef870-3423-4d97-9d85-d6bc6bd4f2a9",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "467c930b-b148-4e3b-9af5-9ff76e2866f7",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "1D Axis",
@@ -154,6 +165,39 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "GamePadAxis",
+                    "id": "ab25d513-82a7-4de8-a585-56da1bde9f9c",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "a2e99d6a-98c6-4a43-82b9-6f169df4edb8",
+                    "path": "<Gamepad>/leftStick/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "aa9c3643-4af1-4b50-9b71-8af8584f8541",
+                    "path": "<Gamepad>/leftStick/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
                     "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -238,7 +282,7 @@
                 {
                     "name": "",
                     "id": "8062aeb3-4260-4dbc-8193-81475accb04b",
-                    "path": "<Gamepad>/leftShoulder",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -260,7 +304,7 @@
                 {
                     "name": "",
                     "id": "7a3540c7-8da3-4b6d-98e8-904236d9fe3f",
-                    "path": "<Gamepad>/rightShoulder",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -274,7 +318,7 @@
                     "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard",
                     "action": "Attack3",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -282,7 +326,7 @@
                 {
                     "name": "",
                     "id": "e5ae0133-f8a7-4c94-aa5c-459394dbf06a",
-                    "path": "<Gamepad>/leftTrigger",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -293,10 +337,10 @@
                 {
                     "name": "",
                     "id": "6501f5ad-8521-4930-b050-eed5a15df6c4",
-                    "path": "<Keyboard>/downArrow",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepad",
                     "action": "Attack4",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -307,7 +351,7 @@
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Gamepad",
+                    "groups": "Keyboard",
                     "action": "Attack4",
                     "isComposite": false,
                     "isPartOfComposite": false
