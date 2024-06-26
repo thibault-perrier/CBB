@@ -553,12 +553,11 @@ public class S_ClickablesManager : MonoBehaviour
     {
         _editorController.enabled = true;
     }
-
     public void SetUnactiveEditor()
     {
         _editorController.enabled = false;
     }
-    
+
     public void LoadStreetFight()
     {
         SceneManager.LoadScene(5);

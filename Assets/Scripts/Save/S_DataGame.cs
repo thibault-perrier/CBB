@@ -68,7 +68,7 @@ public class S_DataGame : MonoBehaviour
         S_FileHandler.Instance.LoadTournament();
     }
 
-    
+
 }
 
 [System.Serializable]
@@ -90,7 +90,7 @@ public class InventorySaver // Inventory
     public string suffixString;
 
     public int overlayImageIndex = 1;
-    public Vector2 overlayImagePosition = new Vector2(0,0);
+    public Vector2 overlayImagePosition = new Vector2(0, 0);
 
     #region Color Load/Save
     public void SaveOverlayColor(string hexColor)
@@ -226,7 +226,6 @@ public class InventorySaver // Inventory
             weapon = new Weapon(weaponData);
             Weapons.Add(weapon);
         }
-        weapon._number++;
     }
 
     public void RemoveWeapon(S_WeaponData weaponData)
@@ -269,7 +268,6 @@ public class InventorySaver // Inventory
             frame = new Frame(frameData);
             Frames.Add(frame);
         }
-        frame._number++;
     }
 
     public void RemoveFrame(S_FrameData frameData)
@@ -326,18 +324,10 @@ public class InventorySaver // Inventory
 
     public void BuyWeapon(S_WeaponData weaponData)
     {
-        if(CurrentMoney - weaponData.Cost >= 0)
+        if (CurrentMoney - weaponData.Cost >= 0)
         {
             CurrentMoney -= weaponData.Cost;
-            Weapon weapon = GetWeapon(weaponData);
-            if (weapon != null)
-            {
-                weapon._number++;
-            }
-            else
-            {
-                AddWeapon(weaponData);
-            }
+            AddWeapon(weaponData);
         }
     }
 
@@ -346,15 +336,7 @@ public class InventorySaver // Inventory
         if (CurrentMoney - frameData.Cost >= 0)
         {
             CurrentMoney -= frameData.Cost;
-            Frame frame = GetFrame(frameData);
-            if (frame != null)
-            {
-                frame._number++;
-            }
-            else
-            {
-                AddFrame(frameData);
-            }
+            AddFrame(frameData);
         }
     }
 }

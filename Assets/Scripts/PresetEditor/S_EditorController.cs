@@ -189,6 +189,7 @@ public class S_EditorController : MonoBehaviour
     {
         if (context.started && gameObject.activeInHierarchy)
         {
+            Debug.Log("test");
             SelectItem();
         }
     }
@@ -388,7 +389,7 @@ public class S_EditorController : MonoBehaviour
                     _editState = EditState.PartChoice;
                     break;
                 }
-                    
+
                 if (_selectedIndex < 0)
                     _selectedIndex = _frame.Count - 1;
                 _selectedIndex = _selectedIndex % _frame.Count;
