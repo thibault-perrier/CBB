@@ -110,6 +110,7 @@ public class S_AIController : MonoBehaviour
     private WaitForSeconds _fleeFailureCooldownCoroutine = new(.5f);
     private float _scaleMovement;
     private float _startMassRigidbody;
+    private float _rangeDodgeTrap = 7f;
 
     #region Property
     /// <summary>
@@ -849,17 +850,17 @@ public class S_AIController : MonoBehaviour
             var direction = new Vector3(xDirection, 0f, scaleDirection);
 
             // make a raycast and add the turn amount
-            bool hit = Physics.Raycast(transform.position, transform.TransformDirection(direction), 5f, _trapLayer);
+            bool hit = Physics.Raycast(transform.position, transform.TransformDirection(direction), _rangeDodgeTrap, _trapLayer);
             if (hit)
             {
                 // add the turn amount by the raycast angle
                 turnAmount += ((angle - 50f) > 0f ? -1f : 1f) * scaleDirection;
                 tuchOneTime = true;
-                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 5f, Color.green, 0f);
+                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * _rangeDodgeTrap, Color.green, 0f);
             }
             else
             {
-                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 5f, Color.red, 0f);
+                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * _rangeDodgeTrap, Color.red, 0f);
             }
         }
 
