@@ -68,6 +68,7 @@ public class S_PauseController : MonoBehaviour
     }
     private void Start()
     {
+        Time.timeScale = 1f;
         SetWorldLocation(_location);
     }
 
