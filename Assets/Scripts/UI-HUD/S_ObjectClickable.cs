@@ -78,7 +78,10 @@ public class S_ObjectClickable : MonoBehaviour
                 _animatorCameraGarage.SetBool("MoveToGarage", true);
                 break;
             case "Rue":
-                _animatorCameraGarage.SetBool("MoveToRue", true);
+                if (S_DataGame.Instance.inventory.GetSelectRobot() != null)
+                {
+                    _animatorCameraGarage.SetBool("MoveToRue", true);
+                }
                 break;
             case "Tournament":
                 _animatorCameraGarage.SetBool("MoveToTournament", true);
