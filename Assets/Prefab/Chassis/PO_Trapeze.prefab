@@ -369,10 +369,6 @@ MonoBehaviour:
     m_ActionName: UI/LeaveBoard[/Keyboard/escape]
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: ebea3937-9822-469a-95bf-29d7ccbd1b1e
-    m_ActionName: UI/LeaveWorkBench[/Keyboard/escape]
-  - m_PersistentCalls:
-      m_Calls: []
     m_ActionId: 8736330a-3442-4c72-a828-edca008e9cad
     m_ActionName: UI/LeaveShelves[/Keyboard/escape]
   - m_PersistentCalls:
@@ -453,20 +449,44 @@ MonoBehaviour:
     m_ActionName: UI/Leave Rue[/Keyboard/escape]
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: 7eb63a33-95e7-411e-b609-e2d62f996be9
-    m_ActionName: UI/CancelEditor[/Keyboard/escape]
+    m_ActionId: eb7e8589-a487-4bad-8233-96d4fc35448c
+    m_ActionName: UI/LeaveWorkBench[/Keyboard/backspace]
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: 9ed1245e-7d59-497a-a0ec-e3e6feb6220e
-    m_ActionName: UI/RotateEditor[/Keyboard/leftArrow,/Keyboard/rightArrow]
+    m_ActionId: 71910db9-3621-42a1-8ae5-2df50f7643e5
+    m_ActionName: Editor/RemoveWeaponEditor[/Keyboard/delete]
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: 9c6cd265-98c1-42ed-b265-55597ecce84a
-    m_ActionName: UI/NavigateEditor[/Keyboard/a,/Keyboard/d]
+    m_ActionId: bdc4799d-e870-43af-87b9-1ee0f369b383
+    m_ActionName: Editor/NavigateEditor[/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: a6fa9cd1-c046-4184-a46f-986bf215a130
-    m_ActionName: UI/RemoveWeaponEditor[/Keyboard/delete,/Keyboard/backspace]
+    m_ActionId: 6efe4b4a-e9f6-45ed-bea8-21600e9dfcca
+    m_ActionName: Editor/ConfirmEditor[/Keyboard/enter,/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2313c1b5-7459-4621-ba21-a5d218af8c2f
+    m_ActionName: Editor/RotateEditor[/Keyboard/leftArrow,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 629610de-0819-481c-a1bd-dc93301d7253
+    m_ActionName: Editor/CancelEditor[/Keyboard/backspace]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1cea3427-55ec-413b-ad39-58c965015c69
+    m_ActionName: Shop/Navigate[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5712acc5-52de-4c50-a6ea-1c38752fd204
+    m_ActionName: Shop/LeaveShop[/Keyboard/backspace]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7101c764-3d67-4965-a2ea-3152a7ba070b
+    m_ActionName: Shop/ShopControllers[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8c4f9a7c-db5b-48a7-8eea-d296c558cd49
+    m_ActionName: Shop/Buy[/Keyboard/enter]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard
   m_DefaultActionMap: Robot
@@ -1067,12 +1087,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7627696444417990143, guid: 54d9a87acec8339438590167e68805de, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627696444417990143, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: -3033667219593020291, guid: b4b66b6b7c07a944bb385dbd1c0e7942, type: 3}
     - target: {fileID: 7941983589671488304, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Name
       value: Wheel (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8129937670934179077, guid: 54d9a87acec8339438590167e68805de, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8626277753439424062, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Mass
@@ -1174,6 +1202,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7627696444417990143, guid: 54d9a87acec8339438590167e68805de, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627696444417990143, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: -3033667219593020291, guid: b4b66b6b7c07a944bb385dbd1c0e7942, type: 3}
@@ -1253,7 +1285,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
@@ -1386,12 +1418,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7627696444417990143, guid: 54d9a87acec8339438590167e68805de, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627696444417990143, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: -3033667219593020291, guid: b4b66b6b7c07a944bb385dbd1c0e7942, type: 3}
     - target: {fileID: 7941983589671488304, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Name
       value: Wheel (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8129937670934179077, guid: 54d9a87acec8339438590167e68805de, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8626277753439424062, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Mass
@@ -1493,12 +1533,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7627696444417990143, guid: 54d9a87acec8339438590167e68805de, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627696444417990143, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: -3033667219593020291, guid: b4b66b6b7c07a944bb385dbd1c0e7942, type: 3}
     - target: {fileID: 7941983589671488304, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Name
       value: Wheel (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8129937670934179077, guid: 54d9a87acec8339438590167e68805de, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8626277753439424062, guid: 54d9a87acec8339438590167e68805de, type: 3}
       propertyPath: m_Mass
