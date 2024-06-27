@@ -42,24 +42,24 @@ public class S_SkillsController : MonoBehaviour
 
         List<S_Skill> skills = new()
         {
-            skillLeft,
             skillUp,
-            skillRight,
             skillDown,
+            skillRight,
+            skillLeft,
         };
         List<UnityAction> actionCooldown = new()
         {
-            ListenerCooldownMashLeft,
             ListenerCooldownMashUp,
-            ListenerCooldownMashRight,
             ListenerCooldownMashDown,
+            ListenerCooldownMashRight,
+            ListenerCooldownMashLeft,
         };
         List<UnityAction> actionDestroy = new()
         {
-            ListenerDestroyMashLeft,
             ListenerDestroyMashUp,
+            ListenerDestroyMashDown,
             ListenerDestroyMashRight,
-            ListenerDestroyMashDown
+            ListenerDestroyMashLeft,
         };
 
         foreach (var skill in skills.Select((value, index) => new { index, value }))
@@ -92,24 +92,24 @@ public class S_SkillsController : MonoBehaviour
 
         List<S_Skill> skills = new()
         {
-            skillLeft,
             skillUp,
-            skillRight,
             skillDown,
+            skillRight,
+            skillLeft,
         };
         List<UnityAction> actionCooldown = new()
         {
-            ListenerCooldownMashLeft,
             ListenerCooldownMashUp,
-            ListenerCooldownMashRight,
             ListenerCooldownMashDown,
+            ListenerCooldownMashRight,
+            ListenerCooldownMashLeft,
         };
         List<UnityAction> actionDestroy = new()
         {
-            ListenerDestroyMashLeft,
             ListenerDestroyMashUp,
+            ListenerDestroyMashDown,
             ListenerDestroyMashRight,
-            ListenerDestroyMashDown
+            ListenerDestroyMashLeft,
         };
 
         foreach (var skill in skills.Select((value, index) => new { index, value }))
@@ -204,21 +204,5 @@ public class S_SkillsController : MonoBehaviour
         weaponMask.fillAmount = 1f;
 
         yield return null;
-    }
-
-    private bool IsEventAlreadyRegistered(UnityEvent unityEvent, MonoBehaviour target, string method)
-    {
-        int eventCount = unityEvent.GetPersistentEventCount();
-
-        for (int i = 0; i < eventCount; i++)
-        {
-            if (unityEvent.GetPersistentTarget(i) == target &&
-                unityEvent.GetPersistentMethodName(i) == method)
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

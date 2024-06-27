@@ -136,7 +136,7 @@ public class S_ShopController : MonoBehaviour
         }
     }
 
-    void ChangeRow(int direction)
+    public void ChangeRow(int direction)
     {
         _currentRow += direction;
         if (_currentRow < 0) _currentRow = 1;
