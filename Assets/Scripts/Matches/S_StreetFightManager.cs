@@ -142,6 +142,8 @@ public class S_StreetFightManager : MonoBehaviour
     }
     private void Update()
     {
+        if (!_timerUpdate) return;
+
         DetectDefeatRadius();
         UpdateHealthBarUI();
         UpdateTimeUI();
