@@ -455,6 +455,41 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd7dd612bb7ceb147ba906be3e013531, type: 3}
+--- !u!1 &635737755 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1398421317326991321, guid: 7f8ca9e424480c349b71a3f072813dd7, type: 3}
+  m_PrefabInstance: {fileID: 2108806332}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &635737756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 635737755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: e212d955e191b7f48bc43e934b655f18, type: 3}
+  m_PointAction: {fileID: -850128998866944560, guid: e212d955e191b7f48bc43e934b655f18, type: 3}
+  m_MoveAction: {fileID: 7909500757535213372, guid: e212d955e191b7f48bc43e934b655f18, type: 3}
+  m_SubmitAction: {fileID: -812182490249941441, guid: e212d955e191b7f48bc43e934b655f18, type: 3}
+  m_CancelAction: {fileID: 0}
+  m_LeftClickAction: {fileID: -7156546171087688450, guid: e212d955e191b7f48bc43e934b655f18, type: 3}
+  m_MiddleClickAction: {fileID: 2567004511984650174, guid: e212d955e191b7f48bc43e934b655f18, type: 3}
+  m_RightClickAction: {fileID: -4860227489036693980, guid: e212d955e191b7f48bc43e934b655f18, type: 3}
+  m_ScrollWheelAction: {fileID: 4917603004739954269, guid: e212d955e191b7f48bc43e934b655f18, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 0}
+  m_TrackedDeviceOrientationAction: {fileID: 0}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
 --- !u!1001 &692476890
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1773,10 +1808,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 185600547669112104, guid: 7f8ca9e424480c349b71a3f072813dd7, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1398421317326991321, guid: 7f8ca9e424480c349b71a3f072813dd7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 635737756}
   m_SourcePrefab: {fileID: 100100000, guid: 7f8ca9e424480c349b71a3f072813dd7, type: 3}
 --- !u!1001 &2126575344
 PrefabInstance:

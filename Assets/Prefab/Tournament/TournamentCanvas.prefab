@@ -3006,10 +3006,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 1eb8590c06a4f4c4582a6a28dfb70f3a, type: 3}
   - {fileID: 21300000, guid: 605b5b518a490264faa3b8c8fe2729b6, type: 3}
   _currentTournament:
-    rank: 3
-    cost: 150
+    rank: 4
+    cost: 250
     participantNb: 8
-    prize: 1200
+    prize: 2000
     maxMatchNb: 4
 --- !u!114 &1522405830087093592
 MonoBehaviour:
@@ -7021,11 +7021,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: S_ArenaManager, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: OnSimulateMatch
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -7613,7 +7613,7 @@ GameObject:
   - component: {fileID: 389457312463885325}
   - component: {fileID: 8958642380718883122}
   m_Layer: 5
-  m_Name: Player'sMoney
+  m_Name: PlayerMoney
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19972,7 +19972,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Garage
+          m_StringArgument: MainMenuV1_0
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &7808305498728675906
@@ -21856,7 +21856,7 @@ MonoBehaviour:
   - {fileID: 3508263617668491959}
   - {fileID: 8282339702172891744}
   _currentBetTxt: {fileID: 4200338502570122735}
-  _playerMoneyTMP: {fileID: 0}
+  _playerMoneyTMP: {fileID: 8958642380718883122}
   _launchMatch: {fileID: 3680335757685969003}
   _betWinDisplay: {fileID: 7886532388385598541}
   Confirm: {fileID: -812182490249941441, guid: e212d955e191b7f48bc43e934b655f18, type: 3}
@@ -29740,7 +29740,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2557163411997657090, guid: b1f71cca627620f40966a1ff862f3e1a, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: -1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2951527748824662320, guid: b1f71cca627620f40966a1ff862f3e1a, type: 3}
       propertyPath: m_Pivot.x
